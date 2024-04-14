@@ -37,16 +37,18 @@
     </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
-    <tr v-for="recording in showRecordings" :key="recording.id"
+    <tr v-for="recording in showRecordings.data" :key="recording.id"
         @mouseover="state.hoveredRow = recording.id"
         @mouseleave="state.hoveredRow = null"
         @click="openVideo(recording)"
         :class="rowClass(recording.id)"
-      >
+    >
       <td class="px-6 py-4 whitespace-nowrap">
         <div>{{ userStore.formatDateInUserTimezone(recording.start_time) }}</div>
         <div v-if="recording.comment" class="text-xs uppercase text-orange-700 font-semibold break-words">
-          <span :class="{ 'text-indigo-600': recording.comment !== 'automated recording' }">{{ recording.comment }}</span>
+          <span :class="{ 'text-indigo-600': recording.comment !== 'automated recording' }">{{
+              recording.comment
+            }}</span>
         </div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
@@ -66,19 +68,26 @@
       <td class=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
         <button @click.stop="shareRecording(recording.shareUrl)"
                 class="hidden btn btn-xs bg-orange-200 hover:bg-orange-300 text-black">
-          <font-awesome-icon icon="fa-share" class=""/>Share
+          <font-awesome-icon icon="fa-share" class=""/>
+          Share
         </button>
         <button @click.stop="confirmAddToEpisode"
-                class="btn btn-xs">Add To Episode</button>
+                class="btn btn-xs">Add To Episode
+        </button>
         <button @click.stop="confirmDownload(recording)"
-        class="btn btn-xs btn-info" >Download</button>
+                class="btn btn-xs btn-info">Download
+        </button>
         <button @click.stop="confirmSaveToPremium"
-                class="btn btn-xs">Save to Premium Storage</button>
+                class="btn btn-xs">Save to Premium Storage
+        </button>
       </td>
     </tr>
     </tbody>
-
   </table>
+
+  <div class="flex flex-row flex-wrap w-full justify-center">
+    <Pagination :data="showRecordings" class="" />
+  </div>
 
   <dialog id="confirmRecordingPlaybackModal" class="modal">
     <div class="modal-box w-full items-center text-center">
@@ -86,9 +95,10 @@
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
       <h3 class="font-bold text-lg"></h3>
-      <p class="py-4 text-xl mt-4">Would you like to play the recording<br /> from
+      <p class="py-4 text-xl mt-4">Would you like to play the recording<br/> from
         <span class="font-semibold">{{ selectedRecordingDate }}</span>?</p>
-      <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.path"><span class="font-semibold">Path: </span>{{ selectedRecording.path }}</p>
+      <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.path"><span
+          class="font-semibold">Path: </span>{{ selectedRecording.path }}</p>
       <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.comment">
         <span class="font-semibold">Comment: </span>
         <span>{{ selectedRecording.comment }}</span>
@@ -160,49 +170,49 @@
   </dialog>
 
 
-
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { computed, reactive, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
+import Pagination from '@/Components/Global/Paginators/Pagination.vue'
 
 const videoPlayerStore = useVideoPlayerStore()
 const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()
 
-const shareClip = useClipboard();
+const shareClip = useClipboard()
 
 const props = defineProps({
   showName: String,
   showImage: Object,
-  showRecordings: Array
+  showRecordings: Object,
 })
 
 const formatDuration = (totalMilliseconds) => {
-  let seconds = Math.floor(totalMilliseconds / 1000);
-  let minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
+  let seconds = Math.floor(totalMilliseconds / 1000)
+  let minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
 
-  seconds = seconds % 60;
-  minutes = minutes % 60;
+  seconds = seconds % 60
+  minutes = minutes % 60
 
   // Padding numbers to always show two digits
-  const paddedHours = hours.toString().padStart(2, '0');
-  const paddedMinutes = minutes.toString().padStart(2, '0');
-  const paddedSeconds = seconds.toString().padStart(2, '0');
+  const paddedHours = hours.toString().padStart(2, '0')
+  const paddedMinutes = minutes.toString().padStart(2, '0')
+  const paddedSeconds = seconds.toString().padStart(2, '0')
 
-  return `${paddedHours}h ${paddedMinutes}m ${paddedSeconds}s`;
-};
+  return `${paddedHours}h ${paddedMinutes}m ${paddedSeconds}s`
+}
 
 const state = reactive({
   hoveredRow: null,
-});
+})
 
 const selectedRecording = ref(null)
 const selectedRecordingDate = ref('')
@@ -216,7 +226,7 @@ const nowPlayingStreamName = ref('')
 const rowClass = computed(() => (recordingId) => ({
   'hover:bg-blue-100 cursor-pointer': state.hoveredRow === recordingId,
   'bg-green-100': nowPlayingRecordingId.value === recordingId,
-}));
+}))
 
 const openVideo = (recording) => {
   document.getElementById('confirmRecordingPlaybackModal').showModal()
@@ -226,24 +236,24 @@ const openVideo = (recording) => {
   selectedRecordingStreamName.value = recording.streamName
   selectedRecordingId.value = recording.id
   selectedRecordingDate.value = userStore.formatDateInUserTimezone(recording.start_time)
-  console.log('Opening video for stream:', recording.streamName);
+  console.log('Opening video for stream:', recording.streamName)
   // Implement the video opening logic here
-};
+}
 
 const source = ref({
   mediaType: '',
   recording: {
     source: '',
     sourceType: '',
-  }
-});
+  },
+})
 
 const play = () => {
   source.value.mediaType = 'recording'
   source.value.recording = {
     source: selectedRecordingStreamName,
     sourceType: 'video/mp4',
-  };
+  }
   console.log('recording source: ' + selectedRecordingStreamName.value)
   try {
     videoPlayerStore.loadNewVideo(source.value)
@@ -284,23 +294,23 @@ const play = () => {
     // Close the modal upon successful video playback
     document.getElementById('confirmRecordingPlaybackModal').close()
   } catch (error) {
-    console.error('Error loading new video:', error);
+    console.error('Error loading new video:', error)
     // Handle error appropriately, possibly with user feedback
   }
 
 }
 
 const shareRecording = (shareUrl) => {
-  shareClip.copy(shareUrl);
-  copyMessage.value = 'Video share URL copied!';
-  showCopyMessage.value = true;
+  shareClip.copy(shareUrl)
+  copyMessage.value = 'Video share URL copied!'
+  showCopyMessage.value = true
   setTimeout(() => {
-    showCopyMessage.value = false;
-  }, 1000); // Hide after 3 seconds
-};
+    showCopyMessage.value = false
+  }, 1000) // Hide after 3 seconds
+}
 
-const showCopyMessage = ref(false);
-const copyMessage = ref('');
+const showCopyMessage = ref(false)
+const copyMessage = ref('')
 
 const confirmAddToEpisode = () => {
   document.getElementById('confirmAddToEpisodeModal').showModal()
@@ -309,30 +319,30 @@ const confirmAddToEpisode = () => {
 const confirmDownload = (recording) => {
   selectedRecording.value = recording
   // Confirm the download.
-  document.getElementById('confirmDownloadModal').showModal();
+  document.getElementById('confirmDownloadModal').showModal()
 }
 
 const beginDownload = () => {
   // Once confirmed, execute the download.
 
   // The URL where your files are hosted
-  const url = selectedRecording.value.download.url;
+  const url = selectedRecording.value.download.url
 
   console.log('download url: ' + url)
   // Create an anchor (<a>) element
-  const downloadLink = document.createElement('a');
-  downloadLink.href = url;
+  const downloadLink = document.createElement('a')
+  downloadLink.href = url
 
   // Optionally, if you want the download to have a specific filename:
   // downloadLink.download = 'YourCustomFileNameHere';
 
   // This is necessary for the download to work in Firefox when triggered programmatically
-  document.body.appendChild(downloadLink);
+  document.body.appendChild(downloadLink)
 
-  downloadLink.click();
+  downloadLink.click()
 
   // Clean up by removing the element after triggering the download
-  document.body.removeChild(downloadLink);
+  document.body.removeChild(downloadLink)
   selectedRecording.value = null
   document.getElementById('downloadStarted').showModal()
 }
@@ -366,9 +376,11 @@ const confirmSaveToPremium = () => {
   z-index: 100;
   transition: opacity 0.5s ease;
 }
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s ease;
 }
+
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
 }

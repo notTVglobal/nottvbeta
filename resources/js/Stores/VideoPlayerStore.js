@@ -121,7 +121,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.on('play', this.handlePlay)
             this.player.on('pause', this.handlePause)
             this.player.on('error', this.handleError)
-            this.player.on('ended', this.handleEnd)
+            this.player.on('ended', () => {
+                console.log('Video has ended. Refreshing the player...');
+                this.refreshVideoPlayer();
+            });
             console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')

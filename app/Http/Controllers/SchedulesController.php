@@ -5,18 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Http\Resources\ShowResource;
+use App\Jobs\AddContentToSchedule;
 use App\Models\Show;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
+use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class SchedulesController extends Controller {
 
@@ -24,155 +28,45 @@ class SchedulesController extends Controller {
     $this->middleware('auth');
   }
 
+  public function index(): \Inertia\Response {
+    return Inertia::render('Schedule/Index', [
+      // we need to return the schedule data...
+      // in our Schedule::class we can gather all the broadcast_dates
+      // which is a json column that will hold an array of dates for each
+      // scheduled object. We'll want to return part of the object too,
+      // it's a polymorph on the schedules table. We want the:
+      // id, name, slug, image (ImageResource), category and categorySub if it's
+      // a show or a movie (shows and movies have their own category and categorySub tables).
+      // we are going to have the `UpdateAllBroadcastDatesOnSchedules` Job cached. The Job
+      // will run daily. The cache should already have the data all prepared for how we need
+      // it for our front end. We will return it here for our Vue ScheduleGrid component.
+        'can' => [
+          //
+        ]
+    ]);
+  }
+
   public function addToSchedule(Request $request): JsonResponse {
     // Manually extract the data from the request body
-    $data = $request->json()->all();
+//    $data = $request->json()->all();
 
-    // Manually create a validator instance
-    $validator = Validator::make($data, [
-        'contentId'    => 'required|integer',
-        'contentType'  => 'required|string',
-        'scheduleType' => 'required|string',
-    ]);
+    $data = $request->all();  // Capture all input data
 
-    if ($validator->fails()) {
-      return response()->json($validator->errors(), 422);
-    }
+    // Dispatch the job with the data
+    AddContentToSchedule::dispatch($data);
 
-    // Extract input
-    // Correctly extract contentId and contentType using the case used in the validator
-    $contentId = $data['contentId'];
-    $contentType = $data['contentType'];
-    $scheduleType = $data['scheduleType'];
+    // Return a response immediately, indicating that the process has started
+    return response()->json(['message' => 'The schedule is being updated.']);
 
-    // Determine the correct model class based on the contentType
-    $modelClass = $this->getModelClass($contentType);
-    if (!$modelClass) {
-      return response()->json(['message' => 'Invalid content type provided'], 400);
-    }
 
-    // Verify the specified content exists
-    $content = $modelClass::find($contentId);
-    if (!$content) {
-      return response()->json(['message' => 'Content not found'], 404);
-    }
-
-    // Convert startDate to UTC
-    $formattedStartDate = \Carbon\Carbon::parse($request->input('startDate'))
-        ->setTimezone('UTC')
-        ->toDateTimeString();
-
-// Convert endDate to UTC
-    $formattedEndDate = \Carbon\Carbon::parse($request->input('endDate'))
-        ->setTimezone('UTC')
-        ->toDateTimeString();
-
-    // TODO: Need to convert the $overlappingSchedules below into UTC time and then compare to the
-    // $formattedStartDate and $formattedEndDate
-    // this doesn't take into account time changes.. so I think we should just do the prioritization
-    // when we add the show to the schedule on the frontend based on the created_at of the Schedule object.
-    // Query for overlapping schedules
-    $overlappingSchedules = Schedule::where(function ($query) use ($formattedStartDate, $formattedEndDate) {
-      $query->whereBetween('start_time', [$formattedStartDate, $formattedEndDate])
-          ->orWhereBetween('end_time', [$formattedStartDate, $formattedEndDate]);
-    })->get();
-
-    // Determine the new priority
-    // Default to 5, allowing room for manual adjustments to insert more urgent schedules if needed
-    $newPriority = 5;
-    if (!$overlappingSchedules->isEmpty()) {
-      // If there is a conflict, adjust the priority to be one less than the lowest existing to make it more urgent
-      $minPriority = $overlappingSchedules->min('priority');
-      $newPriority = max(1, $minPriority - 1); // Ensure the priority doesn't go below 1
-    }
-
-    // Recurring schedule specific data handling
-    $recurrenceDetailsId = null;
-    if ($scheduleType === 'recurring') {
-      $inputDaysOfWeek = $request->input('daysOfWeek');
-
-      // Define the correct order of days for comparison
-      $weekDaysOrdered = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-      // Sort the input days based on the week order
-      $sortedDaysOfWeek = array_values(array_intersect($weekDaysOrdered, $inputDaysOfWeek));
-
-      $recurrenceDetailsData = [
-          'frequency'        => 'weekly', // Adjust based on your requirements
-          'days_of_week'     => json_encode($sortedDaysOfWeek), // Now storing sorted days of week
-          'duration_minutes' => $request->input('duration'),
-          'start_time'       => Carbon::parse($request->input('startDate'))->format('H:i:s'),
-          'start_date'       => $request->input('startDate'),
-          'end_date'         => $request->input('endDate'),
-          'timezone'         => $request->input('timezone'),
-      ];
-
-      // Initialize all days to false
-      $allDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-      foreach ($allDays as $day) {
-        $recurrenceDetailsData[$day] = false;
-      }
-
-      // Set true for the days present in the JSON array
-      foreach ($inputDaysOfWeek as $day) {
-        $dayLower = strtolower($day); // Ensure lowercase to match column names exactly
-        if (in_array($dayLower, $allDays)) {
-          $recurrenceDetailsData[$dayLower] = true;
-        }
-      }
-
-      // Create ScheduleRecurrenceDetails and capture the ID
-      $recurrenceDetails = ScheduleRecurrenceDetails::create($recurrenceDetailsData);
-      $recurrenceDetailsId = $recurrenceDetails->id;
-    }
-
-//    // Determine the correct model class based on the contentType
-//    $modelClass = $this->getModelClass($request->input('contentType'));
-//    if (!$modelClass) {
-//      return response()->json(['message' => 'Invalid content type provided'], 400);
-//    }
 //
-//    // Verify the specified content exists
-//    $content = $modelClass::find($request->input('contentId'));
-//    if (!$content) {
-//      return response()->json(['message' => 'Content not found'], 404);
-//    }
-
-    // Prepare common Schedule data
-    $scheduleData = [
-        'type'                  => $request->input('contentType'),
-        'recurrence_flag'       => $scheduleType === 'recurring' ? 1 : 0,
-        'recurrence_details_id' => $recurrenceDetailsId ?? null,
-        'status'                => 'scheduled',
-        'priority'              => $newPriority,
-        'duration_minutes'      => $request->input('duration'),
-        'start_time'            => $request->input('startDate'),
-        'end_time'              => $request->input('endDate'),
-        'timezone'              => $request->input('timezone'),
-    ];
-
-    // Create Schedule linked to the determined content
-    $schedule = $content->schedules()->create($scheduleData);
-
-    return response()->json([
-        'message' => 'Schedule added successfully',
-        'data'    => $schedule,
-    ]);
+//    return response()->json([
+//        'message' => 'Schedule added successfully',
+//        'data'    => $schedule,
+//    ]);
   }
 
-  protected function getModelClass($contentType): ?string {
-    // Map the 'contentType' to actual model class namespaces
-    $map = [
-        'show'         => \App\Models\Show::class,
-        'showEpisode'  => \App\Models\ShowEpisode::class,
-        'movie'        => \App\Models\Movie::class,
-        'movieTrailer' => \App\Models\MovieTrailer::class,
-        'otherContent' => \App\Models\OtherContent::class,
-      // Add other content types as needed
-    ];
 
-    return $map[$contentType] ?? null;
-  }
 
 
   /**
@@ -353,6 +247,7 @@ class SchedulesController extends Controller {
         // Convert schedule's start_time to UTC for accurate comparison
         $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone)
             ->setTimezone('UTC');
+
         return $scheduleStartUtc->between($dayStart, $dayEnd);
       })->map(function ($schedule) {
         // Handle preloading of additional relationships based on content type
@@ -396,13 +291,8 @@ class SchedulesController extends Controller {
       }
     }
     Log::debug('Schedules by day:', $schedulesByDay);
+
     return $schedulesByDay;
-
-
-
-
-
-
 
 
 //
@@ -537,9 +427,6 @@ class SchedulesController extends Controller {
 //
 //    return now()->lessThan($expiresAt);
 //  }
-
-
-
 
 
   /**
@@ -703,32 +590,32 @@ class SchedulesController extends Controller {
           // Now, you can add both the datetime and the show details to $instances
           // Adjust according to how you need to structure $instances
           $instances[] = [
-              'id' => $uniqueId, // Use the generated unique ID
-              'type' => 'show',
-              'start_time' => $dateTimeUTC->toIso8601String(),
-              'content'      => [
+              'id'              => $uniqueId, // Use the generated unique ID
+              'type'            => 'show',
+              'start_time'      => $dateTimeUTC->toIso8601String(),
+              'content'         => [
                   'show' => $showResource->resolve(), // Resolve to get an array
-                ],
+              ],
               'durationMinutes' => $recurrenceDetails->duration_minutes,
               'priority'        => $schedule->priority,
           ];
         } else {
           // Handle other content types or absence of content
           $instances[] = [
-              'id' => $uniqueId, // Use the generated unique ID
-              'start_time' => $dateTimeUTC->toIso8601String(),
+              'id'              => $uniqueId, // Use the generated unique ID
+              'start_time'      => $dateTimeUTC->toIso8601String(),
               'durationMinutes' => $recurrenceDetails->duration_minutes,
             // Include minimal details or indicate absence of detailed content
-              'content' => [], // Placeholder for non-Show content
+              'content'         => [], // Placeholder for non-Show content
           ];
         }
       }
 
     }
-      // Log the generated instances for debugging
+    // Log the generated instances for debugging
 //      Log::debug('Returning instances array', ['instances' => $instances]);
 
-      // Even after all the logic, ensure an array is returned
+    // Even after all the logic, ensure an array is returned
 //      return $instances ?? []; // Ensures an array is always returned
     // Since ShowResource is JsonResource, you may need to collect() to return an array
     return $instances;
@@ -753,35 +640,33 @@ class SchedulesController extends Controller {
 
 //  }
 
-    /**
-     * TODO: Implement a "Days of the Week" Table for Multilingual Support
-     *
-     * As part of our efforts to enhance internationalization and support multiple languages,
-     * we should consider creating a "Days of the Week" table in our database. This table would map
-     * day-of-week indices (0 for Sunday through 6 for Saturday) to their names in various languages.
-     *
-     * Steps to consider:
-     * 1. Create a new database table that includes columns for the day-of-week index, the English name,
-     *    and additional columns for each supported language.
-     *
-     * 2. Update our current logic that handles days of the week, particularly in the
-     *    generateRecurringInstances function, to reference this table instead of relying on
-     *    hardcoded English day names. This will involve adjusting how we store and check
-     *    `daysOfWeek` in `recurrenceDetails` to use day indices, enhancing flexibility and
-     *    future-proofing our application against localization needs.
-     *
-     * 3. Ensure that all user interfaces that display or allow selection of days of the week
-     *    are updated to dynamically pull day names from the new table, allowing users to view
-     *    and interact with this information in their preferred language.
-     *
-     * 4. Consider implementing caching strategies for the days of the week data to minimize database
-     *    queries, especially on pages or in functionalities where this data is accessed frequently.
-     *
-     * This change will significantly contribute to our application's scalability and accessibility
-     * by accommodating users from different linguistic backgrounds.
-     */
-
-
+  /**
+   * TODO: Implement a "Days of the Week" Table for Multilingual Support
+   *
+   * As part of our efforts to enhance internationalization and support multiple languages,
+   * we should consider creating a "Days of the Week" table in our database. This table would map
+   * day-of-week indices (0 for Sunday through 6 for Saturday) to their names in various languages.
+   *
+   * Steps to consider:
+   * 1. Create a new database table that includes columns for the day-of-week index, the English name,
+   *    and additional columns for each supported language.
+   *
+   * 2. Update our current logic that handles days of the week, particularly in the
+   *    generateRecurringInstances function, to reference this table instead of relying on
+   *    hardcoded English day names. This will involve adjusting how we store and check
+   *    `daysOfWeek` in `recurrenceDetails` to use day indices, enhancing flexibility and
+   *    future-proofing our application against localization needs.
+   *
+   * 3. Ensure that all user interfaces that display or allow selection of days of the week
+   *    are updated to dynamically pull day names from the new table, allowing users to view
+   *    and interact with this information in their preferred language.
+   *
+   * 4. Consider implementing caching strategies for the days of the week data to minimize database
+   *    queries, especially on pages or in functionalities where this data is accessed frequently.
+   *
+   * This change will significantly contribute to our application's scalability and accessibility
+   * by accommodating users from different linguistic backgrounds.
+   */
 
 
 //    // Convert start_date and end_date to Carbon instances, considering null values
@@ -789,7 +674,7 @@ class SchedulesController extends Controller {
 //    $recurrenceEndDate = $recurrenceDetails->end_date ? new Carbon($recurrenceDetails->end_date) : null;
 
 
-    // Assuming $recurrenceDetails->start_date and $recurrenceDetails->end_date
+  // Assuming $recurrenceDetails->start_date and $recurrenceDetails->end_date
 // are in the format 'Y-m-d' and the timezone is specified in $recurrenceDetails->timezone
 
 //// Check if start_date is provided and create a Carbon instance with the specific timezone

@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchedulesIndex extends Model
 {
-  protected $table = 'schedule_index'; // Ensure the table name is correctly specified
+  protected $table = 'schedules_indexes'; // Ensure the table name is correctly specified
 
   protected $fillable = [
       'team_id',
-      'show_id',
+      'content_type',
+      'content_id',
       'schedule_id',
-      'next_broadcast'
+      'next_broadcast',
   ];
 
   protected $casts = [
@@ -24,11 +25,11 @@ class SchedulesIndex extends Model
     return $this->belongsTo(Team::class, 'team_id');
   }
 
-  public function show(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
-    return $this->belongsTo(Show::class, 'show_id');
+  public function content(): \Illuminate\Database\Eloquent\Relations\MorphTo {
+    return $this->morphTo(__FUNCTION__, 'content_type', 'content_id');
   }
 
   public function schedule(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
-    return $this->belongsTo(Schedule::class, 'show_schedule_id');
+    return $this->belongsTo(Schedule::class, 'schedule_id');
   }
 }

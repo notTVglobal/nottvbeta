@@ -212,6 +212,7 @@ const initialState = () => ({
     weeklyContent: [],
     dataFetchLog: [],
     scheduleIsLoading: false,
+    savingToSchedule: false,
 })
 
 export const useScheduleStore = defineStore('scheduleStore', {

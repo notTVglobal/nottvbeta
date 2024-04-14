@@ -315,7 +315,7 @@ watch(selectedSubCategoryId, () => {
 })
 
 onMounted(() => {
-  selectedShowRunnerCreatorId.value = props.show.showRunner.creator_id
+  selectedShowRunnerCreatorId.value = props?.show?.showRunner?.creator_id
   document.getElementById('topDiv').scrollIntoView({behavior: 'smooth'})
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
@@ -363,7 +363,6 @@ let reloadImage = () => {
 }
 
 let submit = () => {
-  console.log('what\'s the show Runner?? ' + form.show_runner)
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
   form.patch(route('shows.update', props.show.slug))

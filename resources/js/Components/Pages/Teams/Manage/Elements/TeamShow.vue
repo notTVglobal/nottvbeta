@@ -3,18 +3,17 @@
     <td class="px-6 py-4 w-20 whitespace-nowrap">
       <!--            <img :src="'/storage/images/' + show.poster" class="h-20 w-20 object-cover">-->
 
-      <div class="h-20 w-20 min-w-[2.5rem]">
-        <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'"
-                     class="w-full h-full object-cover" />
+      <div @click="Inertia.visit(`/shows/${show.slug}/manage`)" class="h-20 w-20 min-w-[2.5rem] hover:cursor-pointer">
+        <SingleImage :image="show.image" :alt="'show cover'"
+                     class="w-full h-full object-cover"/>
       </div>
 
 
     </td>
 
-    <td class="px-6 py-4 whitespace-nowrap">
-      <Link :href="`/shows/${show.slug}/manage`"
-            class="uppercase text-xl font-semibold text-blue-600 hover:text-blue-900">{{ show.name }}
-      </Link>
+    <td @click="Inertia.visit(`/shows/${show.slug}/manage`)"
+        class="px-6 py-4 whitespace-nowrap uppercase text-xl font-semibold text-blue-600 hover:text-blue-900 hover:cursor-pointer">
+      {{ show.name }}
     </td>
 
     <td class="px-6 py-4 text-sm w-full min-w-[16rem]">
@@ -56,12 +55,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useTeamStore } from "@/Stores/TeamStore"
-import ShowNoteEdit from "@/Components/Pages/Teams/Manage/Elements/ShowNoteEdit"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { ref } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useTeamStore } from '@/Stores/TeamStore'
+import ShowNoteEdit from '@/Components/Pages/Teams/Manage/Elements/ShowNoteEdit'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import { Inertia } from '@inertiajs/inertia'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
@@ -69,11 +69,11 @@ const teamStore = useTeamStore()
 let props = defineProps({
   show: Object,
   can: Object,
-});
+})
 
 let form = useForm({
   note: '',
-});
+})
 
 const componentKey = ref(0)
 teamStore.noteEdit = 0

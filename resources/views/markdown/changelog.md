@@ -3,6 +3,11 @@
 Last Update: April 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.64
+April 14, 2024
+* Rebuilt the way scheduling is handled. We have new Scheduling Jobs
+* A shows broadcast schedule is now processed and stored in the schedule.
+
 ## v0.8.7.63
 April 14, 2024
 * Changed the schedule column name for scalability and solve some problems

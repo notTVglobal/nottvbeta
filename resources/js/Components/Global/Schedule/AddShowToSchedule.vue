@@ -271,11 +271,13 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc' // Required for UTC support
 import timezone from 'dayjs/plugin/timezone' // Required for timezone support
 import { useUserStore } from '@/Stores/UserStore'
+import { useScheduleStore } from '@/Stores/ScheduleStore'
 
 import Label from '@/Jetstream/Label.vue'
 import Button from '@/Jetstream/Button.vue'
 
 const userStore = useUserStore()
+const scheduleStore = useScheduleStore()
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -786,6 +788,7 @@ async function submit() {
     console.log('Success:', response.data);
     goToStep(6);
     startConfetti();
+    scheduleStore.savingToSchedule = true
   } catch (error) {
     // Handle errors
     console.error('Error submitting form:', error);

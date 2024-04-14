@@ -9,13 +9,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class PurgeExpiredShowsFromScheduleIndex implements ShouldQueue
+class PurgeExpiredObjectsFromSchedulesIndexes implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     // TODO: Removes items from the show_schedule_index where
     //  1. The show_schedule->end_date is in the past.
-
 
 
 

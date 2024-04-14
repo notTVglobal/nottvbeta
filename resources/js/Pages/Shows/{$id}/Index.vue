@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col">
     <div id="topDiv"></div>
     <div v-if="can.viewCreator && !userStore.isMobile"></div>
-    <div class="bg-gray-900 text-white px-5 pt-6">
+    <div class="bg-gray-900 text-white px-5 pt-6 min-h-screen">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -108,17 +108,8 @@
                   <span v-else class="ml-2">Watch Now</span>
                 </button>
 
-                <button v-if="userStore.isVip || userStore.isAdmin"
-                        disabled
-                        class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                  <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
-                </button>
 
-                <button v-if="userStore.isVip || userStore.isAdmin"
-                        disabled
-                        class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                  <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
-                </button>
+              <ComingSoonShareAndSaveButtons />
 
               </div>
 
@@ -143,7 +134,7 @@
 
               <ShowEpisodesList :episodes="episodes" :show="show"/>
 
-              <div class="container mx-auto px-4 mb-12">
+              <div hidden class="container mx-auto px-4 mb-12">
                 <div class="w-full bg-gray-800 text-2xl p-4 mb-4">CREDITS</div>
 
                 <div class="flex flex-row flex-wrap justify-start">
@@ -203,6 +194,9 @@ import Message from '@/Components/Global/Modals/Messages.vue'
 import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 import { onMounted, ref } from 'vue'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
+import SaveForLaterButton from '@/Components/Global/UserActions/SaveForLaterButton.vue'
+import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
+import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 // import ShowCreatorsList from "@/Components/Pages/Shows/ShowCreatorsList"
 
 usePageSetup('showsShow')

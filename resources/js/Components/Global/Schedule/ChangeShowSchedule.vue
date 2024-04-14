@@ -43,8 +43,8 @@ const errors = ref()
 const removeFromSchedule = async() => {
   const payload = {
     data: {
-      contentType: props.show.scheduleDetails[0].contentType,
-      contentId: props.show.scheduleDetails[0].contentId,
+      contentType: props.show.scheduleDetails.contentType,
+      contentId: props.show.scheduleDetails.contentId,
     }
   }
   await axios.delete('/api/schedule/removeFromSchedule', payload)

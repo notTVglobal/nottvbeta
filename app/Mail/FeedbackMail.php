@@ -37,7 +37,7 @@ class FeedbackMail extends Mailable
    */
   public function build()
   {
-    Log::alert($this->data);
+//    Log::debug($this->data);
 //        return $this->attachFromStorageDisk('public', 'filename.png', 'another_name.png')->subject($subject)->markdown('mail.verify')->to($this->user->email);
     $email =  $this->markdown('mail.feedback', [
 //        'url' => route('stream'),
