@@ -24,28 +24,30 @@
 
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
-            <div v-if="show.isScheduled && show.scheduleDetails.length > 0">
-              <div class="mb-2" v-for="(detail, index) in show.scheduleDetails" :key="index">
-                Your show is currently scheduled as <strong>{{ detail.type }}</strong>.
-                <div v-if="detail.type === 'one-time'">
-                  It will start on <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(detail.startDateTime) }}&nbsp;{{userStore.timezoneAbbreviation}}</strong> and last for <strong>{{ detail.durationMinutes }} minutes</strong>.
+            <div v-if="show.isScheduled && show.scheduleDetails">
+              <div>
+                Your show is currently scheduled as <strong>{{ show.scheduleDetails.type }}</strong>.
+                <div v-if="show.scheduleDetails.type === 'one-time'">
+                  It will start on <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(show.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong> and last for <strong>{{ show.scheduleDetails.durationMinutes }} minutes</strong>.
                 </div>
                 <div v-else>
-                  <template v-if="Array.isArray(detail.daysOfWeek)">
-                    It recurs on <strong>{{ detail.daysOfWeek.join(', ') }}</strong>
+                  <template v-if="Array.isArray(show.scheduleDetails.daysOfWeek)">
+                    It recurs on <strong>{{ show.scheduleDetails.daysOfWeek.join(', ') }}</strong>
                   </template>
                   <template v-else>
-                    It recurs on <strong>{{ detail.daysOfWeek }}</strong>
+                    It recurs on <strong>{{ show.scheduleDetails.daysOfWeek }}</strong>
                   </template>
-                  starting at <strong>{{ userStore.formatTimeFromDateInUserTimezone(detail.startDateTimeIsoUtc) }}&nbsp;{{userStore.timezoneAbbreviation}}</strong> with each occurrence lasting <strong>{{ detail.durationMinutes }} minutes</strong>.
+                  starting at <strong>{{ userStore.formatTimeFromDateInUserTimezone(show.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong> with each occurrence lasting <strong>{{ show.scheduleDetails.durationMinutes }} minutes</strong>.
                 </div>
-
               </div>
             </div>
+
             <div v-if="can.editShow">
             <button v-if="!show.isScheduled" onclick="addShowToScheduleModal.showModal()"
+                    :disabled="scheduleStore.savingToSchedule"
                     class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white drop-shadow-lg py-2 flex flex-col">
-              <span>Add Show To Schedule</span>
+              <span v-if="!scheduleStore.savingToSchedule">Add Show To Schedule</span>
+              <span v-else>The schedule is being updated...</span>
             </button>
             <button v-if="show.isScheduled" onclick="changeScheduleModal.showModal()"
                     class="btn btn-lg bg-indigo-500 hover:bg-indigo-700 border-indigo-500 text-white drop-shadow-lg py-2 flex flex-col">
@@ -79,6 +81,7 @@
 import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useUserStore } from "@/Stores/UserStore"
+import { useScheduleStore } from "@/Stores/ScheduleStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
 import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
@@ -87,6 +90,7 @@ import ChangeSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
 const showStore = useShowStore()
 const teamStore = useTeamStore()
 const userStore = useUserStore()
+const scheduleStore = useScheduleStore()
 
 defineProps({
   show: Object,

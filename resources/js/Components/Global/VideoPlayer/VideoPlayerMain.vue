@@ -32,11 +32,11 @@
       <!-- On Screen Display (OSD)-->
       <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
-      <!-- Video Player Controls-->
-      <!--      <VideoControlsTopRight-->
-      <!--          v-if="videoPlayerStore.controls"-->
-      <!--          class="hidden lg:block"-->
-      <!--      />-->
+
+            <VideoControlsTopRight
+                v-if="!userStore.isMobile"
+                class=""
+            />
 
       <!-- OTT Buttons and Displays -->
 
@@ -80,6 +80,7 @@ import VideoControlsFullPage from '@/Components/Global/VideoPlayer/VideoControls
 import OttContainer from '@/Components/Global/Ott/Layout/OttContainer'
 import videoJs from '@/Components/Global/VideoPlayer/VideoJs/VideoJs'
 import VideoProgressBar from '@/Components/Global/VideoPlayer/VideoIndicators/VideoProgressBar'
+import VideoControlsTopRight from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsTopRight.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

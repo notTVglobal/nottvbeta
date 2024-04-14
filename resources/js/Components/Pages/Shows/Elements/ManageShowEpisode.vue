@@ -11,12 +11,11 @@
     <td class="text-xl font-medium align-center my-auto justify-center gap-x-4 px-6 py-4 uppercase h-full">
       <!-- Example image and link setup, uncomment or adjust as needed -->
 <!--       <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
-      <div class="flex flex-row flex-wrap gap-x-2 gap-y-2">
+      <div @click="Inertia.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)" class="flex flex-row flex-wrap gap-x-2 gap-y-2 hover:cursor-pointer">
         <SingleImage :image="episode.image" :alt="episode.name" :class="`rounded-xl w-10`" />
-        <Link :href="`/shows/${showSlug}/episode/${episode.slug}/manage`"
-              class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200 text-center">
+        <span class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200 text-center">
           {{ episode.name }}
-        </Link>
+        </span>
       </div>
     </td>
 
@@ -55,6 +54,7 @@
         {{ scheduledReleaseDateTime }}
       </div>
       <div v-if="episode.episodeStatusId === 7">
+        Released on: <br/>
         {{ releaseDateTime }}
       </div>
 

@@ -16,7 +16,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, watchEffect } from 'vue'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import SpotComponent from './SpotComponent.vue';
-// import { mockShows } from '@/Json/mockShows'; // assuming you export this from a module
+import { mockShows } from '../../../Json/mockShows'; // assuming you export this from a module
 
 const scheduleStore = useScheduleStore()
 

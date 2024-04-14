@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Schedule extends Model {
   use HasFactory;
 
-  protected $table = 'show_schedule';
+//  protected $table = 'show_schedule';
 
   protected $fillable = [
       'content_type',
       'content_id',
+      'frequency',
       'type', // for display and osd: movie, show, movie trailer, etc.
       'recurrence_flag',
       'recurrence_details_id',
@@ -23,12 +24,14 @@ class Schedule extends Model {
       'start_time',
       'end_time',
       'timezone',
+      'extra_metadata',
   ];
 
   protected $casts = [
       'start_time'      => 'datetime',
       'end_time'        => 'datetime',
       'broadcast_dates' => 'json',
+      'extra_metadata'  => 'json',
     // other casts
   ];
 
@@ -41,7 +44,7 @@ class Schedule extends Model {
   }
 
   public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
-    return $this->hasMany(SchedulesIndex::class, 'show_schedule_id');
+    return $this->hasMany(SchedulesIndex::class, 'schedule_id');
   }
 
 }

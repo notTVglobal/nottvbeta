@@ -4,7 +4,7 @@
 
 
   <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-    <div id="topDiv" class="text-white bg-gray-900 rounded py-5 mb-10">
+    <div id="topDiv" class="text-white bg-gray-900 rounded py-5 min-h-screen">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -113,23 +113,7 @@
               <span v-else class="ml-2">Watch Episode</span>
             </button>
 
-            <div class="p-3 border-2 border-green-500">
-              <div class="text-green-500 mb-2">Coming Soon! (These buttons are currently being built)</div>
-              <div class="flex flex-row">
-                <button v-if="userStore.isVip || userStore.isAdmin"
-                        disabled
-                        class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                  <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
-                </button>
-
-                <button v-if="userStore.isVip || userStore.isAdmin"
-                        disabled
-                        class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                  <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
-                </button>
-              </div>
-
-            </div>
+          <ComingSoonShareAndSaveButtons />
 
           </div>
 
@@ -169,33 +153,35 @@
                 </div>
 
 
+                <div hidden>
+                  <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>
 
-                <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>
 
+                  <div class="flex flex-row flex-wrap">
+                    <div v-for="creator in props.creators.data"
+                         :key="creator.id"
+                         class="pb-8 light:bg-light dark:bg-gray-900">
 
-                <div class="flex flex-row flex-wrap">
-                  <div v-for="creator in props.creators.data"
-                       :key="creator.id"
-                       class="pb-8 light:bg-light dark:bg-gray-900">
+                      <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
+                        <img :src="'/storage/' + creator.profile_photo_path"
+                             class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
+                        <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{ creator.name }}</span>
+                      </div>
 
-                    <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
-                      <img :src="'/storage/' + creator.profile_photo_path"
-                           class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                      <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{ creator.name }}</span>
+                      <!--                            For now, we are just displaying the team members here.
+                                                      This will make a good component that can be re-used across
+                                                      the Show and Episode Index pages. Just pass in the creators prop.
+
+                                                      We will add this when we have our Creators model setup
+                                                      and creators attached to the credits table for this
+                                                      show.                                                       -->
+
+                      <!--                            <ShowCreatorsList />-->
+
                     </div>
-
-                    <!--                            For now, we are just displaying the team members here.
-                                                    This will make a good component that can be re-used across
-                                                    the Show and Episode Index pages. Just pass in the creators prop.
-
-                                                    We will add this when we have our Creators model setup
-                                                    and creators attached to the credits table for this
-                                                    show.                                                       -->
-
-                    <!--                            <ShowCreatorsList />-->
-
                   </div>
                 </div>
+
 
               </div>
 
@@ -222,6 +208,7 @@ import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import { onMounted } from 'vue'
+import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 
 usePageSetup('showEpisodesShow')
 

@@ -22,6 +22,7 @@ use App\Models\AppSetting;
 use App\Models\Video;
 use http\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Carbon;
@@ -730,143 +731,143 @@ class ShowsController extends Controller {
 
   public function manage(Show $show): \Inertia\Response {
     // Eager load related entities for the Show model
-    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.scheduleRecurrenceDetails', 'recordings']);
+    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules', 'recordings']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
 
-
-    $now = now(); // Current time
-
-    // Initialize an array to hold schedule details
-    $scheduleDetails = [];
-
-    // Determine if the show is actively scheduled or has a schedule in the future
-    // And compile schedule details
-    $isScheduled = $show->schedules->contains(function ($schedule) use ($now, &$scheduleDetails) {
-      $isActiveOrFuture = $schedule->start_time >= $now || ($schedule->end_time >= $now);
-
-      // Assuming $schedule->start_time is a string in 'Y-m-d H:i:s' format
-      // First, parse the start_time with the schedule's timezone
-      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone);
-
-      // Then, convert the datetime to UTC
-      $startDateTimeUtc = $startDateTime->setTimezone('UTC');
-
-      if ($isActiveOrFuture) {
-        $detail = [
-            'contentType'     => $schedule->content_type,
-            'contentId'       => $schedule->content_id,
-            'type'            => $schedule->recurrence_flag ? 'recurring' : 'one-time',
-            'startDateTime'   => $startDateTimeUtc->toDateTimeString(), // Converted to UTC
-            'durationMinutes' => $schedule->duration_minutes,
-            'timezone'        => $schedule->timezone,
-        ];
-
-        if ($schedule->recurrence_flag) {
-          // For recurring schedules, add additional details
-          // For recurring schedules, add additional details
-          $daysOfWeek = $schedule->scheduleRecurrenceDetails ? json_decode($schedule->scheduleRecurrenceDetails->days_of_week, true) : [];
-          $orderedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-          // Sort days of week based on the ordered list
-          usort($daysOfWeek, function ($a, $b) use ($orderedDays) {
-            return array_search($a, $orderedDays) - array_search($b, $orderedDays);
-          });
-
-          // Check for specific combinations
-          if (count($daysOfWeek) == 7) {
-            $detail['daysOfWeek'] = 'Weekdays and Weekends';
-          } elseif (count(array_intersect($daysOfWeek, $orderedDays)) == 5 && !in_array('Saturday', $daysOfWeek) && !in_array('Sunday', $daysOfWeek)) {
-            $detail['daysOfWeek'] = 'Weekdays';
-          } elseif (count($daysOfWeek) == 2 && in_array('Saturday', $daysOfWeek) && in_array('Sunday', $daysOfWeek)) {
-            $detail['daysOfWeek'] = 'Weekends';
-          } else {
-            // If none of the specific combinations match, use the sorted list directly
-            $detail['daysOfWeek'] = implode(', ', $daysOfWeek);
-          }
-
-          // Combine start_date and start_time to form a complete datetime string
-//          $dateTimeString = $schedule->scheduleRecurrenceDetails->start_date;
-//          $timezone = $schedule->scheduleRecurrenceDetails->timezone;
-          // Parsing the datetime string in the specified timezone, then converting to UTC
-//          $dateTimeUtc = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeString, $timezone)
-//              ->setTimezone('UTC');
-
-          // Log for debugging
-//          Log::debug('DateTime in UTC:', ['dateTimeUtc' => $dateTimeUtc->toIso8601String()]);
-
-          // Prepare the full UTC datetime string in ISO 8601 format for frontend consumption
-//          $detail['startDateTimeIsoUtc'] = $dateTimeUtc->toIso8601String();
-          $detail['startDateTimeIsoUtc'] = $startDateTimeUtc;
-
-          // If you need to retain the original 'startTime' for any reason, keep this line as is
-//          $detail['startTime'] = $schedule->scheduleRecurrenceDetails ? $schedule->scheduleRecurrenceDetails->start_time : null;
-//          Log::debug('Original StartTime:', ['startTime' => $detail['startTime']]);
-
-        }
-
-        $scheduleDetails[] = $detail;
-      }
-
-      return $isActiveOrFuture;
+    // Fetch the Mist Server URI setting outside the loop to avoid repetitive database queries
+    $mistServerUri = Cache::rememberForever('mist_server_uri', function () {
+      return AppSetting::where('id', 1)->value('mist_server_uri');
     });
-
-    // Fetch the Mist Server URI setting outside the map function to avoid repetitive database queries
-    $mistServerUri = AppSetting::where('id', 1)->pluck('mist_server_uri')->first();
 
     $userRecordingsPath = config('paths.user_recordings_path');
     $autoRecordingsPath = config('paths.auto_recordings_path');
 
-    Log::debug('Recording paths', ['userRecordingsPath' => $userRecordingsPath, 'autoRecordingsPath' => $autoRecordingsPath]);
+    // Paginate recordings directly
+    $paginatedRecordings = $show->recordings()->orderBy('start_time', 'asc')->paginate(10);
 
-    $recordings = $show->recordings->map(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
-      Log::debug('Original recording path', ['path' => $recording->path]);
-      // Determine the correct directory to remove from the path
-      if (str_contains($recording->path, $userRecordingsPath)) {
-        $path = str_replace([$userRecordingsPath], [''], $recording->path);
-        $streamPrefix = 'user_recordings%2B'; // Use a different prefix if needed
-        Log::debug('User recording path modified', ['modifiedPath' => $path]);
-      } else {
-        $path = str_replace([$autoRecordingsPath], [''], $recording->path);
-        $streamPrefix = 'recordings%2B';
-        Log::debug('Auto recording path modified', ['modifiedPath' => $path]);
-      }
+//    Log::debug('Recording paths', ['userRecordingsPath' => $userRecordingsPath, 'autoRecordingsPath' => $autoRecordingsPath]);
 
-      // URL encode the path to ensure it's safe for use in URLs
-      $path = trim($path, '/ ');  // Trim slashes and spaces // NEW
-      $encodedPath = rawurlencode($path);
-      $streamName = $streamPrefix . $encodedPath . '.mp4'; // Prepare stream name
-
-      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
+    // Transform each recording for the frontend
+    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
+      $path = str_contains($recording->path, $userRecordingsPath) ? str_replace($userRecordingsPath, '', $recording->path) : str_replace($autoRecordingsPath, '', $recording->path);
+      $streamPrefix = str_contains($recording->path, $userRecordingsPath) ? 'user_recordings%2B' : 'recordings%2B';
+      $encodedPath = rawurlencode(trim($path, '/ '));
+      $streamName = $streamPrefix . $encodedPath . '.mp4';
       $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
-
-      // Construct the file name and encode it for URL usage
-      $downloadFileName = $show->name . $formattedStartTime . '.mp4';
-      $encodedFileName = rawurlencode($downloadFileName);
-
-      // Construct the download URL with correct query parameters
-      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $encodedFileName;
-      Log::debug('Download URL', ['url' => $downloadUrl]);
-
-      // Construct a share URL
+      $downloadFileName = rawurlencode($show->name . $formattedStartTime . '.mp4');
+      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $downloadFileName;
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
-      Log::debug('Share URL', ['url' => $shareUrl]);
 
-      // Return the modified recording with additional download details
-      return collect($recording->only([
-          'id', 'file_extension', 'start_time', 'end_time',
-          'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url', 'path', 'comment'
-      ]))
-          ->put('streamName', $streamName)
-          ->put('shareUrl', $shareUrl)
-          ->put('download', [
+      return [
+          'id'                          => $recording->id,
+          'comment'                     => $recording->comment,
+          'start_time'                  => $recording->start_time,
+          'end_time'                    => $recording->end_time,
+          'total_milliseconds_recorded' => $recording->total_milliseconds_recorded,
+          'streamName'                  => $streamName,
+          'shareUrl'                    => $shareUrl,
+          'download'                    => [
               'url'      => $downloadUrl,
-              'fileName' => $downloadFileName
-          ]);
+              'fileName' => $downloadFileName,
+          ],
+      ];
     });
 
-    Log::debug('Final data structure for front end', ['recordings' => $recordings]);
+    // Update the paginated collection with transformed data
+    $paginatedRecordings->setCollection($recordings);
+
+//    $recordings = $show->recordings->map(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
+//      Log::debug('Original recording path', ['path' => $recording->path]);
+//      // Determine the correct directory to remove from the path
+//      if (str_contains($recording->path, $userRecordingsPath)) {
+//        $path = str_replace([$userRecordingsPath], [''], $recording->path);
+//        $streamPrefix = 'user_recordings%2B'; // Use a different prefix if needed
+//        Log::debug('User recording path modified', ['modifiedPath' => $path]);
+//      } else {
+//        $path = str_replace([$autoRecordingsPath], [''], $recording->path);
+//        $streamPrefix = 'recordings%2B';
+//        Log::debug('Auto recording path modified', ['modifiedPath' => $path]);
+//      }
+//
+//      // URL encode the path to ensure it's safe for use in URLs
+//      $path = trim($path, '/ ');  // Trim slashes and spaces // NEW
+//      $encodedPath = rawurlencode($path);
+//      $streamName = $streamPrefix . $encodedPath . '.mp4'; // Prepare stream name
+//
+//      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
+//      $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
+//
+//      // Construct the file name and encode it for URL usage
+//      $downloadFileName = $show->name . $formattedStartTime . '.mp4';
+//      $encodedFileName = rawurlencode($downloadFileName);
+//
+//      // Construct the download URL with correct query parameters
+//      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $encodedFileName;
+//      Log::debug('Download URL', ['url' => $downloadUrl]);
+//
+//      // Construct a share URL
+//      $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
+//      Log::debug('Share URL', ['url' => $shareUrl]);
+//
+//      // Return the modified recording with additional download details
+//      return collect($recording->only([
+//          'id', 'file_extension', 'start_time', 'end_time',
+//          'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url', 'path', 'comment'
+//      ]))
+//          ->put('streamName', $streamName)
+//          ->put('shareUrl', $shareUrl)
+//          ->put('download', [
+//              'url'      => $downloadUrl,
+//              'fileName' => $downloadFileName
+//          ]);
+//    });
+
+    $mostRecentSchedule = $show->schedules()->latest()->first();
+    if ($mostRecentSchedule) {
+      // Convert start_time to UTC
+      $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $mostRecentSchedule->start_time, $mostRecentSchedule->timezone)
+          ->setTimezone('UTC')
+          ->toDateTimeString();
+
+      // Convert end_time to UTC
+      $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $mostRecentSchedule->end_time, $mostRecentSchedule->timezone)
+          ->setTimezone('UTC')
+          ->toDateTimeString();
+
+      // Assuming $mostRecentSchedule is your Schedule model instance
+      $extraMetadata = $mostRecentSchedule->extra_metadata;
+
+      // Decode the JSON string into a PHP object
+      $decodedMetadata = json_decode($extraMetadata);
+
+      // Check if decoding was successful and the property exists
+      if ($decodedMetadata && property_exists($decodedMetadata, 'daysOfWeek')) {
+        $daysOfWeek = $decodedMetadata->daysOfWeek;
+      } else {
+        $daysOfWeek = []; // Default to an empty array if not found
+      }
+
+      // Construct the schedule details array
+      $scheduleDetails = [
+          'contentType'     => $mostRecentSchedule->content_type,
+          'contentId'       => $mostRecentSchedule->content_id,
+          'startTime'       => $startTimeUTC,
+          'endTime'         => $endTimeUTC,
+          'timezone'        => 'UTC', // Since we're converting to UTC
+          'broadcastDates'  => $mostRecentSchedule->broadcast_dates,
+          'durationMinutes' => $mostRecentSchedule->duration_minutes,
+          'priority'        => $mostRecentSchedule->priority,
+          'daysOfWeek'      => $daysOfWeek, // Now this contains the array of days or is empty
+          'type'            => $mostRecentSchedule->recurrence_details_id ? 'recurring' : 'one-time',
+      ];
+
+    } else {
+      // Handle case where no recent schedule exists
+    }
+
+//    Log::debug('Final data structure for front end', ['recordings' => $recordings]);
 
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
@@ -888,14 +889,14 @@ class ShowsController extends Controller {
                 'description' => $show->subCategory->description,
             ],
             'notes'           => $show->notes,
-            'isScheduled'     => $isScheduled ?? false,
+            'isScheduled'     => $show->schedules->isNotEmpty(),
             'scheduleDetails' => $scheduleDetails ?? [],
             'showRunner'      => [
                 'id'   => $show->showRunner->id ?? null,
                 'name' => $show->showRunner->user->name ?? null,
             ],
 //            'recordings'      => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
-            'recordings'      => $recordings,
+            'recordings'      => $paginatedRecordings,
         ],
         'team'            => [
             'name' => $show->team->name,
@@ -922,7 +923,6 @@ class ShowsController extends Controller {
                 'isPublished'              => $showEpisode->isPublished,
                 'scheduledReleaseDateTime' => $showEpisode->scheduled_release_dateTime,
                 'releaseDateTime'          => $showEpisode->release_dateTime,
-                'recordings'               => $showEpisode->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
             ]),
         'episodeStatuses' => $filteredStatuses,
         'can'             => [
@@ -1071,8 +1071,8 @@ class ShowsController extends Controller {
         'name'                   => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
         'description'            => 'required|string|max:5000',
         'release_date'           => ['date', 'after:tomorrow'],
-        'category'               => 'required|integer|exists:show_categories,id',
-        'sub_category'           => 'nullable|integer|exists:show_category_subs,id',
+        'category'               => 'required|integer',
+        'sub_category'           => 'nullable|integer',
         'www_url'                => 'nullable|active_url',
         'instagram_name'         => 'nullable|string|max:30',
         'telegram_url'           => 'nullable|active_url',
@@ -1110,20 +1110,20 @@ class ShowsController extends Controller {
 //    $show->save();
 
     $show->update([
-        'name'               => $validatedData['name'],
-        'description'        => $validatedData['description'],
-        'slug'               => \Str::slug($validatedData['name']),
-        'release_date'       => $validatedData['release_date'] ?? null,
-        'category_id'        => $validatedData['category'],
-        'sub_category_id'    => $validatedData['sub_category'],
-        'www_url'            => $validatedData['www_url'] ?? null,
-        'instagram_name'     => $instagramName,
-        'telegram_url'       => $validatedData['telegram_url'] ?? null,
-        'twitter_handle'     => $twitterHandle,
-        'notes'              => $sanitizedNotes,
-        'show_status_id'     => $validatedData['show_status_id'],
-        'episode_play_order' => $validatedData['episode_play_order'],
-        'show_runner'        => $creatorId
+        'name'                 => $validatedData['name'],
+        'description'          => $validatedData['description'],
+        'slug'                 => \Str::slug($validatedData['name']),
+        'release_date'         => $validatedData['release_date'] ?? null,
+        'show_category_id'     => $validatedData['category'],
+        'show_category_sub_id' => $validatedData['sub_category'],
+        'www_url'              => $validatedData['www_url'] ?? null,
+        'instagram_name'       => $instagramName,
+        'telegram_url'         => $validatedData['telegram_url'] ?? null,
+        'twitter_handle'       => $twitterHandle,
+        'notes'                => $sanitizedNotes,
+        'show_status_id'       => $validatedData['show_status_id'],
+        'episode_play_order'   => $validatedData['episode_play_order'],
+        'show_runner'          => $creatorId
     ]);
 
     // gather the data needed to render the Manage page
