@@ -14,7 +14,7 @@ return new class extends Migration {
     // Drop the foreign key before renaming the table
     Schema::table('show_schedule', function (Blueprint $table) {
       // Drop foreign key based on the exact name from the database
-      $table->dropForeign('schedules_recurrence_details_id_foreign');
+      $table->dropForeign('show_schedule_recurrence_details_id_foreign');
     });
     // Rename the table
     Schema::rename('show_schedule', 'schedules');
@@ -33,7 +33,7 @@ return new class extends Migration {
 //    // Recreate the foreign key and indexes in the original 'show_schedule' table
     Schema::table('show_schedule', function (Blueprint $table) {
 //      // Reapply the foreign key and indexes to match the original schema setup
-      $table->foreign('recurrence_details_id', 'schedules_recurrence_details_id_foreign')
+      $table->foreign('recurrence_details_id', 'show_schedule_recurrence_details_id_foreign')
           ->references('id')->on('show_schedule_recurrence_details')
           ->onDelete('set null');
     });
