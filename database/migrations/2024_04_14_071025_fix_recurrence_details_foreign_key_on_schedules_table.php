@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('schedules', function (Blueprint $table) {
           // Drop the index associated with the foreign key
-          $table->dropIndex('schedules_recurrence_details_id_foreign');  // Adjust the index name if necessary
+          $table->dropIndex('show_schedule_recurrence_details_id_foreign');  // Adjust the index name if necessary
 
           // Using the new table name for the foreign key
           $table->foreign('recurrence_details_id')
@@ -37,7 +37,7 @@ return new class extends Migration
         $table->dropForeign(['recurrence_details_id']);  // You may need to specify the constraint name if not default
 
         // Recreate the index that was dropped in the up() method
-        $table->index('recurrence_details_id', 'schedules_recurrence_details_id_foreign');
+        $table->index('recurrence_details_id', 'show_schedule_recurrence_details_id_foreign');
       });
     }
 };
