@@ -2,7 +2,7 @@
   <div>
     <form @submit.prevent="">
       <input
-          class="text-black p-1 w-3/4"
+          class="bg-white text-black p-1 w-3/4"
           placeholder="Write a note..."
           type="text"
           ref="episodeNote"

@@ -14,9 +14,10 @@
       >
         <button
             @click="visitTeamManagePage(team.slug)"
-            class="w-full text-left transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"
+            class="py-4 w-full text-left transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"
         >
-          <p class="px-4 py-2">
+          <SingleImage :image="team.image" :alt="team.name" :class="`h-10 w-auto object-contain mx-auto`"/>
+          <p class="px-4 py-2 text-center font-semibold uppercase">
             {{ team.name }}
           </p></button>
       </div>
@@ -31,6 +32,7 @@
 import { Inertia } from "@inertiajs/inertia"
 import MyTeamsHeader from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeamsHeader.vue"
 import MyTeamsFooter from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeamsFooter.vue"
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 defineProps({
   can: Object,

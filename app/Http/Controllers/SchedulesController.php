@@ -6,8 +6,8 @@ use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Http\Resources\ShowResource;
 use App\Models\Show;
-use App\Models\ShowSchedule;
-use App\Models\ShowScheduleRecurrenceDetails;
+use App\Models\Schedule;
+use App\Models\ScheduleRecurrenceDetails;
 use Carbon\CarbonInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,13 +18,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class ShowScheduleController extends Controller {
+class SchedulesController extends Controller {
 
   public function __construct() {
     $this->middleware('auth');
   }
 
-  public function addToSchedule(Request $request) {
+  public function addToSchedule(Request $request): JsonResponse {
     // Manually extract the data from the request body
     $data = $request->json()->all();
 
@@ -70,9 +70,9 @@ class ShowScheduleController extends Controller {
     // TODO: Need to convert the $overlappingSchedules below into UTC time and then compare to the
     // $formattedStartDate and $formattedEndDate
     // this doesn't take into account time changes.. so I think we should just do the prioritization
-    // when we add the show to the schedule on the frontend based on the created_at of the ShowSchedule object.
+    // when we add the show to the schedule on the frontend based on the created_at of the Schedule object.
     // Query for overlapping schedules
-    $overlappingSchedules = ShowSchedule::where(function ($query) use ($formattedStartDate, $formattedEndDate) {
+    $overlappingSchedules = Schedule::where(function ($query) use ($formattedStartDate, $formattedEndDate) {
       $query->whereBetween('start_time', [$formattedStartDate, $formattedEndDate])
           ->orWhereBetween('end_time', [$formattedStartDate, $formattedEndDate]);
     })->get();
@@ -121,8 +121,8 @@ class ShowScheduleController extends Controller {
         }
       }
 
-      // Create ShowScheduleRecurrenceDetails and capture the ID
-      $recurrenceDetails = ShowScheduleRecurrenceDetails::create($recurrenceDetailsData);
+      // Create ScheduleRecurrenceDetails and capture the ID
+      $recurrenceDetails = ScheduleRecurrenceDetails::create($recurrenceDetailsData);
       $recurrenceDetailsId = $recurrenceDetails->id;
     }
 
@@ -138,8 +138,8 @@ class ShowScheduleController extends Controller {
 //      return response()->json(['message' => 'Content not found'], 404);
 //    }
 
-    // Prepare common ShowSchedule data
-    $showScheduleData = [
+    // Prepare common Schedule data
+    $scheduleData = [
         'type'                  => $request->input('contentType'),
         'recurrence_flag'       => $scheduleType === 'recurring' ? 1 : 0,
         'recurrence_details_id' => $recurrenceDetailsId ?? null,
@@ -151,12 +151,12 @@ class ShowScheduleController extends Controller {
         'timezone'              => $request->input('timezone'),
     ];
 
-    // Create ShowSchedule linked to the determined content
-    $showSchedule = $content->schedules()->create($showScheduleData);
+    // Create Schedule linked to the determined content
+    $schedule = $content->schedules()->create($scheduleData);
 
     return response()->json([
         'message' => 'Schedule added successfully',
-        'data'    => $showSchedule,
+        'data'    => $schedule,
     ]);
   }
 
@@ -182,7 +182,7 @@ class ShowScheduleController extends Controller {
    */
 
   public function fetchFiveDaySixHourSchedule(): JsonResponse {
-//    $cachePath = 'showScheduleFiveDaySixHour'; // A unique identifier for this cache
+//    $cachePath = 'scheduleFiveDaySixHour'; // A unique identifier for this cache
 //
 //    // Check if the cache is valid
 //    if ($this->isCacheValid($cachePath)) {
@@ -210,7 +210,7 @@ class ShowScheduleController extends Controller {
 
 
   public function fetchTodaysContent(): JsonResponse {
-    $cachePath = 'showScheduleToday';
+    $cachePath = 'scheduleToday';
 
     if ($this->isCacheValid($cachePath)) {
       $content = Storage::disk('local')->get("json/{$cachePath}.json");
@@ -234,7 +234,7 @@ class ShowScheduleController extends Controller {
   }
 
   public function preloadWeeklyContent(): JsonResponse {
-//    $cachePath = 'showScheduleWeek';
+//    $cachePath = 'scheduleWeek';
 
     // tec21: commenting out the Cache for testing purposes. (2024-04-09)
     // TODO: This needs to be rebuilt to use our Redis cache instead of a file.
@@ -271,7 +271,7 @@ class ShowScheduleController extends Controller {
     // tec21: commenting out the Cache for testing purposes. (2024-04-09)
     // TODO: This needs to be rebuilt to use our Redis cache instead of a file.
 
-//    $cachePath = "showScheduleWeekFromDate_{$date}";
+//    $cachePath = "scheduleWeekFromDate_{$date}";
 
 //    if ($this->isCacheValid($cachePath)) {
 //      $content = Storage::disk('local')->get("json/{$cachePath}.json");
@@ -317,7 +317,7 @@ class ShowScheduleController extends Controller {
 //    // Check if the cache is valid
 //    if ($this->isCacheValid()) {
 //      // Cache is valid, use the cached data
-//      $path = 'json/showSchedule.json';
+//      $path = 'json/schedule.json';
 //      $content = Storage::disk('local')->get($path);
 //      $cache = json_decode($content, true);
 //
@@ -326,7 +326,7 @@ class ShowScheduleController extends Controller {
 //
 //    // Cache is not valid, fetch new data
 //    $schedulesByDay = $this->fetchSchedulesByDay();
-//    $this->cacheShowSchedule($schedulesByDay);
+//    $this->cacheSchedule($schedulesByDay);
 //
 //    return response()->json($schedulesByDay);
 //  }
@@ -338,7 +338,7 @@ class ShowScheduleController extends Controller {
     $endPeriod = $now->copy()->addDays(6)->addHours(6); // 6 days ahead + 6 hours
 
     // Fetch all schedules in one go within the specified range
-    $allSchedules = ShowSchedule::with(['content', 'showScheduleRecurrenceDetails'])
+    $allSchedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
         ->whereBetween('start_time', [$now, $endPeriod])
         ->orderBy('start_time')
         ->get();
@@ -387,7 +387,7 @@ class ShowScheduleController extends Controller {
             'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
             'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
             'recurrence_flag'    => $schedule->recurence_flag ?? null,
-            'recurrence_details' => $schedule->showScheduleRecurrenceDetails ?? null,
+            'recurrence_details' => $schedule->scheduleRecurrenceDetails ?? null,
         ];
       });
 
@@ -415,7 +415,7 @@ class ShowScheduleController extends Controller {
 //      Log::debug("Querying schedules from {$segmentStart->toDateTimeString()} to {$segmentEnd->toDateTimeString()}");
 //
 //      // Fetch schedules within the current segment.
-//      $schedules = ShowSchedule::with(['content', 'showScheduleRecurrenceDetails'])
+//      $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
 //          ->whereBetween('start_time', [$segmentStart, $segmentEnd])
 //          ->orderBy('start_time')
 //          ->get()
@@ -457,7 +457,7 @@ class ShowScheduleController extends Controller {
 //                'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
 //                'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
 //                'recurrence_flag'    => $schedule->recurence_flag ?? null,
-//                'recurrence_details' => $schedule->showScheduleRecurrenceDetails ?? null,
+//                'recurrence_details' => $schedule->scheduleRecurrenceDetails ?? null,
 //            ];
 //          })->toArray(); // Ensure you convert the collection to an array if needed
 //
@@ -501,10 +501,10 @@ class ShowScheduleController extends Controller {
 
     foreach ($files as $file) {
       // Check if file matches any of the cache patterns
-      if (Str::startsWith($file, "{$directory}/showScheduleWeekFromDate_") ||
-          Str::startsWith($file, "{$directory}/showScheduleWeek") ||
-          Str::startsWith($file, "{$directory}/showScheduleFiveDaySixHour") ||
-          Str::startsWith($file, "{$directory}/showScheduleToday")) {
+      if (Str::startsWith($file, "{$directory}/scheduleWeekFromDate_") ||
+          Str::startsWith($file, "{$directory}/scheduleWeek") ||
+          Str::startsWith($file, "{$directory}/scheduleFiveDaySixHour") ||
+          Str::startsWith($file, "{$directory}/scheduleToday")) {
         // Delete the file
         Storage::disk('local')->delete($file);
       }
@@ -514,8 +514,8 @@ class ShowScheduleController extends Controller {
 
   }
 
-//  private function cacheShowSchedule($scheduleData): void {
-//    $path = 'json/showSchedule.json'; // Path within the "storage/app" directory
+//  private function cacheSchedule($scheduleData): void {
+//    $path = 'json/schedule.json'; // Path within the "storage/app" directory
 //    $data = [
 //        'last_updated' => now()->toDateTimeString(),
 //        'data'         => $scheduleData,
@@ -524,7 +524,7 @@ class ShowScheduleController extends Controller {
 //  }
 
 //  private function isCacheValid(): bool {
-//    $path = 'json/showSchedule.json';
+//    $path = 'json/schedule.json';
 //    if (!Storage::disk('local')->exists($path)) {
 //      return false;
 //    }
@@ -568,16 +568,16 @@ class ShowScheduleController extends Controller {
 //
 //  private function fetchSchedules(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
 //
-//    return ShowSchedule::where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
+//    return Schedule::where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
 //      $query->whereBetween('start_time', [$userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC])
-//          ->with('showScheduleRecurrenceDetails')
+//          ->with('scheduleRecurrenceDetails')
 //          ->orWhere('recurrence_flag', true); // Include recurring schedules
 //    })
 //        ->orderBy('start_time')
 //        ->get()
 //        ->flatMap(function ($schedule) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
 //          // If the schedule is recurring, generate instances for each recurrence within the week
-//          if ($schedule->recurrence_flag && $schedule->showScheduleRecurrenceDetails) {
+//          if ($schedule->recurrence_flag && $schedule->scheduleRecurrenceDetails) {
 //            return $this->generateRecurringInstances($schedule, $userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
 //          }
 //
@@ -587,8 +587,8 @@ class ShowScheduleController extends Controller {
 //  }
 
   private function fetchSchedules(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
-    // Eagerly load showScheduleRecurrenceDetails for all ShowSchedule instances
-    $schedules = ShowSchedule::with('showScheduleRecurrenceDetails')
+    // Eagerly load scheduleRecurrenceDetails for all Schedule instances
+    $schedules = Schedule::with('scheduleRecurrenceDetails')
         ->where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
           $query->whereBetween('start_time', [$userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC])
               ->orWhere('recurrence_flag', true); // Include recurring schedules
@@ -627,7 +627,7 @@ class ShowScheduleController extends Controller {
     // Process schedules
     return $schedules->flatMap(function ($schedule) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
       // If the schedule is recurring, generate instances for each recurrence within the week
-      if ($schedule->recurrence_flag && $schedule->showScheduleRecurrenceDetails) {
+      if ($schedule->recurrence_flag && $schedule->scheduleRecurrenceDetails) {
         return $this->generateRecurringInstances($schedule, $userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
       }
 
@@ -638,10 +638,10 @@ class ShowScheduleController extends Controller {
 
 
   private function generateRecurringInstances($schedule, Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC): array {
-//    Log::debug('Direct DB Recurrence Start Date: ' . $schedule->showScheduleRecurrenceDetails->start_date);
-//    Log::debug('Direct DB Recurrence End Date: ' . $schedule->showScheduleRecurrenceDetails->end_date);
+//    Log::debug('Direct DB Recurrence Start Date: ' . $schedule->scheduleRecurrenceDetails->start_date);
+//    Log::debug('Direct DB Recurrence End Date: ' . $schedule->scheduleRecurrenceDetails->end_date);
 
-    $recurrenceDetails = $schedule->showScheduleRecurrenceDetails;
+    $recurrenceDetails = $schedule->scheduleRecurrenceDetails;
     $timezone = $recurrenceDetails->timezone; // Schedule's local timezone
     $daysOfWeek = json_decode($recurrenceDetails->days_of_week, true);
 
@@ -890,7 +890,7 @@ class ShowScheduleController extends Controller {
         'status'             => $schedule->status ?? null,
         'priority'           => $schedule->priority ?? null,
         'recurrence_flag'    => $schedule->recurrence_flag ?? null,
-        'recurrence_details' => $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->toArray() : null,
+        'recurrence_details' => $schedule->scheduleRecurrenceDetails ? $schedule->scheduleRecurrenceDetails->toArray() : null,
         'id'                 => $schedule->id,
         'durationMinutes'    => $schedule->duration_minutes,
     ];
@@ -933,10 +933,10 @@ class ShowScheduleController extends Controller {
     // Assuming the slug is a property of all content types
     $slug = $content->slug;
 
-    // Find and delete the ShowSchedule items
+    // Find and delete the Schedule items
     $content->schedules()->each(function ($schedule) {
       // If there are any related recurrence details, delete them
-      $schedule->showScheduleRecurrenceDetails()->delete();
+      $schedule->scheduleRecurrenceDetails()->delete();
       // Then delete the schedule itself
       $schedule->delete();
     });
@@ -967,7 +967,7 @@ class ShowScheduleController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function store(Request $request) {
-    // this is where we create a new showSchedule object
+    // this is where we create a new schedule object
     // from a show (with an associated mist_stream or showEpisode),
     // movie, or movieTrailer... and in due time a promo, ad, psa,
     // station id, interstitial, or filler.
@@ -976,20 +976,20 @@ class ShowScheduleController extends Controller {
   /**
    * Display the specified resource.
    *
-   * @param \App\Models\ShowSchedule $showSchedule
+   * @param \App\Models\Schedule $schedule
    * @return \Illuminate\Http\Response
    */
-  public function show(ShowSchedule $showSchedule) {
+  public function show(Schedule $schedule) {
     //
   }
 
   /**
    * Show the form for editing the specified resource.
    *
-   * @param \App\Models\ShowSchedule $showSchedule
+   * @param \App\Models\Schedule $schedule
    * @return \Illuminate\Http\Response
    */
-  public function edit(ShowSchedule $showSchedule) {
+  public function edit(Schedule $schedule) {
     //
   }
 
@@ -997,11 +997,11 @@ class ShowScheduleController extends Controller {
    * Update the specified resource in storage.
    *
    * @param \Illuminate\Http\Request $request
-   * @param \App\Models\ShowSchedule $showSchedule
+   * @param \App\Models\Schedule $schedule
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, ShowSchedule $showSchedule) {
-    // we receive the id of the showSchedule item in the request to update.
+  public function update(Request $request, Schedule $schedule) {
+    // we receive the id of the schedule item in the request to update.
     // the time slot can either change from a show vod (show_episode_id) to
     // a show livestream (mist_stream_id) or to a movie or a trailer (movie_trailer_id)
     // or change its start/end times,
@@ -1012,10 +1012,10 @@ class ShowScheduleController extends Controller {
   /**
    * Remove the specified resource from storage.
    *
-   * @param \App\Models\ShowSchedule $showSchedule
+   * @param \App\Models\Schedule $schedule
    * @return \Illuminate\Http\Response
    */
-  public function destroy(ShowSchedule $showSchedule) {
+  public function destroy(Schedule $schedule) {
     //
   }
 }

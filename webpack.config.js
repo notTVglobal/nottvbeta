@@ -12,7 +12,7 @@ module.exports = {
             // "path": false
         },
         alias: {
-            '@': path.resolve(__dirname, 'resources/js'),
+            '@': path.resolve('resources/js'),
             '@i': path.resolve('public/images'),
         },
     },

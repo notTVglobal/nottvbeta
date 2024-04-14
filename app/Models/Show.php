@@ -116,11 +116,15 @@ class Show extends Model
   }
 
   public function schedules(): \Illuminate\Database\Eloquent\Relations\MorphMany {
-    return $this->morphMany(ShowSchedule::class, 'content');
+    return $this->morphMany(Schedule::class, 'content');
   }
 
   public function recordings(): \Illuminate\Database\Eloquent\Relations\MorphMany {
     return $this->morphMany(Recording::class, 'model');
+  }
+
+  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(SchedulesIndex::class, 'show_id');
   }
 
   /**
@@ -144,6 +148,9 @@ class Show extends Model
     return $this->hasMany(MistStreamPushDestination::class, 'show_id', 'show_id');
   }
 
+  /**
+   * @throws \Exception
+   */
   public static function generateStreamKey($showId)
   {
     try {

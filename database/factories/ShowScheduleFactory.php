@@ -10,9 +10,9 @@ use App\Models\ShowEpisode;
 use Carbon\Carbon;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ShowSchedule>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Schedule>
  */
-class ShowScheduleFactory extends Factory {
+class ScheduleFactory extends Factory {
   protected $year;
   protected $month;
   protected $day;

@@ -50,7 +50,7 @@
                     </label>
                     <ImageUpload :image="image"
                                  :modelType="'team'"
-                                 :modelId="team.id"
+                                 :modelId="`${team.id}`"
                                  :name="'Upload Team Logo'"
                                  :maxSize="'10MB'"
                                  :fileTypes="'image/jpg, image/jpeg, image/png'"
@@ -176,6 +176,9 @@
                       <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
+
+                    <SocialMediaLinksStoreUpdateForForm v-model:form="form" />
+
                     <div class="flex justify-end mb-6">
                       <JetValidationErrors class="mr-4"/>
                       <button
@@ -218,6 +221,7 @@ import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea'
 import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
 
 usePageSetup('teams/slug/edit')
 
@@ -255,6 +259,10 @@ let form = useForm({
   description: props.team.description,
   totalSpots: props.team.totalSpots,
   teamLeader: props.teamLeader ? props.teamLeader.id : null,
+  www_url: props.team.socialMediaLinks.www_url,
+  instagram_name: props.team.socialMediaLinks.instagram_name,
+  telegram_url: props.team.socialMediaLinks.telegram_url,
+  twitter_handle: props.team.socialMediaLinks.twitter_handle,
 })
 
 const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null)

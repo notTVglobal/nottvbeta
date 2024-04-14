@@ -15,10 +15,10 @@
 
       <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
         <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+          <label class="block mb-2 uppercase font-bold text-gray-700"
                  for="name"
           >
-            Team Name
+            Team Name <span class="text-red-500">* REQUIRED</span>
           </label>
 
           <input v-model="form.name"
@@ -27,15 +27,16 @@
                  name="name"
                  id="name"
                  required
+                 placeholder="Team Name"
           >
           <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
         </div>
 
         <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+          <label class="block mb-2 uppercase font-bold text-gray-700"
                  for="description"
           >
-            Description
+            Description (optional)
           </label>
 
           <textarea v-model="form.description"
@@ -43,16 +44,16 @@
                     type="text"
                     name="description"
                     id="description"
-                    required
+                    placeholder="Description"
           ></textarea>
           <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
         </div>
 
         <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+          <label class="block mb-2 uppercase font-bold text-gray-700"
                  for="totalSpots"
           >
-            Maximum # of Team Members
+            Maximum # of Team Members <span class="text-red-500">* REQUIRED</span>
           </label>
           <input v-model="form.totalSpots"
                  class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 "
@@ -62,6 +63,9 @@
           />
           <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots" class="text-xs text-red-600 mt-1"></div>
         </div>
+
+        <SocialMediaLinksStoreUpdateForForm v-model:form="form" />
+
         <input v-model="form.user_id" hidden>
         <div class="flex justify-between mb-6">
           <JetValidationErrors class="mr-4"/>
@@ -88,6 +92,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import Message from '@/Components/Global/Modals/Messages'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
+import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
 
 usePageSetup('teams/create')
 
@@ -102,6 +107,10 @@ let form = useForm({
   description: '',
   user_id: props.user.id,
   totalSpots: '1',
+  www_url: '',
+  instagram_name: '',
+  telegram_url: '',
+  twitter_handle: '',
 })
 
 let submit = () => {

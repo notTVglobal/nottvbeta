@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShowSchedule extends Model {
+class Schedule extends Model {
   use HasFactory;
 
   protected $table = 'show_schedule';
@@ -16,6 +16,7 @@ class ShowSchedule extends Model {
       'type', // for display and osd: movie, show, movie trailer, etc.
       'recurrence_flag',
       'recurrence_details_id',
+      'broadcast_dates',
       'status', // scheduled, live, completed, cancelled
       'priority', // defaults to 0
       'duration_minutes',
@@ -25,8 +26,9 @@ class ShowSchedule extends Model {
   ];
 
   protected $casts = [
-      'start_time' => 'datetime',
-      'end_time'   => 'datetime',
+      'start_time'      => 'datetime',
+      'end_time'        => 'datetime',
+      'broadcast_dates' => 'json',
     // other casts
   ];
 
@@ -34,8 +36,12 @@ class ShowSchedule extends Model {
     return $this->morphTo(__FUNCTION__, 'content_type', 'content_id');
   }
 
-  public function showScheduleRecurrenceDetails(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
-    return $this->belongsTo(ShowScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');
+  public function scheduleRecurrenceDetails(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    return $this->belongsTo(ScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');
+  }
+
+  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(SchedulesIndex::class, 'show_schedule_id');
   }
 
 }

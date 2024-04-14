@@ -296,7 +296,7 @@ class ShowsController extends Controller {
     return Inertia::render('Shows/Create', [
         'teams'      => $teams,
         'userId'     => $userId,
-        'creatorId'     => $creatorId,
+        'creatorId'  => $creatorId,
         'categories' => $categories,
     ]);
 
@@ -326,6 +326,7 @@ class ShowsController extends Controller {
         'category'               => 'required',
         'sub_category'           => 'nullable',
         'instagram_name'         => 'nullable|string|max:30',
+        'www_url'                => 'nullable|active_url',
         'telegram_url'           => 'nullable|active_url',
         'twitter_handle'         => 'nullable|string|min:4|max:15',
         'notes'                  => 'nullable|string|max:1024',
@@ -340,10 +341,12 @@ class ShowsController extends Controller {
     }
 
     // Validation passes, extract validated data
-    $validatedData = $validator->validated();
+    $validatedData = $validator->validated(); // Ensure all data is validated
     $teamId = $validatedData['team_id'];
-    $twitterHandle = str_replace('@', '', $request->input('twitter_handle'));
-    $instagramName = str_replace('@', '', $request->input('instagram_name'));
+// Sanitize Twitter and Instagram usernames after validating to ensure input exists and is correct
+    $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
+    $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
+
 
     // Retrieve the team with the team_id and check its status
     $team = Team::find($teamId);
@@ -364,19 +367,19 @@ class ShowsController extends Controller {
 
     try {
       $show = Show::create([
-          'name'                   => $request->name,
-          'description'            => $request->description,
-          'user_id'                => $request->user_id,
-          'team_id'                => $request->team_id,
-          'show_category_id'       => $request->category,
-          'show_category_sub_id'   => $request->sub_category,
-          'slug'                   => \Str::slug($request->name),
-          'www_url'                => $request->www_url,
+          'name'                   => $validatedData['name'],
+          'description'            => $validatedData['description'],
+          'user_id'                => $validatedData['user_id'],
+          'team_id'                => $validatedData['team_id'],
+          'show_category_id'       => $validatedData['category'],
+          'show_category_sub_id'   => $validatedData['sub_category'] ?? null,  // Handle optional data
+          'slug'                   => \Str::slug($validatedData['name']),
+          'www_url'                => $validatedData['www_url'] ?? null,
           'instagram_name'         => $instagramName,
-          'telegram_url'           => $request->telegram_url,
+          'telegram_url'           => $validatedData['telegram_url'] ?? null,
           'twitter_handle'         => $twitterHandle,
-          'notes'                  => $request->notes,
-          'isBeingEditedByUser_id' => $request->user_id,
+          'notes'                  => $validatedData['notes'] ?? null,
+          'isBeingEditedByUser_id' => $validatedData['user_id'],  // Assuming this is intended to be the same as user_id
           'first_release_year'     => Carbon::now()->format('Y'),
           'show_runner'            => $creatorId,
       ]);
@@ -512,6 +515,14 @@ class ShowsController extends Controller {
   }
 
   private function transformShowData(Show $show, $firstPlayEpisode) {
+
+    $socialMediaLinks = [
+        'www_url'        => $show->www_url,
+        'instagram_name' => $show->instagram_name,
+        'telegram_url'   => $show->telegram_url,
+        'twitter_handle' => $show->twitter_handle,
+    ];
+
     return [
         'id'                 => $show->id,
         'ulid'               => $show->ulid,
@@ -529,10 +540,7 @@ class ShowsController extends Controller {
         'copyrightYear'      => $show->created_at->format('Y'),
         'first_release_year' => $show->first_release_year ?? null,
         'last_release_year'  => $show->last_release_year ?? null,
-        'www_url'            => $show->www_url,
-        'instagram_name'     => $show->instagram_name,
-        'telegram_url'       => $show->telegram_url,
-        'twitter_handle'     => $show->twitter_handle,
+        'socialMediaLinks'   => $socialMediaLinks,
         'status'             => $show->status,
     ];
   }
@@ -722,7 +730,7 @@ class ShowsController extends Controller {
 
   public function manage(Show $show): \Inertia\Response {
     // Eager load related entities for the Show model
-    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.showScheduleRecurrenceDetails', 'recordings']);
+    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.scheduleRecurrenceDetails', 'recordings']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
@@ -758,7 +766,7 @@ class ShowsController extends Controller {
         if ($schedule->recurrence_flag) {
           // For recurring schedules, add additional details
           // For recurring schedules, add additional details
-          $daysOfWeek = $schedule->showScheduleRecurrenceDetails ? json_decode($schedule->showScheduleRecurrenceDetails->days_of_week, true) : [];
+          $daysOfWeek = $schedule->scheduleRecurrenceDetails ? json_decode($schedule->scheduleRecurrenceDetails->days_of_week, true) : [];
           $orderedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
           // Sort days of week based on the ordered list
@@ -779,8 +787,8 @@ class ShowsController extends Controller {
           }
 
           // Combine start_date and start_time to form a complete datetime string
-//          $dateTimeString = $schedule->showScheduleRecurrenceDetails->start_date;
-//          $timezone = $schedule->showScheduleRecurrenceDetails->timezone;
+//          $dateTimeString = $schedule->scheduleRecurrenceDetails->start_date;
+//          $timezone = $schedule->scheduleRecurrenceDetails->timezone;
           // Parsing the datetime string in the specified timezone, then converting to UTC
 //          $dateTimeUtc = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeString, $timezone)
 //              ->setTimezone('UTC');
@@ -793,7 +801,7 @@ class ShowsController extends Controller {
           $detail['startDateTimeIsoUtc'] = $startDateTimeUtc;
 
           // If you need to retain the original 'startTime' for any reason, keep this line as is
-//          $detail['startTime'] = $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->start_time : null;
+//          $detail['startTime'] = $schedule->scheduleRecurrenceDetails ? $schedule->scheduleRecurrenceDetails->start_time : null;
 //          Log::debug('Original StartTime:', ['startTime' => $detail['startTime']]);
 
         }
@@ -853,12 +861,13 @@ class ShowsController extends Controller {
           ->put('streamName', $streamName)
           ->put('shareUrl', $shareUrl)
           ->put('download', [
-              'url' => $downloadUrl,
+              'url'      => $downloadUrl,
               'fileName' => $downloadFileName
           ]);
     });
 
     Log::debug('Final data structure for front end', ['recordings' => $recordings]);
+
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
             'id'              => $show->id,
@@ -958,9 +967,9 @@ class ShowsController extends Controller {
 
 
     // Load the team with members who have creators with status_id of 1
-    $team = Team::with(['members' => function($query) {
+    $team = Team::with(['members' => function ($query) {
       // Filter members to those who have a creator with status_id of 1
-      $query->whereHas('creator', function($query) {
+      $query->whereHas('creator', function ($query) {
         $query->where('status_id', 1);
       });
     }, 'members.creator']) // Ensure to still load the creator relationship
@@ -1058,43 +1067,64 @@ class ShowsController extends Controller {
     }
 
     // validate the request
-    $request->validate([
+    $validatedData = $request->validate([
         'name'                   => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
-        'description'            => 'required',
-        'release_date'           => 'date|after:tomorrow',
-        'category'               => 'required',
-        'sub_category'           => 'nullable',
+        'description'            => 'required|string|max:5000',
+        'release_date'           => ['date', 'after:tomorrow'],
+        'category'               => 'required|integer|exists:show_categories,id',
+        'sub_category'           => 'nullable|integer|exists:show_category_subs,id',
         'www_url'                => 'nullable|active_url',
         'instagram_name'         => 'nullable|string|max:30',
         'telegram_url'           => 'nullable|active_url',
         'twitter_handle'         => 'nullable|string|min:4|max:15',
         'notes'                  => 'nullable|string|max:1024',
-        'show_status_id'         => 'required|integer|exists:show_statuses,id',
+        'show_status_id'         => ['required', 'integer', 'exists:show_statuses,id'],
         'episode_play_order'     => 'required|string',
-        'show_runner_creator_id' => 'exists:creators,id'
+        'show_runner_creator_id' => 'nullable|integer|exists:creators,id'
     ], [
-        'status.exists'      => 'The selected status is invalid.',
-        'release_date.after' => 'The release date must be at least 24 hours in the future.',
+        'show_status_id.exists' => 'The selected status is invalid.',
+        'release_date.after'    => 'The release date must be at least 24 hours in the future.'
     ]);
 
-    $twitterHandle = str_replace('@', '', $request->input('twitter_handle'));
-    $instagramName = str_replace('@', '', $request->input('instagram_name'));
+    $twitterHandle = str_replace('@', '', $validatedData['twitter_handle'] ?? '');
+    $instagramName = str_replace('@', '', $validatedData['instagram_name'] ?? '');
+    // Sanitize the notes to prevent XSS
+    $sanitizedNotes = htmlentities($validatedData['notes'] ?? '', ENT_QUOTES, 'UTF-8');
 
-    // update the show
-    $show->name = $request->name;
-    $show->description = $request->description;
-    $show->show_category_id = $request->category;
-    $show->show_category_sub_id = $request->sub_category;
-    $show->slug = \Str::slug($request->name);
-    $show->www_url = $request->www_url;
-    $show->instagram_name = $instagramName;
-    $show->telegram_url = $request->telegram_url;
-    $show->twitter_handle = $twitterHandle;
-    $show->notes = htmlentities($request->notes);
-    $show->show_status_id = $request->show_status_id;
-    $show->episode_play_order = $request->episode_play_order;
-    $show->show_runner = $creatorId;
-    $show->save();
+
+    // update the show >>> THE OLD WAY!!
+//    $show->name = $request->name;
+//    $show->description = $request->description;
+//    $show->show_category_id = $request->category;
+//    $show->show_category_sub_id = $request->sub_category;
+//    $show->slug = \Str::slug($request->name);
+//    $show->www_url = $request->www_url;
+//    $show->instagram_name = $instagramName;
+//    $show->telegram_url = $request->telegram_url;
+//    $show->twitter_handle = $twitterHandle;
+//    $show->notes = htmlentities($request->notes);
+//    $show->show_status_id = $request->show_status_id;
+//    $show->episode_play_order = $request->episode_play_order;
+//
+//    $show->show_runner = $creatorId;
+//    $show->save();
+
+    $show->update([
+        'name'               => $validatedData['name'],
+        'description'        => $validatedData['description'],
+        'slug'               => \Str::slug($validatedData['name']),
+        'release_date'       => $validatedData['release_date'] ?? null,
+        'category_id'        => $validatedData['category'],
+        'sub_category_id'    => $validatedData['sub_category'],
+        'www_url'            => $validatedData['www_url'] ?? null,
+        'instagram_name'     => $instagramName,
+        'telegram_url'       => $validatedData['telegram_url'] ?? null,
+        'twitter_handle'     => $twitterHandle,
+        'notes'              => $sanitizedNotes,
+        'show_status_id'     => $validatedData['show_status_id'],
+        'episode_play_order' => $validatedData['episode_play_order'],
+        'show_runner'        => $creatorId
+    ]);
 
     // gather the data needed to render the Manage page
     // this is all redundant. It's all contained in the

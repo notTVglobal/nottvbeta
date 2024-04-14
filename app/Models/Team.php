@@ -14,6 +14,7 @@ class Team extends Model {
       'image_id',
       'name',
       'description',
+      'public_message',
       'memberSpots',
       'totalSpots',
       'team_members_profiles_are_visible',
@@ -21,6 +22,10 @@ class Team extends Model {
       'isBeingEditedByUser_id',
       'team_leader',
       'team_status_id',
+      'www_url',
+      'instagram_name',
+      'telegram_url',
+      'twitter_handle',
   ];
 
   protected $casts = [
@@ -90,6 +95,10 @@ class Team extends Model {
     return $this->belongsTo(AppSetting::class)->withDefault([
 //            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
     ]);
+  }
+
+  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(SchedulesIndex::class, 'team_id');
   }
 
 

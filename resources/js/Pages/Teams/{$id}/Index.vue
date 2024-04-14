@@ -9,7 +9,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <header class="flex justify-between mb-3 pt-6">
+      <header class="flex justify-between mb-1 pt-6">
         <div>
           <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
 
@@ -17,18 +17,22 @@
             {{ props.team.name }}
 
           </h3>
+          <SocialMediaBadgeLinks :socialMediaLinks="team.socialMediaLinks"/>
 
         </div>
-        <div class="flex flex-wrap-reverse justify-end gap-2">
-          <div>
-            <button
-                v-if="props.can.manageTeam"
-                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
-                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-            >Manage Team
-            </button>
+        <div class="flex flex-col">
+          <div class="flex flex-wrap-reverse justify-end gap-2 mb-2">
+            <div>
+              <button
+                  v-if="props.can.manageTeam"
+                  @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
+                  class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+              >Back to<br/>
+                Manage Team
+              </button>
+            </div>
           </div>
-          <div>
+          <div class="flex flex-wrap-reverse justify-end gap-2">
             <button
                 v-if="props.can.editTeam"
                 @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
@@ -48,32 +52,72 @@
         </div>
       </header>
 
-      <p class="description mb-6 p-5">
+      <p v-if="props.team.description" class="description mb-6 p-5">
         {{ props.team.description }}
       </p>
+
+      <div v-if="team?.nextBroadcast || team.public_message" class="flex flex-row justify-center w-full py-10 px-5">
+        <div class="flex flex-row text-red-950 bg-yellow-300 w-full py-6 text-center align-middle">
+          <div class="flex flex-col w-1/3 border-r border-black">
+            <div v-if="team?.nextBroadcast">
+              <p class="uppercase font-bold tracking-wider">
+                Next Broadcast
+              </p>
+              <p class="text-lg">
+                April 20, 2024
+              </p>
+              <p class="text-lg">
+                7:30pm PT
+              </p>
+              <p class="text-lg">
+                Duncan Townhall
+              </p>
+            </div>
+            <div v-else>
+              No broadcasts are currently scheduled.
+            </div>
+
+          </div>
+          <div class="flex flex-col w-2/3 justify-center font-semibold">
+            {{ team.public_message }}
+          </div>
+
+        </div>
+      </div>
 
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-            <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">SHOWS</div>
+            <div hidden class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">SHOWS</div>
 
             <TeamShowsList :shows="props.shows"/>
 
-            <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">CREATORS</div>
 
-            <div class="flex flex-row flex-wrap justify-center">
-              <div v-for="creator in props.creators.data" :key="creator.id" class="pb-8 bg-gray-800">
-                <div class="flex flex-col items-center min-w-[8rem] px-6 py-4 font-medium break-words">
-                  <img v-if="!creator.profile_photo_path && creator.profile_photo_url" :src="creator.profile_photo_url"
-                       class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
-                  <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
-                       :alt="creator.name + ' profile photo'" class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
-                  <img v-else :src="'/storage/images/Ping.png'"
-                       :alt="'no profile photo, using our ping logo as a placeholder'" class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
-                  <span class="text-gray-50 text-center">{{ creator.name }}</span>
+            <div hidden class="creators">
+              <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">CREATORS</div>
+              <!-- Note: Team Members ("Creators") will now be hidden by default.
+              Teams and creators need to opt-in to have public creator profiles
+              and to be visible on Team, Shows, and Episode pages. This change
+              is to enhance privacy and give more control to the individuals involved. -->
+
+              <div class="flex flex-row flex-wrap justify-center">
+                <div v-for="creator in props.creators.data" :key="creator.id" class="pb-8 bg-gray-800">
+                  <div class="flex flex-col items-center min-w-[8rem] px-6 py-4 font-medium break-words">
+                    <img v-if="!creator.profile_photo_path && creator.profile_photo_url"
+                         :src="creator.profile_photo_url"
+                         class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                    <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
+                         :alt="creator.name + ' profile photo'"
+                         class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
+                    <img v-else :src="'/storage/images/Ping.png'"
+                         :alt="'no profile photo, using our ping logo as a placeholder'"
+                         class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
+                    <span class="text-gray-50 text-center">{{ creator.name }}</span>
+                  </div>
                 </div>
               </div>
+
             </div>
 
 
@@ -106,6 +150,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 
 usePageSetup('teams/slug')
 

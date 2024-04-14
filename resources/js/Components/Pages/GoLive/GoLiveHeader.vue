@@ -1,17 +1,21 @@
 <template>
   <div class="flex flex-row flex-wrap-reverse w-full justify-between gap-2">
-    <div>
-      <div class="mb-2">
-        <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
-                class="btn bg-blue-500 hover:bg-blue-700 text-white">How To Stream From Zoom
-        </button>
-        <button @click="openObsInstructions = !openObsInstructions"
-                class="btn bg-blue-500 hover:bg-blue-700 text-white ml-2"
-                :class="{'bg-yellow-800 hover:bg-yellow-900 ':openObsInstructions}">
-          <span v-if="!openObsInstructions">View Your Stream Key</span>
-          <span v-else>Hide Your Stream Key</span>
-        </button>
 
+    <div>
+      <div class="flex flex-row flex-wrap gap-x-2 gap-y-2 mb-2">
+        <div>
+          <button @click="openObsInstructions = !openObsInstructions"
+                  class="btn bg-blue-500 hover:bg-blue-700 text-white ml-2"
+                  :class="{'bg-yellow-800 hover:bg-yellow-900 ':openObsInstructions}">
+            <span v-if="!openObsInstructions">View Your Stream Key</span>
+            <span v-else>Hide Your Stream Key</span>
+          </button>
+        </div>
+        <div v-if="!openObsInstructions" >
+          <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
+                  class="btn bg-blue-500 hover:bg-blue-700 text-white">How To Stream From Zoom
+          </button>
+        </div>
       </div>
       <div v-if="openObsInstructions" class="my-4 ml-10">
         <h3>Stream from OBS or other software using these details:</h3>
@@ -38,11 +42,11 @@
                 style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
         </div>
       </div>
+
     </div>
 
-    <div class="flex flex-row flex-wrap justify-between grow ml-4 gap-2">
-      <div v-if="!openObsInstructions"
-           class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2 gap-2">
+    <div v-if="!openObsInstructions" class="flex flex-row flex-wrap justify-between grow ml-4 gap-2">
+      <div class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2 gap-2">
         <div class="flex flex-row gap-2">
           <div class="mb-2">
             <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"

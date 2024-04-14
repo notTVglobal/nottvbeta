@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShowScheduleRecurrenceDetails extends Model
+class ScheduleRecurrenceDetails extends Model
 {
 
-  protected $table = 'show_schedule_recurrence_details';
+  protected $table = 'schedule_recurrence_details';
 
   protected $fillable = [
       'frequency', // varchar(255) Frequency of recurrence (e.g., daily, weekly, monthly)
@@ -41,9 +42,8 @@ class ShowScheduleRecurrenceDetails extends Model
     // other casts
   ];
 
-  public function showSchedule()
-  {
-    return $this->hasOne(ShowSchedule::class);
+  public function schedule(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(Schedule::class);
   }
 
   // Custom accessor for 'start_time' to handle it manually or convert to Carbon

@@ -35,6 +35,7 @@ class DashboardController extends Controller {
     })->count();
 
     $teams = $user->teams()
+        ->with('image.appSetting')
         ->where('active', 1)
         ->orWhere('team_leader', $user->id)
         ->orWhereHas('managers', function ($query) use ($user) {
@@ -157,6 +158,7 @@ class DashboardController extends Controller {
               'id'   => $team->id,
               'name' => $team->name,
               'slug' => $team->slug,
+              'image' => $team->image ? (new ImageResource($team->image))->resolve() : null,
           ];
         }),
         'myTotalStorageUsed'    => formatBytes(Video::where('user_id', auth()->user()->id)

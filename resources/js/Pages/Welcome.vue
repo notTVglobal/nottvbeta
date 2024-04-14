@@ -275,7 +275,7 @@ function watchNow() {
   // }
 }
 
-</script>const videoElement = document.querySelector('video#main-player_html5_api');
+</script>
 
 
 <style scoped>

@@ -18,6 +18,12 @@
         </div>
       </div>
 
+      <div>
+        <h4 v-if="currentStep !== 6" class="font-medium text-lg">
+          <slot name="form-description">Default Form Description</slot>
+        </h4>
+      </div>
+
       <div class="flex flex-col space-y-2 px-12 mt-6">
         <form @submit.prevent="submit">
 
