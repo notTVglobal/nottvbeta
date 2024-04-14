@@ -7376,10 +7376,6 @@ hr {
   top: 12rem;
 }
 
-.top-60 {
-  top: 15rem;
-}
-
 .top-56 {
   top: 14rem;
 }
@@ -7835,10 +7831,6 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
 }
 
 .line-clamp-2 {
@@ -9881,10 +9873,6 @@ hr {
   fill: currentColor;
 }
 
-.fill-primary {
-  fill: var(--fallback-p,oklch(var(--p)/1));
-}
-
 .stroke-current {
   stroke: currentColor;
 }
@@ -11350,11 +11338,6 @@ hr {
 .hover\:text-blue-400:hover {
   --tw-text-opacity: 1;
   color: rgb(96 165 250 / var(--tw-text-opacity));
-}
-
-.hover\:text-blue-50:hover {
-  --tw-text-opacity: 1;
-  color: rgb(239 246 255 / var(--tw-text-opacity));
 }
 
 .hover\:text-blue-500:hover {
