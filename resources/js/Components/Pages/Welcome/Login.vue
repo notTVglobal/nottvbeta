@@ -10,9 +10,9 @@
     <!--    <div class="modal-mask overflow-auto py-32 hide-scrollbar">-->
     <!--      <div class="bg-white py-4 px-4 rounded-lg">-->
 
-    <div v-if="show" class="modal-mask overflow-auto py-32 hide-scrollbar bg-base-100">
+    <div v-if="show" :class="['modal-mask', 'overflow-auto', 'py-32', 'hide-scrollbar', 'bg-base-100', modalClass]">
       <div class="relative w-full h-full">
-
+<div class="w-full text-center text-white text-2xl font-semibold tracking-wide">LOCAL VERSION</div>
         <div class="div1 modal-content bg-base-200 py-4 px-4 rounded-lg">
           <header class="flex justify-center uppercase text-sm font-semibold pt-6 mb-2 text-center">
             <JetAuthenticationCardLogo class="max-w-[30%]"/>
@@ -103,6 +103,7 @@
 
 <script setup>
 import { useWelcomeStore } from '@/Stores/WelcomeStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useForm } from '@inertiajs/inertia-vue3'
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
@@ -112,8 +113,10 @@ import JetInput from '@/Jetstream/Input'
 import JetCheckbox from '@/Jetstream/Checkbox'
 import JetLabel from '@/Jetstream/Label'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import { computed } from 'vue'
 
 const welcomeStore = useWelcomeStore()
+const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()
 
 defineProps({
@@ -162,6 +165,10 @@ function showRegister() {
   welcomeStore.showRegister = true
 }
 
+const modalClass = computed(() => {
+  return videoPlayerStore.mistServerUri.includes('localhost') ? 'modal-mask-local' : 'modal-mask-default';
+});
+
 </script>
 
 <style scoped>
@@ -169,10 +176,17 @@ function showRegister() {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
-  background: linear-gradient(135deg, rgba(46, 187, 236, 1) 0%, rgba(28, 147, 209, 0.6) 70%, rgba(28, 147, 209, 0) 100%);
   display: grid;
   place-items: center;
   z-index: 100;
+}
+
+.modal-mask-default {
+  background: linear-gradient(135deg, rgba(46, 187, 236, 1) 0%, rgba(28, 147, 209, 0.6) 70%, rgba(28, 147, 209, 0) 100%);
+}
+
+.modal-mask-local {
+  background: linear-gradient(135deg, rgba(255, 0, 0, 1) 0%, rgba(139, 0, 0, 0.6) 70%, rgba(139, 0, 0, 0) 100%);
 }
 
 .modal-content {

@@ -8,8 +8,8 @@
           class="text-xs">{{ episode.ulid }}</span></div>
     </div>
     <div>
-      <Link :href="`/teams/${team.slug}`" class="text-blue-500 hover:text-blue-700 ml-2 uppercase">
-        {{ team.name }}&nbsp;
+      <Link :href="`/shows/${show.slug}`" class="text-blue-500 hover:text-blue-700 ml-2 uppercase">
+        {{ show.name }}&nbsp;
       </Link>
 
       <span v-if="episode?.creative_commons?.name"

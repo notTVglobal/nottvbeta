@@ -120,12 +120,20 @@ class TeamsController extends Controller {
 
   public function store(HttpRequest $request, Team $team) {
 
-    $request->validate([
-        'name'        => 'unique:teams|required|max:255',
-        'description' => 'required|string|max:5000',
-        'user_id'     => 'required|exists:users,id',
-        'totalSpots'  => 'required|integer|min:1',
+    $validatedData = $request->validate([
+        'name'           => 'unique:teams|required|max:255',
+        'description'    => 'nullable|string|max:5000',
+        'user_id'        => 'required|exists:users,id',
+        'totalSpots'     => 'required|integer|min:1',
+        'www_url'        => 'nullable|active_url',
+        'instagram_name' => 'nullable|string|max:30',
+        'telegram_url'   => 'nullable|active_url',
+        'twitter_handle' => 'nullable|string|min:4|max:15',
     ]);
+
+    $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
+    $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
+
 
     // Find the user and their creator profile
     $user = User::with('creator')->find($request->user_id);
@@ -139,13 +147,17 @@ class TeamsController extends Controller {
     }
 
     Team::create([
-        'name'                   => $request->name,
-        'description'            => $request->description,
-        'user_id'                => $request->user_id,
-//            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
-        'totalSpots'             => $request->totalSpots,
-        'slug'                   => \Str::slug($request->name),
-        'isBeingEditedByUser_id' => $request->user_id,
+        'name'                   => $validatedData['name'],
+        'description'            => $validatedData['description'],
+        'user_id'                => $validatedData['user_id'],
+      //            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
+        'totalSpots'             => $validatedData['totalSpots'],
+        'slug'                   => \Str::slug($validatedData['name']),
+        'isBeingEditedByUser_id' => $validatedData['user_id'],  // Assuming this is intended to be the same as user_id
+        'www_url'                => $validatedData['www_url'] ?? null,
+        'instagram_name'         => $instagramName,
+        'telegram_url'           => $validatedData['telegram_url'] ?? null,
+        'twitter_handle'         => $twitterHandle,
     ]);
 
     $newTeam = Team::query()->where('name', $request->name)->firstOrFail();
@@ -159,41 +171,13 @@ class TeamsController extends Controller {
 ////////////  SHOW
 //////////////////
 
-  // TODO: Clean up this method!!
-
-  public function show(team $team) {
-    function getLogo($team) {
-      $getLogo = Image::query()
-          ->where('team_id', $team->id)
-          ->pluck('name')
-          ->first();
-      if (!empty($getLogo)) {
-        $logo = $getLogo;
-      } else {
-        $logo = 'Ping.png';
-      }
-
-      return $logo;
-    }
+  public function show(Team $team) {
+    // Eagerly load the image with its appSetting relationship
+    $team->load('image.appSetting');
 
     function showRunner($userId) {
       $showRunner = User::query()->where('id', $userId)->first();
-
       return $showRunner->name;
-    }
-
-    function getPoster($show) {
-      $getPoster = Image::query()
-          ->where('show_id', $show->id)
-          ->pluck('name')
-          ->first();
-      if (!empty($getPoster)) {
-        $poster = $getPoster;
-      } else {
-        $poster = 'EBU_Colorbars.svg.png';
-      }
-
-      return $poster;
     }
 
     function showCategoryName($id) {
@@ -208,17 +192,20 @@ class TeamsController extends Controller {
       return $showCategorySubName->toArray();
     }
 
+    $team->socialMediaLinks = [
+        'www_url'        => $team->www_url,
+        'instagram_name' => $team->instagram_name,
+        'telegram_url'   => $team->telegram_url,
+        'twitter_handle' => $team->twitter_handle,
+    ];
+
+    $nextBroadcast = null;
+
     return Inertia::render('Teams/{$id}/Index', [
         'team'     => $team,
-        'logo'     => getLogo($team),
-        'image'    => [
-            'id'           => $team->image->id,
-            'name'         => $team->image->name,
-            'folder'       => $team->image->folder,
-            'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-            'cloud_folder' => $team->image->cloud_folder,
-        ],
-        'shows'    => Show::with('team', 'image')
+        'image'    => $team->image ? (new ImageResource($team->image))->resolve() : null,
+        'nextBroadcast' => $nextBroadcast,
+        'shows'    => Show::with('team', 'image.appSetting', 'category', 'subCategory')
             ->where('team_id', $team->id)
             ->where(function ($query) {
               if (auth()->check() && auth()->user()->creator) {
@@ -245,16 +232,8 @@ class TeamsController extends Controller {
                 'id'              => $show->id,
                 'name'            => $show->name,
                 'description'     => $show->description,
-                'showRunner'      => showRunner($show->user_id),
                 'team_id'         => $show->team_id,
-                'poster'          => getPoster($show),
-                'image'           => [
-                    'id'           => $show->image->id,
-                    'name'         => $show->image->name,
-                    'folder'       => $show->image->folder,
-                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                    'cloud_folder' => $show->image->cloud_folder,
-                ],
+                'image'           => $show->image ? (new ImageResource($show->image))->resolve() : null,
                 'slug'            => $show->slug,
                 'copyrightYear'   => Carbon::parse($show->created_at)->format('Y'),
                 'categoryName'    => showCategoryName($show->show_category_id),
@@ -696,6 +675,13 @@ class TeamsController extends Controller {
       ];
     });
 
+    $socialMediaLinks = [
+        'www_url'        => $team->www_url,
+        'instagram_name' => $team->instagram_name,
+        'telegram_url'   => $team->telegram_url,
+        'twitter_handle' => $team->twitter_handle,
+    ];
+
     return Inertia::render('Teams/{$id}/Edit', [
         'team'                => [
             'id'               => $team->id,
@@ -705,6 +691,7 @@ class TeamsController extends Controller {
             'totalSpots'       => $team->totalSpots,
             'team_status_id'   => $team->teamStatus->id,
             'team_status_name' => $team->teamStatus->status,
+            'socialMediaLinks' => $socialMediaLinks
         ],
         'teamCreator'         => $teamCreatorData,
         'teamLeader'          => $teamLeaderData,
@@ -740,6 +727,9 @@ class TeamsController extends Controller {
 ////////////  UPDATE
 ////////////////////
 
+  /**
+   * @throws ValidationException
+   */
   public function update(HttpRequest $request, Team $team) {
     if ($request->totalSpots < $team->memberSpots) {
       return redirect(route('teams.edit', [$team->slug]))->with('message', 'You already have the maximum. Please remove team members or increase the maximum # of team members.');
@@ -747,14 +737,22 @@ class TeamsController extends Controller {
 
     // validate the request
     $validatedData = $request->validate([
-        'name'        => ['required', 'string', 'max:255', Rule::unique('teams')->ignore($team->id)],
-        'description' => 'required|string|max:5000',
-        'totalSpots'  => 'required|integer|min:1',
-        'teamLeader'  => 'nullable|exists:users,id',
+        'name'           => ['required', 'string', 'max:255', Rule::unique('teams')->ignore($team->id)],
+        'description'    => 'nullable|string|max:5000',
+        'totalSpots'     => 'required|integer|min:1',
+        'teamLeader'     => 'nullable|exists:users,id',
+        'www_url'        => 'nullable|active_url',
+        'instagram_name' => 'nullable|string|max:30',
+        'telegram_url'   => 'nullable|active_url',
+        'twitter_handle' => 'nullable|string|min:4|max:15',
     ]);
 
     // Initialize the team_leader_id variable
     $team_leader_id = null;
+
+    // Sanitize social media handles
+    $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
+    $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
 
     // Check if the teamLeader is provided and is a valid creator with a status of 1
     if (!is_null($validatedData['teamLeader'])) {
@@ -772,39 +770,41 @@ class TeamsController extends Controller {
       $team_leader_id = $creator->id;
     }
 
-
-    // Check if the user is a creator with a status of 1
-//        $creator = Creator::where('user_id', $validatedData['teamLeader'])
-//            ->whereHas('status', function ($query) {
-//                $query->where('id', 1);
-//            })->first();
-
-//        if (!$creator) {
-//            throw ValidationException::withMessages([
-//                'teamLeader' => 'The selected team leader must be a valid creator with an active status.'
-//            ]);
-//        }
-    // Update the team leader only if a valid creator is found
-//        if ($creator) {
-//            $team->team_leader = $creator->id;
-//        } else {
-//            $team->team_leader = null;
-//        }
-
     // update the team
-    $team->name = $request->name;
-    $team->description = $request->description;
-    $team->totalSpots = $request->totalSpots;
-    $team->team_leader = $team_leader_id;
-    $team->slug = \Str::slug($request->name);
-    $team->save();
-    sleep(1);
+    $team->update([
+        'name'           => $validatedData['name'],
+        'description'    => $validatedData['description'],
+        'totalSpots'     => $validatedData['totalSpots'],
+        'team_leader'    => $team_leader_id,  // Optional, handle absence
+        'slug'           => \Str::slug($validatedData['name']),  // Creating slug from the validated name
+        'www_url'        => $validatedData['www_url'],
+        'instagram_name' => $instagramName,
+        'telegram_url'   => $validatedData['telegram_url'],
+        'twitter_handle' => $twitterHandle
+    ]);
 
     $teamSlug = $team->slug;
 
     // redirect
     return redirect(route('teams.manage', [$teamSlug]))->with('message', 'Team Updated Successfully');
 
+  }
+
+  public function savePublicMessage(HttpRequest $request, Team $team) {
+    // Validate the input
+    $validated = $request->validate([
+        'public_message' => 'nullable|string|max:440'  // Validate against the requirements
+    ]);
+
+    // Save the public message to the team
+    $team->public_message = $validated['public_message'];
+    $team->save();
+
+    // Return a response back to the Vue component
+    return response()->json([
+        'message'        => 'Public message updated successfully.',
+        'public_message' => $team->public_message  // Send back the saved message
+    ]);
   }
 
 

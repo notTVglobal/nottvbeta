@@ -283,7 +283,7 @@ import BackButton from '@/Components/Global/Buttons/BackButton'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useClipboard } from '@vueuse/core'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
-import ImageLightboxModal from '@/Components/Global/Images/ImageLightboxModal.vue'
+import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 
 usePageSetup('training.streamToNotTV')
 

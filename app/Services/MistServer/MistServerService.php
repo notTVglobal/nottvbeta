@@ -420,8 +420,8 @@ class MistServerService {
         "push_auto_remove" => [
             "stream" => $streamName,
             "target" => $targetURL,
-//            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
-//            "completetime" => '', // this can get data from the showSchedule but is a future project.
+//            "scheduletime" => '', // this can get data from the schedule but is a future project.
+//            "completetime" => '', // this can get data from the schedule but is a future project.
         ]
     ];
 

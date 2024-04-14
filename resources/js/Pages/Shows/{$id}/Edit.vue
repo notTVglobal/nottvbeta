@@ -40,7 +40,7 @@
 
                     <ImageUpload :image="image"
                                  :modelType="'show'"
-                                 :modelId="show.id"
+                                 :modelId="`${show.id}`"
                                  :name="'Upload Show Poster'"
                                  :maxSize="'30MB'"
                                  :fileTypes="'image/jpg, image/jpeg, image/png'"
@@ -59,6 +59,41 @@
                   <!--                                        :images="props.images"-->
                   <!--                                    />-->
                   <form @submit.prevent="submit">
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="name"
+                      >
+                        Show Name
+                      </label>
+
+                      <input v-model="form.name"
+                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                             type="text"
+                             name="name"
+                             id="name"
+                             required
+                      >
+                      <div v-if="form.errors.name" v-text="form.errors.name"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="description"
+                      >
+                        Description
+                      </label>
+                      <TabbableTextarea v-model="form.description"
+                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                        name="description"
+                                        id="description"
+                                        rows="10" cols="30"
+                                        required
+                      />
+                      <div v-if="form.errors.description" v-text="form.errors.description"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
 
                     <div class="mb-6">
                       <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
@@ -89,8 +124,8 @@
                       </label>
 
                       <select
-                              class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
-                              v-model="selectedShowRunnerCreatorId"
+                          class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
+                          v-model="selectedShowRunnerCreatorId"
                       >
                         <option v-for="member in teamMembers"
                                 :key="member.creator_id" :value="member.creator_id">{{ member.name }}
@@ -191,108 +226,7 @@
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Show Name
-                      </label>
-
-                      <input v-model="form.name"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="name"
-                             id="name"
-                             required
-                      >
-                      <div v-if="form.errors.name" v-text="form.errors.name"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="description"
-                      >
-                        Description
-                      </label>
-                      <TabbableTextarea v-model="form.description"
-                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                                        name="description"
-                                        id="description"
-                                        rows="10" cols="30"
-                                        required
-                      />
-                      <div v-if="form.errors.description" v-text="form.errors.description"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Website URL
-                      </label>
-
-                      <input v-model="form.www_url"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="www_url"
-                             id="www_url"
-                      >
-                      <div v-if="form.errors.www_url" v-text="form.errors.www_url"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Instagram Handle
-                      </label>
-
-                      <input v-model="form.instagram_name"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="instagram_name handle"
-                             id="instagram_name"
-                      >
-                      <div v-if="form.errors.instagram_name" v-text="form.errors.instagram_name"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Telegram URL
-                      </label>
-
-                      <input v-model="form.telegram_url"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="telegram_url"
-                             id="telegram_url"
-                      >
-                      <div v-if="form.errors.telegram_url" v-text="form.errors.telegram_url"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        X (formerly Twitter) @
-                      </label>
-
-                      <input v-model="form.twitter_handle"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="twitter_handle"
-                             id="twitter_handle"
-                      >
-                      <div v-if="form.errors.twitter_handle" v-text="form.errors.twitter_handle"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
+                    <SocialMediaLinksStoreUpdateForForm v-model:form="form"/>
 
                     <div class="flex justify-end mb-6">
                       <JetValidationErrors class="mr-4"/>
@@ -341,6 +275,7 @@ import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
 import Message from '@/Components/Global/Modals/Messages'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
 
 usePageSetup('shows/slug/edit')
 
@@ -360,7 +295,7 @@ let props = defineProps({
 })
 
 // Reactive property for the selected show_runner ID
-const selectedShowRunnerCreatorId = ref(null);
+const selectedShowRunnerCreatorId = ref(null)
 
 let selectedCategoryId = ref(props?.show?.category?.id)
 let selectedSubCategoryId = ref(props?.show?.subCategory?.id)
@@ -380,8 +315,8 @@ watch(selectedSubCategoryId, () => {
 })
 
 onMounted(() => {
-  selectedShowRunnerCreatorId.value = props.show.showRunner.creator_id;
-  document.getElementById('topDiv').scrollIntoView({ behavior: 'smooth' });
+  selectedShowRunnerCreatorId.value = props.show.showRunner.creator_id
+  document.getElementById('topDiv').scrollIntoView({behavior: 'smooth'})
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
   if (!props.show.showRunner) {
@@ -410,10 +345,10 @@ let form = useForm({
   show_status_id: props.show.show_status_id,
   category: props.show.category,
   sub_category: props.show.subCategory,
-  www_url: props.show.www_url,
-  instagram_name: props.show.instagram_name,
-  telegram_url: props.show.telegram_url,
-  twitter_handle: props.show.twitter_handle,
+  www_url: props.show.socialMediaLinks.www_url,
+  instagram_name: props.show.socialMediaLinks.instagram_name,
+  telegram_url: props.show.socialMediaLinks.telegram_url,
+  twitter_handle: props.show.socialMediaLinks.twitter_handle,
   notes: props.show.notes,
   episode_play_order: props.show.episode_play_order,
   show_runner_creator_id: props?.show?.showRunner?.creator_id,

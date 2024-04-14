@@ -1,5 +1,5 @@
 <template>
-  <tr v-if="showStore.episodeIsBeingDeleted !== episode.id">
+  <tr v-if="showStore.episodeIsBeingDeleted !== episode.id" class="bg-yellow-100">
     <td class="px-6 py-4 text-sm">
 
       <!-- If there is no episode number set by the user
@@ -8,16 +8,18 @@
       <div v-if="episode.episodeNumber">{{ episode.episodeNumber }}</div>
 
     </td>
-    <td class="text-xl font-medium flex items-center gap-x-4 px-6 py-4 uppercase w-fit">
-      <!--            <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
-      <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-      <Link :href="`/shows/${showSlug}/episode/${episode.slug}/manage`"
-            class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200">
-
-        {{ episode.name }}
-
-      </Link>
+    <td class="text-xl font-medium align-center my-auto justify-center gap-x-4 px-6 py-4 uppercase h-full">
+      <!-- Example image and link setup, uncomment or adjust as needed -->
+<!--       <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
+      <div class="flex flex-row flex-wrap gap-x-2 gap-y-2">
+        <SingleImage :image="episode.image" :alt="episode.name" :class="`rounded-xl w-10`" />
+        <Link :href="`/shows/${showSlug}/episode/${episode.slug}/manage`"
+              class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200 text-center">
+          {{ episode.name }}
+        </Link>
+      </div>
     </td>
+
 
     <!--        <td class="text-gray-500 px-6 py-4 text-sm">-->
     <!--            {{episode.notes}}-->
@@ -47,6 +49,10 @@
                              :showSlug="props.showSlug"
                              :showName="props.showName"
                              :scheduledDateTime="props.episode.scheduledReleaseDateTime"/>
+      </div>
+      <div v-if="episode.episodeStatusId === 6">
+        Scheduled for: <br />
+        {{ scheduledReleaseDateTime }}
       </div>
       <div v-if="episode.episodeStatusId === 7">
         {{ releaseDateTime }}
@@ -91,6 +97,7 @@ import { useUserStore } from "@/Stores/UserStore"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import ShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses"
 import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEditNote"
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
@@ -107,6 +114,7 @@ let props = defineProps({
 let showEpisodeStatuses = ref(false)
 
 const releaseDateTime = userStore.formatDateInUserTimezone(props.episode.releaseDateTime, 'ddd DD MMM YYYY')
+const scheduledReleaseDateTime = userStore.formatDateInUserTimezone(props.episode.scheduledReleaseDateTime, 'ddd DD MMM YYYY, hh:mm A' + ' ' + userStore.timezoneAbbreviation)
 
 showStore.noteEdit = 0
 const componentKey = ref(0);

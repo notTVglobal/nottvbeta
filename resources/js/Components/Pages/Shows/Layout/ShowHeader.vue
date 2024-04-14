@@ -47,7 +47,7 @@
                     class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span>Add Show To Schedule</span>
             </button>
-            <button v-if="show.isScheduled" onclick="changeShowScheduleModal.showModal()"
+            <button v-if="show.isScheduled" onclick="changeScheduleModal.showModal()"
                     class="btn btn-lg bg-indigo-500 hover:bg-indigo-700 border-indigo-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span>Change Schedule</span>
             </button>
@@ -62,14 +62,14 @@
         Add your show to the schedule
       </template>
       <template #form-description>
-        Add your show to the schedule
+        NOTE: You may want to schedule episodes individually.
       </template>
       <template #button-label>
         Add
       </template>
     </AddShowToSchedule>
 
-    <ChangeShowSchedule :show="show"/>
+    <ChangeSchedule :show="show"/>
 
 
   </div>
@@ -82,7 +82,7 @@ import { useUserStore } from "@/Stores/UserStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
 import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
-import ChangeShowSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
+import ChangeSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
 
 const showStore = useShowStore()
 const teamStore = useTeamStore()

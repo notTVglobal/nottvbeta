@@ -1,7 +1,17 @@
 # not.tv Changelog
 
-Last Update: April 11, 2024\
+Last Update: April 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.63
+April 14, 2024
+* Changed the schedule column name for scalability and solve some problems
+* Added a public message to the Teams page
+* Added buttons for Team managers to more easily find and return to the Team Manage page
+* Added social media links to teams
+* Hid creators/credits from teams, shows and episode pages.
+* Creators have a toggle to choose if they want their profile to be public
+* Revised broadcast schedule logic
 
 ## v0.8.7.62
 April 11, 2024

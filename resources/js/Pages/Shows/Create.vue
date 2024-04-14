@@ -47,11 +47,11 @@
           <div v-if="form.errors.team_id" v-text="form.errors.team_id" class="text-xs text-red-600 mt-1"></div>
         </div>
 
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+        <div class="mb-6 border-2 p-3">
+          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                  for="show_runner_creator_id"
           >
-            Show Runner
+            Show Runner <span class="text-red-500">* REQUIRED</span>
           </label>
           <select
               class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
@@ -69,14 +69,49 @@
             </option>
           </select>
 
-          <div v-if="form.errors.show_runner_creator_id" v-text="form.errors.show_runner_creator_id" class="text-xs text-red-600 mt-1"></div>
+          <!-- Button to toggle the explanation -->
+          <button @click.prevent="toggleShowRunnerInfo"
+                  class="btn mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold uppercase text-xs">
+            👉 Who is a Show Runner?
+          </button>
+
+          <!-- Conditional rendering of the show runner explanation -->
+          <div v-if="showRunnerInfoVisible" class="mt-2 text-gray-800 dark:text-gray-200">
+            <div class="mb-2">
+              <strong>Show Runner:</strong> The chief architect behind a show, responsible for overseeing every element
+              of production. Comparable to an event planner, but for new media production, the show runner handles the
+              creative vision and daily operations, ensuring the show’s vision is realized through managing everything
+              from scriptwriting to final edits. They lead the production team, make critical decisions on content and
+              direction, and maintain the show's consistency and quality across episodes.
+            </div>
+            <div>
+              <div class="mt-2 text-gray-800 dark:text-gray-200">
+                <h3 class="font-bold">Show Runner for Informal and Community-Driven Productions:</h3>
+                <p class="mt-1">
+                  A show runner in informal settings acts much like an event coordinator, emphasizing flexibility and
+                  audience engagement. They adapt quickly to live interactions and maintain the creative vision,
+                  ensuring the production is engaging and cohesive. Key responsibilities include:
+                </p>
+                <ul class="list-disc pl-5 mt-1">
+                  <li>Adjusting plans on-the-fly in response to audience dynamics and unscripted moments.</li>
+                  <li>Integrating audience feedback in real-time to guide the show’s direction.</li>
+                  <li>Managing schedules and coordinating with participants, akin to event planning.</li>
+                  <li>Maintaining the show's tone and style to align with overarching goals.</li>
+                  <li>Leading the production team effectively in dynamic, less controlled environments.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="form.errors.show_runner_creator_id" v-text="form.errors.show_runner_creator_id"
+               class="text-xs text-red-600 mt-1"></div>
         </div>
 
         <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                  for="name"
           >
-            Show Name
+            Show Name <span class="text-red-500">* REQUIRED</span>
           </label>
 
           <input v-model="form.name"
@@ -85,15 +120,16 @@
                  name="name"
                  id="name"
                  required
+                 placeholder="Show Name"
           >
           <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
         </div>
 
         <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                  for="category"
           >
-            Category
+            Category <span class="text-red-500">* REQUIRED</span>
           </label>
 
 
@@ -101,6 +137,7 @@
               class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs "
               v-model="selectedCategoryId" @change="chooseCategory"
           >
+            <option disabled :value="null">Choose a category...</option>
             <option v-for="category in categories"
                     :key="category.id" :value="category.id">{{ category.name }}
             </option>
@@ -109,21 +146,22 @@
           <div v-if="form.errors.category" v-text="form.errors.category"
                class="text-xs text-red-600 mt-1"></div>
 
-          <span class="">{{showStore.category_description}}</span>
+          <span class="">{{ showStore.category_description }}</span>
         </div>
 
         <div class="mb-6">
-          <label class="block mb-1 uppercase font-bold text-xs dark:text-gray-200"
+          <label class="block mb-1 uppercase font-bold dark:text-gray-200"
                  for="sub_category"
           >
             Sub-category
           </label>
 
           <select
-                  class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
-                  v-model="selectedSubCategoryId" @change="chooseSubCategory"
+              class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
+              v-model="selectedSubCategoryId" @change="chooseSubCategory"
           >
-            <option disabled value="">Select a subcategory</option>
+            <option v-if="!selectedCategoryId" disabled :value="null">Choose a category first</option>
+            <option v-else disabled :value="null">Choose a subcategory...</option>
             <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">
               {{ subCategory?.name }}
             </option>
@@ -134,88 +172,23 @@
         </div>
 
         <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                  for="description"
           >
-            Description
+            Description <span class="text-red-500">* REQUIRED</span>
           </label>
           <textarea v-model="form.description"
-                    class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
                     type="text"
                     name="description"
                     id="description"
                     required
+                    placeholder="Description"
           ></textarea>
           <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
         </div>
 
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                 for="name"
-          >
-            Website URL
-          </label>
-
-          <input v-model="form.www_url"
-                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                 type="text"
-                 name="www_url"
-                 id="www_url"
-          >
-          <div v-if="form.errors.www_url" v-text="form.errors.www_url"
-               class="text-xs text-red-600 mt-1"></div>
-        </div>
-
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                 for="name"
-          >
-            Instagram Handle
-          </label>
-
-          <input v-model="form.instagram_name"
-                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                 type="text"
-                 name="instagram_name handle"
-                 id="instagram_name"
-          >
-          <div v-if="form.errors.instagram_name" v-text="form.errors.instagram_name"
-               class="text-xs text-red-600 mt-1"></div>
-        </div>
-
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                 for="name"
-          >
-            Telegram URL
-          </label>
-
-          <input v-model="form.telegram_url"
-                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                 type="text"
-                 name="telegram_url"
-                 id="telegram_url"
-          >
-          <div v-if="form.errors.telegram_url" v-text="form.errors.telegram_url"
-               class="text-xs text-red-600 mt-1"></div>
-        </div>
-
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                 for="name"
-          >
-            X (formerly Twitter) @
-          </label>
-
-          <input v-model="form.twitter_handle"
-                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                 type="text"
-                 name="twitter_handle"
-                 id="twitter_handle"
-          >
-          <div v-if="form.errors.twitter_handle" v-text="form.errors.twitter_handle"
-               class="text-xs text-red-600 mt-1"></div>
-        </div>
+        <SocialMediaLinksStoreUpdateForForm v-model:form="form" />
 
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
@@ -256,7 +229,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useShowStore } from '@/Stores/ShowStore'
@@ -264,6 +237,7 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CheckboxNotification from '@/Components/Global/Modals/CheckboxNotification'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import Message from '@/Components/Global/Modals/Messages'
+import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
 
 usePageSetup('showsCreate')
 
@@ -279,8 +253,8 @@ let props = defineProps({
   categories: Object,
 })
 
-let selectedCategoryId = ref()
-let selectedSubCategoryId = ref()
+let selectedCategoryId = ref(null)
+let selectedSubCategoryId = ref(null)
 
 const subCategories = computed(() => {
   const category = props.categories.find(cat => cat.id === selectedCategoryId.value)
@@ -297,10 +271,10 @@ watch(selectedSubCategoryId, () => {
 })
 
 onMounted(() => {
-  selectedShowRunnerCreatorId.value = defaultShowRunnerId.value;
+  selectedShowRunnerCreatorId.value = defaultShowRunnerId.value
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-  selectedTeamId.value = defaultTeamId.value;
+  selectedTeamId.value = defaultTeamId.value
 })
 
 const defaultTeamId = computed(() => {
@@ -312,15 +286,15 @@ const defaultShowRunnerId = computed(() => {
 })
 
 // Reactive property for the selected team ID
-const selectedTeamId = ref(null);
+const selectedTeamId = ref(null)
 
 // Reactive property for the selected show_runner ID
-const selectedShowRunnerCreatorId = ref(null);
+const selectedShowRunnerCreatorId = ref(null)
 
 // Watcher to update the teamStore.id when selectedTeamId changes
 watch(selectedTeamId, (newId) => {
-  teamStore.id = newId;
-});
+  teamStore.id = newId
+})
 
 const chooseCategory = () => {
   // Update the selected category ID based on the new selection
@@ -351,8 +325,14 @@ const fetchTeamMembers = async () => {
   }
 }
 
+const showRunnerInfoVisible = ref(false)
+
+const toggleShowRunnerInfo = () => {
+  showRunnerInfoVisible.value = !showRunnerInfoVisible.value
+}
+
 // Use watch to react to changes in defaultTeamId computed property
-watch(defaultTeamId, fetchTeamMembers, { immediate: true }); // immediate: true to run on mount
+watch(defaultTeamId, fetchTeamMembers, {immediate: true}) // immediate: true to run on mount
 
 let form = useForm({
   name: '',

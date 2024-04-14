@@ -21,22 +21,33 @@
 
         <div class="flex justify-between mb-3 pt-6">
           <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE SHOW</div>
-          <div class="flex flex-wrap-reverse justify-end">
-            <button
-                v-if="teamStore.can.editShow"
-                @click="goLive"
-                class="px-4 py-2 mr-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
-            >Go Live
-            </button>
+
+          <div class="flex flex-col">
+            <div class="flex flex-row w-full justify-end mb-2">
+              <button
+                  @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
+                  class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-orange-500 hover:bg-orange-600 rounded-lg"
+              >Back to<br/>
+                Team Page
+              </button>
+            </div>
+            <div class="flex flex-wrap-reverse justify-end">
+              <button
+                  v-if="teamStore.can.editShow"
+                  @click="goLive"
+                  class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
+              >Go Live
+              </button>
               <button
                   v-if="teamStore.can.editShow"
                   @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
-                  class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+                  class="px-4 py-2 mb-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
               >Edit Show
               </button>
 
-              <DashboardButton />
+              <DashboardButton class="mb-2"/>
 
+            </div>
           </div>
 
         </div>
@@ -67,102 +78,102 @@
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8 space-y-4">
-<!--          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">-->
-<!--            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
+            <!--          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">-->
+            <!--            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
 
-              <!-- This code doesn't work .. it's meant to become a header button that collapses/expands each section -->
-              <!--                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button"-->
-              <!--                                    data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true"-->
-              <!--                                    aria-controls="collapseExample">Episodes-->
-              <!--                            </button>-->
+            <!-- This code doesn't work .. it's meant to become a header button that collapses/expands each section -->
+            <!--                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button"-->
+            <!--                                    data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true"-->
+            <!--                                    aria-controls="collapseExample">Episodes-->
+            <!--                            </button>-->
 
-              <!--                            <div class="collapse" id="collapseExample">-->
-<!--              <div>-->
-<!--                <div class="bg-blue-100 p-2 font-bold text-black">Episodes</div>-->
-              <div @click="toggleComponent('showEpisodes')"
-                   :class="{'rounded-t-lg': showStore.openComponent === 'showEpisodes', 'rounded-lg': showStore.openComponent !== 'showEpisodes'}"
-                   class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
-                <font-awesome-icon icon="fa-play-circle" class=""/>
-                Episodes
-              </div>
-              <div v-if="showStore.openComponent === 'showEpisodes'">
-                <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <!--                            <div class="collapse" id="collapseExample">-->
+            <!--              <div>-->
+            <!--                <div class="bg-blue-100 p-2 font-bold text-black">Episodes</div>-->
+            <div @click="toggleComponent('showEpisodes')"
+                 :class="{'rounded-t-lg': showStore.openComponent === 'showEpisodes', 'rounded-lg': showStore.openComponent !== 'showEpisodes'}"
+                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+              <font-awesome-icon icon="fa-play-circle" class=""/>
+              Episodes
+            </div>
+            <div v-if="showStore.openComponent === 'showEpisodes'">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <ShowEpisodesList :episodes="props.episodes" :show="props.show"
                                   :episodeStatuses="props.episodeStatuses"/>
+              </div>
+            </div>
+            <!--              </div>-->
+
+            <!--                            <table class="min-w-full divide-y divide-gray-200">-->
+            <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
+            <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
+            <!--                                    <td class="px-6 py-4 whitespace-nowrap">-->
+            <!--                                        <div class="flex items-center">-->
+            <!--                                            <div>-->
+            <!--                                                <div class="text-sm font-medium text-gray-900">-->
+            <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
+            <!--                                                </div>-->
+            <!--                                            </div>-->
+            <!--                                        </div>-->
+            <!--                                    </td>-->
+
+            <!--                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">-->
+            <!--                                        <Link :href="`/admin/users/edit/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>-->
+            <!--                                    </td>-->
+            <!--                                </tr>-->
+            <!--                                </tbody>-->
+            <!--                            </table>-->
+
+            <!--                            &lt;!&ndash; Paginator &ndash;&gt;-->
+            <!--                            <Pagination :links="episode.links" class="mt-6"/>-->
+
+            <!--            </div>-->
+
+            <!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
+            <!--              <div class="bg-blue-100 p-2 font-bold text-black">Credits</div>-->
+            <!--              -->
+            <!--              -->
+            <div @click="toggleComponent('showCredits')"
+                 :class="{'rounded-t-lg': showStore.openComponent === 'showCredits', 'rounded-lg': showStore.openComponent !== 'showCredits'}"
+                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+              <font-awesome-icon icon="fa-clipboard-list" class=""/>
+              Credits and Assignments
+            </div>
+            <div v-if="showStore.openComponent === 'showCredits'">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <div class="border-1 border-t mb-3 bg-blue-100 py-1 px-2 text-xs font-semibold text-red-800">
+                  In development. Not currently working.
                 </div>
+                <Link
+                    :href="`#`"
+                    v-if="teamStore.can.createAssignment">
+                  <button
+                      class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                      disabled
+                  >Create Assignment
+                  </button>
+                </Link>
+
+                <ShowCreditsList/>
               </div>
-<!--              </div>-->
+            </div>
+            <!--            </div>-->
 
-              <!--                            <table class="min-w-full divide-y divide-gray-200">-->
-              <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
-              <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
-              <!--                                    <td class="px-6 py-4 whitespace-nowrap">-->
-              <!--                                        <div class="flex items-center">-->
-              <!--                                            <div>-->
-              <!--                                                <div class="text-sm font-medium text-gray-900">-->
-              <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-              <!--                                                </div>-->
-              <!--                                            </div>-->
-              <!--                                        </div>-->
-              <!--                                    </td>-->
+            <!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
+            <!--              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>-->
+            <div @click="toggleComponent('showRecordings')"
+                 :class="{'rounded-t-lg': showStore.openComponent === 'showRecordings', 'rounded-lg': showStore.openComponent !== 'showRecordings'}"
+                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+              <font-awesome-icon icon="fa-circle" class="text-red-700"/>
+              Recordings
+            </div>
+            <div v-if="showStore.openComponent === 'showRecordings'">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showImage="show.image"/>
 
-              <!--                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">-->
-              <!--                                        <Link :href="`/admin/users/edit/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>-->
-              <!--                                    </td>-->
-              <!--                                </tr>-->
-              <!--                                </tbody>-->
-              <!--                            </table>-->
-
-              <!--                            &lt;!&ndash; Paginator &ndash;&gt;-->
-              <!--                            <Pagination :links="episode.links" class="mt-6"/>-->
-
-<!--            </div>-->
-
-<!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
-<!--              <div class="bg-blue-100 p-2 font-bold text-black">Credits</div>-->
-<!--              -->
-<!--              -->
-          <div @click="toggleComponent('showCredits')"
-               :class="{'rounded-t-lg': showStore.openComponent === 'showCredits', 'rounded-lg': showStore.openComponent !== 'showCredits'}"
-               class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
-            <font-awesome-icon icon="fa-clipboard-list" class=""/>
-            Credits and Assignments
-          </div>
-          <div v-if="showStore.openComponent === 'showCredits'">
-            <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <div class="border-1 border-t mb-3 bg-blue-100 py-1 px-2 text-xs font-semibold text-red-800">
-                In development. Not currently working.
+                <!--            </div>-->
               </div>
-              <Link
-                  :href="`#`"
-                  v-if="teamStore.can.createAssignment">
-                <button
-                    class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                    disabled
-                >Create Assignment
-                </button>
-              </Link>
-
-              <ShowCreditsList/>
             </div>
-          </div>
-<!--            </div>-->
-
-<!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
-<!--              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>-->
-          <div @click="toggleComponent('showRecordings')"
-               :class="{'rounded-t-lg': showStore.openComponent === 'showRecordings', 'rounded-lg': showStore.openComponent !== 'showRecordings'}"
-               class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
-            <font-awesome-icon icon="fa-circle" class="text-red-700"/>
-            Recordings
-          </div>
-          <div v-if="showStore.openComponent === 'showRecordings'">
-            <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showImage="show.image"/>
-
-<!--            </div>-->
-            </div>
-          </div>
           </div>
         </div>
       </div>
@@ -199,7 +210,6 @@ const goLiveStore = useGoLiveStore()
 const toggleComponent = (componentName) => {
   showStore.openComponent = showStore.openComponent === componentName ? null : componentName
 }
-
 
 
 onUnmounted(() => {

@@ -7,7 +7,6 @@ use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\ChannelExternalSourceController;
 use App\Http\Controllers\ChannelPlaylistController;
-use App\Http\Controllers\FlashController;
 use App\Http\Controllers\GoLiveController;
 use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\MistServerController;
@@ -19,7 +18,6 @@ use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecordingController;
-use App\Http\Controllers\ShowScheduleController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TeamManagersController;
 use App\Http\Controllers\TestMessageController;
@@ -41,14 +39,13 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TeamMembersController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\SchedulesController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsPersonController;
 use App\Http\Controllers\NewsStoryController;
 use App\Http\Controllers\NewsroomController;
 use App\Http\Controllers\NewsRssFeedController;
 use App\Http\Controllers\MovieController;
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoUploadController;
@@ -84,7 +81,13 @@ use Laravel\Cashier\Checkout;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('test', function () {
+  return Inertia::render('Test');
+})->name('test');
 
+Route::get('overlays/stream-preview', function () {
+  return Inertia::render('Stream/StreamPreview');
+})->name('stream.preview');
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
@@ -252,7 +255,7 @@ Route::middleware([
   })->name('settings');
 
   Route::get('/stream', function () {
-    return Inertia::render('Stream');
+    return Inertia::render('Stream/Index');
   })->name('stream');
 
   Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
@@ -350,7 +353,7 @@ Route::middleware([
 ///////////
 
   // User view
-  Route::get('/schedule', [ScheduleController::class, 'index'])
+  Route::get('/schedule', [SchedulesController::class, 'index'])
       ->name('schedule');
 
   // Admin manage the schedule
@@ -796,6 +799,9 @@ Route::middleware([
         ->middleware('can:viewTeamManagePage,team')
         ->name('teams.manage');
 
+    Route::post('/teams/{team}/save-public-message', [TeamsController::class, 'savePublicMessage'])
+        ->middleware('can:manage,team');
+
     // Edit team
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
         ->name('teams.edit');
@@ -1157,15 +1163,15 @@ Route::get('/admin/external-source/search', [ChannelExternalSourceController::cl
 ///////////
 ///
 
-Route::get('/api/schedule', [ShowScheduleController::class, 'fetchFiveDaySixHourSchedule']);
-Route::post('/api/schedule/addToSchedule', [ShowScheduleController::class, 'addToSchedule']);
-Route::post('/api/schedule/{id}', [ShowScheduleController::class, 'update']);
-Route::delete('/api/schedule/removeFromSchedule', [ShowScheduleController::class, 'removeFromSchedule']);
-Route::get('/api/schedule/today', [ShowScheduleController::class, 'fetchTodaysContent']);
-Route::post('/api/schedule/week', [ShowScheduleController::class, 'preloadWeeklyContent']);
-Route::post('/api/schedule/week/{formattedDateTimeUtc}', [ShowScheduleController::class, 'loadWeekFromDate']);
+Route::get('/api/schedule', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
+Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSchedule']);
+Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
+Route::delete('/api/schedule/removeFromSchedule', [SchedulesController::class, 'removeFromSchedule']);
+Route::get('/api/schedule/today', [SchedulesController::class, 'fetchTodaysContent']);
+Route::post('/api/schedule/week', [SchedulesController::class, 'preloadWeeklyContent']);
+Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::class, 'loadWeekFromDate']);
 
-Route::post('/invalidate-caches/', [ShowScheduleController::class, 'invalidateCaches'])
+Route::post('/invalidate-caches/', [SchedulesController::class, 'invalidateCaches'])
     ->can('viewAdmin', 'App\Models\User');
 
 
@@ -1216,6 +1222,11 @@ Route::get('/coffee', function () {
 });
 
 Route::get('/stats', [AppSettingController::class, 'redirectStats']);
+
+// setup on April 12, 2024 by tec21
+Route::get('/bc-townhalls-2024-qr-code', function () {
+  return redirect('/teams/bc-townhalls-2024');
+});
 
 
 // Routes For Testing

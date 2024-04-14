@@ -74,21 +74,133 @@ function getUpcomingContentDates(viewingWindowStart) {
     return dates
 }
 
+/**
+ * Filters shows that are scheduled within a specified datetime range, adjusted to the user's timezone.
+ *
+ * This function ensures that show scheduling comparisons are made accurately by converting all involved
+ * datetime values to the user's local timezone using functions from the userStore. It includes type checking
+ * to ensure input dates are valid and handles edge cases where shows start or end at the boundary times.
+ *
+ * @param {Object} state - The state object containing the shows' data.
+ * @param {Date} startDateTime - The start datetime from which to filter shows, expected to be a Date object.
+ * @param {Date} endDateTime - The end datetime up to which to filter shows, expected to be a Date object.
+ * @returns {Array} An array of shows that start within the specified datetime range.
+ */
 function fetchShowsScheduledBetween(state, startDateTime, endDateTime) {
+    const userStore = useUserStore() // Access user-specific settings and utilities
+
+    if (!(startDateTime instanceof Date && endDateTime instanceof Date)) {
+        throw new TypeError('startDateTime and endDateTime must be Date objects.');
+    }
+
     // Convert start and end DateTime to the user's timezone for accurate comparison
-    const userStore = useUserStore()
     const startInUserTZ = userStore.convertUtcToUserTimezone(startDateTime.toISOString())
     const endInUserTZ = userStore.convertUtcToUserTimezone(endDateTime.toISOString())
 
     return state.weeklyContent.filter(show => {
-        // Convert show's start time to the same timezone before comparison
-        const showStartTimeInUserTZ = userStore.convertUtcToUserTimezone(show.start_time)
-        return showStartTimeInUserTZ >= startInUserTZ && showStartTimeInUserTZ < endInUserTZ
+        if (typeof show.start_time !== 'string') {
+            console.warn('Expected show.start_time to be a string in ISO format.');
+            return false;
+        }
+        const showStartTimeInUserTZ = userStore.convertUtcToUserTimezone(show.start_time);
+
+        // Check if the show's start time is within the specified datetime range, inclusive of start and exclusive of end
+        return new Date(showStartTimeInUserTZ) >= new Date(startInUserTZ) && new Date(showStartTimeInUserTZ) < new Date(endInUserTZ);
+    });
+}
+
+function resolveSchedulingConflicts(shows) {
+    // Sort shows by start time, then by priority for shows with the same start time
+    const sortedShows = shows.sort((a, b) => {
+        const startTimeComparison = new Date(a.start_time) - new Date(b.start_time)
+        if (startTimeComparison === 0) { // If start times are the same
+            return a.priority - b.priority // Compare by priority
+        }
+        return startTimeComparison
+    })
+
+    const resolvedShows = []
+    const showsByStartTime = {}
+
+    // Group shows by their start time
+    sortedShows.forEach(show => {
+        const startTime = new Date(show.start_time).toISOString()
+        if (!showsByStartTime[startTime]) {
+            showsByStartTime[startTime] = []
+        }
+        showsByStartTime[startTime].push(show)
+    })
+
+    // For each start time, select the show with the highest priority (lowest priority number)
+    Object.values(showsByStartTime).forEach(group => {
+        if (group.length > 1) {
+            // If there are conflicts, push only the show with the highest priority
+            resolvedShows.push(group[0]) // Assuming the group is already sorted by priority
+        } else {
+            // No conflict, push the single show
+            resolvedShows.push(group[0])
+        }
+    })
+
+    return resolvedShows
+}
+
+function adjustShowsForGrid(shows, timeSlots) {
+    return shows.map(show => {
+        // Your existing logic for calculating show placement
+        const showStart = new Date(show.start_time)
+        const showEnd = new Date(show.start_time)
+        showEnd.setMinutes(showEnd.getMinutes() + show.durationMinutes)
+        const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000))
+        let span = Math.ceil(show.durationMinutes / 30)
+        if (slotIndex + span > timeSlots.length) {
+            span = timeSlots.length - slotIndex
+        }
+
+        return {
+            ...show,
+            gridStart: slotIndex + 1,
+            gridSpan: span,
+        }
     })
 }
 
+function fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
+    const gridItems = []
+
+    timeSlots.forEach((slot, index) => {
+        // Ensure every slot is a Date object, convert if necessary
+        console.log('type of slot: ' + slot, typeof slot); // Check what `slot` contains and its type
+
+        if (!(slot instanceof Date)) {
+            console.error('slot is not a Date object:', slot);
+            return; // Skip this iteration if `slot` is not a Date object
+        }
+
+        const slotStart = slot
+        const showExistsInSlot = showsWithPlacement.some(show =>
+            slotStart >= new Date(show.start_time) &&
+            slotStart < new Date(new Date(show.start_time).getTime() + show.durationMinutes * 60000),
+        )
+
+        if (!showExistsInSlot) {
+            // Insert a placeholder show for this slot
+            gridItems.push({
+                placeholder: true,
+                start_time: slot.toISOString(),
+                gridStart: index + 1,
+                gridSpan: 1,
+                content: {show: {name: 'Nothing scheduled.'}},
+            })
+        }
+    })
+
+    // Merge and sort the grid items by their start time/gridStart to maintain chronological order
+    return [...showsWithPlacement, ...gridItems].sort((a, b) => a.gridStart - b.gridStart)
+}
+
+
 const initialState = () => ({
-    windowWidth: window.innerWidth, // Store window width in state
     viewingWindowStart: new Date(),
     currentMonth: new Date(),
     selectedDay: new Date(),
@@ -100,7 +212,6 @@ const initialState = () => ({
     weeklyContent: [],
     dataFetchLog: [],
     scheduleIsLoading: false,
-    shows: [],
 })
 
 export const useScheduleStore = defineStore('scheduleStore', {
@@ -115,10 +226,6 @@ export const useScheduleStore = defineStore('scheduleStore', {
             this.viewingWindowStart = now
             this.currentMonth = now
             this.selectedDay = now
-        },
-        updateWidth() {
-            // Action to update the window width in state
-            this.windowWidth = window.innerWidth;
         },
         async setSelectedDay(day) {
             this.selectedDay = day
@@ -459,60 +566,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         //     return slots;
         // },
 
-        resolveSchedulingConflicts(shows) {
-            // Sort shows by start time, then by priority for shows with the same start time
-            const sortedShows = shows.sort((a, b) => {
-                const startTimeComparison = new Date(a.start_time) - new Date(b.start_time)
-                if (startTimeComparison === 0) { // If start times are the same
-                    return a.priority - b.priority // Compare by priority
-                }
-                return startTimeComparison
-            })
 
-            const resolvedShows = []
-            const showsByStartTime = {}
-
-            // Group shows by their start time
-            sortedShows.forEach(show => {
-                const startTime = new Date(show.start_time).toISOString()
-                if (!showsByStartTime[startTime]) {
-                    showsByStartTime[startTime] = []
-                }
-                showsByStartTime[startTime].push(show)
-            })
-
-            // For each start time, select the show with the highest priority (lowest priority number)
-            Object.values(showsByStartTime).forEach(group => {
-                if (group.length > 1) {
-                    // If there are conflicts, push only the show with the highest priority
-                    resolvedShows.push(group[0]) // Assuming the group is already sorted by priority
-                } else {
-                    // No conflict, push the single show
-                    resolvedShows.push(group[0])
-                }
-            })
-
-            return resolvedShows
-        },
-        adjustShowsForGrid(shows, timeSlots) {
-            return shows.map(show => {
-                // Your existing logic for calculating show placement
-                const showStart = new Date(show.start_time)
-                const showEnd = new Date(show.start_time)
-                showEnd.setMinutes(showEnd.getMinutes() + show.durationMinutes)
-                const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000))
-                let span = Math.ceil(show.durationMinutes / 30)
-                if (slotIndex + span > timeSlots.length) {
-                    span = timeSlots.length - slotIndex
-                }
-
-                return {
-                    ...show,
-                    gridStart: slotIndex + 1,
-                    gridSpan: span,
-                }
-            })
-        },
         mapShowsToTimeSlots(shows, timeSlots) {
             const showsWithAdjustedSpans = shows.map(show => {
                 const showStart = new Date(show.start_time)
@@ -552,48 +606,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 }
             })
         },
-        fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
-            const gridItems = []
-
-            timeSlots.forEach((slot, index) => {
-                const slotStart = slot
-                const showExistsInSlot = showsWithPlacement.some(show =>
-                    slotStart >= new Date(show.start_time) &&
-                    slotStart < new Date(new Date(show.start_time).getTime() + show.durationMinutes * 60000),
-                )
-
-                if (!showExistsInSlot) {
-                    // Insert a placeholder show for this slot
-                    gridItems.push({
-                        placeholder: true,
-                        start_time: slot.toISOString(),
-                        gridStart: index + 1,
-                        gridSpan: 1,
-                        content: {show: {name: 'Nothing scheduled.'}},
-                    })
-                }
-            })
-
-            // Merge and sort the grid items by their start time/gridStart to maintain chronological order
-            return [...showsWithPlacement, ...gridItems].sort((a, b) => a.gridStart - b.gridStart)
-        },
-
 
     },
 
     getters: {
-        numberOfColumns: (state) => {
-            // Compute the number of columns based on window width
-            if (state.windowWidth >= 1024 && state.windowWidth < 1200) {
-                return 4; // 4 columns for widths 1024px to 1199px
-            } else if (state.windowWidth >= 1200 && state.windowWidth < 1600) {
-                return 6; // 6 columns for widths 1200px to 1599px
-            } else if (state.windowWidth >= 1600) {
-                return 8; // 8 columns for widths 1600px and above
-            } else {
-                return 4; // Default to 4 columns for smaller sizes
-            }
-        },
         nextFourHoursOfContent: (state) => {
             const now = new Date()
             const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0))
@@ -601,11 +617,9 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             const timeSlots = createTimeSlots(startOfCurrentHour, 4, 30)
             let shows = fetchShowsScheduledBetween(state, startOfCurrentHour, fourHoursLater)
-            shows = this.resolveSchedulingConflicts(shows)
-            let adjustedShows = this.adjustShowsForGrid(shows, timeSlots)
-            adjustedShows = this.fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots)
-
-            return adjustedShows
+            let resolvedShows = resolveSchedulingConflicts(shows)
+            let adjustedShows = adjustShowsForGrid(resolvedShows, timeSlots)
+            return fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots)
         },
         // nextFourHoursOfContent: (state) => {
         //     const userStore = useUserStore()

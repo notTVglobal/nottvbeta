@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted, onMounted } from 'vue'
+import { ref, onUnmounted, onMounted, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { usePage } from '@inertiajs/inertia-vue3'
 import videojs from 'video.js'
@@ -93,14 +93,28 @@ let showLogin = ref(false)
 let screenWidth = ref(screen.width)
 let mouseActive = false
 
-// const { pageProps } = usePage();
-
 onMounted(() => {
-  // const firstPlayVideoSourceType = ref(pageProps.value.firstPlayVideoSourceType);
-  // const firstPlayVideoSource = ref(pageProps.value.firstPlayVideoSource);
-  // nowPlayingStore.setActiveMedia(firstPlayVideoSourceType, firstPlayVideoSource);
+// onMounted lifecycle hook: Initializes video player settings and fetches user-specific playback settings.
+// TODO:
+// 1. Currently, the component fetches initial video source and type from pageProps provided by Inertia.
+//    This should be expanded to integrate fetching and applying user-specific video playback settings from the database.
+//    Use Axios to fetch settings like last_playback_position and additional_settings (e.g., volume, playback speed) based on the user and content ID.
+// 2. Implement logic to decide whether to use these settings directly or prompt the user with a modal (using a component like Modal.vue)
+//    to choose whether to resume from the last saved position or start the video anew.
+// 3. Extend the videojs initialization to apply these settings once fetched. This includes setting the initial playback position,
+//    adjusting volume, and playback speed if those settings exist in the user's video settings.
+// 4. Handle potential errors in fetching or applying settings and ensure robust fallbacks to default settings.
+// 5. Consider adding event listeners to the video player to update the user's settings in real-time as they adjust their playback preferences.
 
-const videoPlayer = videojs('main-player')
+  const pageProps = usePage().props
+  videoPlayerStore.firstPlayVideoSource = pageProps.value.firstPlay.first_play_video_source
+  videoPlayerStore.firstPlayVideoSourceType = pageProps.value.firstPlay.first_play_video_source_type
+
+  const videoPlayer = videojs('main-player')
+
+  // Additional logic to fetch and apply user settings will be added here following the above TODOs.
+  videoPlayerStore.videoSource = pageProps.value.firstPlay.first_play_video_source
+  videoPlayerStore.videoSourceType = pageProps.value.firstPlay.first_play_video_source_type
 
   videoPlayer.ready(() => {
 
@@ -167,7 +181,7 @@ const clickOnVideoAction = () => {
     } else {
       // videoPlayerStore.togglePlay()
       appSettingStore.toggleOsd()
-      if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5 ) {
+      if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5) {
         appSettingStore.closeOtt()
       }
     }

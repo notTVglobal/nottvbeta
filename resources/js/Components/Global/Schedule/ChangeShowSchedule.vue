@@ -1,5 +1,5 @@
 <template>
-  <dialog id="changeShowScheduleModal" class="modal">
+  <dialog id="changeScheduleModal" class="modal">
     <div class="modal-box w-11/12 max-w-5xl">
 
       <div class="flex flex-row justify-center text-center">
@@ -60,6 +60,6 @@ const removeFromSchedule = async() => {
 }
 
 function closeModal() {
-  document.getElementById('changeShowScheduleModal').close()
+  document.getElementById('changeScheduleModal').close()
 }
 </script>

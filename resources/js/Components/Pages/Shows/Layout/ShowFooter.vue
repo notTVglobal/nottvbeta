@@ -11,9 +11,9 @@
 
       <!-- Paginator -->
       <!--                            <Pagination :links="`#`" class="mt-6"/>-->
-      <Link :href="`/teams/${team.slug}`" class="text-blue-500 hover:text-blue-700 ml-2 uppercase">
-        {{ team.name }}&nbsp;
-      </Link>
+      <div class="text-gray-200 ml-2 uppercase">
+        {{ show.name }}&nbsp;
+      </div>
       <div>
         ©
         <!--                    If there is a copyright year display it... we need to remove the &copy; and replace it with whichever creative commons icon it needs -->

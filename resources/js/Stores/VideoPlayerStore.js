@@ -109,7 +109,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 })
             })
         },
-
         // Attach event listeners to the player
         attachEventListeners() {
             if (!this.player || this.eventListenersAttached) {
@@ -122,9 +121,28 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.on('play', this.handlePlay)
             this.player.on('pause', this.handlePause)
             this.player.on('error', this.handleError)
-
+            this.player.on('ended', this.handleEnd)
+            console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')
+        },
+        refreshVideoPlayer() {
+            let videoJs = videojs('main-player')
+            const currentSource = this.videoSource;
+            const currentSourceType = this.videoSourceType;
+
+            // Reset the player source to force reload
+            videoJs.src({
+                type: currentSourceType,
+                src: currentSource
+            });
+            videoJs.ready(() => {
+                videoJs.play().catch(error => {
+                    useNotificationStore().setGeneralServiceNotification('Error', 'Playback initiation error: ' + error)
+                    console.error('Playback initiation error: ', error)
+                })
+                console.log('Player refreshed...')
+            })
         },
 
         // Detach event listeners from the player
@@ -139,6 +157,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.off('fullscreenchange', this.handleFullscreenChange)
             this.player.off('play', this.handlePlay)
             this.player.off('pause', this.handlePause)
+            this.player.off('ended', this.handleEnd)
             this.player.off('error', this.handleError)
 
             this.eventListenersAttached = false
@@ -240,12 +259,22 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.paused = true
             })
         },
+        handleEnd() {
+            this.player.on('ended', () => {
+                console.log('Video has ended. Refreshing the player...');
+                this.refreshVideoPlayer();
+            });
+        },
         handleError() {
             console.log('Handling error...')
             // Implement your logic
-            this.player?.on('error', function () {
+            this.player?.on('error', () => {
                 const error = this.player.error()
                 console.error('Video.js Error:', error.code, error.message)
+                if (error && error.code === 4) { // MEDIA_ERR_SRC_NOT_SUPPORTED
+                    console.log('Refreshing due to source error...');
+                    this.refreshVideoPlayer();
+                }
             })
         },
         makeBlue() {
