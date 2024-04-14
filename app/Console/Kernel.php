@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel {
     $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('archive:rssFeeds')->hourly();
-    $schedule->job(new UpdateNextBroadcastDatesOnScheduleIndexes)->everyFourHours();
+//    $schedule->job(new UpdateNextBroadcastDatesOnScheduleIndexes)->everyFourHours();
 
     $schedule->command('purge:rssFeed')->daily();
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
