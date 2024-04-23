@@ -75,8 +75,8 @@ class AdminController extends Controller {
 //            'mist_server_ip' => $settings->mist_server_ip,
         'mist_server_uri'                        => $settings->mist_server_uri,
         'mist_server_rtmp_uri'                   => $settings->mist_server_rtmp_uri,
-        'mist_server_automated_recording_folder' => str_replace('/', '', $automatedRecordingFolder),
-        'mist_server_user_recording_folder'      => str_replace('/', '', $userRecordingFolder),
+        'mist_server_automated_recording_folder' => ltrim($automatedRecordingFolder, '/'),
+        'mist_server_user_recording_folder'      => ltrim($userRecordingFolder, '/'),
         'public_stats_url'                       => $settings->public_stats_url,
         'currentSection'                         => $queryParam,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
@@ -107,8 +107,8 @@ class AdminController extends Controller {
     $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
     $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
     $settings->mist_server_settings = [
-        'mist_server_automated_recording_folder' => '/' . rtrim($request->mist_server_automated_recording_folder, '/') . '/',
-        'mist_server_user_recording_folder'      => '/' . rtrim($request->mist_server_user_recording_folder, '/') . '/',
+        'mist_server_automated_recording_folder' => '/' . trim($request->mist_server_automated_recording_folder, '/') . '/',
+        'mist_server_user_recording_folder'      => '/' . trim($request->mist_server_user_recording_folder, '/') . '/',
     ];
 
     $settings->public_stats_url = $request->public_stats_url;
