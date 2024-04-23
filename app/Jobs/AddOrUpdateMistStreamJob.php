@@ -57,7 +57,7 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
     // Update or set attributes directly, safely excluding 'metadata' from null access
     $stream->fill(Arr::except($this->mistStreamData, ['metadata']));
 
-    Log::debug('MistStreamData before accessing', ['mistStreamData' => $this->mistStreamData]);
+//    Log::debug('MistStreamData before accessing', ['mistStreamData' => $this->mistStreamData]);
 
     $metadata = collect($this->mistStreamData['metadata'] ?? [])->mapWithKeys(function ($item) {
       // Check if both 'key' and 'value' exist in the $item array to prevent errors
@@ -90,7 +90,7 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
 
     // Check the response to determine if the operation was successful
     if ($response) {
-      Log::info("Successfully added/updated MistStream '{$stream->name}' on MistServer.");
+//      Log::debug("Successfully added/updated MistStream '{$stream->name}' on MistServer.");
     } else {
       Log::error("Failed to add/update MistStream '{$stream->name}' on MistServer.");
     }

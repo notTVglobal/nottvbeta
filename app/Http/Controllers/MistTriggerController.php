@@ -120,13 +120,13 @@ class MistTriggerController extends Controller {
     // Check if the filePath contains 'backup'
     if (str_contains($parsedContent['filePath'], 'backup')) {
       // Return response immediately if 'backup' is found in the filePath
-      Log::debug('Recording is a backup:', ['parsedContent' => $parsedContent]);
+//      Log::debug('Recording is a backup:', ['parsedContent' => $parsedContent]);
       return response('1', 200);
     }
 
     $recording = $this->createRecordingEntry($parsedContent);
     // Log the creation of a new recording entry.
-    Log::info("Created new recording entry for unique identifier: {$recording->path}");
+//    Log::info("Created new recording entry for unique identifier: {$recording->path}");
     // Log after creating the recording entry
 //    Log::debug('Recording entry created:', ['recording' => $recording]);
 

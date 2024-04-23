@@ -764,15 +764,18 @@ class ShowsController extends Controller {
 
       // Check if the path is for a user recording
       if (str_contains($recording->path, 'recordings_user')) {
-        // Remove the base path and explode the rest to find user ID
-        $pathParts = explode('/', str_replace($userRecordingsPath, '', $recording->path));
+        // Correctly strip out the part of the path up to and including 'recordings_user/'
+        $basePath = '/media/recordings_user/';
+        $relativePath = substr($recording->path, strlen($basePath));
+
+        // Now explode the rest to find the user ID
+        $pathParts = explode('/', $relativePath);
         if (!empty($pathParts[0]) && is_numeric($pathParts[0])) {
-          $userId = $pathParts[0]; // Assuming the first part is the user ID
+          $userId = $pathParts[0]; // This should now correctly be the user ID
           $streamPrefix = 'recordings_user_' . $userId . '%2B';
         } else {
           // Log error if user ID is missing or not numeric
           Log::error('Invalid or missing user ID in path', ['path' => $recording->path]);
-          // Optionally handle the error, e.g., skip this record or set a default
           return null; // Skip this iteration if user ID is not valid
         }
       } else {

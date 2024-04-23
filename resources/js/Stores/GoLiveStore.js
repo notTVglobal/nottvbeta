@@ -58,7 +58,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 const response = await axios.post(`/go-live/shows/${this.selectedShowId}/stream-key`)
                 // console.log('Stream key generated:', response.data)
                 // this.streamKey = response.data.stream_key // Assuming the response includes the stream key
-                console.log('this new stream key: ' + this.streamKey)
+                // console.log('this new stream key: ' + this.streamKey)
                 // console.log('response data stream key: ' + response.data.stream_key)
                 // Update goLiveStore.selectedShow.mist_stream_wildcard_id with the returned stream key
                 if (this.selectedShowId && response.data.stream_key) {
@@ -130,17 +130,17 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.isLive = false
         },
         async startRecording() {
-            console.log('1 start recording in Go Live Store')
+            // console.log('1 start recording in Go Live Store')
             const notificationStore = useNotificationStore()
             const showSlug = this.selectedShow.slug
-            console.log(`Starting recording for show ${showSlug}`)
+            // console.log(`Starting recording for show ${showSlug}`)
             this.processingRecordingChange = true
             try {
-                console.log('2a post to /mist-stream/start-recording/')
+                // console.log('2a post to /mist-stream/start-recording/')
                 const response = await axios.post('/mist-stream/start-recording/'+showSlug, {
                     stream_name: this.streamKey,
                 })
-                console.log('5 and we\'re back in the GoLiveStore')
+                // console.log('5 and we\'re back in the GoLiveStore')
                 // console.log('Recording started successfully:', response.data)
                 // console.log('Stream Name:', this.streamKey)
                 const {message, status} = response.data
@@ -159,7 +159,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         async stopRecording() {
             const notificationStore = useNotificationStore()
             const showSlug = this.selectedShow.slug
-            console.log(`Stopping recording for show ${showSlug}`)
+            // console.log(`Stopping recording for show ${showSlug}`)
             this.processingRecordingChange = true
             // console.log(`Stopping recording for show ${showSlug}`)
             try {
