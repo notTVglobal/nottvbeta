@@ -9,9 +9,10 @@
 /storage/app/csv/invite_codes.csv
 /storage/logs/*
 !/storage/logs/.gitignore
-/storage/framework/*
 !/storage/framework/.gitignore
-/storage/framework/cache
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
 /vendor
 .env
 .env.backup
