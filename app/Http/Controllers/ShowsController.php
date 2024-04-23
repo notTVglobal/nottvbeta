@@ -741,11 +741,6 @@ class ShowsController extends Controller {
       return AppSetting::where('id', 1)->value('mist_server_uri');
     });
 
-    $settings = AppSetting::find(1);
-
-    $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
-    $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
-
     // delete these:
 //    $userRecordingsPath = config('paths.user_recordings_path');
 //    $autoRecordingsPath = config('paths.auto_recordings_path');
@@ -753,18 +748,42 @@ class ShowsController extends Controller {
     // Paginate recordings directly
     $paginatedRecordings = $show->recordings()->orderBy('start_time', 'asc')->paginate(10);
 
+    $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+    $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
+
 //    Log::debug('Recording paths', ['userRecordingsPath' => $userRecordingsPath, 'autoRecordingsPath' => $autoRecordingsPath]);
 
     // Transform each recording for the frontend
 //    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
 
-    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($mistServerUri, $show) {
+    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($userRecordingsPath, $autoRecordingsPath, $mistServerUri, $show) {
+
+      // Initialize variables
+      $streamPrefix = '';
+      $userId = '';
+
+      // Check if the path is for a user recording
+      if (str_contains($recording->path, 'recordings_user')) {
+        // Remove the base path and explode the rest to find user ID
+        $pathParts = explode('/', str_replace($userRecordingsPath, '', $recording->path));
+        if (!empty($pathParts[0]) && is_numeric($pathParts[0])) {
+          $userId = $pathParts[0]; // Assuming the first part is the user ID
+          $streamPrefix = 'recordings_user_' . $userId . '%2B';
+        } else {
+          // Log error if user ID is missing or not numeric
+          Log::error('Invalid or missing user ID in path', ['path' => $recording->path]);
+          // Optionally handle the error, e.g., skip this record or set a default
+          return null; // Skip this iteration if user ID is not valid
+        }
+      } else {
+        // It's an automatic recording
+        $streamPrefix = 'recordings%2B';
+      }
 
       // Extract the filename including the extension from the recording path
       $filename = basename($recording->path);
 
-      // Use a fixed prefix with the rawurlencoded filename
-      $streamPrefix = 'recordings%2B';
+      // Get the rawurlencoded filename
       $encodedFilename = rawurlencode($filename);
 
       // Construct the stream name by appending the encoded filename to the prefix
@@ -777,6 +796,11 @@ class ShowsController extends Controller {
 //      // finally it constructs the full path+filename which we call $streamName...
 //      // Construct the stream name by appending the prefix and the encoded path
 //      $streamName = $streamPrefix . $encodedPath . '.mp4';
+
+
+      $settings = AppSetting::find(1);
+
+
 
       // delete these:
 //      $path = str_contains($recording->path, $userRecordingsPath) ? str_replace($userRecordingsPath, '', $recording->path) : str_replace($autoRecordingsPath, '', $recording->path);

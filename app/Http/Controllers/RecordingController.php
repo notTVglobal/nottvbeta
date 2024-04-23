@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Factories\MistServerServiceFactory;
+use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Models\AppSetting;
 use App\Models\Show;
 use App\Services\MistServer\MistServerService;
@@ -43,16 +44,32 @@ class RecordingController extends Controller
 
       if (isset($settings->mist_server_settings['mist_server_user_recording_folder']) && isset($user->id)) {
         $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] . $user->id . '/';
-        Log::error('user recording path not set!');
+      } else {
+        Log::error('User recording path not set!');
+        return response()->json(['error' => 'Configuration error'], 500);
       }
 
-      $fullPushUri = $userRecordingsPath . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
+      // User Recordings Stream Name. This is to create a stream folder
+      // for user recording playback in Mist Server:
+      // Construct the stream name based on the user ID
+      $userRecordingStreamName = 'recordings_user_' . $user->id;
+
+      $fullPushUri = $userRecordingsPath . 'user_' . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
       Log::debug('fullPushUri', (array) $fullPushUri);
+
+      // Dispatch the job to add or update the mist stream
+      AddOrUpdateMistStreamJob::dispatch([
+          'name' => $userRecordingStreamName,
+          'source' => $userRecordingsPath
+      ], $userRecordingStreamName);
+
+      // Data expected by startRecording method
       $data = [
           $streamName,
           $fullPushUri,
       ];
 
+      // Start recording
 //      Log::debug('start recording .', ['data' => $data]);
       $isRecordingStarted = $this->recordingService->startRecording($data);
       Log::debug('3 recording started back to RecordingController');
