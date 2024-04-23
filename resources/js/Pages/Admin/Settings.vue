@@ -777,6 +777,7 @@ let form = useForm({
   first_play_channel_id: props.first_play_channel_id,
   // mist_server_ip: props.mist_server_ip,
   mist_server_uri: props.mist_server_uri,
+  mist_server_rtmp_uri: props.mist_server_rtmp_uri,
   mist_server_automated_recording_folder: props.mist_server_automated_recording_folder,
   mist_server_user_recording_folder: props.mist_server_user_recording_folder,
   public_stats_url: props.public_stats_url,
