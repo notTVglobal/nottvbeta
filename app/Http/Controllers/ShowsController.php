@@ -764,7 +764,7 @@ class ShowsController extends Controller {
       $filename = basename($recording->path);
 
       // Use a fixed prefix with the rawurlencoded filename
-      $streamPrefix = 'recordings_%2B';
+      $streamPrefix = 'recordings%2B';
       $encodedFilename = rawurlencode($filename);
 
       // Construct the stream name by appending the encoded filename to the prefix
@@ -787,7 +787,7 @@ class ShowsController extends Controller {
       $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
       $downloadFileName = rawurlencode($show->name . $formattedStartTime . '.mp4');
       $downloadUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '?dl=1&filename=' . $downloadFileName;
-      $shareUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '.html';
+      $shareUrl = rtrim($mistServerUri, '/') . '/' . $streamPrefix . $encodedFilename . '.html';
 
       return [
           'id'                          => $recording->id,
