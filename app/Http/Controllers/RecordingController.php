@@ -39,9 +39,11 @@ class RecordingController extends Controller
     try {
       $userRecordingsPath = null;
       $settings = AppSetting::find(1);
+      $user = auth()->user();
 
       if (isset($settings->mist_server_settings['mist_server_user_recording_folder']) && isset($user->id)) {
-        $userRecordingsPath = rtrim($settings->mist_server_settings['mist_server_user_recording_folder'], '/') . '/' . $user->id . '/';
+        $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] . $user->id . '/';
+        Log::error('user recording path not set!');
       }
 
       $fullPushUri = $userRecordingsPath . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
