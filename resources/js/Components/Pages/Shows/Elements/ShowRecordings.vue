@@ -77,9 +77,9 @@
         <button @click.stop="confirmDownload(recording)"
                 class="btn btn-xs btn-info">Download
         </button>
-        <button @click.stop="confirmSaveToPremium"
+        <div @click.stop="confirmSaveToPremium"
                 class="btn btn-xs">Save to Premium Storage
-        </button>
+        </div>
       </td>
     </tr>
     </tbody>
@@ -190,6 +190,7 @@ const shareClip = useClipboard()
 
 const props = defineProps({
   showName: String,
+  showSlug: String,
   showImage: Object,
   showRecordings: Object,
 })
@@ -247,7 +248,7 @@ const source = ref({
     sourceType: '',
   },
 })
-
+console.log('slug: ' + props.showSlug)
 const play = () => {
   source.value.mediaType = 'recording'
   source.value.recording = {
@@ -272,7 +273,7 @@ const play = () => {
       primaryName: props.showName, //showName
       secondaryName: secondaryName, //date startTime Recording
       description: nowPlayingRecording?.value?.comment ?? null, // Comment
-      primaryUrl: null,
+      primaryUrl: 'shows/' + props.showSlug,
       secondaryUrl: null,
       channelName: null,
       image: props?.showImage,

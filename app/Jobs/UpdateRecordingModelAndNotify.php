@@ -34,11 +34,11 @@ class UpdateRecordingModelAndNotify  implements ShouldQueue {
   public function handle()
   {
 
-    Log::debug('Handling the recording update process.');
+//    Log::debug('Handling the recording update process.');
 
     $streamName = $this->recording->stream_name;
 
-    Log::debug('Stream name obtained', ['streamName' => $streamName]);
+//    Log::debug('Stream name obtained', ['streamName' => $streamName]);
 
     $wildcard = MistStreamWildcard::where('name', $streamName)->first();
 
@@ -53,11 +53,11 @@ class UpdateRecordingModelAndNotify  implements ShouldQueue {
     if (str_starts_with($streamName, 'show+')) {
       $model = Show::where('mist_stream_wildcard_id', $wildcard->id)->first();
       $modelType = Show::class;
-      Log::debug('Show model found based on stream name', ['modelType' => $modelType, 'modelId' => $model ? $model->id : null]);
+//      Log::debug('Show model found based on stream name', ['modelType' => $modelType, 'modelId' => $model ? $model->id : null]);
     } elseif (str_starts_with($streamName, 'episode+')) {
       $model = ShowEpisode::where('mist_stream_wildcard_id', $wildcard->id)->first();
       $modelType = ShowEpisode::class;
-      Log::debug('ShowEpisode model found based on stream name', ['modelType' => $modelType, 'modelId' => $model ? $model->id : null]);
+//      Log::debug('ShowEpisode model found based on stream name', ['modelType' => $modelType, 'modelId' => $model ? $model->id : null]);
     }
     if ($model) {
       $this->recording->update([
@@ -75,14 +75,14 @@ class UpdateRecordingModelAndNotify  implements ShouldQueue {
         $team = $model->team;
         $message = "A new recording for the show '{$model->name}' is now available. Check it out!";
         $url = url("/shows/{$model->slug}/manage"); // Adjust the URL pattern as needed
-        Log::debug('Notification setup for Show', ['showName' => $model->name, 'url' => $url]);
+//        Log::debug('Notification setup for Show', ['showName' => $model->name, 'url' => $url]);
       } elseif ($model instanceof ShowEpisode) {
         $show = $model->show;
         if ($show) {
           $team = $show->team;
           $message = "A new recording for the episode '{$model->name}' of show '{$show->name}' is now available. Check it out!";
           $url = url("/shows/{$show->slug}/episode/{$model->slug}/manage"); // Adjust the URL pattern as needed
-          Log::debug('Notification setup for ShowEpisode', ['episodeName' => $model->name, 'showName' => $show->name, 'url' => $url]);
+//          Log::debug('Notification setup for ShowEpisode', ['episodeName' => $model->name, 'showName' => $show->name, 'url' => $url]);
         }
       }
 

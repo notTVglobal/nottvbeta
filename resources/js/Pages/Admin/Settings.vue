@@ -346,6 +346,56 @@
 
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="mist_server_automated_recording_folder"
+            >
+              MIST SERVER RECORDING FOLDER - AUTOMATED RECORDINGS
+            </label>
+            <div class="text-xs mb-2"></div>
+
+            <div class="flex flex-row">
+              <span class="pt-2 mr-2">/ </span>
+              <input v-model="form.mist_server_automated_recording_folder"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="mist_server_automated_recording_folder"
+                     id="mist_server_automated_recording_folder"
+              >
+            </div>
+            <span
+                class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
+
+            <div v-if="form.errors.mist_server_automated_recording_folder" v-text="form.errors.mist_server_automated_recording_folder"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="mist_server_user_recording_folder"
+            >
+              MIST SERVER RECORDING FOLDER - USER RECORDINGS
+            </label>
+            <div class="text-xs mb-2"></div>
+
+            <div class="flex flex-row">
+              <span class="pt-2 mr-2">/ </span>
+              <input v-model="form.mist_server_user_recording_folder"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="mist_server_user_recording_folder"
+                     id="mist_server_user_recording_folder"
+              >
+            </div>
+            <span
+                class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
+            <span
+                class="text-xs">SECOND NOTE: Recordings are saved in this PATH/$user->id/filename.ext</span>
+
+            <div v-if="form.errors.mist_server_user_recording_folder" v-text="form.errors.mist_server_user_recording_folder"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="public_stats_url"
             >
               PUBLIC STATS URL
@@ -704,6 +754,8 @@ let props = defineProps({
   // mist_server_ip: String,
   mist_server_uri: String,
   mist_server_rtmp_uri: String,
+  mist_server_automated_recording_folder: String,
+  mist_server_user_recording_folder: String,
   public_stats_url: String,
   // mist_server_api_url: String,
   // mist_server_username: String,
@@ -725,7 +777,8 @@ let form = useForm({
   first_play_channel_id: props.first_play_channel_id,
   // mist_server_ip: props.mist_server_ip,
   mist_server_uri: props.mist_server_uri,
-  mist_server_rtmp_uri: props.mist_server_rtmp_uri,
+  mist_server_automated_recording_folder: props.mist_server_automated_recording_folder,
+  mist_server_user_recording_folder: props.mist_server_user_recording_folder,
   public_stats_url: props.public_stats_url,
   // mist_server_api_url: props.mist_server_api_url,
   // mist_server_username: props.mist_server_username,

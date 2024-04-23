@@ -85,6 +85,14 @@ Route::get('test', function () {
   return Inertia::render('Test');
 })->name('test');
 
+Route::get('time', function () {
+  return Inertia::render('Time');
+})->name('time');
+
+Route::get('date', function () {
+  return Inertia::render('Date');
+})->name('date  ');
+
 Route::get('overlays/stream-preview', function () {
   return Inertia::render('Stream/StreamPreview');
 })->name('stream.preview');

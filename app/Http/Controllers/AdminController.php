@@ -57,22 +57,27 @@ class AdminController extends Controller {
       $decryptedPassword = Crypt::decryptString($settings->mist_server_password);
     }
 
+    $automatedRecordingFolder = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
+    $userRecordingFolder = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+
+
     return Inertia::render('Admin/Settings', [
-        'id'                           => $settings->id,
-        'countries'                    => $countries, // Add the list of countries here
-        'default_country'              => $settings->country_id,
-        'cdn_endpoint'                 => $settings->cdn_endpoint,
-        'cloud_folder'                 => str_replace('/', '', $settings->cloud_folder),
-        'cloud_private_folder'         => str_replace('/', '', $settings->cloud_private_folder),
-        'first_play_video_source'      => $settings->first_play_video_source,
-        'first_play_video_source_type' => $settings->first_play_video_source_type,
-        'first_play_video_name'        => $settings->first_play_video_name,
-        'first_play_channel_id'        => $settings->first_play_channel_id,
+        'id'                                     => $settings->id,
+        'countries'                              => $countries, // Add the list of countries here
+        'default_country'                        => $settings->country_id,
+        'cdn_endpoint'                           => $settings->cdn_endpoint,
+        'cloud_folder'                           => str_replace('/', '', $settings->cloud_folder),
+        'cloud_private_folder'                   => str_replace('/', '', $settings->cloud_private_folder),
+        'first_play_video_source'                => $settings->first_play_video_source,
+        'first_play_video_source_type'           => $settings->first_play_video_source_type,
+        'first_play_video_name'                  => $settings->first_play_video_name,
+        'first_play_channel_id'                  => $settings->first_play_channel_id,
 //            'mist_server_ip' => $settings->mist_server_ip,
-        'mist_server_uri'              => $settings->mist_server_uri,
-        'mist_server_rtmp_uri'         => $settings->mist_server_rtmp_uri,
-        'public_stats_url'             => $settings->public_stats_url,
-        'currentSection'               => $queryParam,
+        'mist_server_uri'                        => $settings->mist_server_uri,
+        'mist_server_automated_recording_folder' => str_replace('/', '', $automatedRecordingFolder),
+        'mist_server_user_recording_folder'      => str_replace('/', '', $userRecordingFolder),
+        'public_stats_url'                       => $settings->public_stats_url,
+        'currentSection'                         => $queryParam,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
 //            'mist_server_username' => $settings->mist_server_username,
 //            'mist_server_password' => $decryptedPassword ?? null,
@@ -82,13 +87,15 @@ class AdminController extends Controller {
 
   public function saveSettings(HttpRequest $request) {
     $request->validate([
-        'default_country'      => 'nullable|integer',
-        'cdn_endpoint'         => 'nullable|string',
-        'cloud_folder'         => 'nullable|string',
-        'cloud_private_folder' => 'nullable|string',
-        'mist_server_uri'      => 'nullable|url',
-        'mist_server_rtmp_uri' => 'nullable|string',
-        'public_stats_url'     => 'nullable|url',
+        'default_country'                        => 'nullable|integer',
+        'cdn_endpoint'                           => 'nullable|string',
+        'cloud_folder'                           => 'nullable|string',
+        'cloud_private_folder'                   => 'nullable|string',
+        'mist_server_uri'                        => 'nullable|url',
+        'mist_server_rtmp_uri'                   => 'nullable|string',
+        'mist_server_user_recording_folder'      => 'nullable|string',
+        'mist_server_automated_recording_folder' => 'nullable|string',
+        'public_stats_url'                       => 'nullable|url',
     ]);
 
     $settings = AppSetting::find($request->id);
@@ -98,6 +105,11 @@ class AdminController extends Controller {
     $settings->cloud_private_folder = '/' . $request->cloud_private_folder;
     $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
     $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
+    $settings->mist_server_settings = [
+        'mist_server_automated_recording_folder' => '/' . rtrim($request->mist_server_automated_recording_folder, '/') . '/',
+        'mist_server_user_recording_folder'      => '/' . rtrim($request->mist_server_user_recording_folder, '/') . '/',
+    ];
+
     $settings->public_stats_url = $request->public_stats_url;
 
     $settings->save();

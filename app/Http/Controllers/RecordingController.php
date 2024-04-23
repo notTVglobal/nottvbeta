@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Factories\MistServerServiceFactory;
+use App\Models\AppSetting;
 use App\Models\Show;
 use App\Services\MistServer\MistServerService;
 use Carbon\Carbon;
@@ -27,9 +28,21 @@ class RecordingController extends Controller
     ]);
 
     $streamName = $validated['stream_name'];
-    $userRecordingsPath = config('paths.user_recordings_path'); // this is set in the .env and referenced in our config/paths.php
-    Log::debug('userRecordingsPath: ' . $userRecordingsPath);
+
+//    $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+
+    // delete this:
+//    $userRecordingsPath = config('paths.user_recordings_path'); // this is set in the .env and referenced in our config/paths.php
+
+//    Log::debug('userRecordingsPath: ' . $userRecordingsPath);
+
     try {
+      $userRecordingsPath = null;
+      $settings = AppSetting::find(1);
+
+      if (isset($settings->mist_server_settings['mist_server_user_recording_folder']) && isset($user->id)) {
+        $userRecordingsPath = rtrim($settings->mist_server_settings['mist_server_user_recording_folder'], '/') . '/' . $user->id . '/';
+      }
 
       $fullPushUri = $userRecordingsPath . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
       Log::debug('fullPushUri', (array) $fullPushUri);
