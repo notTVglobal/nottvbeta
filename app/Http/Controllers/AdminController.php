@@ -74,6 +74,7 @@ class AdminController extends Controller {
         'first_play_channel_id'                  => $settings->first_play_channel_id,
 //            'mist_server_ip' => $settings->mist_server_ip,
         'mist_server_uri'                        => $settings->mist_server_uri,
+        'mist_server_rtmp_uri'                   => $settings->mist_server_rtmp_uri,
         'mist_server_automated_recording_folder' => str_replace('/', '', $automatedRecordingFolder),
         'mist_server_user_recording_folder'      => str_replace('/', '', $userRecordingFolder),
         'public_stats_url'                       => $settings->public_stats_url,

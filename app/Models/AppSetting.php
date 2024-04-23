@@ -22,6 +22,8 @@ class AppSetting extends Model {
       'first_play_channel_id',
       'invite_code_settings',
       'public_stats_url',
+      'mist_server_uri',
+      'mist_server_rtmp_uri',
       'mist_server_settings',
   ];
 
