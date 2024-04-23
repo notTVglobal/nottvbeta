@@ -21,12 +21,14 @@ class AppSetting extends Model {
       'first_play_video_name',
       'first_play_channel_id',
       'invite_code_settings',
-      'public_stats_url'
+      'public_stats_url',
+      'mist_server_settings',
   ];
 
   protected $casts = [
       'first_play_settings' => 'json',
       'invite_code_settings' => 'json',
+      'mist_server_settings' => 'json',
   ];
 
 

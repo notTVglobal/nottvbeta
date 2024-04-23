@@ -2,6 +2,7 @@
 
 namespace App\Services\MistServer;
 
+use App\Models\AppSetting;
 use App\Models\MistStreamWildcard;
 use App\Models\Recording;
 use Carbon\Carbon;
@@ -107,7 +108,7 @@ class RecordingService extends MistServerService {
    * @param int $status The new status to set.
    */
   protected function updateRecordingStatus(string $streamName, int $status): void {
-    $wildcard = MistStreamWildcard::where('stream_name', $streamName)->first();
+    $wildcard = MistStreamWildcard::where('name', $streamName)->first();
     if ($wildcard) {
       $wildcard->update(['is_recording' => $status]);
     }
@@ -122,8 +123,11 @@ class RecordingService extends MistServerService {
    */
   protected function getMatchingPushId(string $streamName): ?int {
     $pushList = $this->send(['push_list' => true]);
-    $userRecordingsPath = config('paths.user_recordings_path');
-    $autoRecordingsPath = config('paths.auto_recordings_path');
+
+    $settings = AppSetting::find(1);
+
+    $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+    $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
 
     foreach ($pushList['push_list'] ?? [] as $item) {
       if ($item[1] === $streamName && $this->isValidRecordingPath($item[2], $userRecordingsPath, $autoRecordingsPath)) {

@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: April 14, 2024\
+Last Update: April 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.65
+April 23, 2024
+* Change how recordings are saved. Added the ability for admin to change the recording path in the Admin/Settings.
+  * User recordings are now saved in a recordings_user folder.
 
 ## v0.8.7.64
 April 14, 2024

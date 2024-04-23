@@ -528,10 +528,10 @@ class MistServerService {
     $streamName = $mistStreamPushDestination->mistStreamWildcard->name; // Adjust based on your model
     $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
 
-    Log::debug("BBBBBBBBBBB  Attempting to start push", [
-        'streamName' => $streamName,
-        'targetURL'  => $targetURL
-    ]);
+//    Log::debug("BBBBBBBBBBB  Attempting to start push", [
+//        'streamName' => $streamName,
+//        'targetURL'  => $targetURL
+//    ]);
 
     $data = [
         "push_start" => [
@@ -545,11 +545,11 @@ class MistServerService {
       $mistStreamPushDestination->push_is_started = 1;
       $mistStreamPushDestination->save();
 
-      Log::debug("CCCCCCCCCCCCCCC  Push start successful", [
-          'streamName' => $streamName,
-          'targetURL'  => $targetURL,
-          'data'       => $data
-      ]);
+//      Log::debug("CCCCCCCCCCCCCCC  Push start successful", [
+//          'streamName' => $streamName,
+//          'targetURL'  => $targetURL,
+//          'data'       => $data
+//      ]);
     } catch (Exception $e) {
       Log::error("Failed to start push", [
           'streamName' => $streamName,
@@ -588,7 +588,7 @@ class MistServerService {
         $this->send($data); // Send the push_stop request to MistServer
         $mistStreamPushDestination->push_is_started = 0;
         $mistStreamPushDestination->save();
-        Log::debug("Push stop successful for stream: {$streamName} with push ID: {$pushId}");
+//        Log::debug("Push stop successful for stream: {$streamName} with push ID: {$pushId}");
       } catch (Exception $e) {
         Log::error("Failed to stop push for stream: {$streamName} with push ID: {$pushId}", ['exception' => $e->getMessage()]);
       }
@@ -611,7 +611,7 @@ class MistServerService {
       $response = $this->send($requestData);
 
       // New log for debugging the response structure
-      Log::debug('Received API response for config backup.', ['response' => $response]);
+//      Log::debug('Received API response for config backup.', ['response' => $response]);
 
       // Validate response structure and success status
       if (isset($response['LTS']) && $response['LTS'] == 1) {

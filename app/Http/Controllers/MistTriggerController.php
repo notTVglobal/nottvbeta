@@ -108,30 +108,30 @@ class MistTriggerController extends Controller {
 //    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
 
     Log::alert('New Recording End');
-    Log::debug('handlePushEnd Raw Request', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::debug('handlePushEnd Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent() // For raw body content
+//    ]);
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
-    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
+//    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
 
     $recording = $this->createRecordingEntry($parsedContent);
     // Log the creation of a new recording entry.
     Log::info("Created new recording entry for unique identifier: {$recording->path}");
     // Log after creating the recording entry
-    Log::debug('Recording entry created:', ['recording' => $recording]);
+//    Log::debug('Recording entry created:', ['recording' => $recording]);
 
     $this->clearRecordingMetadataAndBroadcast($parsedContent['streamName']);
     // Log after clearing recording metadata and broadcasting
-    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
+//    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
 
     if ($recording) {
       UpdateRecordingModelAndNotify::dispatch($recording);
     }
     // Log after dispatching the job
-    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
+//    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
 
     return response('1', 200);
   }
@@ -220,10 +220,10 @@ class MistTriggerController extends Controller {
    */
   public function handleValidateUser(Request $request): Response|Application|ResponseFactory {
     Log::alert('handle Validate User');
-    Log::debug('handleValidateUser Raw Request', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::debug('handleValidateUser Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent() // For raw body content
+//    ]);
     // NOTE: This currently uses the USER_NEW trigger.
     // The request_url is on a different line of the
     // request body in CONN_PLAY. And CONN_PLAY makes
@@ -326,7 +326,7 @@ class MistTriggerController extends Controller {
   }
 
   protected function handleIfRecording(MistStreamWildcard $mistStreamWildcard, $requestUrl): void {
-    Log::debug("Recording detected for stream: $mistStreamWildcard->name on URL: $requestUrl");
+//    Log::debug("Recording detected for stream: $mistStreamWildcard->name on URL: $requestUrl");
     // Marking the recording as started in the database
     $mistStreamWildcard->is_recording = true;
 
@@ -400,7 +400,7 @@ class MistTriggerController extends Controller {
             'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
         ]);
       } else {
-        Log::info("Automated recording found, no update performed.", ['uniqueId' => $uniqueId]);
+//        Log::info("Automated recording found, no update performed.", ['uniqueId' => $uniqueId]);
       }
       return $existingRecording;
     }

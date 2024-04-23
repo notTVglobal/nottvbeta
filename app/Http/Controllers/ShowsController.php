@@ -741,8 +741,14 @@ class ShowsController extends Controller {
       return AppSetting::where('id', 1)->value('mist_server_uri');
     });
 
-    $userRecordingsPath = config('paths.user_recordings_path');
-    $autoRecordingsPath = config('paths.auto_recordings_path');
+    $settings = AppSetting::find(1);
+
+    $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+    $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
+
+    // delete these:
+//    $userRecordingsPath = config('paths.user_recordings_path');
+//    $autoRecordingsPath = config('paths.auto_recordings_path');
 
     // Paginate recordings directly
     $paginatedRecordings = $show->recordings()->orderBy('start_time', 'asc')->paginate(10);
@@ -750,15 +756,38 @@ class ShowsController extends Controller {
 //    Log::debug('Recording paths', ['userRecordingsPath' => $userRecordingsPath, 'autoRecordingsPath' => $autoRecordingsPath]);
 
     // Transform each recording for the frontend
-    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
-      $path = str_contains($recording->path, $userRecordingsPath) ? str_replace($userRecordingsPath, '', $recording->path) : str_replace($autoRecordingsPath, '', $recording->path);
-      $streamPrefix = str_contains($recording->path, $userRecordingsPath) ? 'user_recordings%2B' : 'recordings%2B';
-      $encodedPath = rawurlencode(trim($path, '/ '));
-      $streamName = $streamPrefix . $encodedPath . '.mp4';
+//    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
+
+    $recordings = $paginatedRecordings->getCollection()->transform(function ($recording) use ($mistServerUri, $show) {
+
+      // Extract the filename including the extension from the recording path
+      $filename = basename($recording->path);
+
+      // Use a fixed prefix with the rawurlencoded filename
+      $streamPrefix = 'recordings_%2B';
+      $encodedFilename = rawurlencode($filename);
+
+      // Construct the stream name by appending the encoded filename to the prefix
+      $playableStreamName = $streamPrefix . $encodedFilename . '.mp4';
+
+//      // here's where we want to use the filename again.. rawurlencoded:
+//      // Encode the entire path to ensure it's safe for URL usage
+//      $encodedPath = rawurlencode(trim($recording->path, '/ '));
+//
+//      // finally it constructs the full path+filename which we call $streamName...
+//      // Construct the stream name by appending the prefix and the encoded path
+//      $streamName = $streamPrefix . $encodedPath . '.mp4';
+
+      // delete these:
+//      $path = str_contains($recording->path, $userRecordingsPath) ? str_replace($userRecordingsPath, '', $recording->path) : str_replace($autoRecordingsPath, '', $recording->path);
+//      $streamPrefix = str_contains($recording->path, $userRecordingsPath) ? 'user_recordings%2B' : 'recordings%2B';
+//      $encodedPath = rawurlencode(trim($path, '/ '));
+//      $streamName = $streamPrefix . $encodedPath . '.mp4';
+
       $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
       $downloadFileName = rawurlencode($show->name . $formattedStartTime . '.mp4');
-      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $downloadFileName;
-      $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
+      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '?dl=1&filename=' . $downloadFileName;
+      $shareUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '.html';
 
       return [
           'id'                          => $recording->id,
@@ -766,7 +795,7 @@ class ShowsController extends Controller {
           'start_time'                  => $recording->start_time,
           'end_time'                    => $recording->end_time,
           'total_milliseconds_recorded' => $recording->total_milliseconds_recorded,
-          'streamName'                  => $streamName,
+          'streamName'                  => $playableStreamName,
           'shareUrl'                    => $shareUrl,
           'download'                    => [
               'url'      => $downloadUrl,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Factories\MistServerServiceFactory;
+use App\Models\AppSetting;
 use App\Models\MistStreamPushDestination;
 use App\Models\MistStreamWildcard;
 use App\Services\MistServer\MistServerService;
@@ -198,8 +199,14 @@ class GoLiveController extends Controller {
       $destination->push_is_started = $isMatched ? 1 : 0;
       $destination->save();
 
-      $userRecordingsPath = config('paths.user_recordings_path');
-      $autoRecordingsPath = config('paths.auto_recordings_path');
+      $settings = AppSetting::find(1);
+
+      $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+      $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
+
+      // delete these:
+//      $userRecordingsPath = config('paths.user_recordings_path');
+//      $autoRecordingsPath = config('paths.auto_recordings_path');
 
       // Perform the additional check for recording status
       $isRecording = !is_null($allActivePushesCollection->first(function ($item) use ($autoRecordingsPath, $userRecordingsPath, $destination) {
