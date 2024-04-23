@@ -300,7 +300,7 @@
 
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_api_url"
+                   for="mist_server_uri"
             >
               MIST SERVER URI
             </label>
@@ -324,7 +324,7 @@
 
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_api_url"
+                   for="mist_server_rtmp_uri"
             >
               MIST SERVER RTMP URI
             </label>
