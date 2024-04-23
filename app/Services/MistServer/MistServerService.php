@@ -68,7 +68,7 @@ class MistServerService {
     $authData = $isRetry ? $this->prepareAuthData() : [];
     $dataToSend = $isRetry ? array_merge(['authorize' => $authData], $originalData) : $originalData;
 
-    Log::debug("Sending request to MistServer", ['url' => $url, 'data' => $dataToSend]);
+//    Log::debug("Sending request to MistServer", ['url' => $url, 'data' => $dataToSend]);
 
     // Prepare the actual payload as an array.
     $actualPayload = $isRetry ? array_merge(['authorize' => $authData], $originalData) : $originalData;

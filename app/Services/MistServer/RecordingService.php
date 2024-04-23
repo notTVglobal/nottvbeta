@@ -16,9 +16,9 @@ class RecordingService extends MistServerService {
    * @throws Exception
    */
   public function startRecording($data): bool {
-    Log::debug('2c start recording in RecordingService');
+//    Log::debug('2c start recording in RecordingService');
 // Debugging to check the structure of $data
-    Log::debug('Received data for recording:', ['data' => $data]);
+//    Log::debug('Received data for recording:', ['data' => $data]);
 
     // Ensure data is extracted correctly
     $streamName = $data[0];  // Adjust according to the actual key or use indexing if array is not associative
@@ -38,7 +38,7 @@ class RecordingService extends MistServerService {
       $recording->start_time = Carbon::now(); // Set the start_time to the current time
       $recording->save();
 
-      Log::debug('2d recording started in RecordingService');
+//      Log::debug('2d recording started in RecordingService');
       return true;
     } else {
       Log::warning('Failed to start recording', ['response' => $response]);
@@ -80,7 +80,7 @@ class RecordingService extends MistServerService {
     try {
     $response = $this->send(['push_stop' => $pushId]);
     if ($response['authorize']['status'] === 'OK') {
-      Log::info('Stop Recording: Successfully stopped', ['streamName' => $streamName, 'pushId' => $pushId]);
+//      Log::debug('Stop Recording: Successfully stopped', ['streamName' => $streamName, 'pushId' => $pushId]);
       return true;
     } else {
       Log::error('Stop Recording: Failed to stop', [
