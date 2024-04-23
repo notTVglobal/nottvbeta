@@ -292,7 +292,8 @@
             </div>
             <span
                 class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
-                <span class="text-xs">EXTRA NOTE: This folder is where creator video uploads get stored from the Video Upload Page.</span>
+            <br />
+            <span class="text-xs">EXTRA NOTE: This folder is where creator video uploads get stored from the Video Upload Page.</span>
 
             <div v-if="form.errors.cloud_private_folder" v-text="form.errors.cloud_private_folder"
                  class="text-xs text-red-600 mt-1"></div>
@@ -387,6 +388,7 @@
             </div>
             <span
                 class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
+            <br />
             <span
                 class="text-xs">SECOND NOTE: Recordings are saved in this PATH/$user->id/filename.ext</span>
 
