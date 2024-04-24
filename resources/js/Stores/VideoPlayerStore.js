@@ -121,10 +121,14 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.on('play', this.handlePlay)
             this.player.on('pause', this.handlePause)
             this.player.on('error', this.handleError)
-            this.player.on('ended', () => {
-                console.log('Video has ended. Refreshing the player...');
-                this.refreshVideoPlayer();
-            });
+            // TODO: This .on ended will be useful for something.
+            //  I (tec21) was using it to loop the FirstPlay Test video.
+            //  But, that causes problems with playback on Recording files
+            //  that are short or won't play because of bad file path.
+            // this.player.on('ended', () => {
+            //     console.log('Video has ended. Refreshing the player...');
+            //     this.refreshVideoPlayer();
+            // });
             console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')
@@ -160,7 +164,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.off('fullscreenchange', this.handleFullscreenChange)
             this.player.off('play', this.handlePlay)
             this.player.off('pause', this.handlePause)
-            this.player.off('ended', this.handleEnd)
+            // TODO: If you use the .on 'ended', remember
+            //  to detach it here:
+            // this.player.off('ended', this.handleEnd)
             this.player.off('error', this.handleError)
 
             this.eventListenersAttached = false

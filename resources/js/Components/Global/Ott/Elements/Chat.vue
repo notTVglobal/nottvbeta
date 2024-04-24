@@ -8,7 +8,13 @@
       leave-to-class="opacity-0"
   >
     <div>
-      <div v-if="divClass" :class="divClass" class="">
+      <transition name="fade">
+        <div v-if="chatStore.errorMessage" class="absolute w-96 px-6 right-0 bottom-24 z-999 py-1 error-message text-yellow-500 bg-black bg-opacity-80">
+          {{ chatStore.errorMessage }}
+        </div>
+      </transition>
+      <div v-if="divClass" :class="divClass">
+
         <OttChatMessages/>
 
         <OttChatInput
@@ -17,7 +23,8 @@
             :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
         />
 
-        <button v-if="appSettingStore.fullPage" @click="closeChat"
+
+          <button v-if="appSettingStore.fullPage" @click="closeChat"
                 :class="chatCloseClass">
           CLOSE CHAT
         </button>
@@ -33,7 +40,7 @@ import { useChatStore } from '@/Stores/ChatStore'
 import { useUserStore } from '@/Stores/UserStore'
 import OttChatMessages from '@/Components/Global/Chat/OttChatMessages'
 import OttChatInput from '@/Components/Global/Chat/OttChatInput'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -82,4 +89,17 @@ const chatCloseClass = computed(() => {
     return userStore.isMobile ? 'chatCloseButtonIsMobile' : 'chatCloseButton'
 })
 
+onMounted(() => {
+  chatStore.errorMessage = ''
+})
+
 </script>
+
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+</style>

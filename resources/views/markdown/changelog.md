@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: April 23, 2024\
+Last Update: April 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.66
+April 24, 2024
+* Fixed the recordings. These should be working now.
+* add episode search function to Teams.show() page.
+  * In the process of getting lazy loading working on the search results.
 
 ## v0.8.7.65
 April 23, 2024

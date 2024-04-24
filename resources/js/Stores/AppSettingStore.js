@@ -40,6 +40,11 @@ const initialState = () => ({
     chatMessageBgColor: 'bg-gray-600', // Active chat message background color*
     primaryChatMessageBgColor: 'bg-gray-600', // Primary chat message background color
     pipChatMessageBgColor: 'bg-gray-900', // Chat message background color for PiP Chat Mode
+    showImageLightboxModal: false,
+    imageLightboxModal: {
+        imageUrl: '',
+        imageAlt: '',
+    },
 })
 
 export const useAppSettingStore = defineStore('appSettingStore', {

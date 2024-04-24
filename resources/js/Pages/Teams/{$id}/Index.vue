@@ -52,10 +52,6 @@
         </div>
       </header>
 
-      <p v-if="props.team.description" class="description mb-6 p-5">
-        {{ props.team.description }}
-      </p>
-
       <div v-if="team?.nextBroadcast || team.public_message" class="flex flex-row justify-center w-full py-10 px-5">
         <div class="flex flex-row text-red-950 bg-yellow-300 w-full py-6 text-center align-middle">
           <div class="flex flex-col w-1/3 border-r border-black">
@@ -85,11 +81,29 @@
         </div>
       </div>
 
+      <p v-if="props.team.description" class="description mb-6 p-5">
+        {{ props.team.description }}
+      </p>
+
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-            <div hidden class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">SHOWS</div>
+
+            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SEARCH EPISODES</div>
+
+            <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug">
+              <!-- Provide custom title -->
+              <template v-slot:title>
+                <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
+              </template>
+              <!-- Provide custom description -->
+              <template v-slot:description>
+                <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes from detailed episode information, including dates and full descriptions.</p>
+              </template>
+            </SearchShowEpisodesComponent>
+
+            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS</div>
 
             <TeamShowsList :shows="props.shows"/>
 
@@ -151,13 +165,14 @@ import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
+import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
 
 usePageSetup('teams/slug')
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
 
-let props = defineProps({
+const props = defineProps({
   user: Object,
   team: Object,
   logo: String,

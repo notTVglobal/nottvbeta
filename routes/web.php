@@ -18,6 +18,7 @@ use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecordingController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TeamManagersController;
 use App\Http\Controllers\TestMessageController;
@@ -57,6 +58,8 @@ use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -267,6 +270,16 @@ Route::middleware([
   })->name('stream');
 
   Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
+
+
+  // Channel Playlists
+////////////////////
+///
+
+  Route::resource('channelPlaylists', ChannelPlaylistController::class);
+  Route::get('/admin/channel-playlist/search', [ChannelPlaylistController::class, 'adminSearchChannelPlaylists'])->can('viewAdmin', 'App\Models\User');
+
+
 
 //
 //    Route::get('/payment', function (Request $request) {
@@ -841,7 +854,7 @@ Route::middleware([
     Route::post('/teams/removeTeamManager', [TeamManagersController::class, 'detach'])
         ->name('teams.removeTeamManager');
 
-  });
+
 
 // Creators
 ///////////
@@ -876,6 +889,8 @@ Route::middleware([
     return Inertia::render('Training/HowToPushToRumble');
   })->can('viewCreator', 'App\Models\User')
       ->name('training.howToPushToRumble');
+
+  });
 
 // Shows
 ///////////
@@ -1109,7 +1124,6 @@ Route::middleware([
   Route::get('/api/mistserver', [\App\Http\Controllers\MistStreamController::class, 'mistServer']);
 
 
-});
 
 // Mist Streams
 ///////////////
@@ -1152,19 +1166,13 @@ Route::post('/mist-stream/update-stream-push-status', [MistStreamPushDestination
 Route::post('/mist-stream/start-recording/{show}', [RecordingController::class, 'startRecording']);
 Route::post('/mist-stream/stop-recording/{show}', [RecordingController::class, 'stopRecording']);
 
-// Channel Playlists
-////////////////////
-///
-
-Route::resource('channelPlaylists', ChannelPlaylistController::class);
-Route::get('/admin/channel-playlist/search', [ChannelPlaylistController::class, 'adminSearchChannelPlaylists']);
 
 // External Sources
 ///////////////////
 ///
 
 Route::resource('externalSources', ChannelExternalSourceController::class);
-Route::get('/admin/external-source/search', [ChannelExternalSourceController::class, 'adminSearchExternalSources']);
+Route::get('/admin/external-source/search', [ChannelExternalSourceController::class, 'adminSearchExternalSources'])->can('viewAdmin', 'App\Models\User');
 
 
 // Schedule
@@ -1202,6 +1210,21 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
     ->name('user.feedback');
 
 
+// API Routes simplified for MVP
+////////////////////////////////
+///
+
+// Search ShowEpisodes with Team or Show model
+  Route::get('/api/search/{modelType}/{id}/episodes', [SearchController::class, 'searchShowEpisodes'])->name('model.search');
+
+
+// End Authenticated Routes
+///////////////////////////
+///
+});
+
+
+
 //Route::any('/{any}', function() {
 //    return view('app');
 //})->where('any', '.*');
@@ -1234,13 +1257,13 @@ Route::get('/stats', [AppSettingController::class, 'redirectStats']);
 // setup on April 12, 2024 by tec21
 Route::get('/bc-townhalls-2024-qr-code', function () {
   return redirect('/teams/bc-townhalls-2024');
-});
+
 
 
 // Routes For Testing
 /////////////////////
-Route::get('/test-mail', function () {
-  Mail::raw('Hello world', function ($msg) {
-    $msg->to('test@example.com')->subject('Test Email');
-  });
+//Route::get('/test-mail', function () {
+//  Mail::raw('Hello world', function ($msg) {
+//    $msg->to('test@example.com')->subject('Test Email');
+//  });
 });

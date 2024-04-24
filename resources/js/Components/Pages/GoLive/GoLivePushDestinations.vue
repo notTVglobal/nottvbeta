@@ -211,12 +211,12 @@ const backgroundFetch = async () => {
 
     // Check if the stream just transitioned from offline to online
     if (goLiveStore.previousStreamStatus === true && !goLiveStore.streamOffline) {
-      console.log('Stream just transitioned from offline to online, reloading player');
+      // console.log('Stream just transitioned from offline to online, reloading player');
       await reloadPlayer();
     } else if (goLiveStore.streamOffline) {
-      console.log('Stream is offline, no action taken');
+      // console.log('Stream is offline, no action taken');
     } else {
-      console.log('Stream is online, no action taken');
+      // console.log('Stream is online, no action taken');
     }
 
     // Update the previous stream status for the next check
