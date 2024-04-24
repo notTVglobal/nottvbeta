@@ -57,8 +57,10 @@ class SearchService {
           str_contains(strtolower($episode->description), strtolower($query));
     });
 
-    Log::info('Episodes fetched', ['Model Type' => $modelType, 'ID' => $id, 'Count' => $filteredEpisodes->count()]);
-    return ShowEpisodeResource::collection($filteredEpisodes->values()->all());
+    // Sort globally by date across all fetched episodes
+    $sortedEpisodes = $filteredEpisodes->sortByDesc('release_dateTime');
+//    Log::debug('Episodes fetched', ['Model Type' => $modelType, 'ID' => $id, 'Count' => $filteredEpisodes->count()]);
+    return ShowEpisodeResource::collection($sortedEpisodes->values()->all());
   }
 
 }

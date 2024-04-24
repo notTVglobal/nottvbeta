@@ -99,7 +99,7 @@
               </template>
               <!-- Provide custom description -->
               <template v-slot:description>
-                <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes from detailed episode information, including dates and full descriptions.</p>
+                <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes.</p>
               </template>
             </SearchShowEpisodesComponent>
 
