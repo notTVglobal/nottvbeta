@@ -3,6 +3,11 @@
 Last Update: April 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.67
+April 24, 2024
+* Cleanup the SearchController and SearchService.
+* Remove the attempt at lazy load which prevented the Team ShowEpisode search functionality.
+
 ## v0.8.7.66
 April 24, 2024
 * Fixed the recordings. These should be working now.
