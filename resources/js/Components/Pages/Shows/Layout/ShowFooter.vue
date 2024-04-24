@@ -1,12 +1,12 @@
 <template>
 
-  <div class="flex justify-between mt-64 mb-4">
+  <div class="flex flex-row flex-wrap-reverse justify-between mt-64 mb-4">
     <div>
       <span class="text-xs uppercase font-semibold">Show ID: </span>
       <span class="text-xs">{{ show.ulid }}</span>
     </div>
 
-    <div class="flex justify-end">
+    <div class="flex flex-wrap justify-end text-right">
 
 
       <!-- Paginator -->

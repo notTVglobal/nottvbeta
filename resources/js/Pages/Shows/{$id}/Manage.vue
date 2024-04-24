@@ -97,7 +97,7 @@
               Episodes
             </div>
             <div v-if="showStore.openComponent === 'showEpisodes'">
-              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                 <ShowEpisodesList :episodes="props.episodes" :show="props.show"
                                   :episodeStatuses="props.episodeStatuses"/>
               </div>
@@ -135,12 +135,12 @@
             <!--              -->
             <div @click="toggleComponent('showCredits')"
                  :class="{'rounded-t-lg': showStore.openComponent === 'showCredits', 'rounded-lg': showStore.openComponent !== 'showCredits'}"
-                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-auto shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
               <font-awesome-icon icon="fa-clipboard-list" class=""/>
               Credits and Assignments
             </div>
             <div v-if="showStore.openComponent === 'showCredits'">
-              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                 <div class="border-1 border-t mb-3 bg-blue-100 py-1 px-2 text-xs font-semibold text-red-800">
                   In development. Not currently working.
                 </div>
@@ -163,12 +163,12 @@
             <!--              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>-->
             <div @click="toggleComponent('showRecordings')"
                  :class="{'rounded-t-lg': showStore.openComponent === 'showRecordings', 'rounded-lg': showStore.openComponent !== 'showRecordings'}"
-                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-auto shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
               <font-awesome-icon icon="fa-circle" class="text-red-700"/>
               Recordings
             </div>
             <div v-if="showStore.openComponent === 'showRecordings'">
-              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                 <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showSlug="show.slug" :showImage="show.image"/>
 
                 <!--            </div>-->

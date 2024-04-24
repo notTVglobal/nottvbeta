@@ -22,6 +22,7 @@ const initialState = () => ({
     cooldownIntervalId: null, // Track interval ID
     countdownSeconds: 60, // timeout until next message can be sent, change this throttle in the web.php
     errorMessage: '',
+    errorTimeout: null,  // Store the timeout reference
 })
 
 export const useChatStore = defineStore('chatStore', {
@@ -96,6 +97,22 @@ export const useChatStore = defineStore('chatStore', {
                 videoPlayerStore.makeVideoFullPage();
             } else {
                 videoPlayerStore.makeVideoTopRight();
+            }
+        },
+
+        setErrorMessage(message) {
+            this.errorMessage = message;
+            // Clear any existing timeout to avoid overlaps
+            if (this.errorTimeout) {
+                clearTimeout(this.errorTimeout);
+                this.errorTimeout = null;
+            }
+            // Set a new timeout to clear the message
+            if (message !== '') {
+                this.errorTimeout = setTimeout(() => {
+                    this.errorMessage = '';
+                    this.errorTimeout = null;  // Clear the reference once used
+                }, 3000); // Clears the error message after 3 seconds
             }
         },
 

@@ -1,6 +1,7 @@
 <template>
-  <div class="h-1/2 scrollbar-hide w-full ">
-    <div class="overflow-hidden overflow-ellipsis" :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
+  <div class="h-1/2 scrollbar-hide w-full">
+
+    <div class="overflow-y-auto overflow-ellipsis" :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
 
       <div class="oldMessage hyphens-auto" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">
         <message-item :id="oldMessage.id" :message="oldMessage"/>
@@ -40,7 +41,6 @@ channel.subscribed(() => {
   const newMessage = {...event.message, id: tempId};
   chatStore.newMessages.push(newMessage)
 })
-
 
 // onBeforeMount(async () => {
 //

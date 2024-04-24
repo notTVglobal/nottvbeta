@@ -2,7 +2,7 @@
   <div>
 
     <form @submit.prevent="">
-      <div v-if="errorMessage" class="py-1 error-message text-yellow-500">{{ errorMessage }}</div>
+
       <div class="flex">
         <!-- Display error message -->
         <input
@@ -88,24 +88,23 @@ const vFocus = {
 
 function sendMessage() {
   if (chatStore.cooldown) {
-    errorMessage.value = 'Whoa there, speedy! Let\'s give others a chance to chime in. Try sending your message in a bit. 🕒'
+    chatStore.setErrorMessage('')
+    chatStore.setErrorMessage('Whoa there, speedy! Let\'s give others a chance to chime in. Try sending your message in a bit. 🕒')
     return
   }
 
   if (form.message === '') {
-    // Consider using errorMessage here as well for consistency
-    const emptyMessageAlert = 'Looks like you\'re sending an invisible message! 🕵️‍♂️ Please type something to share with the community.'
-    console.log(emptyMessageAlert) // Or display this message in the UI in a playful way
-    errorMessage.value = emptyMessageAlert
+    chatStore.setErrorMessage('Looks like you\'re sending an invisible message! 🕵️‍♂️ Please type something to share with the community.')
     return
   }
 
   if (form.message.length > 300) {
-    const messageTooLongAlert = 'Keep it short and sweet!\', \'Messages must be 300 characters or shorter. 😊'
-    errorMessage.value = messageTooLongAlert
+    chatStore.setErrorMessage('')
     notificationStore.setGeneralServiceNotification('Keep it short and sweet!', 'Messages must be 300 characters or shorter. 😊')
     return
   }
+
+  chatStore.setErrorMessage('')
 
 
 

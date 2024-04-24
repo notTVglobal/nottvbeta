@@ -31,6 +31,7 @@
       <VideoPlayerMain
           :user="user" />
 
+      <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
       <GeneralServiceNotification v-if="user" />
       <OrangeFeedbackBox v-if="user && !appSettingStore.showNavDropdown"/>
@@ -66,6 +67,7 @@ import VideoPlayerMain from "@/Components/Global/VideoPlayer/VideoPlayerMain"
 import GeneralServiceNotification from '@/Components/Global/Modals/GeneralServiceNotification.vue'
 import OrangeFeedbackBox from '@/Components/Global/Feedback/OrangeFeedbackBox.vue'
 import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
+import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 
 const appSettingStore = useAppSettingStore();
 const videoPlayerStore = useVideoPlayerStore()

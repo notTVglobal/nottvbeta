@@ -488,7 +488,8 @@ hr {
         position: fixed;
         z-index: 90;
         /*max-height: calc(100% - 27.5rem);*/
-        max-height: calc(50vh - 4.2rem);
+        /*max-height: calc(50vh - 4.2rem);*/
+        max-height: calc(50vh);
         max-width: 100%;
         bottom: 0;
         left: 0;
