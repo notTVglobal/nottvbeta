@@ -107,111 +107,84 @@ class Team extends Model {
     return $this->hasMany(SchedulesIndex::class, 'team_id');
   }
 
-  /**
-   * Search function for handling various search types on the Team model.
-   * It allows dynamic search functionality by type, which can be extended with more types as needed.
-   *
-   * @param string $query The search query string.
-   * @param string $type The type of search to perform, defaults to SEARCH_EPISODES.
-   * @return Collection Returns a collection of search results, depending on the type.
-   */
-
-  // Constants to define search types. These constants provide an easy reference for specifying search types.
-  const SEARCH_SHOW_EPISODES = 'showEpisodes'; // Search type for finding episodes related to the team's shows.
-
-  public function search($query, $type = self::SEARCH_SHOW_EPISODES): \Illuminate\Database\Eloquent\Collection|Collection {
-    Log::debug('Team search initiated', ['team_id' => $this->id, 'query' => $query, 'type' => $type]);
-
-    return match ($type) {
-      self::SEARCH_SHOW_EPISODES => $this->searchEpisodes($query),
-      default => collect(),
-    };
-  }
-
-  /**
-   * Searches episodes associated with shows that belong to this team.
-   * It includes complex filters like title, description, and release date searches,
-   * as well as filtering by episode and show status.
-   *
-   * @param string $query The search criteria input by the user.
-   * @return LengthAwarePaginator Paginated search results.
-   */
-  public function searchEpisodes(string $query): LengthAwarePaginator {
-    Log::alert('we are here');
-
-    // Enable the Laravel query log
-    DB::enableQueryLog();
-
-    // Example query to ensure something is logged
-    User::take(1)->get();
-
-// Log the queries
-    Log::debug('SQL Query', ['query' => DB::getQueryLog()]);
-
-
-    Log::debug('Searching episodes for team', ['team_id' => $this->id, 'query' => $query]);
-    // Execute a query on the ShowEpisode model
-    $results = ShowEpisode::query()
-        // Select relevant fields from the show_episodes table and the slug from the shows table.
-        ->select('show_episodes.id', 'show_episodes.name', 'show_episodes.description',
-            'show_episodes.release_dateTime', 'show_episodes.slug', 'shows.slug as show_slug')
-        ->join('shows', 'show_episodes.show_id', '=', 'shows.id') // Join with the shows table to access show-specific fields.
-        ->with([
-            'image.appSetting', // Eagerly load the image relationship and its related appSetting for each episode.
-        ])
-        ->where('shows.team_id', $this->id) // Filter to include only episodes from shows of this team.
-        ->whereIn('shows.show_status_id', [1, 2]) // Filter shows that are either new (1) or active (2).
-        ->where('show_episodes.show_episode_status_id', 7) // Include only episodes that are published.
-        ->where(function($queryBuilder) use ($query) {
-          // Add filters for matching episode titles or descriptions
-          $queryBuilder->where('show_episodes.name', 'like', '%' . $query . '%')
-              ->orWhere('show_episodes.description', 'like', '%' . $query . '%')
-              ->orWhere(function ($dateQuery) use ($query) {
-                // Additional nested conditionals for date searching.
-                // Check different formats of the date string provided by the user.
-                if ($date = $this->tryCarbonParse($query, 'Y-m')) {
-                  $dateQuery->whereYear('show_episodes.release_dateTime', $date->year)
-                      ->whereMonth('show_episodes.release_dateTime', $date->month);
-                } elseif ($date = $this->tryCarbonParse($query)) {
-                  $dateQuery->whereDate('show_episodes.release_dateTime', $date->toDateString());
-                }
-              });
-        })
-        ->orderBy('show_episodes.release_dateTime', 'desc') // Order the results by release date in descending order.
-        ->paginate(10); // Paginate the results to show 10 episodes per page.
-
-                   Log::debug('Episodes found', ['count' => $results->count()]);
-    Log::debug('SQL Query', ['query' => DB::getQueryLog()]);
-    return $results->through(function ($showEpisode) {
-      return new ImageResource($showEpisode);
-    });
-
-//        ->through(function ($showEpisode) {
+//  /**
+//   * Search function for handling various search types on the Team model.
+//   * It allows dynamic search functionality by type, which can be extended with more types as needed.
+//   *
+//   * @param string $query The search query string.
+//   * @param string $type The type of search to perform, defaults to SEARCH_EPISODES.
+//   * @return Collection Returns a collection of search results, depending on the type.
+//   */
 //
-//          // Use ImageResource to format the output including the related image and its settings.
-//          return new ImageResource($showEpisode);
-//        });
-  }
-
-  /**
-   * Attempts to parse a given date string into a Carbon date object.
-   * Handles different formats by attempting to parse using both specified format and general parsing.
-   *
-   * @param string $date The date string to parse.
-   * @param string|null $format An optional date format to try before falling back to general parsing.
-   * @return Carbon|null Returns a Carbon instance if parsing succeeds, or null if it fails.
-   */
-  protected function tryCarbonParse(string $date, string $format = null) {
-    try {
-      // Attempt to create a date with a specific format or parse normally if no format is provided.
-      return $format ? Carbon::createFromFormat($format, $date) : Carbon::parse($date);
-    } catch (\Exception $e) {
-      Log::debug('Date parsing failed', ['date' => $date, 'format' => $format, 'error' => $e->getMessage()]);
-      // Return null if parsing fails, allowing the calling function to handle the failure appropriately.
-      return null;
-    }
-  }
-
+//  // Constants to define search types. These constants provide an easy reference for specifying search types.
+//  const SEARCH_SHOW_EPISODES = 'showEpisodes'; // Search type for finding episodes related to the team's shows.
+//
+//  public function search($query, $type = self::SEARCH_SHOW_EPISODES): \Illuminate\Database\Eloquent\Collection|Collection {
+//    Log::debug('Team search initiated', ['team_id' => $this->id, 'query' => $query, 'type' => $type]);
+//
+//    return match ($type) {
+//      self::SEARCH_SHOW_EPISODES => $this->searchEpisodes($query),
+//      default => collect(),
+//    };
+//  }
+//
+//  /**
+//   * Searches episodes associated with shows that belong to this team.
+//   * It includes complex filters like title, description, and release date searches,
+//   * as well as filtering by episode and show status.
+//   *
+//   * @param string $query The search criteria input by the user.
+//   * @return LengthAwarePaginator Paginated search results.
+//   */
+//  public function searchEpisodes(string $query): LengthAwarePaginator {
+//
+//    Log::debug('Searching episodes for team', ['team_id' => $this->id, 'query' => $query]);
+////     Execute a query on the ShowEpisode model
+//    $results = ShowEpisode::query()
+//        // Select relevant fields from the show_episodes table and the slug from the shows table.
+//        ->select('show_episodes.id', 'show_episodes.name', 'show_episodes.description',
+//            'show_episodes.release_dateTime', 'show_episodes.slug', 'shows.slug as show_slug')
+//        ->join('shows', 'show_episodes.show_id', '=', 'shows.id') // Join with the shows table to access show-specific fields.
+//        ->with([
+//            'image.appSetting', // Eagerly load the image relationship and its related appSetting for each episode.
+//        ])
+//        ->where('shows.team_id', $this->id) // Filter to include only episodes from shows of this team.
+//        ->whereIn('shows.show_status_id', [1, 2]) // Filter shows that are either new (1) or active (2).
+//        ->where('show_episodes.show_episode_status_id', 7) // Include only episodes that are published.
+//        ->where(function ($queryBuilder) use ($query) {
+//          // Add filters for matching episode titles or descriptions
+//          $queryBuilder->where('show_episodes.name', 'like', '%' . $query . '%')
+//              ->orWhere('show_episodes.description', 'like', '%' . $query . '%')
+//              ->orWhere(function ($dateQuery) use ($query) {
+//                // Additional nested conditionals for date searching.
+//                // Check different formats of the date string provided by the user.
+//                if ($date = $this->tryCarbonParse($query, 'Y-m')) {
+//                  $dateQuery->whereYear('show_episodes.release_dateTime', $date->year)
+//                      ->whereMonth('show_episodes.release_dateTime', $date->month);
+//                } elseif ($date = $this->tryCarbonParse($query)) {
+//                  $dateQuery->whereDate('show_episodes.release_dateTime', $date->toDateString());
+//                }
+//              });
+//        })
+//        ->orderBy('show_episodes.release_dateTime', 'desc') // Order the results by release date in descending order.
+//        ->paginate(10) // Paginate the results to show 10 episodes per page.
+//        ->get() // Get the results without pagination
+//        ->map(fn($showEpisode) => $this->transformShowEpisode($showEpisode));
+//
+//    Log::debug('Episodes found', ['count' => $results->count()]);
+//    Log::debug('SQL Query', ['query' => DB::getQueryLog()]);
+//
+//    return $results->through(function ($showEpisode) {
+//      return new ImageResource($showEpisode);
+//    });
+//
+//    ->
+//    through(function ($showEpisode) {
+//
+//      // Use ImageResource to format the output including the related image and its settings.
+//      return new ImageResource($showEpisode);
+//    });
+//  }
 
 
 }

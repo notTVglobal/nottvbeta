@@ -1214,8 +1214,8 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 ////////////////////////////////
 ///
 
-// In routes/web.php
-  Route::get('/api/search/{model}/{slug}/', [SearchController::class, 'search'])->name('model.search');
+// Search ShowEpisodes with Team or Show model
+  Route::get('/api/search/{modelType}/{id}/episodes', [SearchController::class, 'searchShowEpisodes'])->name('model.search');
 
 
 // End Authenticated Routes

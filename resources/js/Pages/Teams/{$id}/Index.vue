@@ -90,18 +90,20 @@
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
 
-            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS</div>
+            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SEARCH EPISODES</div>
 
-            <SearchComponent :currentModel="`teams`" :currentSlug="props.team.slug" :searchType="`showEpisodes`">
+            <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug">
               <!-- Provide custom title -->
               <template v-slot:title>
                 <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
               </template>
               <!-- Provide custom description -->
               <template v-slot:description>
-                <p class="text-gray-400 text-sm mb-4">Find episodes from detailed episode information, including dates and full descriptions.</p>
+                <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes from detailed episode information, including dates and full descriptions.</p>
               </template>
-            </SearchComponent>
+            </SearchShowEpisodesComponent>
+
+            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS</div>
 
             <TeamShowsList :shows="props.shows"/>
 
@@ -163,8 +165,7 @@ import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
-import SearchEpisode from '@/Components/Pages/Teams/Elements/SearchEpisode.vue'
-import SearchComponent from '@/Components/Global/Search/SearchComponent.vue'
+import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
 
 usePageSetup('teams/slug')
 

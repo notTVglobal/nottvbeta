@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\MistServer\MistServerService;
+use App\Services\SearchService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -19,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
     {
       $this->app->singleton(MistServerService::class, function ($app) {
         return new MistServerService();
+      });
+
+      $this->app->singleton(SearchService::class, function ($app) {
+        return new SearchService();
+        // Add any dependencies if your SearchService constructor requires them
       });
     }
 
