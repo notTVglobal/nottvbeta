@@ -29,7 +29,7 @@ export const useSearchStore = defineStore('searchStore', {
             try {
                 // Construct the dynamic endpoint based on the model and slug
                 const endpoint = `/api/search/${modelType}/${id}/episodes`; // Ensure endpoint is correct
-                console.log('Constructed endpoint:', endpoint);
+                // console.log('Constructed endpoint:', endpoint);
 
                 // Perform the API request using axios
                 const response = await axios.get(endpoint, {
@@ -39,17 +39,17 @@ export const useSearchStore = defineStore('searchStore', {
                 });
 
                 // Store the search results on successful fetch
-                console.log('API response:', response.data);
+                // console.log('API response:', response.data);
                 this.searchResults = response.data;
                 this.pagination = response.data.pagination; // Assuming 'pagination' is part of the response
             } catch (error) {
-                console.log('Error during search API call:', error.message);
+                // console.log('Error during search API call:', error.message);
                 // Handle any errors that occur during the API request
                 this.errorMessage = 'Failed to fetch results: ' + (error.response?.data?.message || error.message);
             } finally {
                 // Set isLoading to false once the API request is complete, regardless of success or failure
                 this.isLoading = false;
-                console.log('Search completed:', {isLoading: this.isLoading, resultsFound: this.searchResults.length});
+                // console.log('Search completed:', {isLoading: this.isLoading, resultsFound: this.searchResults.length});
             }
         },
         loadMoreItems() {

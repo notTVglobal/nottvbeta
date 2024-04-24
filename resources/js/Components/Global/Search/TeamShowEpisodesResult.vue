@@ -34,14 +34,9 @@ const props = defineProps({
   result: Object
 });
 
-// Computed property to format the release date into the user's timezone
-const formattedDate = computed(() => {
-  return userStore.formatDateTimeInUserTimezone(props.result.release_dateTime);
-});
-
 // Computed property to create a processed date for ConvertDateTimeToTimeAgo
 const timeZoneConvertedDateTime = computed(() => {
-  return userStore.formatDateTimeInUserTimezone(props.result.release_dateTime);
+  return userStore.formatDateTimeInUserTimezone(props.result.releaseDateTime);
 });
 
 // Method to truncate text and append ellipsis

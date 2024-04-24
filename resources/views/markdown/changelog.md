@@ -3,6 +3,10 @@
 Last Update: April 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.68
+April 24, 2024
+* Fix the Team ShowEpisode Search to return results newest first.
+
 ## v0.8.7.67
 April 24, 2024
 * Cleanup the SearchController and SearchService.
