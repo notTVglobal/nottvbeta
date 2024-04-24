@@ -10,6 +10,7 @@ use App\Models\Team;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class SearchController extends Controller
@@ -25,6 +26,8 @@ class SearchController extends Controller
    */
   public function search(Request $request, string $model, string $slug): JsonResponse {
 
+    Log::debug('Search requested', ['model' => $model, 'slug' => $slug, 'params' => $request->all()]);
+
     // Validate the incoming request parameters and query
     $validator = Validator::make($request->all() + compact('model', 'slug'), [
         'model' => 'required|string|in:teams,shows,showEpisodes,newsStories,creators', // Adjust the allowed models as necessary
@@ -35,26 +38,32 @@ class SearchController extends Controller
 
     // Handle validation failure
     if ($validator->fails()) {
+      Log::debug('Validation failed', ['errors' => $validator->errors()]);
       return response()->json(['message' => 'Invalid input parameters', 'errors' => $validator->errors()], 422);
     }
 
     // Translate URL model name to actual model class
     $modelClass = $this->getModelClass($model);
     if (!$modelClass) {
+      Log::debug('Invalid model type', ['model' => $model]);
       return response()->json(['message' => 'Invalid model type'], 404);
     }
 
     try {
       $modelInstance = $modelClass::where('slug', $slug)->firstOrFail();
     } catch (ModelNotFoundException $e) {
+      Log::debug('Model not found', ['model' => $model, 'slug' => $slug]);
       return response()->json(['message' => 'Model not found'], 404);
     }
 
     // Retrieve the type of search from the request, defaulting to 'default' if not provided
     $type = $request->query('type', 'default');
+    $query = $request->query('query');
+    Log::debug('Performing search', ['model' => $model, 'slug' => $slug, 'type' => $type, 'query' => $query]);
 
     // Perform the search with the provided query string and type
-    $searchResults = $modelInstance->search($request->query('query'), $type);
+    $searchResults = $modelInstance->search($query, $type);
+    Log::debug('Search results', ['results' => $searchResults]);
 
     return response()->json($searchResults);
   }

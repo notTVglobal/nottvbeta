@@ -58,6 +58,8 @@ use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -1213,9 +1215,7 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 ///
 
 // In routes/web.php
-  Route::get('/api/{model}/{slug}/search', [SearchController::class, 'search'])->name('model.search');
-
-
+  Route::get('/api/search/{model}/{slug}/', [SearchController::class, 'search'])->name('model.search');
 
 
 // End Authenticated Routes

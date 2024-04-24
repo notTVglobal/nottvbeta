@@ -92,7 +92,7 @@
 
             <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS</div>
 
-            <SearchComponent>
+            <SearchComponent :currentModel="`teams`" :currentSlug="props.team.slug" :searchType="`showEpisodes`">
               <!-- Provide custom title -->
               <template v-slot:title>
                 <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
@@ -171,7 +171,7 @@ usePageSetup('teams/slug')
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
 
-let props = defineProps({
+const props = defineProps({
   user: Object,
   team: Object,
   logo: String,

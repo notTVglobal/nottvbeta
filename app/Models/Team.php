@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Team extends Model {
   use HasFactory;
@@ -118,6 +120,8 @@ class Team extends Model {
   const SEARCH_SHOW_EPISODES = 'showEpisodes'; // Search type for finding episodes related to the team's shows.
 
   public function search($query, $type = self::SEARCH_SHOW_EPISODES): \Illuminate\Database\Eloquent\Collection|Collection {
+    Log::debug('Team search initiated', ['team_id' => $this->id, 'query' => $query, 'type' => $type]);
+
     return match ($type) {
       self::SEARCH_SHOW_EPISODES => $this->searchEpisodes($query),
       default => collect(),
@@ -133,10 +137,23 @@ class Team extends Model {
    * @return LengthAwarePaginator Paginated search results.
    */
   public function searchEpisodes(string $query): LengthAwarePaginator {
+    Log::alert('we are here');
+
+    // Enable the Laravel query log
+    DB::enableQueryLog();
+
+    // Example query to ensure something is logged
+    User::take(1)->get();
+
+// Log the queries
+    Log::debug('SQL Query', ['query' => DB::getQueryLog()]);
+
+
+    Log::debug('Searching episodes for team', ['team_id' => $this->id, 'query' => $query]);
     // Execute a query on the ShowEpisode model
-    return ShowEpisode::query()
+    $results = ShowEpisode::query()
         // Select relevant fields from the show_episodes table and the slug from the shows table.
-        ->select('show_episodes.id', 'show_episodes.title', 'show_episodes.description',
+        ->select('show_episodes.id', 'show_episodes.name', 'show_episodes.description',
             'show_episodes.release_dateTime', 'show_episodes.slug', 'shows.slug as show_slug')
         ->join('shows', 'show_episodes.show_id', '=', 'shows.id') // Join with the shows table to access show-specific fields.
         ->with([
@@ -147,7 +164,7 @@ class Team extends Model {
         ->where('show_episodes.show_episode_status_id', 7) // Include only episodes that are published.
         ->where(function($queryBuilder) use ($query) {
           // Add filters for matching episode titles or descriptions
-          $queryBuilder->where('show_episodes.title', 'like', '%' . $query . '%')
+          $queryBuilder->where('show_episodes.name', 'like', '%' . $query . '%')
               ->orWhere('show_episodes.description', 'like', '%' . $query . '%')
               ->orWhere(function ($dateQuery) use ($query) {
                 // Additional nested conditionals for date searching.
@@ -161,11 +178,19 @@ class Team extends Model {
               });
         })
         ->orderBy('show_episodes.release_dateTime', 'desc') // Order the results by release date in descending order.
-        ->paginate(10) // Paginate the results to show 10 episodes per page.
-        ->through(function ($showEpisode) {
-          // Use ImageResource to format the output including the related image and its settings.
-          return new ImageResource($showEpisode);
-        });
+        ->paginate(10); // Paginate the results to show 10 episodes per page.
+
+                   Log::debug('Episodes found', ['count' => $results->count()]);
+    Log::debug('SQL Query', ['query' => DB::getQueryLog()]);
+    return $results->through(function ($showEpisode) {
+      return new ImageResource($showEpisode);
+    });
+
+//        ->through(function ($showEpisode) {
+//
+//          // Use ImageResource to format the output including the related image and its settings.
+//          return new ImageResource($showEpisode);
+//        });
   }
 
   /**
@@ -181,6 +206,7 @@ class Team extends Model {
       // Attempt to create a date with a specific format or parse normally if no format is provided.
       return $format ? Carbon::createFromFormat($format, $date) : Carbon::parse($date);
     } catch (\Exception $e) {
+      Log::debug('Date parsing failed', ['date' => $date, 'format' => $format, 'error' => $e->getMessage()]);
       // Return null if parsing fails, allowing the calling function to handle the failure appropriately.
       return null;
     }
