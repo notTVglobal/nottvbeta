@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: April 24, 2024\
+Last Update: April 25, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.69
+April 25, 2024
+* Fix the Recordings prefix for playback
+* Created a Live Streaming Guide
 
 ## v0.8.7.68
 April 24, 2024

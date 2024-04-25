@@ -1,7 +1,9 @@
 <template>
   <div class="title-page">
     <div class="title-content">
-      <div class="logo-container"><ApplicationLogo /></div>
+      <div class="logo-container"><ApplicationLogo class="max-w-48"/>
+
+      </div>
       <h1>Welcome to the notTV Live Streaming Guide!</h1>
       <p>Embark on your journey to becoming a streaming expert with our interactive guide.</p>
       <button @click="startJourney">Begin Adventure</button>

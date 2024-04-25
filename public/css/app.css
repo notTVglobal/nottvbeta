@@ -8402,6 +8402,22 @@ hr {
   max-width: 20rem;
 }
 
+.max-w-40 {
+  max-width: 10rem;
+}
+
+.max-w-32 {
+  max-width: 8rem;
+}
+
+.max-w-36 {
+  max-width: 9rem;
+}
+
+.max-w-48 {
+  max-width: 12rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }

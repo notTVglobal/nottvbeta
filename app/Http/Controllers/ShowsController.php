@@ -779,8 +779,8 @@ class ShowsController extends Controller {
           return null; // Skip this iteration if user ID is not valid
         }
       } else {
-        // It's an automatic recording
-        $streamPrefix = 'recordings%2B';
+        // It's an automatic recording NOTE: $show->ulid is the show streamName
+        $streamPrefix = 'recordings_show_'. strtolower($show->ulid) .'%2B';
       }
 
       // Extract the filename including the extension from the recording path

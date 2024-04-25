@@ -1,12 +1,12 @@
 <template>
   <nav class="nav-bar">
     <div @click="toggleDropdown" class="dropdown-button" v-if="isMobile">
-      <font-awesome-icon icon="bars" />
-      {{ sections.find(section => section.id === currentHash.value)?.name }}
+      <font-awesome-icon icon="bars" /> <!-- FontAwesome icon for menu -->
+      {{ currentSectionName }}
     </div>
     <ul v-show="dropdownOpen || !isMobile">
       <li v-for="(section, index) in sections" :key="section.id"
-          :class="{ 'active': section.id === activeSection  }"
+          :class="{ 'active': section.id === activeSectionId }"
           @click="handleNavigation(section)">
         <font-awesome-icon :icon="`fa-${index + 1}`" />
         {{ section.name }}
@@ -14,63 +14,72 @@
     </ul>
   </nav>
 </template>
-
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-const props = defineProps({
-  sections: Array,
-  activeSection: String
-});
+const props = defineProps({ sections: Array });
 const emit = defineEmits(['navigate']);
 
 const currentHash = ref(window.location.hash.replace('#', ''));
-const dropdownOpen = ref(false);
 const isMobile = ref(window.innerWidth < 1020);
+const dropdownOpen = ref(false);
 
-// Computed property for active section ID is not necessary if we use currentHash directly in the template
-// Computed property to get the current section's name
+// Reactive window size check
+const updateMobileState = () => {
+  isMobile.value = window.innerWidth < 1020;
+  if (!isMobile.value) {
+    dropdownOpen.value = false; // Ensure dropdown is closed when not in mobile view
+  }
+};
+
+window.addEventListener('resize', updateMobileState);
+
+const activeSectionId = computed(() => currentHash.value || props.sections[0].id);
 const currentSectionName = computed(() => {
-  const section = props.sections.find(s => s.id === currentHash.value);
-  return section ? section.name : 'Select Section';
+  const section = props.sections.find(s => s.id === activeSectionId.value);
+  return section ? section.name : 'Select a section';
 });
 
 function toggleDropdown() {
-  dropdownOpen.value = !dropdownOpen.value;
+  if (isMobile.value) { // Ensure toggle only works in mobile view
+    dropdownOpen.value = !dropdownOpen.value;
+  }
 }
 
 function handleNavigation(section) {
-  // Directly setting the hash will automatically update currentHash via the watcher
+  currentHash.value = section.id;
   window.location.hash = section.id;
   emit('navigate', section);
-  dropdownOpen.value = false; // Close the dropdown upon selection
+  dropdownOpen.value = false; // Close dropdown after navigation
 }
 
-// Listener for hash changes
-function onHashChange() {
+// Function to update the current hash based on window.location.hash
+function updateCurrentHash() {
   currentHash.value = window.location.hash.replace('#', '');
 }
 
-// Setup to handle resizing properly
-window.addEventListener('resize', () => {
-  isMobile.value = window.innerWidth < 1020;
-});
 
-// Watch hash changes to update currentHash
-watch(() => window.location.hash, (newHash) => {
+watch(() => window.location.hash, newHash => {
   currentHash.value = newHash.replace('#', '');
 });
 
 onMounted(() => {
-  window.addEventListener('hashchange', onHashChange);
-  isMobile.value = window.innerWidth < 1020;
+  updateMobileState(); // Initial check on component mount
+  // Set up the hashchange event listener when the component mounts
+  window.addEventListener('hashchange', updateCurrentHash);
+  // if (!window.location.hash && props.sections.length > 0) {
+  //   window.location.hash = props.sections[0].id;
+  // }
 });
 
-onBeforeUnmount(() => {
-  window.removeEventListener('hashchange', onHashChange);
+onUnmounted(() => {
+  // Remove the hashchange event listener when the component unmounts
+  window.removeEventListener('hashchange', updateCurrentHash);
 });
 
+// Initial check in case the URL already has a hash when the component mounts
+updateCurrentHash();
 </script>
 
 
@@ -92,6 +101,7 @@ ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  display: block; /* Always visible on larger screens */
 }
 
 .nav-bar li {
@@ -110,23 +120,18 @@ ul {
 
 @media (max-width: 1020px) {
   .dropdown-button {
-    display: flex; /* Show on smaller screens */
-    justify-content: space-between;
-    align-items: center;
+    display: block; /* Show on smaller screens */
   }
 
   ul {
-    display: none; /* Hide by default on smaller screens */
     position: absolute;
     width: 100%;
     background-color: white;
-    z-index: 1000;
   }
 
   ul[v-show="true"] {
-    display: block; /* Show when active, controlled by Vue */
+    display: block; /* Show when active */
   }
 }
 </style>
-
 
