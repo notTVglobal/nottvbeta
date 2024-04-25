@@ -3,6 +3,10 @@
 Last Update: April 25, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.70
+April 25, 2024
+* Fix the logo, something was breaking the login page
+
 ## v0.8.7.69
 April 25, 2024
 * Fix the Recordings prefix for playback
