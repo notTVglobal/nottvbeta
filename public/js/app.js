@@ -4116,6 +4116,16 @@ var map = {
 		"./resources/js/Pages/Library.vue",
 		"resources_js_Pages_Library_vue"
 	],
+	"./LoggedOut/News/Index": [
+		"./resources/js/Pages/LoggedOut/News/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_LoggedOut_News_Index_vue"
+	],
+	"./LoggedOut/News/Index.vue": [
+		"./resources/js/Pages/LoggedOut/News/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_LoggedOut_News_Index_vue"
+	],
 	"./Movies/Create": [
 		"./resources/js/Pages/Movies/Create.vue",
 		"resources_js_Pages_Movies_Create_vue"

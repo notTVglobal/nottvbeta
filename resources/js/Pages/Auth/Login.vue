@@ -97,22 +97,19 @@
 
 <script setup>
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
-import { useAppSettingStore } from '@/Stores/AppSettingStore'
+// import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Footer from '@/Components/Global/Layout/Footer.vue'
-import {Link, useForm} from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/inertia-vue3';
 import JetButton from '@/Jetstream/Button.vue';
-import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
-import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
-import { onMounted } from 'vue'
 
-const appSettingStore = useAppSettingStore()
-
-appSettingStore.noLayout = true
-appSettingStore.currentPage = 'login'
+// const appSettingStore = useAppSettingStore()
+//
+// appSettingStore.noLayout = true
+// appSettingStore.currentPage = 'login'
 
 const props = defineProps({
   newsPeople: Array,
@@ -131,7 +128,14 @@ const submit = () => {
   })).post(route('login'), {
     onFinish: () => form.reset('password'),
   });
-  appSettingStore.pageReload = true
+  // appSettingStore.pageReload = true
 };
 
+</script>
+<script>
+import NoLayout from '@/Layouts/NoLayout';
+
+export default {
+  layout: NoLayout,
+}
 </script>

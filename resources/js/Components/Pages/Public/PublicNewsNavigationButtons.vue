@@ -50,7 +50,6 @@ const appSettingStore = useAppSettingStore()
 const props = defineProps({
   href: String,
   active: Boolean,
-  can: Object,
 });
 
 const classes = computed(() => {

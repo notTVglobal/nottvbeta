@@ -7,16 +7,15 @@
           <div class="flex">
             <!-- Logo -->
             <div class="shrink-0 flex items-center">
-              <Link @click="returnToWelcomePage">
+              <Link :href="`/`">
                 <JetApplicationMark class="block h-9 w-auto"/>
               </Link>
             </div>
-            <div v-if="!userStore.loggedIn" class="w-full flex flex-row justify-between">
+            <div v-if="!$page.props.user" class="w-full flex flex-row justify-between">
               <div class="space-x-4 py-6 pt-6 ml-8 text-gray-200">
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
-                      @click="returnToWelcomePage"
-                  >Watch Now</JetNavLink>
+                  ><Link :href="`/`">Watch Now</Link></JetNavLink>
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
@@ -45,7 +44,7 @@
               </div>
             </div>
           </div>
-          <div v-if="!userStore.loggedIn" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+          <div v-if="!$page.props.user" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
             <h3 class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/login`"
@@ -60,8 +59,8 @@
             </h3>
 
           </div>
-          <div v-if="userStore.loggedIn" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
-            <h3 v-if="userStore.isCreator" class="inline-flex items-center relative">
+          <div v-if="$page.props.user" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+            <h3 v-if="$page.props.user.isCreator" class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/dashboard`">
                 Dashboard</JetNavLink>
@@ -83,7 +82,7 @@
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
 import { onMounted } from "vue"
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link, usePage } from '@inertiajs/inertia-vue3'
 import JetNavLink from '@/Jetstream/NavLink'
 import JetApplicationMark from '@/Jetstream/ApplicationMark'
 import JetDropdownLink from '@/Jetstream/DropdownLink'
@@ -103,18 +102,20 @@ const streamStore = useStreamStore()
 const userStore = useUserStore()
 const welcomeStore = useWelcomeStore()
 
+const { props } = usePage();
+
 // streamStore.isLive(true)
 
-let props = defineProps({
-  user: Object,
-})
+// let props = defineProps({
+//   user: Object,
+// })
 
 appSettingStore.pageReload = false
 
-const returnToWelcomePage = () => {
-  appSettingStore.pageReload = true
-  Inertia.visit('/')
-}
+// const returnToWelcomePage = () => {
+//   appSettingStore.pageReload = true
+//   Inertia.visit('/')
+// }
 
 
 // let isStreamPage = false

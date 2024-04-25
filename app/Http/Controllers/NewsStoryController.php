@@ -43,101 +43,217 @@ class NewsStoryController extends Controller {
    *
    * @return Response
    */
-  public function index() {
-    $user = Auth::user();
 
-    return Inertia::render('News/Index', [
-        'newsStories' => NewsStory::with('image', 'user', 'newsPerson.user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
-            ->when(Request::input('search'), function ($query, $search) {
-              $lowerSearch = strtolower($search); // Convert search term to lowercase
-              $query->whereRaw('LOWER(title) like ?', "%{$lowerSearch}%")
-                  ->orWhereRaw('LOWER(content_json) like ?', "%{$lowerSearch}%")
-                  ->orWhereHas('newsPerson', function ($query) use ($lowerSearch) {
-                    $query->whereHas('user', function ($q) use ($lowerSearch) {
-                      $q->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                    });
-                  })
-                  ->orWhereHas('user', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhereHas('newsCategory', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhereHas('newsCategorySub', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhereHas('city', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhereHas('province', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhereHas('federalElectoralDistrict', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($lowerSearch) {
-                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                  })
-                  ->orWhere(function ($query) use ($search) {
-                    // Check if search query could be a year
-                    if (preg_match('/^\d{4}$/', $search)) { // Regex to match a 4-digit year
-                      $query->whereYear('published_at', $search);
-                    }
-                  })
-                  ->orWhere(function ($query) use ($search) {
-                    // Check if search query could be a year-month
-                    try {
-                      $date = \Carbon\Carbon::createFromFormat('Y-m', $search);
-                      $query->whereYear('published_at', $date->format('Y'))
-                          ->whereMonth('published_at', $date->format('m'));
-                    } catch (\Exception $e) {
-                      // If it's not a valid year-month, do nothing
-                    }
-                  })
-                  ->orWhere(function ($query) use ($search) {
-                    // Check if search query could be a date
-                    try {
-                      $date = \Carbon\Carbon::parse($search);
-                      $query->whereDate('published_at', $date->format('Y-m-d'));
-                    } catch (\Exception $e) {
-                      // If it's not a valid date, do nothing
-                    }
-                  });
-            })
-            ->whereNotNull('published_at') // Only return stories with a published_at date
-            ->orderBy('published_at', 'desc')
-            ->paginate(10, ['*'], 'news')
-            ->withQueryString()
-            ->through(fn($newsStory) => [
-                'id'                           => $newsStory->id,
-                'user'                         => [
-                    'name' => $newsStory->user->name,
-                ],
-                'news_person'                  => [
-                    'id'   => $newsStory->news_person_id ?? null,
-                    'name' => $newsStory->newsPerson->user->name ?? null,
-                ],
-                'title'                        => html_entity_decode($newsStory->title),
-                'slug'                         => $newsStory->slug,
-                'newsCategory'                 => $newsStory->newsCategory->name ?? null,
-                'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
-                'content'                      => $newsStory->content,
-                'city'                         => $newsStory->city->name ?? null,
-                'province'                     => $newsStory->province->name ?? null,
-                'federalElectoralDistrict'     => $newsStory->federalElectoralDistrict->name ?? null,
-                'subnationalElectoralDistrict' => $newsStory->subnationalElectoralDistrict->name ?? null,
-                'image'                        => $newsStory->image,
-                'status'                       => $newsStory->newsStatus->name,
-                'video'                        => $newsStory->video ?? null,
-                'created_at'                   => $newsStory->created_at,
-                'published_at'                 => $newsStory->published_at,
-            ]),
-        'filters'     => Request::only(['search']),
-        'can'         => [
-            'viewNewsroom' => optional($user)->can('viewAny', NewsPerson::class) ?: false,
-        ]
-    ]);
+
+  public function index() {
+    // Check if user is logged in
+    if (Auth::check()) {
+      // User is logged in, show the news index for logged-in users
+      return Inertia::render('News/Index', [
+          'newsStories' => $this->getNewsStories(),
+          'filters' => Request::only(['search']),
+          'can' => [
+              'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class),
+          ],
+      ]);
+    } else {
+      // User is not logged in, show a different page
+      return Inertia::render('LoggedOut/News/Index', [
+          'newsStories' => $this->getNewsStories(),
+          'filters' => Request::only(['search']),
+      ]);
+    }
   }
+
+  private function getNewsStories() {
+    $user = Auth::user();
+    return NewsStory::with('image', 'user', 'newsPerson.user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
+        ->when(Request::input('search'), function ($query, $search) {
+          $lowerSearch = strtolower($search); // Convert search term to lowercase
+          $query->whereRaw('LOWER(title) like ?', "%{$lowerSearch}%")
+              ->orWhereRaw('LOWER(content_json) like ?', "%{$lowerSearch}%")
+              ->orWhereHas('newsPerson', function ($query) use ($lowerSearch) {
+                $query->whereHas('user', function ($q) use ($lowerSearch) {
+                  $q->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                });
+              })
+              ->orWhereHas('user', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhereHas('newsCategory', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhereHas('newsCategorySub', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhereHas('city', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhereHas('province', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhereHas('federalElectoralDistrict', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($lowerSearch) {
+                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+              })
+              ->orWhere(function ($query) use ($search) {
+                // Check if search query could be a year
+                if (preg_match('/^\d{4}$/', $search)) { // Regex to match a 4-digit year
+                  $query->whereYear('published_at', $search);
+                }
+              })
+              ->orWhere(function ($query) use ($search) {
+                // Check if search query could be a year-month
+                try {
+                  $date = \Carbon\Carbon::createFromFormat('Y-m', $search);
+                  $query->whereYear('published_at', $date->format('Y'))
+                      ->whereMonth('published_at', $date->format('m'));
+                } catch (\Exception $e) {
+                  // If it's not a valid year-month, do nothing
+                }
+              })
+              ->orWhere(function ($query) use ($search) {
+                // Check if search query could be a date
+                try {
+                  $date = \Carbon\Carbon::parse($search);
+                  $query->whereDate('published_at', $date->format('Y-m-d'));
+                } catch (\Exception $e) {
+                  // If it's not a valid date, do nothing
+                }
+              });
+        })
+        ->whereNotNull('published_at')
+        ->orderBy('published_at', 'desc')
+        ->paginate(10, ['*'], 'news')
+        ->withQueryString()
+        ->through(fn($newsStory) => [
+            'id'                           => $newsStory->id,
+            'user'                         => [
+                'name' => $newsStory->user->name,
+            ],
+            'news_person'                  => [
+                'id'   => $newsStory->news_person_id ?? null,
+                'name' => $newsStory->newsPerson->user->name ?? null,
+            ],
+            'title'                        => html_entity_decode($newsStory->title),
+            'slug'                         => $newsStory->slug,
+            'newsCategory'                 => $newsStory->newsCategory->name ?? null,
+            'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
+            'content'                      => $newsStory->content,
+            'city'                         => $newsStory->city->name ?? null,
+            'province'                     => $newsStory->province->name ?? null,
+            'federalElectoralDistrict'     => $newsStory->federalElectoralDistrict->name ?? null,
+            'subnationalElectoralDistrict' => $newsStory->subnationalElectoralDistrict->name ?? null,
+            'image'                        => $newsStory->image,
+            'status'                       => $newsStory->newsStatus->name,
+            'video'                        => $newsStory->video ?? null,
+            'created_at'                   => $newsStory->created_at,
+            'published_at'                 => $newsStory->published_at,
+        ]);
+  }
+
+
+
+
+//
+//  public function index() {
+//    $user = Auth::user();
+//
+//
+//    return Inertia::render('News/Index', [
+//        'newsStories' => NewsStory::with('image', 'user', 'newsPerson.user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $lowerSearch = strtolower($search); // Convert search term to lowercase
+//              $query->whereRaw('LOWER(title) like ?', "%{$lowerSearch}%")
+//                  ->orWhereRaw('LOWER(content_json) like ?', "%{$lowerSearch}%")
+//                  ->orWhereHas('newsPerson', function ($query) use ($lowerSearch) {
+//                    $query->whereHas('user', function ($q) use ($lowerSearch) {
+//                      $q->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                    });
+//                  })
+//                  ->orWhereHas('user', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhereHas('newsCategory', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhereHas('newsCategorySub', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhereHas('city', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhereHas('province', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhereHas('federalElectoralDistrict', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($lowerSearch) {
+//                    $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+//                  })
+//                  ->orWhere(function ($query) use ($search) {
+//                    // Check if search query could be a year
+//                    if (preg_match('/^\d{4}$/', $search)) { // Regex to match a 4-digit year
+//                      $query->whereYear('published_at', $search);
+//                    }
+//                  })
+//                  ->orWhere(function ($query) use ($search) {
+//                    // Check if search query could be a year-month
+//                    try {
+//                      $date = \Carbon\Carbon::createFromFormat('Y-m', $search);
+//                      $query->whereYear('published_at', $date->format('Y'))
+//                          ->whereMonth('published_at', $date->format('m'));
+//                    } catch (\Exception $e) {
+//                      // If it's not a valid year-month, do nothing
+//                    }
+//                  })
+//                  ->orWhere(function ($query) use ($search) {
+//                    // Check if search query could be a date
+//                    try {
+//                      $date = \Carbon\Carbon::parse($search);
+//                      $query->whereDate('published_at', $date->format('Y-m-d'));
+//                    } catch (\Exception $e) {
+//                      // If it's not a valid date, do nothing
+//                    }
+//                  });
+//            })
+//            ->whereNotNull('published_at') // Only return stories with a published_at date
+//            ->orderBy('published_at', 'desc')
+//            ->paginate(10, ['*'], 'news')
+//            ->withQueryString()
+//            ->through(fn($newsStory) => [
+//                'id'                           => $newsStory->id,
+//                'user'                         => [
+//                    'name' => $newsStory->user->name,
+//                ],
+//                'news_person'                  => [
+//                    'id'   => $newsStory->news_person_id ?? null,
+//                    'name' => $newsStory->newsPerson->user->name ?? null,
+//                ],
+//                'title'                        => html_entity_decode($newsStory->title),
+//                'slug'                         => $newsStory->slug,
+//                'newsCategory'                 => $newsStory->newsCategory->name ?? null,
+//                'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
+//                'content'                      => $newsStory->content,
+//                'city'                         => $newsStory->city->name ?? null,
+//                'province'                     => $newsStory->province->name ?? null,
+//                'federalElectoralDistrict'     => $newsStory->federalElectoralDistrict->name ?? null,
+//                'subnationalElectoralDistrict' => $newsStory->subnationalElectoralDistrict->name ?? null,
+//                'image'                        => $newsStory->image,
+//                'status'                       => $newsStory->newsStatus->name,
+//                'video'                        => $newsStory->video ?? null,
+//                'created_at'                   => $newsStory->created_at,
+//                'published_at'                 => $newsStory->published_at,
+//            ]),
+//        'filters'     => Request::only(['search']),
+//        'can'         => [
+//            'viewNewsroom' => optional($user)->can('viewAny', NewsPerson::class) ?: false,
+//        ]
+//    ]);
+//  }
 
   /**
    * Show the form for creating a new resource.

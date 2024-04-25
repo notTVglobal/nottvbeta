@@ -123,6 +123,13 @@ class HandleInertiaRequests extends Middleware {
         ],
         'firstPlay' => fn() => $firstPlayData,
         'appUrl'    => fn() => config('app.url'),
+        'user' => function () use ($request) {
+          $user = $request->user();
+          return $user ? array_merge($user->only('id', 'name', 'email', 'timezone', 'isVip', 'profile_photo_url'), [
+              'isCreator' => !empty($user->creator), // Assuming $user->creator is a property or method that returns a truthy or falsy value
+          ]) : null;
+        },
+      // Other shared data...
     ]);
   }
 
