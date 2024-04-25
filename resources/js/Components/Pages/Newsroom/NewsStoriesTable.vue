@@ -20,7 +20,7 @@
         <div class="w-full flex flex-row flex-wrap justify-end px-6 gap-2">
           <div>
             <button
-                v-if="props.can.viewNewsroom"
+                v-if="props?.can?.viewNewsroom"
                 @click="appSettingStore.btnRedirect(`/newsroom`)"
                 class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
 
