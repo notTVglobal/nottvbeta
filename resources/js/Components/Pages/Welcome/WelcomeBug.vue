@@ -11,7 +11,7 @@
       <div class="absolute top-10 md:top-4 left-5 md:left-20">
         <div class="flex flex-row">
           <div>
-            <img :src="`/storage/images/logo_white_512.png`" class="w-20 md:w-40 pt-2" alt="notTV logo">
+            <img :src="`/storage/images/logo_white.svg`" class="w-20 md:w-40 pt-2" alt="notTV logo">
           </div>
 
         </div>
