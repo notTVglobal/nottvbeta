@@ -1,4 +1,4 @@
 <template>
-    <img :src="`/storage/images/logo_white_512.png`" alt="notTV Logo Black">
+    <img :src="`/storage/images/logo_white.svg`" alt="notTV Logo Black">
 
 </template>

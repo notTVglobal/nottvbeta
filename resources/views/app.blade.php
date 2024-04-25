@@ -11,6 +11,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/liveStreamGuide.css') }}">
 {{--        <style nonce="{{ csp_nonce() }}"></style>--}}
 {{--        <link rel="stylesheet" href="css/emojionearea.min.css">--}}
 

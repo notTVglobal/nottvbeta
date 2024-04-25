@@ -1225,6 +1225,15 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 
 
 
+// Public Pages
+///////////////
+
+Route::get('/live-streaming-guide', function () {
+  return Inertia::render('Training/LiveStreamGuide');
+})->name('liveStreamingGuide');
+
+
+
 //Route::any('/{any}', function() {
 //    return view('app');
 //})->where('any', '.*');
