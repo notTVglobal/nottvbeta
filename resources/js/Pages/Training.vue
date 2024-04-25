@@ -35,6 +35,10 @@
             Push To Rumble
           </Link>
         </li>
+        <li>
+          <Link class="text-blue-500 hover:text-blue-700 font-semibold" :href="`/training/live-streaming-guide`"> Live Streaming Cheat Sheet
+          </Link>
+        </li>
 
       </ul>
       </div>
