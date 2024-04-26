@@ -173,12 +173,12 @@ import VideoControlsWelcome from '@/Components/Global/VideoPlayer/VideoControls/
 import Footer from '@/Components/Global/Layout/Footer'
 import { Inertia } from '@inertiajs/inertia'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from '@inertiajs/inertia-vue3'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 
-const page = usePage();
-const flash = ref(page.props.value.flash || {}); // Default to an empty object if flash is undefined
-const errorMessage = ref('');
+const page = usePage()
+const flash = ref(page.props.value.flash || {}) // Default to an empty object if flash is undefined
+const errorMessage = ref('')
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -237,8 +237,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   if (flash.value.error) {
-    errorMessage.value = flash.value.error;
-    document.getElementById('flashErrorModal').showModal();
+    errorMessage.value = flash.value.error
+    document.getElementById('flashErrorModal').showModal()
   }
   videoPlayerStore.makeVideoWelcomePage()
   // document.getElementById('popUpModalForFlashError').showModal()
@@ -252,7 +252,6 @@ onMounted(() => {
   if (topDiv) {
     topDiv.scrollIntoView()
   }
-
 
 
 })

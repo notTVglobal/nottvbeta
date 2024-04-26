@@ -111,7 +111,8 @@ onMounted(() => {
   videoPlayerStore.firstPlayVideoSource = pageProps.value.firstPlay.first_play_video_source
   videoPlayerStore.firstPlayVideoSourceType = pageProps.value.firstPlay.first_play_video_source_type
 
-  const videoPlayer = videojs('main-player')
+  const videoElementId = videoPlayerStore.videoElementId
+  const videoPlayer = videojs(videoElementId)
 
   // Additional logic to fetch and apply user settings will be added here following the above TODOs.
   videoPlayerStore.videoSource = pageProps.value.firstPlay.first_play_video_source

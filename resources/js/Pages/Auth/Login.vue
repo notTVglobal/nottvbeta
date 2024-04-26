@@ -97,7 +97,10 @@
 
 <script setup>
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
-// import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import JetButton from '@/Jetstream/Button.vue';
@@ -105,11 +108,14 @@ import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import { onMounted } from 'vue'
 
-// const appSettingStore = useAppSettingStore()
-//
-// appSettingStore.noLayout = true
-// appSettingStore.currentPage = 'login'
+const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+
+appSettingStore.currentPage = 'login'
+appSettingStore.setPrevUrl()
 
 const props = defineProps({
   newsPeople: Array,
@@ -130,6 +136,16 @@ const submit = () => {
   });
   // appSettingStore.pageReload = true
 };
+
+onMounted(() => {
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer();
+    }, 1000); // Delay the disposal by 1000 milliseconds (1 second)
+  }
+});
 
 </script>
 <script>

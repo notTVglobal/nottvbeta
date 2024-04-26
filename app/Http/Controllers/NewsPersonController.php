@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class NewsPersonController extends Controller
-{
+class NewsPersonController extends Controller {
 
   public function fetchNewsPersons(): JsonResponse {
     // Eager load the 'user' relationship to get the user's name
@@ -27,8 +26,10 @@ class NewsPersonController extends Controller
     $newsPersons->transform(function ($newsPerson) {
       // Map roles relationship to only include role names
       $newsPerson->roles = $newsPerson->roles->pluck('name');
+
       return $newsPerson;
     });
+
     return response()->json($newsPersons);
   }
 
@@ -44,29 +45,36 @@ class NewsPersonController extends Controller
     return response()->json(['message' => 'Role assigned successfully!']);
   }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Inertia\Response
-     */
-    public function reportersIndex(): \Inertia\Response {
-      // Filter news people who have a role with id 5 'Reporter'
-      $newsPeople = NewsPerson::whereHas('roles', function ($query) {
-        $query->where('news_people_roles.id', 5);
-      })->with('user')->get()->map(function ($newsPerson) {
-        return [
-            'id' => $newsPerson->user->id,
-            'name' => $newsPerson->user->name,
-            'profile_photo_path' => $newsPerson->user->profile_photo_path,
-            'profile_photo_url' => $newsPerson->user->profile_photo_url,
-        ];
-      });
-      return Inertia::render('News/Reporters/Index', [
-          'newsPeople' => $newsPeople,
-          'can'         => [
-              'viewNewsroom'     => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false,
-          ]
-      ]);
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Inertia\Response
+   */
+  public function reportersIndex(): \Inertia\Response {
+    $user = Auth::user();
+    $canViewNewsroom = optional($user)->can('viewAny', NewsPerson::class);
+
+    // Select the view based on the authentication status
+    $component = $user ? 'News/Reporters/Index' : 'LoggedOut/News/Reporters/Index';
+
+    // Filter news people who have a role with id 5 'Reporter'
+    $newsPeople = NewsPerson::whereHas('roles', function ($query) {
+      $query->where('news_people_roles.id', 5);
+    })->with('user')->get()->map(function ($newsPerson) {
+      return [
+          'id'                 => $newsPerson->user->id,
+          'name'               => $newsPerson->user->name,
+          'profile_photo_path' => $newsPerson->user->profile_photo_path,
+          'profile_photo_url'  => $newsPerson->user->profile_photo_url,
+      ];
+    });
+
+    return Inertia::render($component, [
+        'newsPeople' => $newsPeople,
+        'can'        => [
+            'viewNewsroom' => $canViewNewsroom
+        ]
+    ]);
   }
 
   /**
@@ -75,78 +83,80 @@ class NewsPersonController extends Controller
    * @param NewsPerson $newsPerson
    * @return \Inertia\Response
    */
-  public function reporterShow(NewsPerson $newsPerson): \Inertia\Response
-  {
+  public function reporterShow(NewsPerson $newsPerson): \Inertia\Response {
 
-    return Inertia::render('News/Reporters/{$id}/Index', [
+    $user = Auth::user();
+    $canViewNewsroom = optional($user)->can('viewAny', NewsPerson::class);
+
+    $component = $user ? 'News/Reporters/{$id}/Index' : 'LoggedOut/News/Reporters/{$id}/Index';
+
+    return Inertia::render($component, [
         'newsPerson' => [
-            'id' => $newsPerson->user->id,
-            'name' => $newsPerson->user->name,
+            'id'                 => $newsPerson->user->id,
+            'name'               => $newsPerson->user->name,
             'profile_photo_path' => $newsPerson->user->profile_photo_path,
-            'profile_photo_url' => $newsPerson->user->profile_photo_url,
+            'profile_photo_url'  => $newsPerson->user->profile_photo_url,
         ],
-        'can' => [
-            'viewNewsroom' => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false,
+        'can'        => [
+            'viewNewsroom' => $canViewNewsroom
         ]
     ]);
   }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return void
-     */
-    public function create()
-    {
-        //
-    }
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return void
+   */
+  public function create() {
+    //
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse
-     */
-    public function store(Request $request)
-    {
-      $validated = $request->validate([
-          'id' => 'required|exists:users,id', // Ensure the user exists
-          'name' => 'required|string', // Ensure the user exists
-          'role_ids' => 'required|array', // Validate role_ids as an array
-          'role_ids.*' => 'exists:news_people_roles,id', // Each role ID must exist
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param Request $request
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse
+   */
+  public function store(Request $request) {
+    $validated = $request->validate([
+        'id'         => 'required|exists:users,id', // Ensure the user exists
+        'name'       => 'required|string', // Ensure the user exists
+        'role_ids'   => 'required|array', // Validate role_ids as an array
+        'role_ids.*' => 'exists:news_people_roles,id', // Each role ID must exist
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+      $newsPerson = NewsPerson::firstOrCreate([
+          'user_id' => $validated['id'],
       ]);
 
-      DB::beginTransaction();
+      // Assign the roles to the NewsPerson
+      $newsPerson->roles()->sync($validated['role_ids']);
 
-      try {
-        $newsPerson = NewsPerson::firstOrCreate([
-            'user_id' => $validated['id'],
-        ]);
-
-        // Assign the roles to the NewsPerson
-        $newsPerson->roles()->sync($validated['role_ids']);
-
-        // Manually update timestamps for each pivot entry
-        foreach ($validated['role_ids'] as $roleId) {
-          $newsPerson->roles()->updateExistingPivot($roleId, ['created_at' => now()]);
-          $newsPerson->roles()->updateExistingPivot($roleId, ['updated_at' => now()]);
-        }
-
-        DB::commit();
-        return back()->with('message', $validated['name'] . ' has successfully been added to the Newsroom.');
-//        return to_route('users.index')->with('success', 'User has successfully been added to the Newsroom and roles assigned.');
-      } catch (Exception $e) {
-        DB::rollBack();
-        // Log the error or handle it as per your application's requirements
-        // Log::error($e->getMessage());
-        return back()->with(['error' => 'Could not add user to the Newsroom or assign roles.']);
+      // Manually update timestamps for each pivot entry
+      foreach ($validated['role_ids'] as $roleId) {
+        $newsPerson->roles()->updateExistingPivot($roleId, ['created_at' => now()]);
+        $newsPerson->roles()->updateExistingPivot($roleId, ['updated_at' => now()]);
       }
+
+      DB::commit();
+
+      return back()->with('message', $validated['name'] . ' has successfully been added to the Newsroom.');
+//        return to_route('users.index')->with('success', 'User has successfully been added to the Newsroom and roles assigned.');
+    } catch (Exception $e) {
+      DB::rollBack();
+      // Log the error or handle it as per your application's requirements
+      // Log::error($e->getMessage());
+      return back()->with(['error' => 'Could not add user to the Newsroom or assign roles.']);
+    }
 //        return redirect()->route('newsroom')->with('message', $request->name . ' has successfully been added to the Newsroom.');
 //        return to_route('users.index')->with('success', $request->name . ' has successfully been added to the Newsroom.');
-    }
+  }
 
-  public function fetchRoles($id)
-  {
+  public function fetchRoles($id) {
     $newsPerson = NewsPerson::with('roles')->find($id);
 
     if (!$newsPerson) {
@@ -156,11 +166,10 @@ class NewsPersonController extends Controller
     return response()->json($newsPerson->roles);
   }
 
-  public function updateRoles(Request $request)
-  {
+  public function updateRoles(Request $request) {
     $request->validate([
-        'id' => 'required|exists:news_people,user_id',
-        'role_ids' => 'required|array',
+        'id'         => 'required|exists:news_people,user_id',
+        'role_ids'   => 'required|array',
         'role_ids.*' => 'exists:news_people_roles,id',
     ]);
 
@@ -178,56 +187,53 @@ class NewsPersonController extends Controller
 
 
   /**
-     * Display the specified resource.
-     *
-     * @param NewsPerson $newsPerson
-     * @return void
-     */
-    public function show(NewsPerson $newsPerson)
-    {
-        //
-    }
+   * Display the specified resource.
+   *
+   * @param NewsPerson $newsPerson
+   * @return void
+   */
+  public function show(NewsPerson $newsPerson) {
+    //
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param NewsPerson $newsPerson
-     * @return void
-     */
-    public function edit(NewsPerson $newsPerson)
-    {
-        //
-    }
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param NewsPerson $newsPerson
+   * @return void
+   */
+  public function edit(NewsPerson $newsPerson) {
+    //
+  }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param NewsPerson $newsPerson
-     * @return Response
-     */
-    public function update(Request $request, NewsPerson $newsPerson) {
-        //
-    }
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param Request $request
+   * @param NewsPerson $newsPerson
+   * @return Response
+   */
+  public function update(Request $request, NewsPerson $newsPerson) {
+    //
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
-     * @return \Inertia\Response
-     * @throws AuthorizationException
-     */
-    public function destroy(HttpRequest $request)
-    {
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param $id
+   * @return \Inertia\Response
+   * @throws AuthorizationException
+   */
+  public function destroy(HttpRequest $request) {
 //        dd($request);
-        $this->authorize('delete', NewsPerson::class);
-        $id = NewsPerson::query()->where('user_id', $request->id)->pluck('id');
-        NewsPerson::destroy($id);
+    $this->authorize('delete', NewsPerson::class);
+    $id = NewsPerson::query()->where('user_id', $request->id)->pluck('id');
+    NewsPerson::destroy($id);
 
-        $user = User::where('id', $request->id);
+    $user = User::where('id', $request->id);
 
-        return to_route('users.index')->with('warning', 'User Removed From News Team Successfully');
+    return to_route('users.index')->with('warning', 'User Removed From News Team Successfully');
 
 
-    }
+  }
 }
