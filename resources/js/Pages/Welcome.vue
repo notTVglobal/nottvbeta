@@ -12,12 +12,12 @@
 
             <div class="flex gap-2">
               <Button
-                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  class="hidden h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                   v-if="!$page.props.user" @click="Inertia.visit('/schedule')">
                 Schedule
               </Button>
               <Button
-                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  class="hidden h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                   v-if="!$page.props.user" @click="Inertia.visit('/teams')">
                 Browse
               </Button>
