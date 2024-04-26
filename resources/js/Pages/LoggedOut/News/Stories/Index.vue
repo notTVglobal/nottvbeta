@@ -49,9 +49,13 @@ appSettingStore.currentPage = 'news'
 appSettingStore.setPrevUrl()
 
 onMounted(() => {
-  setTimeout(() => {
-    videoPlayerStore.disposePlayer();
-  }, 2000); // Delay the disposal by 2000 milliseconds (2 seconds)
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer();
+    }, 1000); // Delay the disposal by 1000 milliseconds (1 second)
+  }
 });
 
 defineProps({

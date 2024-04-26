@@ -3,6 +3,10 @@
 Last Update: April 25, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.71
+April 25, 2024
+* Logged out version of pages are now live.
+
 ## v0.8.7.70
 April 25, 2024
 * Fix the logo, something was breaking the login page

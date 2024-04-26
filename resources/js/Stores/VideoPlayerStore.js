@@ -11,8 +11,53 @@ import { nextTick } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
-    mistServerUri: 'https://mist.nottv.io/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
+    mistServerUri: 'https://mist.not.tv/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
     player: null, // Video.js player instance
+    videoElementId: 'main-player',
+    playerOptions: {
+        controlBar: {
+            audioTrackButton: false,
+            autoHide: true,
+            captionsButton: false,
+            chaptersButton: false,
+            currentTimeDisplay: false,
+            customControlSpacer: false,
+            descriptionsButton: false,
+            durationDisplay: false,
+            fullscreenToggle: false, // Removes the full screen option
+            liveDisplay: false,
+            pictureInPictureToggle: false,
+            playToggle: false,
+            playbackRateMenuButton: false,
+            progressControl: {seekBar: false},
+            remainingTimeDisplay: false,
+            seekToLive: false,
+            subsCapsButton: false,
+            subtitlesButton: false,
+            timeDivider: false,
+            volumePanel: {
+                inline: true,
+                volumeBar: {
+                    vertical: false,
+                    liveDisplay: false,
+                },
+            },
+            userActions: {
+                hotkeys: true, // Enable hotkeys to show/hide controls
+            },
+            controls: false,
+            muted: true, // Start muted to comply with autoplay policies
+            inactivityTimeout: 0,
+            autoplay: true,
+            preload: 'auto',
+            // techOrder: ['html5'],
+            html5: {
+                hls: {
+                    overrideNative: !videojs.browser.IS_SAFARI, // Override native HLS on non-Safari browsers
+                },
+            },
+        },
+    },
     eventListenersAttached: false, // Track if listeners are attached
     videoPlayerLoaded: false,
     class: '',
@@ -135,14 +180,14 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         refreshVideoPlayer() {
             let videoJs = videojs('main-player')
-            const currentSource = this.videoSource;
-            const currentSourceType = this.videoSourceType;
+            const currentSource = this.videoSource
+            const currentSourceType = this.videoSourceType
 
             // Reset the player source to force reload
             videoJs.src({
                 type: currentSourceType,
-                src: currentSource
-            });
+                src: currentSource,
+            })
             videoJs.ready(() => {
                 videoJs.play().catch(error => {
                     useNotificationStore().setGeneralServiceNotification('Error', 'Playback initiation error: ' + error)
@@ -270,9 +315,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         handleEnd() {
             this.player.on('ended', () => {
-                console.log('Video has ended. Refreshing the player...');
-                this.refreshVideoPlayer();
-            });
+                console.log('Video has ended. Refreshing the player...')
+                this.refreshVideoPlayer()
+            })
         },
         handleError() {
             console.log('Handling error...')
@@ -281,8 +326,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 const error = this.player.error()
                 console.error('Video.js Error:', error.code, error.message)
                 if (error && error.code === 4) { // MEDIA_ERR_SRC_NOT_SUPPORTED
-                    console.log('Refreshing due to source error...');
-                    this.refreshVideoPlayer();
+                    console.log('Refreshing due to source error...')
+                    this.refreshVideoPlayer()
                 }
             })
         },
@@ -458,7 +503,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // Here, we assume the cdn_endpoint, cloud_folder, and folder are correctly formatted
                 // and do not require encoding. Only the file_name might need encoding.
                 // Determine the basePath using cloud_folder or cloud_private_folder
-                const basePath = `${source.cdn_endpoint}${source.cloud_folder ? source.cloud_folder : source.cloud_private_folder}${source.folder}/`;
+                const basePath = `${source.cdn_endpoint}${source.cloud_folder ? source.cloud_folder : source.cloud_private_folder}${source.folder}/`
                 // const encodedFileName = encodeURIComponent(source.file_name);
                 const fileName = source.file_name
                 videoSrc = basePath + fileName

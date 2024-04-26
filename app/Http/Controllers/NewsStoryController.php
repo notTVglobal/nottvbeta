@@ -29,10 +29,10 @@ class NewsStoryController extends Controller {
 
   public function __construct() {
 //        $this->middleware('auth');
-        $this->middleware('can:edit,newsStory')->only(['edit', 'update']);
+    $this->middleware('can:edit,newsStory')->only(['edit', 'update']);
 //        $this->middleware('can:edit,newsStory')->only(['edit', 'update']);
-        $this->middleware('can:startStory,' . NewsStory::class)->only(['create', 'store']);
-        $this->middleware('can:delete,newsStory')->only(['destroy']);
+    $this->middleware('can:startStory,' . NewsStory::class)->only(['create', 'store']);
+    $this->middleware('can:delete,newsStory')->only(['destroy']);
 //        $this->authorizeResource(NewsStory::class, 'newsStory');
 
   }
@@ -51,22 +51,23 @@ class NewsStoryController extends Controller {
       // User is logged in, show the news index for logged-in users
       return Inertia::render('News/Index', [
           'newsStories' => $this->getNewsStories(),
-          'filters' => Request::only(['search']),
-          'can' => [
+          'filters'     => Request::only(['search']),
+          'can'         => [
               'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class),
           ],
       ]);
     } else {
       // User is not logged in, show a different page
-      return Inertia::render('LoggedOut/News/Index', [
+      return Inertia::render('LoggedOut/News/Stories/Index', [
           'newsStories' => $this->getNewsStories(),
-          'filters' => Request::only(['search']),
+          'filters'     => Request::only(['search']),
       ]);
     }
   }
 
   private function getNewsStories() {
     $user = Auth::user();
+
     return NewsStory::with('image', 'user', 'newsPerson.user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
         ->when(Request::input('search'), function ($query, $search) {
           $lowerSearch = strtolower($search); // Convert search term to lowercase
@@ -357,8 +358,10 @@ class NewsStoryController extends Controller {
         ])
         ->firstOrFail();
 
-    $canViewNewsroom = optional(Auth::user())->can('viewAny', NewsPerson::class);
-    $canEditNewsStory = optional(Auth::user())->can('edit', $newsStory);
+    $user = Auth::user();
+
+    $canViewNewsroom = optional($user)->can('viewAny', NewsPerson::class);
+    $canEditNewsStory = optional($user)->can('edit', $newsStory);
 
     // Allow public access if the story status is 6
     // Otherwise, check permissions
@@ -366,8 +369,11 @@ class NewsStoryController extends Controller {
       throw new NotFoundHttpException('Story not available.');
     }
 
+    // Select the view based on the authentication status
+    $component = $user ? 'News/Stories/{$id}/Index' : 'LoggedOut/News/Stories/{$id}/Index';
+
     return Inertia::render(
-        'News/Stories/{$id}/Index',
+        $component,
         [
             'newsStory' => [
                 'id'                           => $newsStory->id,
@@ -391,9 +397,9 @@ class NewsStoryController extends Controller {
                 'published_at'                 => $newsStory->published_at,
             ],
             'can'       => [
-                'editNewsStory'   => optional(Auth::user())->can('edit', $newsStory) ?: false,
+                'editNewsStory'   => $canEditNewsStory,
                 'deleteNewsStory' => optional(Auth::user())->can('delete', $newsStory) ?: false,
-                'viewNewsroom'    => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false
+                'viewNewsroom'    => $canViewNewsroom
             ]
         ]);
   }

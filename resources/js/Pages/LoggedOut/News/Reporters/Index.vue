@@ -1,12 +1,11 @@
 <template>
   <Head :title="`News Reporters`"/>
   <div id="topDiv" ></div>
-  <div :class="marginTopClass">
-    <PublicNavigationMenu v-if="!userStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-    <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />
+  <div class="mt-16">
+    <PublicNavigationMenu class="fixed top-0 w-full nav-mask"/>
+    <PublicResponsiveNavigationMenu />
     <div class="h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
-      <PublicNewsNavigationButtons :can="can"/>
-<!--      <Breadcrumbs :breadcrumbs="[{ text: 'Reporters', to: '' }]" />-->
+      <PublicNewsNavigationButtons :can="null"/>
 
       <div class="text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">News Reporters</div>
 
@@ -41,7 +40,7 @@
         </div>
       </main>
 
-      <Footer v-if="!userStore.loggedIn"/>
+      <Footer/>
     </div>
   </div>
 </template>
@@ -50,8 +49,7 @@
 
 
 <script setup>
-import { computed, nextTick, onMounted, watch } from 'vue'
-import { usePageSetup } from '@/Utilities/PageSetup'
+import { onMounted } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { Link } from '@inertiajs/inertia-vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -59,7 +57,6 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons'
 import Footer from '@/Components/Global/Layout/Footer'
-import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 
@@ -67,7 +64,6 @@ const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
-// appSettingStore.noLayout = true
 appSettingStore.currentPage = 'news.reporters'
 appSettingStore.setPrevUrl()
 
@@ -76,42 +72,44 @@ const { props } = usePage();
 onMounted(() => {
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer();
+    }, 1000); // Delay the disposal by 1000 milliseconds (1 second)
+  } else (console.log('no video'))
   // appSettingStore.noVideo = true
 })
 
 
 // Watch for changes in the loggedIn state of appSettingStore
-watch(() => userStore.loggedIn, (loggedIn) => {
-  appSettingStore.noLayout = !loggedIn;
-
-  // Call usePageSetup if loggedIn is true
-  if (loggedIn) {
-    console.log('Logged In:', loggedIn, 'Video Player Loaded:', videoPlayerStore.videoPlayerLoaded);
-    usePageSetup('news.reporters');
-  }
-  nextTick(() => {
-    videoPlayerStore.makeVideoTopRight()
-    appSettingStore.pageIsHidden = false
-  });
-}, {
-  // immediate: true // This ensures the watcher runs immediately on setup
-});
+// watch(() => userStore.loggedIn, (loggedIn) => {
+//   appSettingStore.noLayout = !loggedIn;
+//
+//   // Call usePageSetup if loggedIn is true
+//   if (loggedIn) {
+//     console.log('Logged In:', loggedIn, 'Video Player Loaded:', videoPlayerStore.videoPlayerLoaded);
+//     usePageSetup('news.reporters');
+//   }
+//   nextTick(() => {
+//     videoPlayerStore.makeVideoTopRight()
+//     appSettingStore.pageIsHidden = false
+//   });
+// }, {
+//   // immediate: true // This ensures the watcher runs immediately on setup
+// });
 
 defineProps({
   newsPeople: Array,
   can: Object,
 })
 
-const marginTopClass = computed(() => {
-  return userStore.loggedIn ? '' : 'mt-16';
-});
-
 </script>
+<script>
+import NoLayout from '@/Layouts/NoLayout'
 
-<!--<script>-->
-<!--import NoLayout from '@/Layouts/NoLayout'-->
-
-<!--export default {-->
-<!--  layout: NoLayout,-->
-<!--}-->
-<!--</script>-->
+export default {
+  layout: NoLayout,
+}
+</script>
