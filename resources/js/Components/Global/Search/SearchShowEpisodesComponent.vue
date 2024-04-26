@@ -37,6 +37,7 @@
             :key="result.id"
             :result="result"
         />
+        <p v-if="searchStore.searchResults.length === 0" class="text-center text-white">No results.</p>
       </div>
 
     </transition>
@@ -44,6 +45,7 @@
     <div ref="sentinel" class="sentinel"></div>
     <!-- Optional: Display a loading indicator or "Load more" button -->
     <p v-if="searchStore.isLoading" class="text-center text-white">Loading...</p>
+
 
   </div>
 </template>
@@ -61,7 +63,7 @@ const sentinel = ref(null)
 
 const props = defineProps({
   modelType: String,
-  modelId: String,
+  modelId: Number,
   modelSlug: String,
 })
 

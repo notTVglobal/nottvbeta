@@ -3,53 +3,27 @@
   <Head :title="props.team.name"/>
 
   <!--    <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">-->
-  <div class="place-self-center flex flex-col">
+  <div id="topDiv" class="place-self-center h-screen flex flex-col">
+
+    <PublicNavigationMenu/>
+    <PublicResponsiveNavigationMenu/>
     <!--        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">-->
-    <div id="topDiv" class="bg-gray-800 text-gray-50 rounded px-5 pt-6">
+    <div class="h-screen bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow sm:rounded-lg px-5 pt-6 mt-16 overflow-y-scroll">
 
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-
-      <header class="flex justify-between mb-1 pt-6">
-        <div>
-          <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
-
-            <SingleImage :image="image" :alt="'team logo'" :class="'w-20 mr-2'"/>
-            {{ props.team.name }}
-
-          </h3>
-          <SocialMediaBadgeLinks :socialMediaLinks="team.socialMediaLinks"/>
-
-        </div>
-        <div class="flex flex-col">
-          <div class="flex flex-wrap-reverse justify-end gap-2 mb-2">
-            <div>
-              <button
-                  v-if="props.can.manageTeam"
-                  @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
-                  class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-              >Back to<br/>
-                Manage Team
-              </button>
-            </div>
-          </div>
-          <div class="flex flex-wrap-reverse justify-end gap-2">
-            <button
-                v-if="props.can.editTeam"
-                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Edit
-            </button>
+      <header class="flex flex-col justify-between pt-6 px-5">
+        <div class="flex flex-row flex-wrap justify-between">
+          <div class="flex flex-row">
+            <SingleImage :image="image" :alt="'team logo'" :class="'w-40 mr-4'"/>
+            <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
+              {{ props.team.name }}
+            </h3>
           </div>
           <div>
-            <button
-                v-if="props.user.role_id === 4"
-                @click="appSettingStore.btnRedirect(`/dashboard`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                hidden
-            >Dashboard
-            </button>
+            <button @click="Inertia.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
           </div>
+
         </div>
+        <SocialMediaBadgeLinks :socialMediaLinks="team.socialMediaLinks"/>
       </header>
 
       <div v-if="team?.nextBroadcast || team.public_message" class="flex flex-row justify-center w-full py-10 px-5">
@@ -81,50 +55,65 @@
         </div>
       </div>
 
+
+
       <!--      <p v-if="props.team.description" class="description mb-6 p-5">-->
       <!--        {{ props.team.description }}-->
       <!--      </p>-->
 
-      <p v-if="props.team.description" class="description mb-6 p-5">
-        {{ truncatedDescription }}
-        <span v-if="props.team.description.length > 300 && !showFullDescription">
-    ...
-  </span>
-        <br/><br/>
-        <button v-if="props.team.description.length > 300 && !showFullDescription"
-                @click="showFullDescription = true"
-                class="btn btn-wide justify-self-center">Read the full description
-        </button>
-        <span v-if="showFullDescription">
-    {{ props.team.description }}
-  </span>
-      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <div class="order-last lg:order-none">
+          <p v-if="props.team.description" class="description mb-6 p-5">
+            {{ truncatedDescription }}
+            <span v-if="props.team.description.length > 300 && !showFullDescription">
+              ...
+            </span>
+                <br/><br/>
+                <button v-if="props.team.description.length > 300 && !showFullDescription"
+                        @click="showFullDescription = true"
+                        class="btn btn-wide justify-self-center">Read the full description
+                </button>
+                <span v-if="showFullDescription">
+              {{ props.team.description }}
+            </span>
+          </p>
+        </div>
+        <div class="px-5">
+
+          <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-center  text-2xl p-4 mb-4">
+            SEARCH
+            EPISODES
+          </div>
+
+          <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug">
+            <!-- Provide custom title -->
+            <template v-slot:title>
+              <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
+            </template>
+            <!-- Provide custom description -->
+            <template v-slot:description>
+              <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes.</p>
+            </template>
+          </SearchShowEpisodesComponent>
+
+          <div v-if="props.shows.data.length !== 0"
+               class="w-full bg-gray-900 text-white text-center text-2xl p-4 mb-4">SHOWS
+          </div>
+
+          <TeamShowsList :shows="props.shows"/>
+        </div>
+
+
+      </div>
 
 
       <div class="flex flex-col">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="overflow-x-auto">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
 
-            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SEARCH
-              EPISODES
-            </div>
 
-            <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug">
-              <!-- Provide custom title -->
-              <template v-slot:title>
-                <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
-              </template>
-              <!-- Provide custom description -->
-              <template v-slot:description>
-                <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes.</p>
-              </template>
-            </SearchShowEpisodesComponent>
-
-            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS
-            </div>
-
-            <TeamShowsList :shows="props.shows"/>
 
 
             <div hidden class="creators">
@@ -180,17 +169,22 @@
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
-import { computed, ref } from 'vue'
-
-usePageSetup('teams/slug')
+import { computed, onMounted, ref } from 'vue'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
+import { Inertia } from '@inertiajs/inertia'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
+const userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
 
 const props = defineProps({
   user: Object,
@@ -200,8 +194,10 @@ const props = defineProps({
   shows: Object,
   creators: Object,
   filters: Object,
-  can: Object,
 })
+
+appSettingStore.currentPage = `teams.${props.team.slug}`
+appSettingStore.setPrevUrl()
 
 teamStore.setActiveTeam(props.team)
 teamStore.can = props.can
@@ -216,6 +212,38 @@ const truncatedDescription = computed(() => {
   }
 })
 
+// Function to handle scrolling
+const scrollToTop = () => {
+  requestAnimationFrame(() => {
+    const topDiv = document.getElementById('topDiv')
+    if (topDiv) {
+      // Smooth scroll to the 'topDiv' element
+      topDiv.scrollIntoView({behavior: 'smooth'})
+    } else {
+      // Fallback: smooth scroll to the top of the page
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    }
+  })
+}
+scrollToTop() // Optionally scroll to top when the component mounts
+
+onMounted(() => {
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer()
+    }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
+  }
+})
+
+</script>
+<script>
+import NoLayout from '@/Layouts/NoLayout'
+
+export default {
+  layout: NoLayout,
+}
 </script>
 
 <style scoped>

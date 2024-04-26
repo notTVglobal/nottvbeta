@@ -3,7 +3,7 @@
     <!-- Paginator -->
     <Pagination :data="shows" class="mb-6"/>
 
-    <div class="flex flex-row flex-wrap pb-12">
+    <div class="flex flex-row flex-wrap justify-center lg:justify-start pb-12">
       <div
           v-for="(show, key) in shows.data"
           :key="show.id"

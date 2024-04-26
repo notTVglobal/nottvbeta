@@ -5,6 +5,7 @@ use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistTriggerController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
@@ -27,12 +28,6 @@ use App\Http\Controllers\Api\ChannelApiController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::post('messages', [ChatController::class, 'message']);
-//Route::get('prometheus', 'http://mist.nottv.io:4242/nottv');
-
-Route::post('movies/upload', [MovieUploadController::class, 'upload'])
-    ->name('moviesApi.upload');
 
 
 
@@ -69,3 +64,5 @@ Route::post('/mist-trigger/log', [MistTriggerController::class, 'logTrigger']);
 
 Route::get('/news-countries-simple-list', [NewsController::class, 'getNewsCountriesSimpleList'])->name('news.countries.simpleList');
 
+// Search ShowEpisodes with Team or Show model
+Route::get('/search/{modelType}/{id}/episodes', [SearchController::class, 'searchShowEpisodes'])->name('model.search');

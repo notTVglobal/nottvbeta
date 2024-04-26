@@ -246,6 +246,16 @@ Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
     ->name('news/story.show');
 
 
+// Public view .. Teams/{team}/Index
+Route::resource('teams', TeamsController::class);
+//         Show a team
+Route::get('/teams/{team}', [TeamsController::class, 'show'])
+    ->name('teams.show');
+
+
+
+
+
 // BEGIN ROUTES FOR
 // Logged In Users
 ///////////
@@ -777,11 +787,11 @@ Route::middleware([
   ///////////
 
   // Public view .. Teams/{team}/Index
-  Route::resource('teams', TeamsController::class);
-//         Show a team
-  Route::get('/teams/{team}', [TeamsController::class, 'show'])
-      ->middleware('can:view,team')
-      ->name('teams.show');
+//  Route::resource('teams', TeamsController::class);
+////         Show a team
+//  Route::get('/teams/{team}', [TeamsController::class, 'show'])
+//      ->middleware('can:view,team')
+//      ->name('teams.show');
 
 
   /////////////////  CREATOR RESOURCES ////////////////
@@ -801,9 +811,9 @@ Route::middleware([
     ///////////
 
     // List all teams
-    Route::get('/teams', [TeamsController::class, 'index'])
-        //        ->middleware('can:viewAny,App\Models\User')
-        ->name('teams.index');
+//    Route::get('/teams', [TeamsController::class, 'index'])
+//        //        ->middleware('can:viewAny,App\Models\User')
+//        ->name('teams.index');
 
     // Create a team
     Route::get('/teams/create', [TeamsController::class, 'create'])
@@ -1214,8 +1224,11 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 ////////////////////////////////
 ///
 
-// Search ShowEpisodes with Team or Show model
-  Route::get('/api/search/{modelType}/{id}/episodes', [SearchController::class, 'searchShowEpisodes'])->name('model.search');
+  Route::post('/api/messages', [ChatController::class, 'message']);
+//Route::get('prometheus', 'http://mist.nottv.io:4242/nottv');
+
+  Route::post('/api/movies/upload', [MovieUploadController::class, 'upload'])
+      ->name('moviesApi.upload');
 
 
 // End Authenticated Routes

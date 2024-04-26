@@ -33,7 +33,8 @@ class TeamsController extends Controller {
     // with the other ones below. So they are in web.php
     $this->middleware('can:viewTeamManagePage,team')->only(['manage']);
     $this->middleware('can:update,team')->only(['edit']);
-    $this->middleware('can:view,team')->only(['show']);
+//    $this->middleware('can:view,team')->only(['show']);
+//    $this->middleware('can:viewAny,team')->only(['index']);
 
 
 // If you are having troubles with the policies saying
@@ -59,6 +60,10 @@ class TeamsController extends Controller {
 
   public function index() {
 
+    $user = Auth::user();
+
+    $canViewCreator = optional($user)->can('viewCreator', User::class);
+
     function getLogo($team) {
       $getLogo = Image::query()
           ->where('team_id', $team->id)
@@ -73,7 +78,9 @@ class TeamsController extends Controller {
       return $logo;
     }
 
-    return Inertia::render('Teams/Index', [
+    $component = $user ? 'Teams/Index' : 'LoggedOut/Teams/Index';
+
+    return Inertia::render($component, [
         'teams'   => Team::with('user', 'image', 'shows', 'teamStatus')
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('name', 'like', "%{$search}%");
@@ -99,13 +106,13 @@ class TeamsController extends Controller {
                 'memberSpots' => $team->memberSpots,
                 'totalSpots'  => $team->totalSpots,
                 'can'         => [
-                    'editTeam' => Auth::user()->can('editTeam', $team),
-                    'viewTeam' => Auth::user()->can('viewTeamManagePage', $team)
+                    'editTeam' => optional($user)->can('editTeam', $team),
+                    'viewTeam' => optional($user)->can('viewTeamManagePage', $team)
                 ]
             ]),
         'filters' => Request::only(['search']),
         'can'     => [
-            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            'viewCreator' => $canViewCreator,
         ]
     ]);
   }
@@ -201,7 +208,11 @@ class TeamsController extends Controller {
 
     $nextBroadcast = null;
 
-    return Inertia::render('Teams/{$id}/Index', [
+    $user = Auth::user();
+
+    $component = $user ? 'Teams/{$id}/Index' : 'LoggedOut/Teams/{$id}/Index';
+
+    return Inertia::render($component, [
         'team'     => $team,
         'image'    => $team->image ? (new ImageResource($team->image))->resolve() : null,
         'nextBroadcast' => $nextBroadcast,
@@ -254,9 +265,9 @@ class TeamsController extends Controller {
             ]),
         'filters'  => Request::only(['team_id']),
         'can'      => [
-            'viewTeam'   => auth()->user()->can('view', $team),
-            'manageTeam' => auth()->user()->can('viewTeamManagePage', $team),
-            'editTeam'   => auth()->user()->can('update', $team),
+            'viewTeam'   => optional($user)->can('view', $team),
+            'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
+            'editTeam'   => optional($user)->can('update', $team),
         ]
     ]);
   }

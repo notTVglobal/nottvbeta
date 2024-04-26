@@ -19,6 +19,10 @@
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
+                  ><Link :href="`/teams`">Browse</Link></JetNavLink>
+                </h3>
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
                       :href="route('news.index')"
                       :active="route().current('news.index')">
                     News Stories</JetNavLink>

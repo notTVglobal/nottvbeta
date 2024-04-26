@@ -73,8 +73,8 @@ class UpdateRecordingModelAndNotify  implements ShouldQueue {
 
       if ($model instanceof Show) {
         $team = $model->team;
-        $message = "A new recording for the show '{$model->name}' is now available. Check it out!";
         $url = url("/shows/{$model->slug}/manage"); // Adjust the URL pattern as needed
+        $message = "A new recording for the show '{$model->name}' is now available. Check it out!";
 //        Log::debug('Notification setup for Show', ['showName' => $model->name, 'url' => $url]);
       } elseif ($model instanceof ShowEpisode) {
         $show = $model->show;
