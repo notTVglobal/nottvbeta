@@ -25,11 +25,16 @@ use Inertia\Inertia;
 class SchedulesController extends Controller {
 
   public function __construct() {
-    $this->middleware('auth');
+    $this->middleware('auth')->except(['index', 'preloadWeeklyContent', 'loadWeekFromDate']);
   }
 
   public function index(): \Inertia\Response {
-    return Inertia::render('Schedule/Index', [
+
+    $user = Auth::user();
+
+    $component = $user ? 'Schedule/Index' : 'LoggedOut/Schedule/Index';
+
+    return Inertia::render($component, [
       // we need to return the schedule data...
       // in our Schedule::class we can gather all the broadcast_dates
       // which is a json column that will hold an array of dates for each
@@ -178,7 +183,7 @@ class SchedulesController extends Controller {
 //      ]);
 //    }
 
-    $userTimezone = auth()->user()->timezone;
+//    $userTimezone = auth()->user()->timezone;
 
     // Assume the frontend sends the full ISO date-time string and timezone, e.g., "2024-04-10T06:57:00-07:00"
     $dateTimeFromFrontend = $request->formattedDateTimeUtc; // Full ISO string from the frontend

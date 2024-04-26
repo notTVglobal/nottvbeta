@@ -399,7 +399,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
         async loadWeekFromDate(date) {
-            let formattedDate // Declare formattedDate outside of the try block
+            let formattedDate = null // Declare formattedDate outside of the try block
             this.scheduleIsLoading = true
             try {
                 const userStore = useUserStore()

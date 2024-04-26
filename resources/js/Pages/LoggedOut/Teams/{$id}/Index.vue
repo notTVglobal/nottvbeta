@@ -8,7 +8,8 @@
     <PublicNavigationMenu/>
     <PublicResponsiveNavigationMenu/>
     <!--        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">-->
-    <div class="h-screen bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow sm:rounded-lg px-5 pt-6 mt-16 overflow-y-scroll">
+    <div
+        class="min-h-screen w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow pt-6 mt-16 overflow-y-scroll">
 
       <header class="flex flex-col justify-between pt-6 px-5">
         <div class="flex flex-row flex-wrap justify-between">
@@ -56,7 +57,6 @@
       </div>
 
 
-
       <!--      <p v-if="props.team.description" class="description mb-6 p-5">-->
       <!--        {{ props.team.description }}-->
       <!--      </p>-->
@@ -69,19 +69,20 @@
             <span v-if="props.team.description.length > 300 && !showFullDescription">
               ...
             </span>
-                <br/><br/>
-                <button v-if="props.team.description.length > 300 && !showFullDescription"
-                        @click="showFullDescription = true"
-                        class="btn btn-wide justify-self-center">Read the full description
-                </button>
-                <span v-if="showFullDescription">
+            <br/><br/>
+            <button v-if="props.team.description.length > 300 && !showFullDescription"
+                    @click="showFullDescription = true"
+                    class="btn btn-wide justify-self-center">Read the full description
+            </button>
+            <span v-if="showFullDescription">
               {{ props.team.description }}
             </span>
           </p>
         </div>
         <div class="px-5">
 
-          <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-center  text-2xl p-4 mb-4">
+          <div v-if="props.shows.data.length !== 0"
+               class="w-full bg-gray-900 text-white text-center  text-2xl p-4 mb-4">
             SEARCH
             EPISODES
           </div>
@@ -111,9 +112,6 @@
       <div class="flex flex-col">
         <div class="overflow-x-auto">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-
-
-
 
 
             <div hidden class="creators">
@@ -159,6 +157,8 @@
         </div>
       </div>
 
+      <Footer/>
+
     </div>
   </div>
 
@@ -180,6 +180,7 @@ import { computed, onMounted, ref } from 'vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
 import { Inertia } from '@inertiajs/inertia'
+import Footer from '@/Components/Global/Layout/Footer.vue'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
@@ -212,29 +213,30 @@ const truncatedDescription = computed(() => {
   }
 })
 
+
+
 // Function to handle scrolling
 const scrollToTop = () => {
-  requestAnimationFrame(() => {
-    const topDiv = document.getElementById('topDiv')
-    if (topDiv) {
-      // Smooth scroll to the 'topDiv' element
-      topDiv.scrollIntoView({behavior: 'smooth'})
-    } else {
-      // Fallback: smooth scroll to the top of the page
-      window.scrollTo({top: 0, behavior: 'smooth'})
-    }
-  })
+  const hasQueryStrings = window.location.search !== '';
+  if (!hasQueryStrings || appSettingStore.shouldScrollToTop) {
+    requestAnimationFrame(() => {
+      const topDiv = document.getElementById('topDiv')
+      if (topDiv) {
+        // Smooth scroll to the 'topDiv' element
+        topDiv.scrollIntoView({behavior: 'smooth'})
+      } else {
+        // Fallback: smooth scroll to the top of the page
+        window.scrollTo({top: 0, behavior: 'smooth'})
+      }
+    })
+  }
 }
 scrollToTop() // Optionally scroll to top when the component mounts
 
+
+
 onMounted(() => {
-  if (videoPlayerStore.player) {
-    console.log('player is initialized...')
-    console.log('disposing player...')
-    setTimeout(() => {
-      videoPlayerStore.disposePlayer()
-    }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
-  }
+
 })
 
 </script>

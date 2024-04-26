@@ -14,31 +14,31 @@
 
     <div :class="videoControlsClass">
       <button
-          class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
+          class="font-bold text-xl md:text-2xl bg-gray-800 rounded-full py-3 px-6 tracking-wider hover:bg-gray-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg transition-transform duration-300 ease-in-out"
           @click="videoPlayerStore.fullscreen()">
         FULLSCREEN
       </button>
 
       <button v-if="videoPlayerStore.muted===true"
-              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
+              class="font-bold text-xl md:text-2xl bg-gray-800 rounded-full py-3 px-6 tracking-wider hover:bg-gray-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg transition-transform duration-300 ease-in-out"
               @click="videoPlayerStore.unMute()">
         UNMUTE
       </button>
 
       <button v-if="videoPlayerStore.muted===false"
-              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
+              class="font-bold text-xl md:text-2xl bg-gray-800 rounded-full py-3 px-6 tracking-wider hover:bg-gray-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg transition-transform duration-300 ease-in-out"
               @click="videoPlayerStore.mute()">
         MUTE
       </button>
 
       <button v-if="!videoPlayerStore.paused"
-              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
+              class="font-bold text-xl md:text-2xl bg-gray-800 rounded-full py-3 px-6 tracking-wider hover:bg-gray-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg transition-transform duration-300 ease-in-out"
               @click="videoPlayerStore.pause()">
         PAUSE
       </button>
 
       <button v-if="videoPlayerStore.paused"
-              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
+              class="font-bold text-xl md:text-2xl bg-gray-800 rounded-full py-3 px-6 tracking-wider hover:bg-gray-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg transition-transform duration-300 ease-in-out"
               @click="videoPlayerStore.play()">
         PLAY
       </button>
@@ -49,34 +49,26 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+
 const appSettingStore = useAppSettingStore()
-import { useChatStore } from "@/Stores/ChatStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useChatStore } from '@/Stores/ChatStore'
+import { useUserStore } from '@/Stores/UserStore'
 
 const videoPlayerStore = useVideoPlayerStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
 defineProps({
-  show: Boolean
-});
-
-function backToPage() {
-  // videoPlayerStore.makeVideoTopRight();
-  // chatStore.showChat = false;
-  // streamStore.showOSD = false;
-  window.history.back()
-}
-
+  show: Boolean,
+})
 
 const videoControlsClass = computed(() => ({
   videoControlsWelcomeMobile: userStore.isMobile,
-  videoControlsWelcomeStandard: !userStore.isMobile
+  videoControlsWelcomeStandard: !userStore.isMobile,
 }))
-
 
 </script>
 
@@ -91,5 +83,13 @@ const videoControlsClass = computed(() => ({
   justify-content: center;
 }
 
+.fade-out {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.fade-out.visible {
+  opacity: 1;
+}
 
 </style>

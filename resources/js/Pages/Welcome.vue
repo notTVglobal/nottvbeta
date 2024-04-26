@@ -2,44 +2,58 @@
   <Head title="Beta"/>
   <transition name="fade" mode="out-in">
     <div id="topDiv"
-         class=""
          :class="welcomeContainer">
       <header class="headerContainer w-full">
-        <div class="w-full flex flex-row md:px-6 py-4 welcomeOverlay">
+        <div class="w-full flex flex-row justify-between md:px-6 py-4 welcomeOverlay">
+
           <WelcomeBug/>
 
-          <div class="flex justify-end pt-4 md:pr-6 w-full">
-            <Button
-                class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                v-if="!$page.props.user" @click="welcomeStore.showLogin = true">
-              Log in
-            </Button>
-            <!--            <Button-->
-            <!--                class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
-            <!--                v-if="!$page.props.user" @click="welcomeStore.showRegister = true">-->
-            <!--              &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
+          <div class="flex flex-row flex-wrap justify-center md:justify-end pt-8 lg:pr-6 w-full gap-2">
 
-            <!--              Register-->
-            <!--            </Button>-->
-            <Button v-if="!$page.props.user"
-                    class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                    @click="Inertia.visit('register')">Register
-            </Button>
+            <div class="flex gap-2">
+              <Button
+                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  v-if="!$page.props.user" @click="Inertia.visit('/schedule')">
+                Schedule
+              </Button>
+              <Button
+                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  v-if="!$page.props.user" @click="Inertia.visit('/teams')">
+                Browse
+              </Button>
+            </div>
+            <div class="flex gap-2">
+              <Button
+                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  v-if="!$page.props.user" @click="welcomeStore.showLogin = true">
+                Log in
+              </Button>
+              <!--            <Button-->
+              <!--                class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
+              <!--                v-if="!$page.props.user" @click="welcomeStore.showRegister = true">-->
+              <!--              &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
+
+              <!--              Register-->
+              <!--            </Button>-->
+              <Button v-if="!$page.props.user"
+                      class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                      @click="Inertia.visit('register')">Register
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-
-      <div class="overscroll-y-scroll">
+      <div class="">
 
         <div class="welcomeOverlay">
           <div class="relative flex items-top justify-center min-h-screen text-gray-200">
 
-            <div class="w-full flex justify-center items-center h-screen w-screen">
+            <div class="flex justify-center items-center h-screen w-screen">
 
               <WelcomeOverlay v-show="welcomeStore.showOverlay"
                               @watchNow="watchNow"/>
-              <VideoControlsWelcome v-show="!welcomeStore.showOverlay"/>
+              <VideoControlsWelcome v-if="!welcomeStore.showOverlay"/>
 
             </div>
           </div>
@@ -157,7 +171,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watchEffect, computed, onBeforeUnmount, onBeforeMount } from 'vue'
+import { onMounted, ref, watchEffect, computed, onBeforeUnmount, onBeforeMount, onUnmounted, provide, watch } from 'vue'
 import videojs from 'video.js'
 
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
@@ -231,6 +245,7 @@ let reloadPage = () => {
 //   }
 // });
 
+
 onBeforeMount(() => {
   reloadPage()
 })
@@ -253,7 +268,6 @@ onMounted(() => {
     topDiv.scrollIntoView()
   }
 
-
 })
 
 onBeforeUnmount(() => {
@@ -263,15 +277,6 @@ onBeforeUnmount(() => {
 function watchNow() {
   welcomeStore.showOverlay = false
   videoPlayerStore.unMute()
-  // Check if the video is muted
-  // const videoPlayer = videojs('main-player')
-  //
-  // if (videoPlayer.muted()) {
-
-  // videoPlayerStore.resumeAudioContextIfNeeded()
-  // videoPlayerStore.ensureAudioContextAndNodesReady(videoPlayer);
-  // videoPlayerStore.fadeInAudioFromMuted()
-  // }
 }
 
 </script>

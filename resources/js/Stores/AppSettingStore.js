@@ -16,6 +16,7 @@ const initialState = () => ({
     fullPage: false, // Used to determine layout FullPage or TopRight
     pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true
     shouldScrollToTop: false,
+    savedScrollPosition: null,
     ott: 0, // Number representing the Ott Panel currently open. 0 is closed.
             // 1: Info
             // 2: Channels

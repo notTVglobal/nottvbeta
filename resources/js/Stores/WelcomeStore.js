@@ -13,6 +13,5 @@ export const useWelcomeStore = defineStore('welcomeStore', {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
         },
-
     }
 })

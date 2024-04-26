@@ -66,10 +66,17 @@
             Watch Now
           </JetResponsiveNavLink>
 
-          <JetResponsiveNavLink
+          <JetResponsiveNavLink hidden
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('home')"
-              :active="route().current('home')">
+              :href="route('schedule')"
+              :active="route().current('schedule')">
+            Schedule
+          </JetResponsiveNavLink>
+
+          <JetResponsiveNavLink hidden
+              @click="appSettingStore.closeNavDropdown()"
+              :href="route('teams.index')"
+              :active="route().current('teams.index')">
             Browse
           </JetResponsiveNavLink>
 

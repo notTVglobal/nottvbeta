@@ -25,24 +25,39 @@ class ShowPolicy
 
     public function view(User $user, Show $show)
     {
-//      return true;
-      // Check if the show has a status_id of 9
-      if ($show->status_id == 9) {
-        // If the user is a creator, allow viewing
-        if ($user->creator) {
-          return true;
-        }
-
-        return Response::deny('You must be a creator to view this show.');
-
-        // We may use these AuthorizationExceptions later to add more functionality
-        // to our authorization denials. tec21: I'll leave this here for now.
-        // If the user is not a creator, throw an exception with a custom message
-//        throw new AuthorizationException('You must be a creator to view this show.');
+      // Allow admins to view any show regardless of its status
+      if ($user->isAdmin) {
+        return Response::allow();
       }
 
-      // For all other cases, allow viewing
-      return true;
+      // Check if the show is in a specific frozen, restricted, or hidden status
+      if ($this->isRestrictedShow($show)) {
+        return Response::deny($this->restrictionMessage($show));
+      }
+
+      // If the show has a status_id of 9
+      if ($show->status_id == 9) {
+        // Only users who are creators can view it
+        return $user->is_creator
+            ? Response::allow()
+            : Response::deny('You must be a creator to view this show.');
+      }
+
+      // If the show has a status of 2, anyone can view it
+      if ($show->status_id == 2) {
+        return Response::allow();
+      }
+
+      // If the show has a status of 1, only show->team->members can view it
+      if ($show->status_id == 1) {
+        return $show->team->members->contains($user->id)
+            ? Response::allow()
+            : Response::deny('You must be a team member to view this show.');
+      }
+
+      // Optionally handle other cases or provide a default response
+      return Response::deny('You do not have permission to view this show.');
+
     }
 
     public function viewShowManagePage(User $user, Show $show)
@@ -267,4 +282,29 @@ class ShowPolicy
 
         return Response::deny('There\'s been a problem. Please let not.TV know.');
     }
+
+  /**
+   * Check if the show is in a restricted status and needs special handling.
+   *
+   * @param  \App\Models\Show $show
+   * @return bool
+   */
+  private function isRestrictedShow(Show $show): bool {
+    return in_array($show->status_id, [6, 7, 8]);
+  }
+
+  /**
+   * Return the appropriate message for restricted shows.
+   *
+   * @param  \App\Models\Show $show
+   * @return string
+   */
+  private function restrictionMessage(Show $show): string {
+    return match ($show->status_id) {
+      6 => 'The show is frozen please contact the notTV support team.',
+      7 => 'The show is restricted please contact the notTV support team.',
+      8 => 'The show is hidden please contact the notTV support team.',
+      default => 'Access is restricted.',
+    };
+  }
 }

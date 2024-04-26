@@ -2,12 +2,12 @@
   <Head :title="`Contact Us`"/>
   <div id="topDiv" ></div>
   <div :class="marginTopClass">
-    <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-    <PublicResponsiveNavigationMenu v-if="!appSettingStore.loggedIn"/>
+    <PublicNavigationMenu class="fixed top-0 w-full nav-mask"/>
+    <PublicResponsiveNavigationMenu />
 
     <div class="w-full h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white">
 
-      <div class="pt-10 text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">Contact Us</div>
+      <div class="pt-20 text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">Contact Us</div>
       <main class="mx-auto border-b border-gray-800 pb-36">
 
         <div class="text-green-500 py-12 w-56" v-if="$page.props.flash.success && !$page.props.flash.error">Thank You for Reaching Out!<br />Your message is on its way to us. We appreciate you taking the time to get in touch and will respond as quickly as possible. Look forward to speaking with you soon!</div>
@@ -80,7 +80,7 @@
 
       </main>
 
-      <Footer v-if="!userStore.loggedIn "/>
+      <Footer />
     </div>
   </div>
 </template>
@@ -102,13 +102,33 @@ const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
-appSettingStore.noLayout = true
-appSettingStore.noVideo = true
-appSettingStore.currentPage = 'newsletterSignup'
+appSettingStore.currentPage = 'Contact'
+appSettingStore.setPrevUrl()
+
+// Function to handle scrolling
+const scrollToTop = () => {
+  requestAnimationFrame(() => {
+    const topDiv = document.getElementById('topDiv')
+    if (topDiv) {
+      // Smooth scroll to the 'topDiv' element
+      topDiv.scrollIntoView({behavior: 'smooth'})
+    } else {
+      // Fallback: smooth scroll to the top of the page
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    }
+  })
+}
+scrollToTop() // Optionally scroll to top when the component mounts
+
 
 onMounted(() => {
-  const topDiv = document.getElementById("topDiv")
-  topDiv.scrollIntoView()
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer()
+    }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
+  }
 })
 
 
@@ -141,6 +161,13 @@ const marginTopClass = computed(() => {
 
 
 
+</script>
+<script>
+import NoLayout from '@/Layouts/NoLayout'
+
+export default {
+  layout: NoLayout,
+}
 </script>
 
 <style scoped>

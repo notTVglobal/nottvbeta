@@ -38,7 +38,7 @@
                   </svg>
                   <input id="email"
                          v-model="form.email" type="email" class="grow border-none w-full" placeholder="Email" required
-                         autofocus/>
+                         />
                 </label>
               </div>
 

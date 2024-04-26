@@ -216,6 +216,7 @@ const truncatedDescription = computed(() => {
   }
 })
 
+
 </script>
 
 <style scoped>

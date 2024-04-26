@@ -1,11 +1,10 @@
 <template>
   <Head :title="`Newsletter Signup`"/>
-  <div id="topDiv" ></div>
-  <div class="mt-16">
+  <div id="topDiv" class="place-self-center flex flex-col overscroll-x-none pb-64 h-screen">
+    <div class="w-full min-h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white mt-16 overflow-y-scroll">
     <PublicNavigationMenu class="fixed top-0 w-full nav-mask"/>
     <PublicResponsiveNavigationMenu />
 
-    <div class="w-full h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white">
       <main class="mx-auto border-b border-gray-800">
         <BrevoForm />
       </main>
@@ -14,9 +13,6 @@
     </div>
   </div>
 </template>
-
-
-
 
 <script setup>
 import { onMounted } from 'vue'
