@@ -248,11 +248,17 @@ Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
 
 // Public view .. Teams/{team}/Index
 Route::resource('teams', TeamsController::class);
+
 //         Show a team
-Route::get('/teams/{team}', [TeamsController::class, 'show'])
-    ->name('teams.show');
+//Route::get('/teams/{team}', [TeamsController::class, 'show'])
+//    ->name('teams.show');
 
+// Public view .. Shows/{show}/Index
+Route::resource('shows', ShowsController::class);
 
+// Public view .. Schedule/Index
+Route::get('/schedule', [SchedulesController::class, 'index'])
+    ->name('schedule');
 
 
 
@@ -382,10 +388,6 @@ Route::middleware([
 
   // Schedule
 ///////////
-
-  // User view
-  Route::get('/schedule', [SchedulesController::class, 'index'])
-      ->name('schedule');
 
   // Admin manage the schedule
   Route::get('/admin/schedule', [AdminController::class, 'adminSchedulePage'])
@@ -905,7 +907,7 @@ Route::middleware([
 // Shows
 ///////////
   // Shows resource
-  Route::resource('shows', ShowsController::class);
+
   // Display shows index page
 //    Route::get('/shows', [ShowsController::class, 'index'])
 //        ->can('viewAny', 'App\Models\Show')
@@ -1194,8 +1196,6 @@ Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSc
 Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
 Route::delete('/api/schedule/removeFromSchedule', [SchedulesController::class, 'removeFromSchedule']);
 Route::get('/api/schedule/today', [SchedulesController::class, 'fetchTodaysContent']);
-Route::post('/api/schedule/week', [SchedulesController::class, 'preloadWeeklyContent']);
-Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::class, 'loadWeekFromDate']);
 
 Route::post('/invalidate-caches/', [SchedulesController::class, 'invalidateCaches'])
     ->can('viewAdmin', 'App\Models\User');
@@ -1244,6 +1244,13 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 Route::get('/live-streaming-guide', function () {
   return Inertia::render('Training/LiveStreamGuide');
 })->name('liveStreamingGuide');
+
+
+// Public API Routes
+////////////////////
+
+Route::post('/api/schedule/week', [SchedulesController::class, 'preloadWeeklyContent']);
+Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::class, 'loadWeekFromDate']);
 
 
 

@@ -40,23 +40,22 @@ class ShowsController extends Controller {
 
   public function __construct() {
 
-//        $this->middleware('can:viewAny' . \App\Models\Show::class)->only(['index']);
-    $this->middleware('can:view,show')->only(['show']);
-//    $this->middleware('can:view,' . \App\Models\Show::class)->only(['create']);
-//    $this->middleware('can:view,show')->only('index');
+    // Apply auth middleware only to certain methods
+    $this->middleware('auth')->except(['index', 'show']);
+
+//    $this->middleware('can:viewAny,show')->only(['index']);
+//    $this->middleware('can:view,show')->only(['show']);
+
+
     $this->middleware('can:create,' . Show::class)->only(['create']);
     $this->middleware('can:create,' . Show::class)->only(['store']);
-//    $this->middleware('can:create' . \App\Models\Show::class)->only(['store']);
+
     $this->middleware('can:edit,show')->only(['edit']);
     $this->middleware('can:edit,show')->only(['update']);
     $this->middleware('can:destroy,show')->only(['destroy']);
 
     $this->middleware('can:viewShowManagePage,show')->only(['manage']);
 
-    // tec21: this policy isn't working vvv
-//        $this->middleware('can:editShowManagePage,show')->only(['changeEpisodeStatus']);
-
-//        $this->middleware('can:create,show')->only(['store']);
     $this->middleware('can:createEpisode,show')->only(['createEpisode']);
     $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
 
@@ -69,14 +68,21 @@ class ShowsController extends Controller {
 ///////////////////
 
   public function index(): \Inertia\Response {
-    return Inertia::render('Shows/Index', [
+
+    $user = Auth::user();
+
+    $canViewCreator = optional($user)->can('viewCreator', User::class);
+
+    $component = $user ? 'Shows/Index' : 'LoggedOut/Shows/Index';
+
+    return Inertia::render($component, [
         'shows'          => $this->fetchShows(),
         'newestEpisodes' => $this->fetchNewestEpisodes(),
         'comingSoon'     => $this->fetchComingSoon(),
         'filters'        => Request::only(['search']),
         'can'            => [
 //            'viewShows'   => Auth::user()->can('view', Show::class),
-            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            'viewCreator' => $canViewCreator,
         ]
     ]);
   }
@@ -482,7 +488,11 @@ class ShowsController extends Controller {
 
     $firstPlayEpisode = $this->determineFirstPlayEpisode($show);
 
-    return Inertia::render('Shows/{$id}/Index', [
+    $user = Auth::user();
+
+    $component = $user ? 'Shows/{$id}/Index' : 'LoggedOut/Shows/{$id}/Index';
+
+    return Inertia::render($component, [
         'show'     => $this->transformShowData($show, $firstPlayEpisode),
         'episodes' => $this->fetchEpisodes($show),
         'creators' => $this->fetchCreators($show->team_id),
@@ -719,10 +729,11 @@ class ShowsController extends Controller {
   }
 
   private function getPermissions(Show $show) {
+    $user = Auth::user();
     return [
-        'manageShow'  => Auth::user()->can('manage', $show),
-        'editShow'    => Auth::user()->can('edit', $show),
-        'viewCreator' => Auth::user()->can('viewCreator', User::class),
+        'manageShow'  => optional($user)->can('manage', $show),
+        'editShow'    => optional($user)->can('edit', $show),
+        'viewCreator' => optional($user)->can('viewCreator', User::class),
     ];
   }
 

@@ -174,6 +174,7 @@ onUnmounted(() => {
 //             videoPlayerStore.showOsdAndControlsAndNav()
 //         }
 //     }
+  videoPlayerStore.disposePlayer()
 })
 
 const clickOnVideoAction = () => {

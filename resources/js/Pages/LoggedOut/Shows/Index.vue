@@ -4,8 +4,6 @@
   <div class="place-self-center flex flex-col gap-y-3 w-full overflow-x-hidden">
     <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-
       <header class="flex justify-between mb-3 border-b border-gray-800">
         <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 pb-4 md:py-6">
 
@@ -185,11 +183,13 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
 import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import MostAnticipated from '@/Components/Pages/Shows/Elements/MostAnticipated'
 import PaginationDark from '@/Components/Global/Paginators/PaginationDark'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
@@ -198,9 +198,12 @@ import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTi
 import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 import NewContentBadge from '@/Components/Global/Badges/NewContentBadge.vue'
 
-usePageSetup('shows')
-
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+
+appSettingStore.currentPage = 'teams'
+appSettingStore.setPrevUrl()
 
 function scrollToNewEpisodes() {
   document.getElementById('new-episodes').scrollIntoView({behavior: 'smooth'})
@@ -224,7 +227,6 @@ let props = defineProps({
   // mostAnticipated: Object,
   comingSoon: Object,
   filters: Object,
-  can: Object,
 
 })
 
@@ -237,6 +239,23 @@ watch(search, throttle(function (value) {
   })
 }, 300))
 
-</script>
+onMounted(() => {
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer()
+    }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
+  }
 
+})
+
+</script>
+<script>
+import NoLayout from '@/Layouts/NoLayout'
+
+export default {
+  layout: NoLayout,
+}
+</script>
 

@@ -33,8 +33,11 @@
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import { Inertia } from '@inertiajs/inertia'
+import { onMounted } from 'vue'
 
 defineProps({
   shows: Object,
 })
+
+
 </script>

@@ -2,12 +2,13 @@
 
   <Head title="Login"/>
   <div class="bg-gray-900 h-[calc(100vh)]">
+    <div id="topDiv"></div>
     <div>
       <PublicNavigationMenu class="fixed top-0 w-full h-16"/>
       <PublicResponsiveNavigationMenu />
     </div>
 
-      <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
+      <div class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
 
         <div class="flex flex-col mt-36 text-gray-50 justify-center w-full text-center text-3xl font-semibold tracking-widest">
           <div><ApplicationLogo class="mx-auto w-1/2 lg:w-1/4 xl:w-1/6 mb-6"/></div>
@@ -45,7 +46,7 @@
                             d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"/>
                       </svg>
                       <input id="email"
-                             v-model="form.email" type="email" class="grow border-none" placeholder="Email" required autofocus/>
+                             v-model="form.email" type="email" class="grow border-none" placeholder="Email" required/>
                     </label>
                   </div>
 
@@ -136,6 +137,22 @@ const submit = () => {
   });
   // appSettingStore.pageReload = true
 };
+
+// Function to handle scrolling
+const scrollToTop = () => {
+  requestAnimationFrame(() => {
+    const topDiv = document.getElementById('topDiv')
+    if (topDiv) {
+      // Smooth scroll to the 'topDiv' element
+      topDiv.scrollIntoView({behavior: 'smooth'})
+    } else {
+      // Fallback: smooth scroll to the top of the page
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    }
+  })
+}
+scrollToTop() // Optionally scroll to top when the component mounts
+
 
 onMounted(() => {
   if (videoPlayerStore.player) {

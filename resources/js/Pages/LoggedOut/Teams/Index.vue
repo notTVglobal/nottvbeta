@@ -1,13 +1,14 @@
 <template>
-  <Head title="Teams"/>
+  <Head title="Browse Teams"/>
 
-  <div id="topDiv" class="place-self-center h-screen flex flex-col">
+  <div class="place-self-center h-screen flex flex-col">
+    <div id="topDiv"></div>
 
     <PublicNavigationMenu/>
     <PublicResponsiveNavigationMenu/>
     <div class="h-screen mt-16 overflow-y-scroll">
 
-            <div class="bg-gray-700 text-gray-50 dark:bg-gray-800 dark:text-gray-50 shadow rounded sm:rounded-lg">
+            <div class="min-h-screen bg-gray-700 text-gray-50 dark:bg-gray-800 dark:text-gray-50 shadow rounded sm:rounded-lg">
 
                 <div class="p-6">
 
@@ -15,7 +16,7 @@
                     <!-- Paginator -->
 <!--                    <Pagination :data="teams" class=""/>-->
 
-                    <h1 class="text-3xl font-semibold pb-3 text-white">Teams</h1>
+                    <h1 class="text-3xl font-semibold pb-3 text-white">Browse Teams</h1>
                     <div class="gap-x-4 mb-4">
                       <input v-model="search" type="search" placeholder="Search Teams..."
                              class="border px-2 rounded-lg"/>
@@ -55,6 +56,8 @@
 
             </div>
 
+      <Footer />
+
     </div>
   </div>
 
@@ -74,6 +77,7 @@ import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Pagination from '@/Components/Global/Paginators/Pagination'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
+import Footer from '@/Components/Global/Layout/Footer.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()

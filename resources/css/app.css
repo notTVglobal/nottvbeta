@@ -873,7 +873,7 @@ hr {
 
 .videoControlsWelcomeStandard {
     z-index: 200;
-    @apply absolute flex justify-center space-x-4 bottom-36 w-full
+    @apply absolute flex justify-center space-x-4 bottom-40 w-full
 }
 @media (orientation: portrait) and (min-width: 800px) {
     .videoControlsMobile {

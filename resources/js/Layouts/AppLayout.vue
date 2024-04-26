@@ -44,6 +44,7 @@
 import { ref, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useWelcomeStore } from "@/Stores/WelcomeStore"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -70,6 +71,7 @@ import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNoti
 import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 
 const appSettingStore = useAppSettingStore();
+const welcomeStore = useWelcomeStore()
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()

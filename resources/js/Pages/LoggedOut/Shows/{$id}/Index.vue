@@ -2,46 +2,25 @@
 
   <Head :title="props.show.name"/>
 
-  <div class="place-self-center flex flex-col">
-    <div id="topDiv"></div>
-    <div v-if="can.viewCreator && !userStore.isMobile"></div>
-    <div class="bg-gray-900 text-white px-5 pt-6 min-h-screen">
+  <div id="topDiv" class="place-self-center flex flex-col h-screen">
+    <div class="min-h-screen w-full bg-gray-900 text-gray-50 pt-6 mt-16 overflow-y-scroll">
 
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
+      <PublicNavigationMenu/>
+      <PublicResponsiveNavigationMenu/>
 
-      <header v-if="props.can.editShow || props.can.manageShow" class="flex justify-end">
+      <header class="container mx-auto px-4 gap-y-3 flex justify-end">
 
-        <div class="flex flex-col">
-          <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-4">
-            <div>
-              <button
-                  @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
-                  class="px-4 py-2 mr-2 h-fit text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-              >Back to<br />
-                Team Page
-              </button>
-              <button
-                  v-if="props.can.manageShow"
-                  @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
-                  class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-              >Back to<br />
-                Manage Show
-              </button>
-            </div>
-          </div>
-          <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
-            <button
-                v-if="props.can.editShow"
-                @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/edit`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Edit Show
-            </button>
-          </div>
-        </div>
+        <button
+            @click="appSettingStore.btnRedirect(`/teams/${team.slug}`)"
+            class="px-4 py-2 mr-2 h-fit text-white bg-orange-600 hover:bg-orange-500 rounded-lg shadow-md"
+        >Visit the<br/>
+          Team Page
+        </button>
+
       </header>
 
       <main>
-        <div class="container mx-auto px-4 gap-y-3 mt-12">
+        <div class="container mx-auto px-4 gap-y-3 mt-12 rounded sm:rounded-lg shadow">
           <div class="show-details border-b border-gray-800 pb-12 flex flex-col md:flex-row">
             <div class="items-center relative">
               <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
@@ -52,9 +31,10 @@
                            class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
 
             </div>
-            <div v-if="!props.can.viewCreator || userStore.isMobile"></div>
             <div class="lg:ml-12 lg:mr-0">
-              <div @click="Inertia.visit(`/teams/${team.slug}`)" class="text-gray-200 hover:text-blue-500 hover:cursor-pointer tracking-wide"> {{ team.name }} </div>
+              <div @click="Inertia.visit(`/teams/${team.slug}`)"
+                   class="text-gray-200 hover:text-blue-500 hover:cursor-pointer tracking-wide"> {{ team.name }}
+              </div>
               <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
               <div class="text-gray-400 text-center lg:text-left">
                 <div class="mt-1">
@@ -109,7 +89,7 @@
                 </button>
 
 
-                <ComingSoonShareAndSaveButtons />
+                <ComingSoonShareAndSaveButtons/>
 
               </div>
 
@@ -124,7 +104,7 @@
         </div>
       </main>
 
-      <div class="flex flex-col px-5">
+      <div class="flex flex-col px-5 border-b border-blue-50">
         <div class="-my-2 overflow-x-hidden sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
@@ -140,8 +120,10 @@
                 <div class="flex flex-row flex-wrap justify-start">
                   <div v-for="creator in creators" :key="creator.id" class="pb-8 mx-auto lg:mx-0">
                     <div class="flex flex-col items-center max-w-[8rem] px-3 py-4 font-medium break-words">
-                      <img v-if="!creator.profile_photo_path" :src="creator.profile_photo_url" class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
-                      <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path" class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                      <img v-if="!creator.profile_photo_path" :src="creator.profile_photo_url"
+                           class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                      <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
+                           class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
                       <span class="text-gray-200 text-center text-sm">{{ creator.name }}</span>
                     </div>
                   </div>
@@ -167,11 +149,14 @@
 
 
             </div>
-
-            <ShowFooter :team="props.team" :show="props.show"/>
+            <div class="container mx-auto px-4 gap-y-3">
+              <ShowFooter :team="props.team" :show="props.show"/>
+            </div>
           </div>
         </div>
       </div>
+
+      <Footer/>
 
     </div>
   </div>
@@ -180,7 +165,6 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
@@ -197,9 +181,11 @@ import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLi
 import SaveForLaterButton from '@/Components/Global/UserActions/SaveForLaterButton.vue'
 import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
+import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import Footer from '@/Components/Global/Layout/Footer.vue'
 // import ShowCreatorsList from "@/Components/Pages/Shows/ShowCreatorsList"
 
-usePageSetup('showsShow')
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -212,22 +198,40 @@ let props = defineProps({
   episodes: Object,
   creators: Object,
   team: Object,
-  can: Object,
 })
+
+appSettingStore.currentPage = `teams.${props.team.slug}`
+appSettingStore.setPrevUrl()
+
 
 const socialMediaLinks = [
   {
     www_url: props.show.www_url,
     instagram_name: props.show.instagram_name,
     telegram_url: props.show.telegram_url,
-    twitter_handle: props.show.twitter_handle
-  }
-];
+    twitter_handle: props.show.twitter_handle,
+  },
+]
 
 console.log('social media: ' + socialMediaLinks[0].www_url)
 
+// Function to handle scrolling
+const scrollToTop = () => {
+  requestAnimationFrame(() => {
+    const topDiv = document.getElementById('topDiv')
+    if (topDiv) {
+      // Smooth scroll to the 'topDiv' element
+      topDiv.scrollIntoView({behavior: 'smooth'})
+    } else {
+      // Fallback: smooth scroll to the top of the page
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    }
+  })
+}
+scrollToTop() // Optionally scroll to top when the component mounts
+
 onMounted(() => {
-  const topDiv = document.getElementById("topDiv")
+  const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 })
 
@@ -302,63 +306,37 @@ let playEpisode = () => {
 
 
   appSettingStore.ott = 1
-  // Inertia.visit('/stream');
+
+  if (videoPlayerStore.player) {
+    console.log('player is initialized...')
+    console.log('disposing player...')
+    setTimeout(() => {
+      videoPlayerStore.disposePlayer()
+    }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
+  }
+
 }
-//
-// nowPlayingStore.reset()
-// nowPlayingStore.show.name = props.show.name
-// nowPlayingStore.show.url = `/shows/${props.show.slug}`
-// nowPlayingStore.show.description = props.show.description
-// nowPlayingStore.show.image = props.show.image
-// nowPlayingStore.show.category = props.show.category
-// nowPlayingStore.show.categorySub = props.show.categorySub
-// videoPlayerStore.makeVideoFullPage()
-// Inertia.visit('/stream')
-//
-// if (props.show.firstPlayEpisode.storage_location === 'spaces' && props.show.firstPlayEpisode.upload_status !== 'processing') {
-//   // play video if !processing
-//   nowPlayingStore.show.episode.name = props.show.firstPlayEpisode.name
-//   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayEpisode.slug}`
-//   nowPlayingStore.show.episode.image = props.show.firstPlayEpisode.image
-//   videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayEpisode)
-//
-// } else if (props.show.firstPlayVideoFromUrl.video_url !== '') {
-//   nowPlayingStore.isFromWeb = true
-//   nowPlayingStore.show.episode.name = props.show.firstPlayVideoFromUrl.name
-//   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
-//   nowPlayingStore.show.episode.image = props.show.firstPlayVideoFromUrl.image
-//   videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
-// }
-// }
 
 let thisYear = new Date().getFullYear()
 
 teamStore.slug = props.team.slug
 teamStore.name = props.team.name
 
-// function checkForVideo() {
-//     if (props.show.firstPlay) {
-//         if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
-//             videoPlayerStore.hasVideo = true;
-//         } else if (props.show.firstPlay.video_url) {
-//             videoPlayerStore.hasVideo = true;
-//         } else if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing') {
-//             videoPlayerStore.hasVideo = false;
-//         } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
-//             videoPlayerStore.hasVideo = false;
-//         }
-//         return true;
-//     }
-// }
 
-// checkForVideo()
+</script>
+<script>
+import NoLayout from '@/Layouts/NoLayout'
 
-
+export default {
+  layout: NoLayout,
+}
 </script>
 
 <style scoped>
 .description {
+  overflow: hidden;
   white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  text-overflow: ellipsis;
   @apply tracking-wide
 }
 </style>

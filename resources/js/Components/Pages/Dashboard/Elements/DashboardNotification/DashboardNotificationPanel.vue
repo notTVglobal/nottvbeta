@@ -39,7 +39,7 @@ import TeamTransferAlert from "@/Components/Pages/Dashboard/Elements/DashboardNo
 import PromotionalPoster from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Promotions/PromotionalPoster"
 import WeatherWidget from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Widgets/WeatherWidget"
 
-const dashboardStore = useDashboardStore()
+const AdashboardStore = useDashboardStore()
 
 const setNotificationType = (type) => {
   dashboardStore.setNotificationType(type)

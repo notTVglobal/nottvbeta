@@ -230,6 +230,22 @@ const submit = () => {
   })
 }
 
+// Function to handle scrolling
+const scrollToTop = () => {
+  requestAnimationFrame(() => {
+    const topDiv = document.getElementById('topDiv')
+    if (topDiv) {
+      // Smooth scroll to the 'topDiv' element
+      topDiv.scrollIntoView({behavior: 'smooth'})
+    } else {
+      // Fallback: smooth scroll to the top of the page
+      window.scrollTo({top: 0, behavior: 'smooth'})
+    }
+  })
+}
+scrollToTop() // Optionally scroll to top when the component mounts
+
+
 onMounted(() => {
   if (videoPlayerStore.player) {
     console.log('player is initialized...')

@@ -31,10 +31,17 @@ class TeamsController extends Controller {
   public function __construct() {
     //tec21: this authorization works... but I'm having trouble
     // with the other ones below. So they are in web.php
+
+    // Apply auth middleware only to certain methods
+    $this->middleware('auth')->except(['index', 'show']);
+
+//    $this->middleware('can:viewAny,team')->only(['index']);
+//    $this->middleware('can:view,team')->only(['show']);
     $this->middleware('can:viewTeamManagePage,team')->only(['manage']);
     $this->middleware('can:update,team')->only(['edit']);
-//    $this->middleware('can:view,team')->only(['show']);
-//    $this->middleware('can:viewAny,team')->only(['index']);
+    $this->middleware('can:delete,team')->only(['destroy']);
+
+
 
 
 // If you are having troubles with the policies saying
@@ -86,7 +93,7 @@ class TeamsController extends Controller {
               $query->where('name', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(10)
+            ->paginate(6)
             ->withQueryString()
             ->through(fn($team) => [
                 'id'          => $team->id,

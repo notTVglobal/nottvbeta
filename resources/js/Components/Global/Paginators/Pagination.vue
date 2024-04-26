@@ -18,18 +18,21 @@
 
 
 <script setup>
-import { onMounted, onUpdated } from 'vue'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   data: Object,
 })
-let savedScrollPosition = 0
+
+
+appSettingStore.savedScrollPosition = 0
 const saveScrollPosition = () => {
-  savedScrollPosition = window.scrollY
+  appSettingStore.savedScrollPosition = window.scrollY
 }
-onMounted(() => {
-  window.scrollTo(0, savedScrollPosition)
-})
+window.scrollTo(0, appSettingStore.savedScrollPosition)
+
 </script>
 
 

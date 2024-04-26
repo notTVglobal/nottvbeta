@@ -34,6 +34,15 @@
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
+
+
+                    :href="route('teams.index')"
+                    :active="appSettingStore.currentPage === 'teams.index'">
+                  Browse
+                </JetNavLink>
+              </h3>
+              <h3 class="inline-flex items-center relative">
+                <JetNavLink
                     v-touch="()=>(route('news.index'))"
                     @click.prevent="videoPlayerStore.makeVideoTopRight()"
                     :href="route('news.index')"
