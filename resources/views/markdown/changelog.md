@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: April 25, 2024\
+Last Update: April 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.72
+April 26, 2024
+* Continue working on logged out pages.
+* Fixed Recording playback issue, we weren't creating the MistStream for auto recordings. Now we are.
 
 ## v0.8.7.71
 April 25, 2024

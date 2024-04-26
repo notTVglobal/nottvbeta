@@ -139,6 +139,7 @@ class RecordingService extends MistServerService {
 
   /**
    * Checks if the given path is a valid recording path based on configuration.
+   * Checks if the given path is a valid recording path based on configuration.
    *
    * This method determines whether a given path is considered valid by checking
    * if it contains a specific user-defined path while not containing an automatically

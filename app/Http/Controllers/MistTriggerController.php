@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\MistTriggerPushEnd;
 use App\Events\MistTriggerPushOutStart;
 use App\Events\MistTriggerRecordingStop;
+use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\UpdateRecordingModelAndNotify;
 use App\Models\AppSetting;
 use App\Models\MistStreamPushDestination;
@@ -135,6 +136,20 @@ class MistTriggerController extends Controller {
 //    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
 
     if ($recording) {
+      if (str_contains($parsedContent['filePath'], 'auto')) {
+        // Add or Update Mist Stream for recording playbck of folder contents if 'auto' is found in filePath.
+        // TODO: auto should be the name of the folder 'recordings_auto' we currently have it as prepended to the file name.
+        //  and the folder is just 'recordings'
+        // Dispatch the job to add or update the mist stream
+        $recordingStreamName = $recording->stream_name;
+        $newMistStreamName = 'recordings_' . str_replace('+', '_', $recordingStreamName);
+        $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
+        $fullAutoRecordingsPath = $autoRecordingsPath . $recordingStreamName;
+        AddOrUpdateMistStreamJob::dispatch([
+            'name' => $newMistStreamName,
+            'source' => $fullAutoRecordingsPath
+        ], $newMistStreamName);
+      }
       UpdateRecordingModelAndNotify::dispatch($recording);
     }
     // Log after dispatching the job

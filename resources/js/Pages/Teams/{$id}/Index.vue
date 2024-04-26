@@ -81,16 +81,34 @@
         </div>
       </div>
 
+      <!--      <p v-if="props.team.description" class="description mb-6 p-5">-->
+      <!--        {{ props.team.description }}-->
+      <!--      </p>-->
+
       <p v-if="props.team.description" class="description mb-6 p-5">
-        {{ props.team.description }}
+        {{ truncatedDescription }}
+        <span v-if="props.team.description.length > 300 && !showFullDescription">
+    ...
+  </span>
+        <br/><br/>
+        <button v-if="props.team.description.length > 300 && !showFullDescription"
+                @click="showFullDescription = true"
+                class="btn btn-wide justify-self-center">Read the full description
+        </button>
+        <span v-if="showFullDescription">
+    {{ props.team.description }}
+  </span>
       </p>
+
 
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
 
-            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SEARCH EPISODES</div>
+            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SEARCH
+              EPISODES
+            </div>
 
             <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug">
               <!-- Provide custom title -->
@@ -103,7 +121,8 @@
               </template>
             </SearchShowEpisodesComponent>
 
-            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS</div>
+            <div v-if="props.shows.data.length !== 0" class="w-full bg-gray-900 text-white text-2xl p-4 mb-4">SHOWS
+            </div>
 
             <TeamShowsList :shows="props.shows"/>
 
@@ -166,6 +185,7 @@ import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
+import { computed, ref } from 'vue'
 
 usePageSetup('teams/slug')
 
@@ -186,11 +206,23 @@ const props = defineProps({
 teamStore.setActiveTeam(props.team)
 teamStore.can = props.can
 
+const showFullDescription = ref(false)
+
+const truncatedDescription = computed(() => {
+  if (props.team.description.length <= 300 || showFullDescription) {
+    return props.team.description
+  } else {
+    return props.team.description.slice(0, 300)
+  }
+})
+
 </script>
 
 <style scoped>
 .description {
+  overflow: hidden;
   white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  text-overflow: ellipsis;
   @apply tracking-wide
 }
 </style>

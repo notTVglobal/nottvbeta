@@ -60,7 +60,7 @@
     <!-- Responsive Navigation Menu -->
     <!--    <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"-->
     <div :class="appSettingStore.showNavDropdown ? 'block' : 'hidden'"
-         class="lg:hidden bg-gray-800 text-white fixed w-full h-full">
+         class="lg:hidden bg-gray-800 border-t text-white fixed w-full h-full">
       <!-- Responsive Settings Options -->
       <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
       <div ref="scrollableDiv" class="pb-0 h-[calc(100vh)] overflow-y-auto hide-scrollbar" @scroll="handleScroll">
@@ -110,7 +110,7 @@
         </div>
 
 
-        <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
+        <div class="space-y-1 z-50 bg-gray-900 pb-20 border-1 border-white">
 
 <!--          <JetResponsiveNavLink-->
 <!--              v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"-->
@@ -124,7 +124,7 @@
 <!--          </JetResponsiveNavLink>-->
 
           <div
-               class="flex flex-row w-full justify-center py-4">
+               class="flex flex-row w-full justify-center pt-8 pb-4">
             <PublicNavLink
                 @click="contribute"
                 :active="appSettingStore.currentPage === 'contribute'"
@@ -279,7 +279,7 @@
             </JetResponsiveNavLink>
           </div>
 
-          <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm pb-20">
+          <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm py-10 bg-gray-950">
             <AppVersion/>
           </div>
         </div>
