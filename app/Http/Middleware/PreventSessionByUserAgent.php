@@ -3,9 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class PreventSessionByUserAgent
 {
@@ -14,9 +12,8 @@ class PreventSessionByUserAgent
      *
      * @param Request $request
      * * @param Closure $next
-     * * @return Response|RedirectResponse
  */
-    public function handle(Request $request, Closure $next): Response|RedirectResponse {
+    public function handle(Request $request, Closure $next) {
       // List of user agents to not start sessions for
       $blockedUserAgents = ['DigitalOcean Uptime Probe 0.22.0 (https://digitalocean.com)'];
 
