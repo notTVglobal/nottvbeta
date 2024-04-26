@@ -140,11 +140,16 @@ class MistTriggerController extends Controller {
         // Add or Update Mist Stream for recording playbck of folder contents if 'auto' is found in filePath.
         // TODO: auto should be the name of the folder 'recordings_auto' we currently have it as prepended to the file name.
         //  and the folder is just 'recordings'
+
         // Dispatch the job to add or update the mist stream
         $recordingStreamName = $recording->stream_name;
         $newMistStreamName = 'recordings_' . str_replace('+', '_', $recordingStreamName);
+
+        $settings = AppSetting::find(1);
         $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
         $fullAutoRecordingsPath = $autoRecordingsPath . $recordingStreamName;
+
+        Log::debug($fullAutoRecordingsPath);
         AddOrUpdateMistStreamJob::dispatch([
             'name' => $newMistStreamName,
             'source' => $fullAutoRecordingsPath
