@@ -147,7 +147,7 @@ class MistTriggerController extends Controller {
 
         $settings = AppSetting::find(1);
         $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
-        $fullAutoRecordingsPath = $autoRecordingsPath . $recordingStreamName;
+        $fullAutoRecordingsPath = $autoRecordingsPath . $recordingStreamName . '/';
 
         Log::debug($fullAutoRecordingsPath);
         AddOrUpdateMistStreamJob::dispatch([
