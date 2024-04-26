@@ -13,9 +13,9 @@ class PreventSessionByUserAgent
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure(Request): (Response|RedirectResponse) $next
-     * @return Response|RedirectResponse
-     */
+     * * @param Closure $next
+     * * @return Response|RedirectResponse
+ */
     public function handle(Request $request, Closure $next): Response|RedirectResponse {
       // List of user agents to not start sessions for
       $blockedUserAgents = ['DigitalOcean Uptime Probe 0.22.0 (https://digitalocean.com)'];
