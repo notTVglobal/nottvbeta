@@ -1,5 +1,8 @@
 <template>
 
+  <div class="w-full bg-yellow-200 px-2 py-1">
+    <span class="font-semibold uppercase">⚠️ NOTICE: </span> The first time you playback a recording it will take a long time to load. This only happens the first time!
+  </div>
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="divide-y divide-gray-200">
     <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
