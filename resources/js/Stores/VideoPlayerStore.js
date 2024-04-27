@@ -9,6 +9,7 @@ import videojs from 'video.js'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { nextTick } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
     mistServerUri: 'https://mist.not.tv/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
@@ -623,6 +624,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 // EmbedCode
 // Mist
 // File
+
+        // The YouTube loader requires the video-js YouTube plugin which is not currently installed.
         loadNewSourceFromYouTube(source) {
             this.videoIsYoutube = true
             useChannelStore().clearChannel()
@@ -840,6 +843,23 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             appSettingStore.loggedIn = false
             appSettingStore.fullPage = true
             appSettingStore.hidePage = false
+        },
+        clickOnVideoAction() {
+            const appSettingStore = useAppSettingStore()
+            const userStore = useUserStore()
+            if (appSettingStore.currentPage === 'stream') {
+                if (userStore.isMobile) {
+                    this.controls = !this.controls
+                } else {
+                    // videoPlayerStore.togglePlay()
+                    appSettingStore.toggleOsd()
+                    if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5) {
+                        appSettingStore.closeOtt()
+                    }
+                }
+            } else if (!appSettingStore.pipChatMode) {
+                Inertia.visit('/stream')
+            }
         },
 
 

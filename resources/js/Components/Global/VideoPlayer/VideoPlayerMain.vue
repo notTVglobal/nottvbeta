@@ -1,21 +1,21 @@
 <template>
-  <div>
+  <div
+  >
     <!--        This v-touch Vuetify directive is not working properly-->
     <!--        Vuetify 3 is still in development. We are implementing-->
     <!--        a vanilla javascript approach with an event listener instead. -->
     <!--        v-touch="() => {clickOnVideoAction()}"-->
     <!-- Video Player -->
-    <div v-touch="() => {clickOnVideoAction()}"
-         :class="videoPlayerStore.videoContainerClass"
-    >
+    <div :class="videoPlayerStore.videoContainerClass" v-touch="() => {videoPlayerStore.clickOnVideoAction()}" >
 
-      <div :class="videoPlayerStore.class">
 
-        <videoJs/>
+      <div :class="videoPlayerStore.class" >
+          <videoJs/>
+
+
       </div>
-
-
     </div>
+
     <VideoProgressBar v-if="user"/>
 
     <!-- Over The Top (OTT) -->
@@ -33,10 +33,10 @@
       <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
 
-            <VideoControlsTopRight
-                v-if="!userStore.isMobile"
-                class=""
-            />
+      <VideoControlsTopRight
+          v-if="!userStore.isMobile"
+          class=""
+      />
 
       <!-- OTT Buttons and Displays -->
 
@@ -176,22 +176,6 @@ onUnmounted(() => {
 //     }
   videoPlayerStore.disposePlayer()
 })
-
-const clickOnVideoAction = () => {
-  if (appSettingStore.currentPage === 'stream') {
-    if (userStore.isMobile) {
-      videoPlayerStore.controls = !videoPlayerStore.controls
-    } else {
-      // videoPlayerStore.togglePlay()
-      appSettingStore.toggleOsd()
-      if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5) {
-        appSettingStore.closeOtt()
-      }
-    }
-  } else if (!appSettingStore.pipChatMode) {
-    Inertia.visit('/stream')
-  }
-}
 
 
 </script>

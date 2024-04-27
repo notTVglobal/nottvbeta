@@ -1,5 +1,5 @@
 <template>
-  <div :class="videoPlayerStore.class">
+  <div >
 
     <!-- iPhone needs the options loaded from the video tag here to autoplay. -->
     <video-js id="main-player"
@@ -9,6 +9,7 @@
               muted
               playsinline
               crossorigin="anonymous"
+
     >
       <source :type="$page.props.firstPlay.first_play_video_source_type"
               :src="$page.props.firstPlay.first_play_video_source">
@@ -23,6 +24,7 @@ import { onMounted } from 'vue'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { Inertia } from '@inertiajs/inertia'
 
 const videoPlayerStore = useVideoPlayerStore()
 
@@ -88,6 +90,8 @@ onMounted(() => {
   // Disable right-click on the video element
   videoDomElement.addEventListener('contextmenu', (event) => {
     event.preventDefault();
+
+
   });
 
 })

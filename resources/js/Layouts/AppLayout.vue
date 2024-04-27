@@ -105,7 +105,8 @@ const pageHide = computed(() => ({
 
 const layoutClass = computed(() => ({
   layoutWelcome: !props.user || appSettingStore.noLayout,
-  layoutLoggedIn: props.user && !appSettingStore.noLayout,
+  layoutLoggedInVideoTopRight: props.user && !appSettingStore.noLayout && !appSettingStore.fullPage,
+  layoutLoggedInVideoFullPage: props.user && !appSettingStore.noLayout && appSettingStore.fullPage,
   'hidden lg:block': appSettingStore.ott && userStore.isMobile
 }))
 

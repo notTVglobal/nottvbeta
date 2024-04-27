@@ -3,7 +3,7 @@
     <div class="flex justify-end custom-volume-indicator"> <!-- Ensure the parent container has a defined height -->
       <!--      <div id="volumeIndicator" class="absolute bottom-0 bg-green-500 w-3 z-999"></div>-->
       <!-- Volume Indicator; shown when volume is not at its default state -->
-      <div v-if="audioStore.audioLevel > 1" class="flex flex-row">
+      <div v-if="showAudioComponent" class="flex flex-row">
         <div>
           <span class="text-xs text-gray-500 uppercase tracking-widest pr-2">Audio Signal</span>
         </div>
@@ -30,9 +30,17 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useAudioStore } from '@/Stores/AudioStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { debounce } from 'lodash'
 
 const audioStore = useAudioStore()
 const videoPlayerStore = useVideoPlayerStore()
+
+const showAudioComponent = ref(false);
+
+// Watch for changes in audio level and delay updates to `showAudioComponent` to handle brief pauses in audio.
+watch(() => audioStore.audioLevel, debounce(newAudioLevel => {
+  showAudioComponent.value = newAudioLevel > 1;
+}, 1500)); // Adjust the delay as needed
 
 
 </script>

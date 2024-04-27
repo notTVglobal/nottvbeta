@@ -39,9 +39,12 @@ html {
     @apply fixed h-[calc(100vh)] w-[calc(100vw)] top-0
     z-10 overflow-y-scroll overscroll-x-none
 }
-.layoutLoggedIn {
+.layoutLoggedInVideoTopRight {
     @apply fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16 w-full lg:w-[calc(100vw-24rem)] h-full
     z-10 overflow-y-scroll overscroll-x-none
+}
+.layoutLoggedInVideoFullPage {
+    @apply hidden
 }
 .chatMessages {
     z-index: 200;
@@ -414,7 +417,7 @@ hr {
         /*top: calc(100vh - 57%);*/
         top: calc(50vh - 4rem);
         /*padding-top: 56.25%;*/
-        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 w-full
+        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 w-fit
     }
     .backToPage {
         z-index: 200;
