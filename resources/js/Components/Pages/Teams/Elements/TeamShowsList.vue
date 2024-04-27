@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="shows.data.length !== 0"
+         class="w-full bg-gray-900 text-white text-center text-2xl p-4 mb-4">SHOWS
+    </div>
     <!-- Paginator -->
     <Pagination :data="shows" class="mb-6"/>
 

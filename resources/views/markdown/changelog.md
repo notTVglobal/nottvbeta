@@ -3,6 +3,10 @@
 Last Update: April 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.74
+April 26, 2024
+* Finish the Public pages for Team
+
 ## v0.8.7.73
 April 26, 2024
 * Added public pages for schedule, teams index, teams.show and show.show

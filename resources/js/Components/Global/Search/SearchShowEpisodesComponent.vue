@@ -1,4 +1,11 @@
 <template>
+<div>
+  <div v-if="shows.data.length !== 0"
+       class="w-full bg-gray-900 text-white text-center  text-2xl p-4 mb-4">
+    SEARCH
+    EPISODES
+  </div>
+
   <div class="bg-gray-800 px-4 pt-2 pb-8 rounded-lg shadow-lg w-full mx-auto mb-8">
 
     <div class="max-w-md mx-auto">
@@ -48,6 +55,7 @@
 
 
   </div>
+</div>
 </template>
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -65,6 +73,7 @@ const props = defineProps({
   modelType: String,
   modelId: Number,
   modelSlug: String,
+  shows: Object
 })
 
 // Computed property to determine which result component to use
