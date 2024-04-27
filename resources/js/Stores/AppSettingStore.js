@@ -155,6 +155,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
         toggleOtt(num) {
             const userStore = useUserStore();
+            const videoPlayerStore = useVideoPlayerStore();
             if (userStore.isMobile || window.innerWidth < 1024 || this.fullPage) {
                 this.ott = num === this.ott && !this.fullPage ? 0 : num;
             } else {
@@ -167,6 +168,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
             if (this.fullPage) {
                 this.showOttButtons = this.ott === 0;
+                videoPlayerStore.controls = this.ott === 0;
                 if (userStore.isMobile) {
                     this.osd = this.ott === 0;
                 }
@@ -175,6 +177,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
                 // adjust as necessary based on additional context.
 
                 this.showOttButtons = true;
+                videoPlayerStore.controls = true;
                 if (userStore.isMobile || window.innerWidth < 1024) {
                     this.osd = this.ott !== 0;
                 }

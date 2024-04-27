@@ -6596,8 +6596,8 @@ hr {
     border-top-width: 1px;
     --tw-border-opacity: 1;
     border-color: rgb(17 24 39 / var(--tw-border-opacity));
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 0px;
+    padding-right: 0px;
   }
     .upgradeFullPageContainer {
         z-index: 200;
@@ -8083,6 +8083,10 @@ hr {
 
 .max-h-full {
   max-height: 100%;
+}
+
+.min-h-12 {
+  min-height: 3rem;
 }
 
 .min-h-20 {

@@ -16,32 +16,33 @@
           </div>
         </div>
       </div>
-      <div>
-      <h2>Live Streaming</h2>
-      <ul class="list-disc list-inside pt-4">
-        <li>
-          <Link class="text-blue-500 hover:text-blue-700 font-semibold" :href="`/training/go-live-using-zoom`">How to
-            Stream to notTV Using Zoom
-          </Link>
-        </li>
+      <div class="p-4 bg-white rounded-lg shadow-lg">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Live Streaming</h2>
+        <ul class="space-y-2">
+          <li>
+            <Link class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out font-semibold" :href="`/training/go-live-using-zoom`">
+              <font-awesome-icon icon="fa-video" class="text-blue-300"/> How to Stream to notTV Using Zoom
 
-        <li>
-          <Link class="text-blue-500 hover:text-blue-700 font-semibold" :href="`/training/how-to-push-to-facebook`">How
-            to Push To Facebook
-          </Link>
-        </li>
-        <li>
-          <Link class="text-blue-500 hover:text-blue-700 font-semibold" :href="`/training/how-to-push-to-rumble`">How to
-            Push To Rumble
-          </Link>
-        </li>
-        <li>
-          <Link class="text-blue-500 hover:text-blue-700 font-semibold" :href="`/training/live-streaming-guide`"> Live Streaming Cheat Sheet
-          </Link>
-        </li>
-
-      </ul>
+            </Link>
+          </li>
+          <li>
+            <Link class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out font-semibold" :href="`/training/how-to-push-to-facebook`">
+               How to Push To Facebook
+            </Link>
+          </li>
+          <li>
+            <Link class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out font-semibold" :href="`/training/how-to-push-to-rumble`">
+              <font-awesome-icon icon="fa-rss" class="text-blue-300"/> How to Push To Rumble
+            </Link>
+          </li>
+          <li>
+            <Link class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out font-semibold" :href="`/live-streaming-guide`">
+              <font-awesome-icon icon="fa-book-open" class="text-blue-300"/> Live Streaming Guide
+            </Link>
+          </li>
+        </ul>
       </div>
+
       <div class="mt-4">
         <h2>
           Field production
@@ -78,6 +79,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 usePageSetup('training')
 

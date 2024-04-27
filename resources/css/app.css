@@ -845,7 +845,7 @@ hr {
         cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
-        @apply fixed top-72 right-0 bottom-0 w-96 mt-7 px-2 overflow-y-scroll z-30 border-t border-gray-900
+        @apply fixed top-72 right-0 bottom-0 w-96 mt-7 px-0 overflow-y-scroll z-30 border-t border-gray-900
     }
     .upgradeFullPageContainer {
         z-index: 200;

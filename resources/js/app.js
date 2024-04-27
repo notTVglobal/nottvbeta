@@ -27,6 +27,7 @@ import {
     fa9,
     faAngleLeft,
     faArrowRightArrowLeft,
+    faBookOpen,
     faCheck,
     faCircle,
     faCircleDown,
@@ -52,6 +53,7 @@ import {
     faQuestion,
     faRepeat,
     faRocket,
+    faRss,
     faShare,
     faStar,
     faTrashCan,
@@ -59,6 +61,7 @@ import {
     faUsers,
     faUserGroup,
     faUserSecret,
+    faVideo,
     faVolumeMute,
     faVolumeUp,
     faWrench,
@@ -155,7 +158,7 @@ createInertiaApp({
     },
 });
 
-library.add(fa1, fa2, fa3, fa4, fa5, fa6, fa7, fa8, fa9,faArrowRightArrowLeft, faCircleExclamation, faUserSecret, faPlay, faPlayCircle, faQuestion, faStar, faUsers, faUserGroup, faHandsHelping, faRocket,
+library.add(fa1, fa2, fa3, fa4, fa5, fa6, fa7, fa8, fa9,faArrowRightArrowLeft, faBookOpen, faVideo, faRss, faCircleExclamation, faUserSecret, faPlay, faPlayCircle, faQuestion, faStar, faUsers, faUserGroup, faHandsHelping, faRocket,
             faEye, faComments, faPaperPlane, faUser, faGem, faHeart, faLeaf, faFlagUsa, faList, faFilter,
             faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo, faPencil, faClipboard, faClipboardList, faCircle, faClapperboard, faLock, faVolumeMute, faVolumeUp, faWrench);
 
