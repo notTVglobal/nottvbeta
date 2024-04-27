@@ -11,83 +11,21 @@
     <div
         class="min-h-screen w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow pt-6 mt-16 overflow-y-scroll">
 
-      <header class="flex flex-col justify-between pt-6 px-5">
-        <div class="flex flex-row flex-wrap justify-between">
-          <div class="flex flex-row">
-            <SingleImage :image="image" :alt="'team logo'" :class="'w-40 mr-4'"/>
-            <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
-              {{ props.team.name }}
-            </h3>
-          </div>
-          <div>
-            <button @click="Inertia.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
-          </div>
-
-        </div>
-        <SocialMediaBadgeLinks :socialMediaLinks="team.socialMediaLinks"/>
-      </header>
-
-      <div v-if="team?.nextBroadcast || team.public_message" class="flex flex-row justify-center w-full py-10 px-5">
-        <div class="flex flex-row text-red-950 bg-yellow-300 w-full py-6 text-center align-middle">
-          <div class="flex flex-col w-1/3 border-r border-black">
-            <div v-if="team?.nextBroadcast">
-              <p class="uppercase font-bold tracking-wider">
-                Next Broadcast
-              </p>
-              <p class="text-lg">
-                April 20, 2024
-              </p>
-              <p class="text-lg">
-                7:30pm PT
-              </p>
-              <p class="text-lg">
-                Duncan Townhall
-              </p>
-            </div>
-            <div v-else>
-              No broadcasts are currently scheduled.
-            </div>
-
-          </div>
-          <div class="flex flex-col w-2/3 justify-center font-semibold">
-            {{ team.public_message }}
-          </div>
-
-        </div>
-      </div>
-
+      <TeamIdIndexHeader :team="team" :image="image"/>
 
       <!--      <p v-if="props.team.description" class="description mb-6 p-5">-->
       <!--        {{ props.team.description }}-->
       <!--      </p>-->
-
+      <TeamIdIndexBanner :team="team"/>
 
       <div class="grid grid-cols-1 lg:grid-cols-2">
         <div class="order-last lg:order-none">
-          <p v-if="props.team.description" class="description mb-6 p-5">
-            {{ truncatedDescription }}
-            <span v-if="props.team.description.length > 300 && !showFullDescription">
-              ...
-            </span>
-            <br/><br/>
-            <button v-if="props.team.description.length > 300 && !showFullDescription"
-                    @click="showFullDescription = true"
-                    class="btn btn-wide justify-self-center">Read the full description
-            </button>
-            <span v-if="showFullDescription">
-              {{ props.team.description }}
-            </span>
-          </p>
+          <TeamIdIndexDescription :team="team"/>
         </div>
         <div class="px-5">
 
-          <div v-if="props.shows.data.length !== 0"
-               class="w-full bg-gray-900 text-white text-center  text-2xl p-4 mb-4">
-            SEARCH
-            EPISODES
-          </div>
-
-          <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug">
+          <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug"
+                                       :shows="shows">
             <!-- Provide custom title -->
             <template v-slot:title>
               <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
@@ -98,13 +36,9 @@
             </template>
           </SearchShowEpisodesComponent>
 
-          <div v-if="props.shows.data.length !== 0"
-               class="w-full bg-gray-900 text-white text-center text-2xl p-4 mb-4">SHOWS
-          </div>
 
-          <TeamShowsList :shows="props.shows"/>
+          <TeamShowsList :shows="shows"/>
         </div>
-
 
       </div>
 
@@ -112,33 +46,6 @@
       <div class="flex flex-col">
         <div class="overflow-x-auto">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-
-
-            <div hidden class="creators">
-              <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">CREATORS</div>
-              <!-- Note: Team Members ("Creators") will now be hidden by default.
-              Teams and creators need to opt-in to have public creator profiles
-              and to be visible on Team, Shows, and Episode pages. This change
-              is to enhance privacy and give more control to the individuals involved. -->
-
-              <div class="flex flex-row flex-wrap justify-center">
-                <div v-for="creator in props.creators.data" :key="creator.id" class="pb-8 bg-gray-800">
-                  <div class="flex flex-col items-center min-w-[8rem] px-6 py-4 font-medium break-words">
-                    <img v-if="!creator.profile_photo_path && creator.profile_photo_url"
-                         :src="creator.profile_photo_url"
-                         class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
-                    <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
-                         :alt="creator.name + ' profile photo'"
-                         class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
-                    <img v-else :src="'/storage/images/Ping.png'"
-                         :alt="'no profile photo, using our ping logo as a placeholder'"
-                         class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
-                    <span class="text-gray-50 text-center">{{ creator.name }}</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
 
 
             <!--                            For now, we are just displaying the team members here.
@@ -152,7 +59,7 @@
             <!--                            <ShowCreatorsList />-->
 
             <!--  <TeamFooter />  -->
-
+            <TeamIdIndexCreators :creators="creators" v-if="showCreators"/>
           </div>
         </div>
       </div>
@@ -173,14 +80,17 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
 import Message from '@/Components/Global/Modals/Messages'
-import SingleImage from '@/Components/Global/Multimedia/SingleImage'
-import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
+
 import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
 import { computed, onMounted, ref } from 'vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
 import { Inertia } from '@inertiajs/inertia'
 import Footer from '@/Components/Global/Layout/Footer.vue'
+import TeamIdIndexHeader from '@/Components/Pages/Teams/Elements/TeamIdIndexHeader.vue'
+import TeamIdIndexBanner from '@/Components/Pages/Teams/Elements/TeamIdIndexBanner.vue'
+import TeamIdIndexDescription from '@/Components/Pages/Teams/Elements/TeamIdIndexDescription.vue'
+import TeamIdIndexCreators from '@/Components/Pages/Teams/Elements/TeamIdIndexCreators.vue'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
@@ -203,21 +113,13 @@ appSettingStore.setPrevUrl()
 teamStore.setActiveTeam(props.team)
 teamStore.can = props.can
 
-const showFullDescription = ref(false)
 
-const truncatedDescription = computed(() => {
-  if (props.team.description.length <= 300 || showFullDescription) {
-    return props.team.description
-  } else {
-    return props.team.description.slice(0, 300)
-  }
-})
-
+const showCreators = false
 
 
 // Function to handle scrolling
 const scrollToTop = () => {
-  const hasQueryStrings = window.location.search !== '';
+  const hasQueryStrings = window.location.search !== ''
   if (!hasQueryStrings || appSettingStore.shouldScrollToTop) {
     requestAnimationFrame(() => {
       const topDiv = document.getElementById('topDiv')
@@ -234,7 +136,6 @@ const scrollToTop = () => {
 scrollToTop() // Optionally scroll to top when the component mounts
 
 
-
 onMounted(() => {
 
 })
@@ -248,11 +149,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.description {
-  overflow: hidden;
-  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
-  text-overflow: ellipsis;
-  @apply tracking-wide
-}
-</style>
+
