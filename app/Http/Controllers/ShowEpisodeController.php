@@ -255,6 +255,7 @@ class ShowEpisodeController extends Controller {
       $mistStreamWildcard = MistStreamWildcard::create([
           'name'           => 'episode+' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
           'comment'        => 'Automatically created with new episode.',
+          'mime_type'      => 'application/x-mpegURL',
           'source'         => 'push://',
           'mist_stream_id' => $mistStream->id,
       ]);

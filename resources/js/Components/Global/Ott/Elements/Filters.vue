@@ -21,7 +21,7 @@
           <upgrade/>
         </div>
 
-        <div v-else class="now-playing w-full h-full bg-yellow-500 text-black p-2 overflow-y-hidden scrollbar-hide">
+        <div v-else class="now-playing w-full h-full bg-yellow-500 text-black p-4 overflow-y-hidden scrollbar-hide">
 
           <div v-if="appSettingStore.fullPage" class="flex flex-col p-5 mt-2 mb-3 ">
             <div class="text-3xl text-center font-semibold uppercase w-full bg-yellow-600 text-black p-2">FILTERS</div>

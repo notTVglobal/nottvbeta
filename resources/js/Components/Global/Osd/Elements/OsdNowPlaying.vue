@@ -1,8 +1,8 @@
 <template>
-  <div class="ml-6 md:ml-0">
+  <div class="bg-black bg-opacity-60 mt-4 py-1 px-4">
 
     <div
-        class="w-fit flex flex-row justify-start text-xs text-gray-500 break-words uppercase tracking-wider"
+        class="w-fit flex flex-row justify-start text-xs text-gray-200 break-words uppercase tracking-wider"
         :class="{ 'pt-4': applyPaddingTop }">
       Now Playing
       <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='channel'">&nbsp;<span class="text-yellow-400">{{ channelStore.currentChannelName }}&nbsp;Channel</span></span>

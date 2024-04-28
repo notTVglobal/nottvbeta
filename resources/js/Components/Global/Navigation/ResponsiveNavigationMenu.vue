@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:hidden fixed top-0 w-full nav-mask border-b-2 border-gray-100">
+  <div class="xl:hidden fixed top-0 w-full nav-mask border-b-2 border-gray-100">
     <div class="flex justify-between h-16 w-full bg-black nav-mask">
       <div class="flex">
         <!-- Logo -->
@@ -60,7 +60,7 @@
     <!-- Responsive Navigation Menu -->
     <!--    <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"-->
     <div :class="appSettingStore.showNavDropdown ? 'block' : 'hidden'"
-         class="lg:hidden bg-gray-800 border-t text-white fixed w-full h-full">
+         class="xl:hidden bg-gray-800 border-t text-white fixed w-full h-full">
       <!-- Responsive Settings Options -->
       <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
       <div ref="scrollableDiv" class="pb-0 h-[calc(100vh)] overflow-y-auto hide-scrollbar" @scroll="handleScroll">
@@ -72,7 +72,7 @@
                 <Link @click="appSettingStore.closeNavDropdown()"
                       :href="route('profile.show')"
                       :active="route().current('profile.show')">
-                  <img class="h-12 w-12 rounded-full object-cover border-1 border-gray-300"
+                  <img class="min-h-12 min-w-12 mr-2 rounded-full object-cover border-1 border-gray-300"
                        :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                 </Link>
               </div>

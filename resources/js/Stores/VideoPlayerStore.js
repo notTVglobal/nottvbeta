@@ -9,6 +9,7 @@ import videojs from 'video.js'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { nextTick } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
     mistServerUri: 'https://mist.not.tv/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
@@ -174,7 +175,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             //     console.log('Video has ended. Refreshing the player...');
             //     this.refreshVideoPlayer();
             // });
-            console.log('video source: ' + this.videoSource)
+            // console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')
         },
@@ -485,7 +486,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // For external videos, use the URL as provided without encoding
                 // videoSrc = source.video_url
                 // console.log('Using external video source:', videoSrc)
-
+            } else if (source.mediaType === 'mistStream') {
+                videoSrc = source.source
+                videoSourceType = source.type
             } else if (source.mediaType === 'recording') {
                 // console.log('Video is a recording.')
                 videoSrc = this.mistServerUri + source.recording.source
@@ -623,6 +626,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 // EmbedCode
 // Mist
 // File
+
+        // The YouTube loader requires the video-js YouTube plugin which is not currently installed.
         loadNewSourceFromYouTube(source) {
             this.videoIsYoutube = true
             useChannelStore().clearChannel()
@@ -840,6 +845,23 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             appSettingStore.loggedIn = false
             appSettingStore.fullPage = true
             appSettingStore.hidePage = false
+        },
+        clickOnVideoAction() {
+            const appSettingStore = useAppSettingStore()
+            const userStore = useUserStore()
+            if (appSettingStore.currentPage === 'stream') {
+                if (userStore.isMobile) {
+                    this.controls = !this.controls
+                } else {
+                    // videoPlayerStore.togglePlay()
+                    appSettingStore.toggleOsd()
+                    if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5) {
+                        appSettingStore.closeOtt()
+                    }
+                }
+            } else if (!appSettingStore.pipChatMode) {
+                Inertia.visit('/stream')
+            }
         },
 
 

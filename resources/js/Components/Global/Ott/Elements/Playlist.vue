@@ -16,7 +16,7 @@
           <upgrade />
         </div>
 
-        <div v-else class="now-playing w-full h-full bg-orange-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
+        <div v-else class="now-playing w-full h-full bg-orange-800 p-4 overflow-y-scroll scrollbar-hide mb-64">
 
 <!--          <div v-if="!appSettingStore.fullPage"-->
 <!--              class="text-xs font-semibold uppercase w-full bg-orange-900 text-white p-2 mb-3">PLAYLIST</div>-->

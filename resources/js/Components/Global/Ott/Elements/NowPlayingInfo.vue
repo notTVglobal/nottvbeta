@@ -32,9 +32,9 @@
 
 
     <div v-if="shouldDisplayOtt"
-         :class="[appSettingStore.fullPage ? 'playlistFullPageContainer' : 'ottTopRightDisplay','hide-scrollbar']">
+         :class="[appSettingStore.fullPage ? '' : 'ottTopRightDisplay','hide-scrollbar']">
       <div class="h-full w-full overflow-y-scroll scrollbar-hide">
-        <div class="w-full h-full px-2 bg-gray-900 overflow-y-scroll scrollbar-hide">
+        <div class="w-full h-full px-4 bg-gray-900 overflow-y-scroll scrollbar-hide">
           <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-4 mb-4">
             NOW PLAYING
             <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='channel'">&nbsp;&nbsp;{{ channelStore.currentChannelName }}&nbsp;Channel</span>

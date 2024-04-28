@@ -49,7 +49,7 @@ onMounted(() => {
   background: linear-gradient(to right, #FFD700, #6495ED); /* Bright and engaging background */
   color: #2F4F4F; /* Deep, storybook font color */
   text-align: center;
-  font-family: 'Comic Neue', cursive; /* Playful, child-friendly font */
+  font-family: 'Comic Neue', 'Comic Sans MS', Arial, sans-serif; /* Playful, child-friendly font */
 }
 
 .title-content {

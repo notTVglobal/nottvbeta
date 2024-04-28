@@ -49,10 +49,14 @@
             <div class="text-3xl text-center font-semibold uppercase w-full bg-green-700 text-white p-2">CHANNELS</div>
           </div>
 
-          <div v-else class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-700 text-white p-2">CHANNELS</div>
+          <div v-else class="px-4 pt-2">
+            <div class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-700 text-white">
+              CHANNELS
+            </div>
+          </div>
 
 
-          <div class="pb-24 w-full"
+          <div class="pb-24 w-full px-4"
                :class="[{'h-[calc(100vh-2rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
             <ChannelsList />
           </div>

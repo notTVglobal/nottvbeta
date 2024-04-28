@@ -103,7 +103,7 @@ onMounted(() => {
   width: 100vw;
   padding-top: 4rem; /* Offset for fixed header, assuming it's 4rem high */
   overflow: hidden; /* Prevents scrolling on the main container */
-  font-family: 'Comic Sans MS', 'Comic Sans', cursive; /* Fun, child-like font */
+  font-family: 'Comic Sans MS', 'Comic Sans', Arial, sans-serif; /* Fun, child-like font */
   background-color: #6495ED; /* Bright, engaging background color */
 }
 

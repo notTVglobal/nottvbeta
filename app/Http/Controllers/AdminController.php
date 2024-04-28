@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChangeFirstPlayVideo;
+use App\Factories\MistServerServiceFactory;
+use App\Http\Resources\ImageResource;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
 use App\Models\Channel;
 use App\Models\Image;
 use App\Models\InviteCode;
+use App\Models\MistStreamWildcard;
 use App\Models\Movie;
 use App\Models\NewsCountry;
 use App\Models\SecureNote;
@@ -14,6 +18,7 @@ use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\MistServer\MistServerService;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\Response;
@@ -33,10 +38,81 @@ use Inertia\Inertia;
 
 class AdminController extends Controller {
 
-  public function __construct() {
+  protected MistServerService $playbackService;
 
+  public function __construct() {
+    $this->playbackService = MistServerServiceFactory::make('playback');
 //    $this->middleware('can:view,show')->only(['show']);
 
+  }
+
+
+////////////  FETCH ACTIVE STREAMS
+//////////////////////////////////
+
+  public function fetchActiveStreams(): \Illuminate\Http\JsonResponse {
+    try {
+      // Attempt to fetch the active streams
+      $activeStreams = $this->playbackService->activeStreams();
+
+      // Log the raw data received from the playback service
+      Log::debug('Raw active streams data received from service.', ['activeStreams' => $activeStreams]);
+
+      // Extract the 'active_streams' part from the fetched data
+      $activeStreamData = $activeStreams['active_streams'] ?? []; // Ensure correct key access based on your structure
+
+      // Log the extracted active stream names
+      Log::debug('Extracted active stream names.', ['activeStreamNames' => $activeStreamData]);
+
+      // Prepare to collect stream data with show details
+      $activeStreamsWithShowData = [];
+
+      // Loop through each stream name in the activeStreamData
+      foreach ($activeStreamData as $streamName) {
+
+        // Log current stream name being processed
+        Log::debug('Processing stream name.', ['streamName' => $streamName]);
+
+        // Find the stream with its related show and the show's image
+        $stream = MistStreamWildcard::where('name', $streamName)
+            ->with('show.image.appSetting') // Assumes 'show' has a nested 'image' relationship
+            ->first();
+
+        // Log the fetched stream details
+        Log::debug('Fetched stream details from database.', ['streamDetails' => $stream]);
+
+        if ($stream && $stream->show && $stream->show->image) {
+          $imageResource = new ImageResource($stream->show->image);
+          $activeStreamsWithShowData[] = [
+              'streamName'     => $stream->name,
+              'streamMimeType' => $stream->mime_type,
+              'showId'         => $stream->show->id ?? null,
+              'showName'       => $stream->show->name ?? null,
+              'showImage'      => $imageResource->resolve()
+          ];
+        }
+      }
+
+      // Log the final processed data
+      Log::debug('Final processed active streams with show data.', ['activeStreamsWithShowData' => $activeStreamsWithShowData]);
+
+      // Return a JSON response with the detailed stream data
+      return response()->json([
+          'activeStreams' => $activeStreamsWithShowData,
+          'success'       => true,
+          'message'       => 'Active streams with show data retrieved.',
+          'status'        => 'success',
+      ]);
+    } catch (Exception $e) {
+      // Log the error with details for troubleshooting
+      Log::error('Failed to fetch active streams.', [
+          'error' => $e->getMessage(),
+          'trace' => $e->getTraceAsString()
+      ]);
+
+      // Return a response indicating a server error
+      return response()->json(['error' => 'Failed to fetch active streams due to an internal error.'], 500);
+    }
   }
 
 
@@ -225,6 +301,10 @@ class AdminController extends Controller {
     $jsonFilePath = 'json/firstPlayData.json';
     Cache::forget('firstPlayData');
     Storage::disk('local')->put($jsonFilePath, json_encode($cacheDataToUpdate, JSON_PRETTY_PRINT));
+
+    // broadcast the updated firstPlay
+    $videoDetails = null;
+    event(new ChangeFirstPlayVideo($videoDetails));
 
     // Return a success response
     return response()->json([

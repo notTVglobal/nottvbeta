@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Models\UserVideoSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -51,6 +52,11 @@ class CreateNewUser implements CreatesNewUsers {
           'isVip'              => $isVip,
           'invite_code'        => $inviteCode->id,
           'terms_agreed_at '   => now(),
+      ]);
+
+      // Create video settings for the new user
+      UserVideoSetting::create([
+          'user_id' => $user->id,
       ]);
 
       // Check invite code volume and used count

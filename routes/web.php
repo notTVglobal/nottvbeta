@@ -642,7 +642,11 @@ Route::middleware([
   Route::post('/admin/clear-first-play-data-cache',
       [AdminController::class, 'clearFirstPlayDataCache'])
       ->can('viewAdmin', 'App\Models\User')
-      ->name('admin.clear-first-play-data-cache');
+      ->name('admin.clearFirstPlayDataCache');
+
+  Route::post('/admin/fetch-active-streams', [AdminController::class, 'fetchActiveStreams'])
+    ->can('viewAdmin', 'App\Models\User')
+    ->name('admin.fetchActiveStreams');
 
 
   //// ADMIN - SECURE NOTES

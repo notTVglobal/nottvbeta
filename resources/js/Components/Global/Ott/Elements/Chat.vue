@@ -69,7 +69,7 @@ const pipChatModeChangeTopPosition = computed(() => {
 })
 
 const pipChatModeChangeStyle = computed(() => {
-  return appSettingStore.pipChatMode ? 'top-16' : 'bg-gray-800'
+  return appSettingStore.pipChatMode ? 'top-16' : 'bg-gray-950'
 })
 
 const divClass = computed(() => {
@@ -79,7 +79,7 @@ const divClass = computed(() => {
     } else if (appSettingStore.fullPage && appSettingStore.pipChatMode) {
       return `pipChatFullPageContainer hide-scrollbar ${pipChatModeChangeTopPosition.value}`
     } else {
-      return `ottTopRightDisplay hide-scrollbar bg-gray-950 ${pipChatModeChangeStyle.value}`
+      return `ottTopRightDisplay hide-scrollbar ${pipChatModeChangeStyle.value}`
     }
   }
   return null // Return null if `ott` is not 4
