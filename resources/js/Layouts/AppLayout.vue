@@ -106,8 +106,9 @@ onMounted(async () => {
 // in the future, or it can listen for
 // schedule updates.
 
-Echo.channel('firstPlayVideo')
-    .listen('changeFirstPlayVideo', (e) => {
+const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
+    firstPlayVideoEcho.subscribed(() => {
+    }).listen('.changeFirstPlayVideo', (e) => {
       console.log('Broadcast notification, first play video changed to: ' + e.showName);
 
       // Check if 'skip_first_playback_video' is not enabled
@@ -124,6 +125,7 @@ Echo.channel('firstPlayVideo')
         videoPlayerStore.loadNewVideo(source);
       }
     });
+
 
 
 // const userTimezone = ref('');
@@ -167,6 +169,7 @@ function setPage() {
 
 function disconnect() {
   window.Echo.leave('channel.' + channelStore.currentChannelId)
+  window.Echo.leave('firstPlayVideo');
   console.log('CHANNEL DISCONNECTED')
 }
 

@@ -129,7 +129,15 @@ class HandleInertiaRequests extends Middleware {
             // Eager load the video settings relationship
             $user->load('videoSettings');
 
-            return $user ? array_merge($user->only('id', 'name', 'email', 'timezone', 'isVip', 'profile_photo_url'), [
+            return $user ? array_merge($user->only(
+                'id',
+                'name',
+                'email',
+                'timezone',
+                'isVip',
+                'profile_photo_url',
+                'profile_photo_path'
+            ), [
                 'isCreator' => !empty($user->creator), // Assuming $user->creator is a property or method that returns a truthy or falsy value
                 'videoSettings' => $user->videoSettings ? $user->videoSettings->toArray() : null,
             ]) : null;

@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: April 26, 2024\
+Last Update: April 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.75
+April 28, 2024
+* Create a way to change First Play settings easier and start the function in vue. Needs testing.
+* Fix chat messages, user profile_photo_path.
 
 ## v0.8.7.74
 April 26, 2024
