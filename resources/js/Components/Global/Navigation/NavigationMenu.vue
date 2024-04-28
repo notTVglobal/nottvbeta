@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden lg:block fixed top-0 w-full nav-mask border-b-2 border-gray-100">
+  <div class="hidden xl:block fixed top-0 w-full nav-mask border-b-2 border-gray-100">
     <nav class="sticky top-0 bg-black" :class="{ isFullPageCss: appSettingStore.fullPage }">
       <!-- Primary Navigation Menu -->
       <div class="mx-auto px-4 lg:px-6 xl:px-8">

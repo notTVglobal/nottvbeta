@@ -14,6 +14,8 @@ const initialState = () => ({
     showConfirmationDialog: false, // show confirmation Dialog
     currentPage: '', // formerly videoPlayerStore.currentPage
     fullPage: false, // Used to determine layout FullPage or TopRight
+    smallScreen: false, // Used to determine layout size width... min or max 1024
+    verySmallScreen: false, // Used to determine layout size width... min or max 800
     pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true
     shouldScrollToTop: false,
     savedScrollPosition: null,
@@ -276,5 +278,26 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.pageIsHidden = false
             Inertia.visit(prevUrl)
         },
-    }
+        checkScreenSize() {
+            // Check initial screen size
+            this.smallScreen = window.innerWidth <= 1024;
+            this.verySmallScreen = window.innerWidth <= 600;
+
+            // Setup a listener for resizing
+            window.addEventListener('resize', this.updateScreenSize);
+        },
+        updateScreenSize() {
+            this.smallScreen = window.innerWidth <= 1024;
+            this.verySmallScreen = window.innerWidth <= 600;
+        },
+        removeResizeListener() {
+            // Clean up the listener when it's no longer needed
+            window.removeEventListener('resize', this.updateScreenSize);
+        }
+    },
+    getters: {
+        // this isn't being used anywhere right now..... 2024-04-27 tec21
+        isSmallScreen: (state) => state.smallScreen,
+        isVerySmallScreen: (state) => state.verySmallScreen,
+    },
 });

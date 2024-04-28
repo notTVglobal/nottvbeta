@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Factories\MistServerServiceFactory;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
 use App\Models\Channel;
@@ -14,6 +15,7 @@ use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\MistServer\MistServerService;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\Response;
@@ -33,10 +35,51 @@ use Inertia\Inertia;
 
 class AdminController extends Controller {
 
-  public function __construct() {
+  protected MistServerService $playbackService;
 
+  public function __construct() {
+    $this->playbackService = MistServerServiceFactory::make('playback');
 //    $this->middleware('can:view,show')->only(['show']);
 
+  }
+
+
+////////////  FETCH ACTIVE STREAMS
+//////////////////////////////////
+
+  public function fetchActiveStreams(): \Illuminate\Http\JsonResponse {
+    try {
+      // Attempt to fetch the active streams
+      $activeStreams = $this->playbackService->activeStreams();
+
+      // Extract the 'active_streams' part from the fetched data
+      $activeStreamData = $activeStreams['active_streams'] ?? [];
+
+      // Log the successful fetch
+//      Log::debug('Successfully fetched active streams.', ['activeStreams' => $activeStreams]);
+
+      // Return a JSON response with dynamic message and status
+      $message = 'Active streams retrieved.';
+      $status = 'success';
+
+      return response()->json([
+          'activeStreams' => $activeStreamData,
+          'success'       => true,
+          'message'       => $message,
+          'status'        => $status, // Include the status in the response
+      ]);
+
+    } catch (Exception $e) {
+      // Log the error with details for troubleshooting
+      Log::error('Failed to fetch active streams.', [
+          'error' => $e->getMessage(),
+          'trace' => $e->getTraceAsString() // Optionally include the stack trace for deeper debugging
+      ]);
+
+      // Handle the error, for example, by returning an HTTP response with a server error status
+      return response()->json(['error' => 'Failed to fetch active streams due to an internal error.'], 500);
+
+    }
   }
 
 

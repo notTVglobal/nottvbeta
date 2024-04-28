@@ -26,7 +26,7 @@
       <OsdNowPlaying />
 
     </div>
-<div :class="isMobileVolumeIndicator" >
+<div :class="isSmallScreenVolumeIndicator" >
   <VideoVolumeIndicatorVertical v-if="appSettingStore.osd && appSettingStore.osdSlot.b && appSettingStore.fullPage"/>
 
 </div>
@@ -67,8 +67,8 @@ const isLive = computed(() => {
   return nowPlayingStore.isLive;
 });
 
-const isMobileVolumeIndicator = computed(() => {
-  return (userStore.isMobile) ? 'fixed flex justify-end text-right top-48  left-0 right-10 z-50 w-calc([100vw])' : 'fixed flex justify-end text-right top-10 left-0 right-10 z-50 w-calc([100vw])'
+const isSmallScreenVolumeIndicator = computed(() => {
+  return (appSettingStore.isSmallScreen) ? 'fixed flex justify-end text-right top-0 left-0 right-10 z-50 w-calc([100vw])' : 'fixed flex justify-end text-right top-10 left-0 right-10 z-50 w-calc([100vw])'
 })
 
 

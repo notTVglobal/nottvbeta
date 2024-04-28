@@ -20,6 +20,20 @@ class PlaybackService extends MistServerService {
   /**
    * @throws Exception
    */
+  public function activeStreams(): array {
+    return $this->send(['active_streams' => true]);
+  }
+
+  /**
+   * @throws Exception
+   */
+  public function statsStreams(): array {
+    return $this->send(['stats_streams' => new \stdClass()]);
+  }
+
+  /**
+   * @throws Exception
+   */
   public function addStream($streamDetails): array {
     return $this->send(['addstream' => $streamDetails]);
   }

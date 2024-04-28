@@ -27,10 +27,10 @@
           </li>
           <li>
             <Link class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out font-semibold" :href="`/training/how-to-push-to-facebook`">
-               How to Push To Facebook
+              <font-awesome-icon icon="fa-rss" class="text-blue-300"/> How to Push To Facebook
             </Link>
           </li>
-          <li>
+          <li class="hidden">
             <Link class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out font-semibold" :href="`/training/how-to-push-to-rumble`">
               <font-awesome-icon icon="fa-rss" class="text-blue-300"/> How to Push To Rumble
             </Link>

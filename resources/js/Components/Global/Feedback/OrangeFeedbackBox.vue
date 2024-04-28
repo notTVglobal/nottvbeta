@@ -1,6 +1,6 @@
 <template>
   <div :class="appSettingStore.ott !== 0 ? 'hidden lg:block' : ''" class="fixed z-999 mx-auto bottom-36">
-    <div class="absolute w-12 h-full  z-999 hover:cursor-pointer"
+    <div class="absolute w-12 h-full z-999 hover:cursor-pointer"
          @mouseover="hover = true"
          @mouseleave="hover = false"
          @click="openModal"
@@ -26,6 +26,8 @@
 <!--          Found a bug? Have a question?-->
 <!--        </div>-->
 <!--      </div>-->
+
+
 
       <div :class="[
     'fixed z-50 left-3 bottom-36 w-32 h-custom flex flex-col justify-center transition-all duration-300 bg-opacity-transition',

@@ -20,7 +20,8 @@ const initialState = () => ({
     },
     firstPlaySettings: {},
     validationErrors: {},
-    checkSendProcessing: false
+    checkSendProcessing: false,
+    activeStreams: [],
 })
 
 export const useAdminStore = defineStore('adminStore', {
@@ -357,6 +358,36 @@ export const useAdminStore = defineStore('adminStore', {
                 }
 
                 notificationStore.setToastNotification(errorMessage, 'error');
+            }
+        },
+        async fetchActiveStreams() {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post(`/admin/fetch-active-streams`);
+                if (response.data.success) {
+                    // Operation was a success
+                    this.activeStreams = response.data.activeStreams
+                    notificationStore.setToastNotification(response.data.message, 'success', 1500);
+                } else {
+                    // Handle logical errors even when the HTTP response was OK
+                    // Assuming 'status' and 'message' are part of the error response
+                    const { message, status } = response.data;
+                    let errorMessage = 'Failed to fetch active streams due to a server error.';
+
+                    if (status === 'error' && message && message.fallbackMessages) {
+                        // Construct a more detailed error message based on validation feedback
+                        const validationMessages = Object.values(message.fallbackMessages)
+                            .map(msgs => msgs.join(' ')) // Join messages if there are multiple for one field
+                            .join('; '); // Separate field messages with semicolons
+
+                        errorMessage = validationMessages || errorMessage;
+                    }
+
+                    notificationStore.setToastNotification(errorMessage, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                notificationStore.setToastNotification('Failed to fetch Active Streams due to a network or server error.', 'error');
             }
         },
     },

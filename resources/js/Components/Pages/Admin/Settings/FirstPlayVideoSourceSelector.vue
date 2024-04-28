@@ -10,7 +10,8 @@
       <div class="form-control mt-4">
         <label class="label cursor-pointer flex justify-start items-center space-x-3 mb-2">
           <span class="label-text">Use Custom First Play Video</span>
-          <input type="checkbox" ref="useCustomVideoCheckbox"  class="toggle toggle-primary" v-model="adminStore.firstPlaySettings.useCustomVideo" @click="blurCheckbox"/>
+          <input type="checkbox" ref="useCustomVideoCheckbox" class="toggle toggle-primary"
+                 v-model="adminStore.firstPlaySettings.useCustomVideo" @click="blurCheckbox"/>
         </label>
         <!-- Display error for useCustomVideo if exists -->
         <div v-if="adminStore.validationErrors['useCustomVideo']" class="text-xs text-red-600 mt-1">
@@ -20,70 +21,95 @@
 
       <!-- Custom Video Inputs -->
       <div v-if="adminStore.firstPlaySettings.useCustomVideo" class="space-y-3">
-        <!-- First Play Video Source -->
-        <div class="mb-6">
-          <label for="customVideoSource" class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
-            First Play Video Source
-          </label>
-          <input v-model="adminStore.firstPlaySettings.customVideoSource" class="input input-bordered w-full" id="first_play_video_source">
-          <!-- Display error for videoSource if exists -->
-          <div v-if="adminStore.validationErrors['customVideoSource']" class="text-xs text-red-600 mt-1">
-            {{ adminStore.validationErrors['customVideoSource'][0] }}
-          </div>
-          <span class="text-xs">e.g., https://mist.nottv.io/hls/test/index.m3u8</span>
-        </div>
 
-        <!-- First Play Video Source Type -->
-        <div class="mb-6">
-          <label for="customVideoSourceType" class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
-            First Play Video Source Type
-          </label>
-          <input v-model="adminStore.firstPlaySettings.customVideoSourceType" class="input input-bordered w-full" id="first_play_video_source_type">
-          <!-- Display error for videoSourceType if exists -->
-          <div v-if="adminStore.validationErrors['customVideoSourceType']" class="text-xs text-red-600 mt-1">
-            {{ adminStore.validationErrors['customVideoSourceType'][0] }}
-          </div>
-          <span class="text-xs">e.g., video/mp4 or application/x-mpegURL</span>
-        </div>
+        <div class="space-y-3 mt-6 mb-12">
+          <div class="test-stream">
+            Button to load Test Stream here.
 
-        <!-- First Play Video Name -->
-        <div class="mb-6">
-          <label for="customVideoName" class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
-            First Play Video Name
-          </label>
-          <input v-model="adminStore.firstPlaySettings.customVideoName" class="input input-bordered w-full" id="first_play_video_name">
-          <!-- Display error for videoName if exists -->
-          <div v-if="adminStore.validationErrors['customVideoName']" class="text-xs text-red-600 mt-1">
-            {{ adminStore.validationErrors['customVideoName'][0] }}
+
+          </div>
+
+          <div class="active-streams">
+            Loop through active streams here.
+
+
+          </div>
+
+        </div>
+        <div class="space-y-3">
+          <!-- First Play Video Source -->
+          <div class="mb-6">
+            <label for="customVideoSource"
+                   class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
+              First Play Video Source
+            </label>
+            <input v-model="adminStore.firstPlaySettings.customVideoSource" class="input input-bordered w-full"
+                   id="first_play_video_source">
+            <!-- Display error for videoSource if exists -->
+            <div v-if="adminStore.validationErrors['customVideoSource']" class="text-xs text-red-600 mt-1">
+              {{ adminStore.validationErrors['customVideoSource'][0] }}
+            </div>
+            <span class="text-xs">e.g., https://mist.nottv.io/hls/test/index.m3u8</span>
+          </div>
+
+          <!-- First Play Video Source Type -->
+          <div class="mb-6">
+            <label for="customVideoSourceType"
+                   class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
+              First Play Video Source Type
+            </label>
+            <input v-model="adminStore.firstPlaySettings.customVideoSourceType" class="input input-bordered w-full"
+                   id="first_play_video_source_type">
+            <!-- Display error for videoSourceType if exists -->
+            <div v-if="adminStore.validationErrors['customVideoSourceType']" class="text-xs text-red-600 mt-1">
+              {{ adminStore.validationErrors['customVideoSourceType'][0] }}
+            </div>
+            <span class="text-xs">e.g., video/mp4 or application/x-mpegURL</span>
+          </div>
+
+          <!-- First Play Video Name -->
+          <div class="mb-6">
+            <label for="customVideoName"
+                   class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
+              First Play Video Name
+            </label>
+            <input v-model="adminStore.firstPlaySettings.customVideoName" class="input input-bordered w-full"
+                   id="first_play_video_name">
+            <!-- Display error for videoName if exists -->
+            <div v-if="adminStore.validationErrors['customVideoName']" class="text-xs text-red-600 mt-1">
+              {{ adminStore.validationErrors['customVideoName'][0] }}
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Channel Dropdown -->
       <div v-else class="">
-        <label for="channelId" class="label block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">Select
-          Channel</label>
-        <select v-model="adminStore.firstPlaySettings.channelId" class="select select-bordered w-full" id="channel_id">
-          <option disabled value="">Select a channel</option>
-          <option v-for="channel in channelStore.activeChannels" :key="channel.id" :value="channel.id">{{
-              channel.name
-            }}
-          </option>
-        </select>
-        <!-- Display error for channelId if exists -->
-        <div v-if="adminStore.validationErrors['channelId']" class="text-xs text-red-600 mt-1">
-          {{ adminStore.validationErrors['channelId'][0] }}
+        <div class="channel-selector">
+          <label for="channelId" class="label block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">Select
+            Channel</label>
+          <select v-model="adminStore.firstPlaySettings.channelId" class="select select-bordered w-full"
+                  id="channel_id">
+            <option disabled value="">Select a channel</option>
+            <option v-for="channel in channelStore.activeChannels" :key="channel.id" :value="channel.id">{{
+                channel.name
+              }}
+            </option>
+          </select>
+          <!-- Display error for channelId if exists -->
+          <div v-if="adminStore.validationErrors['channelId']" class="text-xs text-red-600 mt-1">
+            {{ adminStore.validationErrors['channelId'][0] }}
+          </div>
         </div>
       </div>
 
     </form>
 
 
-
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 // import { useForm } from '@inertiajs/inertia-vue3'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useAdminStore } from '@/Stores/AdminStore'
@@ -107,13 +133,13 @@ onMounted(async () => {
   await adminStore.fetchFirstPlaySettings()
 })
 
-const useCustomVideoCheckbox = ref(null);
+const useCustomVideoCheckbox = ref(null)
 
 const blurCheckbox = () => {
   if (useCustomVideoCheckbox.value) {
-    useCustomVideoCheckbox.value.blur();
+    useCustomVideoCheckbox.value.blur()
   }
-};
+}
 
 const selectedChannelId = ref('')
 
@@ -122,5 +148,13 @@ let clearFirstPlayCacheData = () => {
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 }
+
+// Watch for changes in audio level
+watch(() => adminStore.firstPlaySettings.useCustomVideo, newCustomVideoSetting => {
+  if (newCustomVideoSetting) {
+    adminStore.fetchActiveStreams()
+    console.log('fetch active streams')
+  }
+}, {immediate: true})
 
 </script>
