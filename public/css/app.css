@@ -8107,6 +8107,10 @@ hr {
   max-height: 100%;
 }
 
+.max-h-12 {
+  max-height: 3rem;
+}
+
 .min-h-12 {
   min-height: 3rem;
 }
@@ -8451,6 +8455,10 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-12 {
+  max-width: 3rem;
 }
 
 .flex-1 {
