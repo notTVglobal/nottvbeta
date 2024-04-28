@@ -180,6 +180,7 @@ class Show extends Model
       $mistStreamWildcard = MistStreamWildcard::create([
           'name' => 'show+' . $ulid,
           'comment' => 'Automatically created with new show.', // We don't have a way to clarify if it was generated through the Generate Key button on the GoLive page because that is a one-off for DB:Seeders.
+          'mime_type'      => 'application/x-mpegURL',
           'source' => 'push://',
           'mist_stream_id' => $mistStream->id,
       ]);

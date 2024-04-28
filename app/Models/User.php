@@ -114,19 +114,19 @@ class User extends Authenticatable implements MustVerifyEmail {
    * Chat messages.
    */
 
-  public function messages() {
+  public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(ChatMessage::class);
   }
 
-  public function role() {
+  public function role(): \Illuminate\Database\Eloquent\Relations\HasOne {
     return $this->hasOne(Role::class);
   }
 
-  public function creator() {
+  public function creator(): \Illuminate\Database\Eloquent\Relations\HasOne {
     return $this->hasOne(Creator::class, 'user_id');
   }
 
-  public function newsPerson() {
+  public function newsPerson(): \Illuminate\Database\Eloquent\Relations\HasOne {
     return $this->hasOne(NewsPerson::class);
   }
 
@@ -138,7 +138,7 @@ class User extends Authenticatable implements MustVerifyEmail {
 //            ->withTimestamps();
 //    }
 
-  public function teams() {
+  public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
     return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')
         ->using(TeamMember::class)
         ->as('teamMember')
@@ -146,7 +146,7 @@ class User extends Authenticatable implements MustVerifyEmail {
         ->withTimestamps();
   }
 
-  public function teamManager() {
+  public function teamManager(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
     return $this->belongsToMany(Team::class, 'team_managers', 'user_id', 'team_id')
         ->using(TeamManager::class)
         ->as('teamManager')
@@ -154,19 +154,19 @@ class User extends Authenticatable implements MustVerifyEmail {
         ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
   }
 
-  public function shows() {
+  public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Show::class);
   }
 
-  public function showEpisodes() {
+  public function showEpisodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(ShowEpisode::class);
   }
 
-  public function newsStories() {
+  public function newsStories(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(NewsStory::class);
   }
 
-  public function videos() {
+  public function videos(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Video::class);
   }
 
@@ -178,26 +178,30 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->hasOne(InviteCode::class, 'claimed_by');
   }
 
-  public function orders() {
+  public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(ProductOrder::class);
   }
 
-  public function notifications() {
+  public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Notification::class);
+  }
+
+  public function videoSettings(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(UserVideoSetting::class);
   }
 
   /**
    * Get the secure notes for the user.
    */
-  public function secureNotes() {
+  public function secureNotes(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(SecureNote::class);
   }
 
-  public function savedNewsRssFeedItemTemps() {
+  public function savedNewsRssFeedItemTemps(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(NewsRssFeedItemTemp::class, 'saved_by_user_id');
   }
 
-  public function archivedNewsRssFeedItems() {
+  public function archivedNewsRssFeedItems(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(NewsRssFeedItemArchive::class, 'saved_by_user_id');
   }
 

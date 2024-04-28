@@ -22,20 +22,6 @@
       <!-- Custom Video Inputs -->
       <div v-if="adminStore.firstPlaySettings.useCustomVideo" class="space-y-3">
 
-        <div class="space-y-3 mt-6 mb-12">
-          <div class="test-stream">
-            Button to load Test Stream here.
-
-
-          </div>
-
-          <div class="active-streams">
-            Loop through active streams here.
-
-
-          </div>
-
-        </div>
         <div class="space-y-3">
           <!-- First Play Video Source -->
           <div class="mb-6">
@@ -81,6 +67,53 @@
             </div>
           </div>
         </div>
+
+        <div v-if="adminStore.fetchingActiveStreams" class="flex w-full pt-6 justify-center items-center gap-4">
+          <span class="loading loading-spinner loading-lg text-info"></span>
+          Loading Active Streams ...
+        </div>
+
+        <div v-else class="space-y-3 pt-6 mb-12">
+          <div class="test-stream">
+            <label for="customVideoName"
+                   class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
+              Test Stream
+            </label>
+            <div class="mb-2 text-xs">Note: Requires a stream with the name 'test'</div>
+            <div @click.prevent="adminStore.setActiveStreamAsFirstPlay('test')"
+                 class="stream-image w-40 gap-2 break-words hover:cursor-pointer hover:text-blue-500 relative group">
+              <img src="/storage/images/EBU_Colorbars.svg.png" alt="`test pattern`" :class="`w-40 h-40 object-cover rounded-xl`"/>
+              <!-- Overlay div for dimming effect -->
+              <div class="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-300 rounded-xl group-hover:bg-opacity-50 pl-1"></div>
+              <div class="absolute inset-0 flex items-center justify-center opacity-50 group-hover:opacity-100 pl-1">
+                <span class="text-white text-xl font-bold">Test Bars and Music</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="active-streams pt-4">
+            <label for="customVideoName"
+                   class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
+              Active Streams
+            </label>
+            <div class="flex flex-row flex-wrap gap-3">
+              <div v-for="activeStream in adminStore.activeStreams"
+                   :key="activeStream.showId"
+                   @click.prevent="adminStore.setActiveStreamAsFirstPlay(activeStream)"
+                   class="stream-image w-40 break-words hover:cursor-pointer hover:text-blue-500 relative group">
+                <SingleImage :image="activeStream.showImage" :alt="`show image`" :class="`w-40 h-40 object-cover rounded-xl`"/>
+                <!-- Overlay div for dimming effect -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-300 rounded-xl group-hover:bg-opacity-50"></div>
+                <div class="absolute inset-0 flex items-center justify-center opacity-50 group-hover:opacity-100 pl-1">
+                  <span class="text-white text-xl font-bold">{{ activeStream.showName }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
       <!-- Channel Dropdown -->
@@ -115,6 +148,7 @@ import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useAdminStore } from '@/Stores/AdminStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { Inertia } from '@inertiajs/inertia'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 const notificationStore = useNotificationStore()
 const adminStore = useAdminStore()
@@ -158,3 +192,12 @@ watch(() => adminStore.firstPlaySettings.useCustomVideo, newCustomVideoSetting =
 }, {immediate: true})
 
 </script>
+<style>
+.stream-image .w-40 {
+  transition: transform 0.3s ease-in-out;
+}
+
+.stream-image:hover .w-40 {
+  transform: scale(1.05); /* Scales up the image to 105% of its original size on hover */
+}
+</style>

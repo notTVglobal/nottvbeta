@@ -72,7 +72,6 @@ import NotificationModal from '@/Components/Global/Notifications/NotificationMod
 import DialogNotification from '@/Components/Global/Modals/DialogNotification'
 import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 
-
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -96,10 +95,36 @@ onMounted(async () => {
   if (props.user) { // Checking if user is logged in based on page props
     await userStore.updateUserTimezone()
     await userStore.fetchUserData()
-    console.log('get user data on AppLayout')
+    userStore.videoSettings = props.user.videoSettings
+    // console.log('get user data on AppLayout')
     // Call any other user-specific initialization functions here
   }
 })
+
+// listen for new firstPlayVideo
+// this could change to stop listening
+// in the future, or it can listen for
+// schedule updates.
+
+Echo.channel('firstPlayVideo')
+    .listen('changeFirstPlayVideo', (e) => {
+      console.log('Broadcast notification, first play video changed to: ' + e.showName);
+
+      // Check if 'skip_first_playback_video' is not enabled
+      if (userStore.videoSettings.skip_first_playback_video !== 1) {
+        // Define the source object correctly
+        const source = {
+          source: e.source,
+          mediaType: 'mistStream',
+          type: e.type,
+          name: e.name,
+        };
+
+        // Assuming `loadNewVideo` might need the `source` as a parameter
+        videoPlayerStore.loadNewVideo(source);
+      }
+    });
+
 
 // const userTimezone = ref('');
 

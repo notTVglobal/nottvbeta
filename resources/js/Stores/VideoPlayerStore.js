@@ -175,7 +175,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             //     console.log('Video has ended. Refreshing the player...');
             //     this.refreshVideoPlayer();
             // });
-            console.log('video source: ' + this.videoSource)
+            // console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')
         },
@@ -486,7 +486,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // For external videos, use the URL as provided without encoding
                 // videoSrc = source.video_url
                 // console.log('Using external video source:', videoSrc)
-
+            } else if (source.mediaType === 'mistStream') {
+                videoSrc = source.source
+                videoSourceType = source.type
             } else if (source.mediaType === 'recording') {
                 // console.log('Video is a recording.')
                 videoSrc = this.mistServerUri + source.recording.source

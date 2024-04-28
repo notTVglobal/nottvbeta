@@ -24,70 +24,67 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
-{
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+class AddVideoUrlFromEmbedCodeJob implements ShouldQueue {
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected ShowEpisode $showEpisode;
-    protected Notification $notification;
-    public int $timeout = 60;
-    public int $tries = 3;
-    public int $backoff = 2;
+  protected ShowEpisode $showEpisode;
+  protected Notification $notification;
+  public int $timeout = 60;
+  public int $tries = 3;
+  public int $backoff = 2;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct($showEpisode)
-    {
-        $this->showEpisode = $showEpisode;
-    }
+  /**
+   * Create a new job instance.
+   *
+   * @return void
+   */
+  public function __construct($showEpisode) {
+    $this->showEpisode = $showEpisode;
+  }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
+  /**
+   * Execute the job.
+   *
+   * @return void
+   */
+  public function handle() {
 
-        $userId = $this->showEpisode->isBeingEditedByUser_id;
+    $userId = $this->showEpisode->isBeingEditedByUser_id;
 
-        // Generate a unique job name for JobA
-        $jobName = 'job_a_' . Str::uuid();
-        $jobId = $this->job->getJobId();
-        $cacheKey = 'job_data_' . $jobId;
+    // Generate a unique job name for JobA
+    $jobName = 'job_a_' . Str::uuid();
+    $jobId = $this->job->getJobId();
+    $cacheKey = 'job_data_' . $jobId;
 
-        // Store the generated job name in a shared cache
-        // Store data in the cache using the unique key
-        Cache::put($cacheKey, $jobName, now()->addMinutes(60));
+    // Store the generated job name in a shared cache
+    // Store data in the cache using the unique key
+    Cache::put($cacheKey, $jobName, now()->addMinutes(60));
 
-        // Set the coordination flag for JobA
-        DB::table('job_flags')->updateOrInsert(
-            ['job_name' => $jobName],
-            ['flag' => true]
-        );
+    // Set the coordination flag for JobA
+    DB::table('job_flags')->updateOrInsert(
+        ['job_name' => $jobName],
+        ['flag' => true]
+    );
 
-        sleep(10);
+    sleep(10);
 
-        try {
+    try {
 
-            if (!$this->showEpisode->video_embed_code) {
-                return;
-            } else
-                $firstMp4 = '';
-                $matches = [];
-                $response = '';
-                $sourceIs = '';
+      if (!$this->showEpisode->video_embed_code) {
+        return;
+      } else
+        $firstMp4 = '';
+      $matches = [];
+      $response = '';
+      $sourceIs = '';
 
-            // strip the url from the embed code
-            $regex = '/https?\:\/\/[^\",]+/i';
-            preg_match($regex, $this->showEpisode->video_embed_code, $match);
-            $sourceUrl = implode(" ", $match);
+      // strip the url from the embed code
+      $regex = '/https?\:\/\/[^\",]+/i';
+      preg_match($regex, $this->showEpisode->video_embed_code, $match);
+      $sourceUrl = implode(" ", $match);
 //            $scraperApiKey =  env('SCRAPER_API_KEY');
 
-            // get the page source from the url
+      // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
 ////            $proxy_address = 'https://api.scraperapi.com?api_key=' . env('SCRAPER_API_KEY') . '&autoparse=true&url=' . $url;
 //            $response = file_get_contents($proxy_address);
@@ -101,64 +98,64 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $response = curl_exec($ch);
 //            curl_close($ch);
 
-            $url =
-                "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
+      $url =
+          "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
 //            Log::channel('custom_error')->error($url);
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER,
-                TRUE);
-            curl_setopt($ch, CURLOPT_HEADER,
-                FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
-                0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
-                0);
-            $response = curl_exec($ch);
-            curl_close($ch);
-            $responseToLog = strlen($response) > 500 ? substr($response, 0, 500) : $response;
-            Log::channel('custom_error')->info('SCRAPER API RESPONSE: ' . $responseToLog);
-            Log::channel('slack')->info('SCRAPER API RESPONSE: ' . $responseToLog);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER,
+          true);
+      curl_setopt($ch, CURLOPT_HEADER,
+          false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
+          0);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
+          0);
+      $response = curl_exec($ch);
+      curl_close($ch);
+      $responseToLog = strlen($response) > 500 ? substr($response, 0, 500) : $response;
+      Log::channel('custom_error')->info('SCRAPER API RESPONSE: ' . $responseToLog);
+      Log::channel('slack')->info('SCRAPER API RESPONSE: ' . $responseToLog);
 
 //            Log::channel('custom_error')->error($response);
 
 
-            // get the mp4 urls from the page.
-            if (str_contains($sourceUrl, 'rumble.com')) {
-                // if rumble ...
-                $sourceIs = 'rumble';
-                $pattern = '/https(.*?)mp4/';
-                preg_match_all($pattern, $response, $matches);
-                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-                $firstMp4 = $matches[0][0];
+      // get the mp4 urls from the page.
+      if (str_contains($sourceUrl, 'rumble.com')) {
+        // if rumble ...
+        $sourceIs = 'rumble';
+        $pattern = '/https(.*?)mp4/';
+        preg_match_all($pattern, $response, $matches);
+        // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+        $firstMp4 = $matches[0][0];
 //                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
-            } elseif (str_contains($sourceUrl, 'bitchute.com')) {
-                // if bitchute ...
-                $sourceIs = 'bitchute';
-                $pattern = '/<source src="https(.*?)mp4/';
-                preg_match_all($pattern, $response, $matches);
-                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-                $firstMp4 = $matches[0][0];
+      } elseif (str_contains($sourceUrl, 'bitchute.com')) {
+        // if bitchute ...
+        $sourceIs = 'bitchute';
+        $pattern = '/<source src="https(.*?)mp4/';
+        preg_match_all($pattern, $response, $matches);
+        // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+        $firstMp4 = $matches[0][0];
 
 
-            }
+      }
 
-            Log::channel('custom_error')->info('FIRST MP4 RETRIEVED FROM SCRAPER API: ' . $firstMp4 . ' for show episode: ' . $this->showEpisode->name);
-            Log::channel('slack')->info('FIRST MP4 RETRIEVED FROM SCRAPER API: ' . $firstMp4 . ' for show episode: ' . $this->showEpisode->name);
+      Log::channel('custom_error')->info('FIRST MP4 RETRIEVED FROM SCRAPER API: ' . $firstMp4 . ' for show episode: ' . $this->showEpisode->name);
+      Log::channel('slack')->info('FIRST MP4 RETRIEVED FROM SCRAPER API: ' . $firstMp4 . ' for show episode: ' . $this->showEpisode->name);
 
 
-            // Check if the data is null
-            if ($firstMp4 == []) {
-                throw new \Exception("There was an error importing the video embed code for ShowName: Episode #. Please check the embed code and try again.
+      // Check if the data is null
+      if ($firstMp4 == []) {
+        throw new \Exception("There was an error importing the video embed code for ShowName: Episode #. Please check the embed code and try again.
                                           if you continue to see this error please let Travis know.");
-            }
+      }
 
-            // this poster save needs to be finished...
-            // get the jpg urls from the page.
+      // this poster save needs to be finished...
+      // get the jpg urls from the page.
 //            $pattern = '/poster="([^"]+)"/';
 //
 //            preg_match_all($pattern, $response, $imageMatches);
-            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+      // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
 //            $firstJpg = $imageMatches[0];
 //
 //            $image = str_replace('poster=', '', $firstJpg);
@@ -178,182 +175,181 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $episode = ShowEpisode::find($episodeId);
 //            $episode->image_id = $id;
 //            $episode->save();
-            if ($sourceIs === 'rumble') {
-                $url = str_replace('\\', '', $firstMp4);
-            } elseif ($sourceIs === 'bitchute') {
-                $url = str_replace('<source src="', '', $firstMp4);
+      if ($sourceIs === 'rumble') {
+        $url = str_replace('\\', '', $firstMp4);
+      } elseif ($sourceIs === 'bitchute') {
+        $url = str_replace('<source src="', '', $firstMp4);
 //                Log::channel('custom_error')->error('Bitchute Matches: '. $url);
-                // send notification, success.
+        // send notification, success.
 //                return $url;
 
-              // Bitchute has CORS issues, we need to proxy the video through our Mist Server.
-              // Therefore, we create a new MistStreamWildcard for the video with the Bitchute *.mp4 url as a source.
+        // Bitchute has CORS issues, we need to proxy the video through our Mist Server.
+        // Therefore, we create a new MistStreamWildcard for the video with the Bitchute *.mp4 url as a source.
 
-              $lowercaseShowEpisodeUlid = strtolower($this->showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
+        $lowercaseShowEpisodeUlid = strtolower($this->showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
 
-              $mistStream = MistStream::firstOrCreate([
-                  'name' => 'z.bitchute.' . $lowercaseShowEpisodeUlid,
-              ], [
-                  'source' => '',
-                  'comment'   => 'Created as Bitchute proxy.',
-                  'mime_type' => 'video/mp4',
-              ]);
+        $mistStream = MistStream::firstOrCreate([
+            'name' => 'z.bitchute.' . $lowercaseShowEpisodeUlid,
+        ], [
+            'source'    => '',
+            'comment'   => 'Created as Bitchute proxy.',
+            'mime_type' => 'video/mp4',
+        ]);
 
-              if ($mistStream->wasRecentlyCreated) {
-                // The model was created, run the job
-                // Prepare data for add Mist Stream Job
-                // Prepare $mistStreamData with necessary details
-                $mistStreamData = [
-                    'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
-                    'source' => $mistStream['source'], // Define the source, e.g., 'push://'
-                  // Add any other necessary details for the mist stream here
-                ];
+        if ($mistStream->wasRecentlyCreated) {
+          // The model was created, run the job
+          // Prepare data for add Mist Stream Job
+          // Prepare $mistStreamData with necessary details
+          $mistStreamData = [
+              'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
+              'source' => $mistStream['source'], // Define the source, e.g., 'push://'
+            // Add any other necessary details for the mist stream here
+          ];
 
-                // $originalName is null for new streams, or set it to the current name if updating an existing stream
-                $originalName = null; // This is for a new stream creation, or set appropriately for updates
+          // $originalName is null for new streams, or set it to the current name if updating an existing stream
+          $originalName = null; // This is for a new stream creation, or set appropriately for updates
 
-                AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+          AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
 
+          $mistStreamWildcard = MistStreamWildcard::create([
+              'name'           => 'z.bitchute.' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
+              'comment'        => 'Automatically created with new episode.',
+              'mime_type'      => 'application/x-mpegURL',
+              'source'         => $url,
+              'mist_stream_id' => $mistStream->id,
+          ]);
+        }
 
-                $mistStreamWildcard = MistStreamWildcard::create([
-                    'name'           => 'z.bitchute.' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
-                    'comment'        => 'Automatically created with new episode.',
-                    'source'         => $url,
-                    'mist_stream_id' => $mistStream->id,
-                ]);
-              }
+      } else {
+        // Handle the case when $sourceIs is null
+        // You might want to assign a default behavior or value for $url
+        $sourceIs = 'external_error'; // This is just an example. Adjust as needed.
+      }
 
-            }else {
-              // Handle the case when $sourceIs is null
-              // You might want to assign a default behavior or value for $url
-              $sourceIs = 'external_error'; // This is just an example. Adjust as needed.
-            }
+      // write firstMp4 to database.
+      // Create a new Video instance
+      $video = new Video();
 
-            // write firstMp4 to database.
-            // Create a new Video instance
-            $video = new Video();
+      // Set the user_id, video_url and storage_location attributes
+      $video->user_id = $userId;
+      $video->name = 'External Video';
+      $video->file_name = 'external_video_' . Str::uuid();
+      $video->video_url = $url;
+      $video->type = 'video/mp4';
+      $video->storage_location = $sourceIs;
+      $video->show_episodes_id = $this->showEpisode->id;
+      $video->mist_stream_wildcard_id = $mistStreamWildcard->id;
 
-            // Set the user_id, video_url and storage_location attributes
-            $video->user_id = $userId;
-            $video->name = 'External Video';
-            $video->file_name = 'external_video_' . Str::uuid();
-            $video->video_url = $url;
-            $video->type = 'video/mp4';
-            $video->storage_location = $sourceIs;
-            $video->show_episodes_id = $this->showEpisode->id;
-            $video->mist_stream_wildcard_id = $mistStreamWildcard->id;
+      // Save the video to the database
+      $video->save();
 
-            // Save the video to the database
-            $video->save();
+      // Get the ID of the newly created Video model
+      $videoId = $video->id;
 
-            // Get the ID of the newly created Video model
-            $videoId = $video->id;
+      // update the showEpisode
+      $updateShowEpisode = ShowEpisode::find($this->showEpisode->id);
 
-            // update the showEpisode
-            $updateShowEpisode = ShowEpisode::find($this->showEpisode->id);
+      // TODO: the video url needs to be removed form the showEpisode,
+      // it will only be in the video model. The front end needs to be
+      // updated accordingly.
+      $updateShowEpisode->video_url = $url;
 
-            // TODO: the video url needs to be removed form the showEpisode,
-            // it will only be in the video model. The front end needs to be
-            // updated accordingly.
-            $updateShowEpisode->video_url = $url;
+      $updateShowEpisode->video_id = $videoId;
+      $updateShowEpisode->save();
 
-            $updateShowEpisode->video_id = $videoId;
-            $updateShowEpisode->save();
+      // Initialize the message variable
+      $processVideoInfoMessage = '';
 
-            // Initialize the message variable
-            $processVideoInfoMessage = '';
+      // Listen for custom events
+      Event::listen(ProcessVideoInfoListener::class, function ($event) use (&$processVideoInfoMessage, $firstMp4) {
 
-            // Listen for custom events
-            Event::listen(ProcessVideoInfoListener::class, function ($event) use (&$processVideoInfoMessage, $firstMp4) {
+        // Check if the event represents a success or an error
+        if ($event->type === 'success') {
+          // Set the success message
+          $processVideoInfoMessage = 'with updated video info in the database.';
+        } elseif ($event->type === 'error') {
+          // Set the error message
+          $processVideoInfoMessage = 'but was unable to update the info in the database.';
+        }
+        Log::channel('custom_error')->info('AddVideoUrlFromEmbedCodeJob Event Listener: ' . $event->message);
+        Log::channel('slack')->info('AddVideoUrlFromEmbedCodeJob Event Listener: ' . $event->message);
 
-                // Check if the event represents a success or an error
-                if ($event->type === 'success') {
-                    // Set the success message
-                    $processVideoInfoMessage = 'with updated video info in the database.';
-                } elseif ($event->type === 'error') {
-                    // Set the error message
-                    $processVideoInfoMessage = 'but was unable to update the info in the database.';
-                }
-                Log::channel('custom_error')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$event->message);
-                Log::channel('slack')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$event->message);
+        // Handle success or error in the first job...
+      });
 
-                // Handle success or error in the first job...
-            });
+      // get the video information.
+      dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
 
-            // get the video information.
-            dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
+      // Check the coordination flag for JobA before proceeding
+      retry(10, function () use ($jobName) {
+        return !DB::table('job_flags')->where('job_name', $jobName)->value('flag');
+      }, 2000); // Retry up to 10 times, waiting 2 second (2000 milliseconds) between retries
 
-            // Check the coordination flag for JobA before proceeding
-            retry(10, function () use ($jobName) {
-                return !DB::table('job_flags')->where('job_name', $jobName)->value('flag');
-            }, 2000); // Retry up to 10 times, waiting 2 second (2000 milliseconds) between retries
+      // Create and save the notification
+      $notification = new Notification;
 
-            // Create and save the notification
-            $notification = new Notification;
+      $notification->user_id = $userId;
 
-            $notification->user_id = $userId;
-
-            // make the image the show_episode_poster
-            $notification->image_id = $this->showEpisode->image_id;
+      // make the image the show_episode_poster
+      $notification->image_id = $this->showEpisode->image_id;
 //            $notification->image_id = 1;
 //            $notification->title = $this->showEpisode->name;
-            $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
-            $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
+      $notification->url = '/shows/' . $this->showEpisode->show->slug . '/episode/' . $this->showEpisode->slug;
+      $notification->title = $this->showEpisode->show->name . ': ' . $this->showEpisode->name;
 
-            if ($sourceIs === 'external_error') {
-              $notification->message = '<span class="text-red-500">We could not generate a URL from the embed code. Please ask Travis to check the ScraperAPI.</span>' . $processVideoInfoMessage;
-            } else {
-              $notification->message = '<span class="text-green-500">The video url has now been generated from the embed code. The video is now ready for playback.</span>' . $processVideoInfoMessage;
-            }
+      if ($sourceIs === 'external_error') {
+        $notification->message = '<span class="text-red-500">We could not generate a URL from the embed code. Please ask Travis to check the ScraperAPI.</span>' . $processVideoInfoMessage;
+      } else {
+        $notification->message = '<span class="text-green-500">The video url has now been generated from the embed code. The video is now ready for playback.</span>' . $processVideoInfoMessage;
+      }
 
 
+      $notification->save();
 
-            $notification->save();
-
-            // Trigger the event to broadcast the new notification
-            event(new NewNotificationEvent($notification));
+      // Trigger the event to broadcast the new notification
+      event(new NewNotificationEvent($notification));
 
 //            Log::channel('custom_error')->info('Finish broadcasting new notification.');
 
-            Log::channel('custom_error')->info($url);
+      Log::channel('custom_error')->info($url);
 
 //            else
-            // send notification, failed.
+      // send notification, failed.
 //            return false;
 
-        } catch (\Exception $e) {
-            Log::channel('custom_error')->error($e->getMessage());
-            Log::channel('custom_error')->error($e->getCode());
-            Log::channel('slack')->error($e->getMessage());
-            Log::channel('slack')->error($e->getCode());
+    } catch (\Exception $e) {
+      Log::channel('custom_error')->error($e->getMessage());
+      Log::channel('custom_error')->error($e->getCode());
+      Log::channel('slack')->error($e->getMessage());
+      Log::channel('slack')->error($e->getCode());
 
 
-            // Create and save the notification
-            $notification = new Notification;
-            $notification->user_id = $userId;
+      // Create and save the notification
+      $notification = new Notification;
+      $notification->user_id = $userId;
 
-            // make the image the show_episode_poster
-            $notification->image_id = $this->showEpisode->image_id;
+      // make the image the show_episode_poster
+      $notification->image_id = $this->showEpisode->image_id;
 //            $notification->image_id = 1;
 //            $notification->title = $this->showEpisode->name;
-            $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug.'/manage';
-            $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
-            $notification->message = 'There was a problem getting the video. ' . $response;
-            $notification->save();
-            $notification->image = $this->showEpisode->image;
+      $notification->url = '/shows/' . $this->showEpisode->show->slug . '/episode/' . $this->showEpisode->slug . '/manage';
+      $notification->title = $this->showEpisode->show->name . ': ' . $this->showEpisode->name;
+      $notification->message = 'There was a problem getting the video. ' . $response;
+      $notification->save();
+      $notification->image = $this->showEpisode->image;
 
-            // Trigger the event to broadcast the new notification
-            event(new NewNotificationEvent($notification));
+      // Trigger the event to broadcast the new notification
+      event(new NewNotificationEvent($notification));
 
-            echo "Exception Message: " . $e->getMessage();
-            echo "Exception Code: " . $e->getCode();
-            // Handle the exception here
-            // You can log it, send notifications, or take any appropriate action
-            // For example:
-            // \Log::error($e->getMessage());
-        }
-
+      echo "Exception Message: " . $e->getMessage();
+      echo "Exception Code: " . $e->getCode();
+      // Handle the exception here
+      // You can log it, send notifications, or take any appropriate action
+      // For example:
+      // \Log::error($e->getMessage());
     }
+
+  }
 
 
 }

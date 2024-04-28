@@ -57,6 +57,7 @@ const initialState = () => ({
         'America/Halifax',   // AT
         'America/St_Johns',   // NT
     ],
+    videoSettings: {},
 })
 
 export const useUserStore = defineStore('userStore', {
@@ -78,7 +79,7 @@ export const useUserStore = defineStore('userStore', {
                 this.isSubscriber = response.data.isSubscriber
                 this.hasAccount = response.data.hasAccount
                 this.getUserDataCompleted = true
-                console.log('get user data in User Store')
+                // console.log('get user data in User Store')
                 await this.subscribeToUserNotifications(response.data.id)
                 await this.updateUserTimezone;
                 if (this.isCreator) {

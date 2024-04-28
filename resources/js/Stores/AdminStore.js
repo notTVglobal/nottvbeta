@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 
 const initialState = () => ({
     channels: [], // For Admin Channels page
@@ -22,6 +23,7 @@ const initialState = () => ({
     validationErrors: {},
     checkSendProcessing: false,
     activeStreams: [],
+    fetchingActiveStreams: false,
 })
 
 export const useAdminStore = defineStore('adminStore', {
@@ -362,12 +364,14 @@ export const useAdminStore = defineStore('adminStore', {
         },
         async fetchActiveStreams() {
             const notificationStore = useNotificationStore();
+            this.fetchingActiveStreams = true
             try {
                 const response = await axios.post(`/admin/fetch-active-streams`);
                 if (response.data.success) {
                     // Operation was a success
                     this.activeStreams = response.data.activeStreams
                     notificationStore.setToastNotification(response.data.message, 'success', 1500);
+                    this.fetchingActiveStreams = false
                 } else {
                     // Handle logical errors even when the HTTP response was OK
                     // Assuming 'status' and 'message' are part of the error response
@@ -384,12 +388,36 @@ export const useAdminStore = defineStore('adminStore', {
                     }
 
                     notificationStore.setToastNotification(errorMessage, 'error');
+                    this.fetchingActiveStreams = false
                 }
             } catch (error) {
                 console.error(error);
                 notificationStore.setToastNotification('Failed to fetch Active Streams due to a network or server error.', 'error');
+                this.fetchingActiveStreams = false
             }
         },
+        async setActiveStreamAsFirstPlay(activeStream) {
+            const videoPlayerStore = useVideoPlayerStore();
+            if (activeStream === 'test') {
+                this.firstPlaySettings.customVideoSource = videoPlayerStore.mistServerUri + 'hls/test/index.m3u8'
+                this.firstPlaySettings.customVideoSourceType = 'application/x-mpegURL'
+                this.firstPlaySettings.customVideoName = 'Test Stream'
+            } else {
+                // axios.post save firstPlaySettings and broadcast an event.
+                // this.
+                // showName, streamName, streamMimeType
+                this.firstPlaySettings.customVideoSource = videoPlayerStore.mistServerUri + 'hls/' + activeStream.streamName + '/index.m3u8'
+                this.firstPlaySettings.customVideoSourceType = activeStream.streamMimeType
+                this.firstPlaySettings.customVideoName = activeStream.showName
+            }
+            await this.updateFirstPlaySettings()
+            // broadcast
+            // source
+            // mediaType
+            // type
+            // name
+
+        }
     },
 
     // Getters (if needed)

@@ -419,6 +419,7 @@ class ShowsController extends Controller {
       $mistStreamWildcard = MistStreamWildcard::create([
           'name'           => 'show+' . $lowercaseShowUlid, // by appending show+ this becomes our full stream key.
           'comment'        => 'Automatically created with new show.',
+          'mime_type'      => 'application/x-mpegURL',
           'source'         => 'push://',
           'mist_stream_id' => $mistStream->id,
       ]);
