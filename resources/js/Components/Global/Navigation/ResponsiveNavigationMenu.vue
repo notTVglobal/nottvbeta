@@ -72,7 +72,7 @@
                 <Link @click="appSettingStore.closeNavDropdown()"
                       :href="route('profile.show')"
                       :active="route().current('profile.show')">
-                  <img class="min-h-12 min-w-12 mr-2 rounded-full object-cover border-1 border-gray-300"
+                  <img class="min-h-12 min-w-12 max-h-12 max-w-12 mr-2 rounded-full object-cover border-1 border-gray-300"
                        :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                 </Link>
               </div>
