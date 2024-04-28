@@ -6505,6 +6505,8 @@ hr {
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: scroll;
+        padding-left: 1rem;
+        padding-right: 1rem;
         padding-top: 1.25rem;
     /* Hide scrollbar for Webkit browsers */
 
@@ -8083,6 +8085,10 @@ hr {
   height: 100vh;
 }
 
+.max-h-12 {
+  max-height: 3rem;
+}
+
 .max-h-20 {
   max-height: 5rem;
 }
@@ -8105,10 +8111,6 @@ hr {
 
 .max-h-full {
   max-height: 100%;
-}
-
-.max-h-12 {
-  max-height: 3rem;
 }
 
 .min-h-12 {
@@ -8361,6 +8363,10 @@ hr {
   min-width: max-content;
 }
 
+.max-w-12 {
+  max-width: 3rem;
+}
+
 .max-w-20 {
   max-width: 5rem;
 }
@@ -8455,10 +8461,6 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
-}
-
-.max-w-12 {
-  max-width: 3rem;
 }
 
 .flex-1 {
@@ -12671,6 +12673,10 @@ hr {
 
   .lg\:w-5\/6 {
     width: 83.333333%;
+  }
+
+  .lg\:w-96 {
+    width: 24rem;
   }
 
   .lg\:transform-none {

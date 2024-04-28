@@ -17,9 +17,15 @@
 
         <OttChatMessages/>
 
+<!--        <OttChatInput-->
+<!--            :user="user"-->
+<!--            class="fixed bottom-5 left-1/2 transform -translate-x-1/2 lg:left-auto lg:transform-none w-full"-->
+<!--            :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"-->
+<!--        />-->
+
         <OttChatInput
             :user="user"
-            class="fixed bottom-5 left-1/2 transform -translate-x-1/2 lg:left-auto lg:transform-none"
+            class="absolute w-full lg:w-96 px-6 right-0 bottom-5"
             :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
         />
 
