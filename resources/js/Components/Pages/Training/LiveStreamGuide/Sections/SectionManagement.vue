@@ -13,7 +13,7 @@
       </div>
       <div class="role-info text-lg">
         <h3 class="font-bold text-xl">Creating and Managing the Show Page</h3>
-        <p><strong>Step-by-step:</strong> on setting up a <span class="uppercase">show page</span> with images and descriptions.</p>
+        <p><strong>Step-by-step:</strong> on setting up a <span class="uppercase text-green-500 font-semibold">show page</span> with images and descriptions.</p>
         <p><strong>Managing multiple episodes and events ("episodes").</strong></p>
 
         <ol class="list-decimal pl-4">
@@ -21,22 +21,23 @@
             Join not.TV with an invite code sent by an existing creator.
           </li>
           <li>
-            <span class="uppercase">Team Manager</span> or <span class="uppercase">Team Leader</span> to add you to the <span class="uppercase">team</span>.
+            <span class="uppercase text-blue-500 font-semibold">Team Manager</span> or <span class="uppercase text-blue-500 font-semibold">Team Leader</span> to add you to the <span class="uppercase text-red-500 font-semibold">team</span>.
           </li>
           <li>
-            <span class="uppercase">Team Manager</span> or <span class="uppercase">Team Leader</span> to create a new <span class="uppercase">show</span> and add a <span class="uppercase">Show Runner</span>.
+            <span class="uppercase text-blue-500 font-semibold">Team Manager</span> or <span class="uppercase text-blue-500 font-semibold">Team Leader</span> to create a new <span class="uppercase text-green-500 font-semibold">show</span> and add a <span class="uppercase text-purple-500 font-semibold">Show Runner</span>.
           </li>
           <li>
-            Log in and go to the <span class="uppercase">Show Go Live</span> page (<span class="uppercase">Technical Operator</span>).
+            Log in and go to the <span class="uppercase text-yellow-500 font-semibold">Show Go Live</span> page (<span class="uppercase text-orange-500 font-semibold">Technical Operator</span>).
           </li>
           <li>
-            Log in and go to the <span class="uppercase">Show Edit</span> page (<span class="uppercase">Stream/Event Coordinator</span>). Add an <span class="uppercase">Image</span> and a <span class="uppercase">Description</span> to the <span class="uppercase">show</span> page. Then create an <span class="uppercase">Episode</span> for the scheduled event. Add an <span class="uppercase">Image</span> and a <span class="uppercase">Description</span> to the episode. Image suggestions include taking a picture of the venue exterior, a group of volunteers, or a wide image of the room during an event to use later, or pictures of the presenters. Alternatively, create a "poster" like image. The description should detail what will be discussed, making it searchable for people to find later based on the description.
+            Log in and go to the <span class="uppercase text-yellow-500 font-semibold">Show Edit</span> page (<span class="uppercase text-orange-500 font-semibold">Stream/Event Coordinator</span>). Add an <span class="uppercase text-teal-500 font-semibold">Image</span> and a <span class="uppercase text-teal-500 font-semibold">Description</span> to the <span class="uppercase text-green-500 font-semibold">show</span> page. Then create an <span class="uppercase text-pink-500 font-semibold">Episode</span> for the scheduled event. Add an <span class="uppercase text-teal-500 font-semibold">Image</span> and a <span class="uppercase text-teal-500 font-semibold">Description</span> to the <span class="uppercase text-pink-500 font-semibold">Episode</span>. Image suggestions include taking a picture of the venue exterior, a group of volunteers, or a wide image of the room during an event to use later, or pictures of the presenters. Alternatively, create a "poster" like image. The description should detail what will be discussed, making it searchable for people to find later based on the description.
           </li>
           <li>
-            Connect <span class="uppercase">Zoom</span>, <span class="uppercase">OBS</span>, or a Phone with <span class="uppercase">Larix</span> to the livestream.
+            Connect <span class="uppercase text-indigo-500 font-semibold">Zoom</span>, <span class="uppercase text-indigo-500 font-semibold">OBS</span>, or a Phone with <span class="uppercase text-indigo-500 font-semibold">Larix</span> to the livestream.
           </li>
         </ol>
       </div>
+
 
 
     </div>
