@@ -50,7 +50,7 @@
           </div>
 
           <div v-else class="px-4 pt-2">
-            <div class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-700 text-white">
+            <div class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-700 text-white p-2">
               CHANNELS
             </div>
           </div>

@@ -5,7 +5,7 @@
         <button @click="Inertia.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
       </div>
       <div class="flex flex-row gap-2">
-        <SingleImage :image="image" :alt="'team logo'" :class="'w-40 mr-4'"/>
+        <SingleImage :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-w-40 max-h-40 mr-4'"/>
         <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
           {{ team.name }}
         </h3>

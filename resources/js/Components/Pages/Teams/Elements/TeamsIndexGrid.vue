@@ -1,14 +1,14 @@
 <template>
   <div class="p-6">
 
-    <div class="flex flex-col lg:flex-row w-full justify-between items-center mb-6 lg:mb-0">
+    <div class="flex flex-col w-full justify-center items-center mb-6 lg:mb-0">
       <!-- Paginator -->
       <!--                    <Pagination :data="teams" class=""/>-->
 
-      <h1 class="text-3xl font-semibold pb-3 text-white">Teams</h1>
+      <h1 class="text-3xl font-semibold pb-3 text-white">Browse Teams</h1>
       <div class="gap-x-4 mb-4">
         <input v-model="search" type="search" placeholder="Search Teams..."
-               class="border px-2 rounded-lg"/>
+               class="border px-2 rounded-lg text-gray-900 bg-white dark:bg-white dark:text-gray-900"/>
       </div>
     </div>
 
