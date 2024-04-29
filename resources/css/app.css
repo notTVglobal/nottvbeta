@@ -796,7 +796,7 @@ hr {
         z-index: 200;
         position: fixed;
         top: 4rem;
-        right:0;
+        right: 0;
         max-height: 96rem;
         display: flex; /* Enable Flexbox */
         /*align-items: center; !* Vertically center children *!*/
