@@ -1,10 +1,10 @@
 <template>
   <nav class="nav-bar">
-    <div @click="toggleDropdown" class="dropdown-button" v-if="isMobile">
+    <div @click="toggleDropdown" class="dropdown-button" v-if="appSettingStore.isSmallScreen">
       <font-awesome-icon icon="bars" /> <!-- FontAwesome icon for menu -->
       {{ currentSectionName }}
     </div>
-    <ul v-show="dropdownOpen || !isMobile">
+    <ul v-show="dropdownOpen || !appSettingStore.isSmallScreen">
       <li v-for="(section, index) in sections" :key="section.id"
           :class="{ 'active': section.id === activeSectionId }"
           @click="handleNavigation(section)">
@@ -16,24 +16,28 @@
 </template>
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+const appSettingStore = useAppSettingStore()
 
 const props = defineProps({ sections: Array });
 const emit = defineEmits(['navigate']);
 
 const currentHash = ref(window.location.hash.replace('#', ''));
-const isMobile = ref(window.innerWidth < 1020);
 const dropdownOpen = ref(false);
+
+appSettingStore.checkScreenSize()
 
 // Reactive window size check
 const updateMobileState = () => {
-  isMobile.value = window.innerWidth < 1020;
-  if (!isMobile.value) {
+  // isMobile.value = window.innerWidth < 1020;
+  if (!appSettingStore.isSmallScreen) {
     dropdownOpen.value = false; // Ensure dropdown is closed when not in mobile view
   }
 };
 
-window.addEventListener('resize', updateMobileState);
+// window.addEventListener('resize', updateMobileState);
 
 const activeSectionId = computed(() => currentHash.value || props.sections[0].id);
 const currentSectionName = computed(() => {
@@ -42,7 +46,7 @@ const currentSectionName = computed(() => {
 });
 
 function toggleDropdown() {
-  if (isMobile.value) { // Ensure toggle only works in mobile view
+  if (appSettingStore.isSmallScreen) { // Ensure toggle only works in mobile view
     dropdownOpen.value = !dropdownOpen.value;
   }
 }
@@ -89,7 +93,7 @@ updateCurrentHash();
 }
 
 .dropdown-button {
-  display: none; /* Hidden by default */
+  //display: none; /* Hidden by default */
   cursor: pointer;
   padding: 10px;
   background-color: #FFD700;
