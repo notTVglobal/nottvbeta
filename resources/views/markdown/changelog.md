@@ -3,6 +3,10 @@
 Last Update: April 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.78
+April 28, 2024
+* CSS Fixes.
+
 ## v0.8.7.77
 April 28, 2024
 * Update Live Stream Guide.
