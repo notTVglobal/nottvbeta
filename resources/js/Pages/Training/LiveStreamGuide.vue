@@ -1,5 +1,5 @@
   <template>
-    <Head title="Live Stream Guide"/>
+    <Head title="Live Streaming Guide"/>
     <div>
       <PublicNavigationMenu class="fixed top-0 w-full h-16"/>
       <PublicResponsiveNavigationMenu />
@@ -13,11 +13,16 @@
   import MainContent from '@/Components/Pages/Training/LiveStreamGuide/MainContent.vue'
   import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
   import TitlePage from '@/Components/Pages/Training/LiveStreamGuide/TitlePage.vue'
-  import { onMounted, ref } from 'vue'
+  import { onMounted, onUnmounted, ref, watch } from 'vue'
 
   // State to track if the user has started the guide
   const hasStarted = ref(false);
   const currentSectionId = ref(''); // Default to intro
+
+  // Function to update the hash
+  const updateHash = () => {
+    currentSectionId.value = window.location.hash.replace('#', '');
+  };
 
   // Function to handle the start from the TitlePage
   function handleStart(sectionId = 'intro') {
@@ -31,6 +36,26 @@
     if (hash) {
       currentSectionId.value = hash;
       hasStarted.value = true; // Bypass the TitlePage if a hash is present
+    }
+    // Add event listener for hash changes
+    window.addEventListener('hashchange', updateHash);
+  });
+
+  // Cleanup event listener on unmount
+  onUnmounted(() => {
+    window.removeEventListener('hashchange', updateHash);
+  });
+
+  watch(currentSectionId, (newHash, oldHash) => {
+    if (newHash !== oldHash) {
+      requestAnimationFrame(() => {
+        const topDiv = document.getElementById("topDiv");
+        if (topDiv) {
+          topDiv.scrollIntoView({ behavior: 'auto' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      });
     }
   });
 

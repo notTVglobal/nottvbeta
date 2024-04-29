@@ -4,7 +4,7 @@
       <div>Understand the different roles involved in a live streaming setup, from technical support to content creators, and learn how each contributes to a successful broadcast.</div>
       <div class="flex flex-row gap-4 items-center mt-3">
         <Exclamation />
-        <div class="text-xl"><span class="font-semibold">NOTE: </span> You'll need to assign key roles, at least 1 person who can be the live streaming technician and/or camera operator.</div>
+        <div class="text-xl"><span class="font-semibold">NOTE: </span> You'll need to assign key roles, <span class="font-semibold"> at least 1 person</span> who can be the live streaming technician and/or camera operator.</div>
 
       </div>
     </div>

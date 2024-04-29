@@ -198,7 +198,7 @@
         <h3 class="font-bold text-xl">Live Stream Software and Tools</h3>
         <p><strong>Setup:</strong> Setting up <span class="uppercase text-indigo-500 font-semibold">OBS</span> or <span
             class="uppercase text-indigo-500 font-semibold">Larix</span> for streaming.</p>
-        <p><strong>Stream Keys:</strong> are available on the <span class="uppercase text-yellow-500 font-semibold">notTV Go Live</span>
+        <p><strong>Stream Keys:</strong> are available on the <span class="text-lowercase text-yellow-500 font-semibold">not</span><span class="uppercase text-yellow-500 font-semibold">TV Go Live</span>
           page.</p>
         <p><strong>Using tools like <span class="uppercase text-orange-500 font-semibold">Zoom</span>:</strong> for
           simpler setups or guest inclusion.</p>
