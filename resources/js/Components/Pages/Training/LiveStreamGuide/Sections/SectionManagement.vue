@@ -13,9 +13,32 @@
       </div>
       <div class="role-info text-lg">
         <h3 class="font-bold text-xl">Creating and Managing the Show Page</h3>
-        <p><strong>Step-by-step:</strong> on setting up a show page with images and descriptions.</p>
+        <p><strong>Step-by-step:</strong> on setting up a <span class="uppercase">show page</span> with images and descriptions.</p>
         <p><strong>Managing multiple episodes and events ("episodes").</strong></p>
+
+        <ol class="list-decimal pl-4">
+          <li>
+            Join not.TV with an invite code sent by an existing creator.
+          </li>
+          <li>
+            <span class="uppercase">Team Manager</span> or <span class="uppercase">Team Leader</span> to add you to the <span class="uppercase">team</span>.
+          </li>
+          <li>
+            <span class="uppercase">Team Manager</span> or <span class="uppercase">Team Leader</span> to create a new <span class="uppercase">show</span> and add a <span class="uppercase">Show Runner</span>.
+          </li>
+          <li>
+            Log in and go to the <span class="uppercase">Show Go Live</span> page (<span class="uppercase">Technical Operator</span>).
+          </li>
+          <li>
+            Log in and go to the <span class="uppercase">Show Edit</span> page (<span class="uppercase">Stream/Event Coordinator</span>). Add an <span class="uppercase">Image</span> and a <span class="uppercase">Description</span> to the <span class="uppercase">show</span> page. Then create an <span class="uppercase">Episode</span> for the scheduled event. Add an <span class="uppercase">Image</span> and a <span class="uppercase">Description</span> to the episode. Image suggestions include taking a picture of the venue exterior, a group of volunteers, or a wide image of the room during an event to use later, or pictures of the presenters. Alternatively, create a "poster" like image. The description should detail what will be discussed, making it searchable for people to find later based on the description.
+          </li>
+          <li>
+            Connect <span class="uppercase">Zoom</span>, <span class="uppercase">OBS</span>, or a Phone with <span class="uppercase">Larix</span> to the livestream.
+          </li>
+        </ol>
       </div>
+
+
     </div>
 
     <!-- Event Promotion -->

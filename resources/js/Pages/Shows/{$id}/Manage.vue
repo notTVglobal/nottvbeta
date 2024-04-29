@@ -33,7 +33,7 @@
             </div>
             <div class="flex flex-wrap-reverse justify-end">
               <button
-                  v-if="teamStore.can.editShow"
+                  v-if="can.goLive"
                   @click="goLive"
                   class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
               >Go Live

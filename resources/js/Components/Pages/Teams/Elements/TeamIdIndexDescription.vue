@@ -1,5 +1,10 @@
 <template>
-<div>
+<div class="px-5">
+
+  <div class="w-full bg-gray-900 text-white text-center text-2xl p-4 mb-4">
+    DESCRIPTION
+  </div>
+
     <p v-if="team.description" class="description mb-6 p-5">
       {{ truncatedDescription }}
       <span v-if="team.description.length > 300 && !showFullDescription">

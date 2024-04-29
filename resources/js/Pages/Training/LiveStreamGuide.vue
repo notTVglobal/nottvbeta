@@ -1,4 +1,5 @@
   <template>
+    <Head title="Live Stream Guide"/>
     <div>
       <PublicNavigationMenu class="fixed top-0 w-full h-16"/>
       <PublicResponsiveNavigationMenu />

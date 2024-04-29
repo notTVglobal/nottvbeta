@@ -8121,6 +8121,14 @@ hr {
   max-height: 100%;
 }
 
+.max-h-10 {
+  max-height: 2.5rem;
+}
+
+.max-h-16 {
+  max-height: 4rem;
+}
+
 .min-h-12 {
   min-height: 3rem;
 }
@@ -8159,6 +8167,14 @@ hr {
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-10 {
+  min-height: 2.5rem;
+}
+
+.min-h-16 {
+  min-height: 4rem;
 }
 
 .w-0 {
@@ -8371,6 +8387,14 @@ hr {
   min-width: max-content;
 }
 
+.min-w-10 {
+  min-width: 2.5rem;
+}
+
+.min-w-16 {
+  min-width: 4rem;
+}
+
 .max-w-12 {
   max-width: 3rem;
 }
@@ -8469,6 +8493,14 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-10 {
+  max-width: 2.5rem;
+}
+
+.max-w-16 {
+  max-width: 4rem;
 }
 
 .flex-1 {
@@ -12711,6 +12743,10 @@ hr {
     justify-content: flex-start;
   }
 
+  .lg\:justify-end {
+    justify-content: flex-end;
+  }
+
   .lg\:space-x-12 > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 0;
     margin-right: calc(3rem * var(--tw-space-x-reverse));
@@ -12766,6 +12802,14 @@ hr {
 
   .lg\:pt-4 {
     padding-top: 1rem;
+  }
+
+  .lg\:pb-0 {
+    padding-bottom: 0px;
+  }
+
+  .lg\:pt-6 {
+    padding-top: 1.5rem;
   }
 
   .lg\:text-left {

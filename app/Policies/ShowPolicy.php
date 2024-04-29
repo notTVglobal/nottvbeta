@@ -117,11 +117,11 @@ class ShowPolicy
 
     public function goLive(User $user, Show $show)
     {
-        if ($this->hasAccessToTeam($user, $show) || $show->user_id === $user->id) {
+      if ($this->handleTeamMemberStatusForGoLive($user, $show->team_id)) {
+        return true;
+      } elseif ($this->hasAccessToTeam($user, $show) || $show->user_id === $user->id) {
             return true;
         }
-
-        return $this->handleTeamMemberStatusForGoLive($user, $show->team_id);
     }
 
     public function viewEpisodeManagePage(User $user, Show $show)
@@ -250,6 +250,10 @@ class ShowPolicy
         $isTeamMemberActive = TeamMember::where('team_id', $teamId)
             ->where('user_id', $user->id)
             ->value('active');
+
+        if ($isTeamMemberActive) {
+          Return Response::allow();
+        }
 
         if ($isTeamMemberActive === 0) {
             return Response::deny('You are not active on this team.');
