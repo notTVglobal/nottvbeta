@@ -17,8 +17,7 @@
       <div class="role-info text-lg">
         <h2 class="font-bold text-xl">Audio Setup</h2>
         <p><strong>Diagram of audio flow:</strong> Connecting microphones to cameras or directly to the speaker system.
-          <img src="placeholder-for-audio-flow-diagram.jpg" alt="Audio Flow Diagram - Coming Soon" class="bg-yellow-200"
-               style="width: 400px; height: 200px;"></p>
+          <img src="placeholder-for-audio-flow-diagram.jpg" alt="Audio Flow Diagram - Coming Soon" class="max-w-64 max-h-32 bg-yellow-200"></p>
         <p><strong>Decision Points:</strong> Choosing between direct audio line-in or ambient mic setup based on venue
           acoustics.</p>
         <p>

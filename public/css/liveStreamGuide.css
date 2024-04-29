@@ -33,6 +33,13 @@
     margin-bottom: 10px;
 }
 
+/* Hide on screens smaller than 1024px */
+@media (max-width: 1023px) {
+    .role-card {
+        flex-direction: column;
+    }
+}
+
 .role-title {
     font-weight: bold;  /* Makes text bold */
     font-size: 1.25em;
@@ -81,13 +88,14 @@
 
 .role-info {
     padding: 1rem;
+
 }
 
 .role-icon {
     flex-shrink: 0; /* Keeps icon size consistent */
     margin-top: 10px;
+    display: block; /* Default display as block or inline-block */
 }
-
 /* Additional styles for Troubleshooting and Support section */
 .troubleshooting-content .troubleshooting-card {
     display: flex;
