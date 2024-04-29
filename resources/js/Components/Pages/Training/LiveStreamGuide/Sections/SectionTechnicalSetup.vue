@@ -15,9 +15,26 @@
       </div>
       <div class="role-info text-lg">
         <h3 class="font-bold text-xl">Audio Setup</h3>
-        <p><strong>Diagram of audio flow:</strong> Connecting microphones to cameras or directly to the speaker system.</p>
+        <p><strong>Diagram of audio flow:</strong> Connecting microphones to cameras or directly to the speaker system. <img src="placeholder-for-audio-flow-diagram.jpg" alt="Audio Flow Diagram" class="bg-yellow-200" style="width: 300px; height: 200px;"></p>
         <p><strong>Decision Points:</strong> Choosing between direct audio line-in or ambient mic setup based on venue acoustics.</p>
+
+        <h4 class="font-semibold text-lg">Types of Microphones</h4>
+        <ul>
+          <li>
+            <strong>Professional Wireless Microphones</strong> - Ideal for large events where mobility and range are important.
+            <img src="placeholder-for-professional-wireless.jpg" alt="Professional Wireless Microphone" class="bg-yellow-200" style="width: 200px; height: 150px;">
+          </li>
+          <li>
+            <strong>Bluetooth Wireless Microphones</strong> - Suitable for smaller venues or personal use, easy to connect with mobile devices.
+            <img src="placeholder-for-bluetooth-wireless.jpg" alt="Bluetooth Wireless Microphone" class="bg-yellow-200" style="width: 200px; height: 150px;">
+          </li>
+          <li>
+            <strong>Wired Adapters for Phones</strong> - Options include XLR, USB, and 3.5mm plugs. Essential for converting smartphones into recording devices in professional settings.
+            <img src="placeholder-for-wired-adapters.jpg" alt="Wired Adapters for Phones" class="bg-yellow-200" style="width: 200px; height: 150px;">
+          </li>
+        </ul>
       </div>
+
     </div>
     <!-- Video Setup -->
     <div class="role-card">
@@ -31,7 +48,44 @@
         <h3 class="font-bold text-xl">Video Setup</h3>
         <p><strong>Camera choices and placement strategies:</strong> for optimal coverage.</p>
         <p><strong>Teachable Moments:</strong> Understanding lighting and avoiding common pitfalls like backlighting.</p>
+
+        <h4 class="font-semibold text-lg">Types of Cameras and Tools</h4>
+        <ul>
+          <li>
+            <strong>DSLRs:</strong> High-quality image, suitable for dynamic shooting environments.
+            <img src="placeholder-for-dslrs.jpg" class="bg-yellow-200" alt="DSLR Camera" style="width: 200px; height: 150px;">
+          </li>
+          <li>
+            <strong>Phone Cameras:</strong> Convenient for quick setups and casual documentation.
+            <img src="placeholder-for-phone-cameras.jpg" class="bg-yellow-200" alt="Phone Camera" style="width: 200px; height: 150px;">
+          </li>
+          <li>
+            <strong>Web Cameras:</strong> Ideal for stationary setups, commonly used for live streaming.
+            <img src="placeholder-for-web-cameras.jpg" class="bg-yellow-200" alt="Web Camera" style="width: 200px; height: 150px;">
+          </li>
+          <li>
+            <strong>Recording and Streaming Tools:</strong>
+            <ul>
+              <li>
+                <strong>Atomos Ninja+Connect:</strong> For high-quality recording and instant replay on larger displays.
+                <img src="placeholder-for-atomos-ninja.jpg" class="bg-yellow-200" alt="Atomos Ninja+Connect" style="width: 200px; height: 150px;">
+              </li>
+              <li>
+                <strong>Camera for OBS Studio iPhone Software:</strong> Integrates mobile devices directly with OBS for streaming.
+                <img src="placeholder-for-camera-for-obs.jpg" class="bg-yellow-200" alt="Camera for OBS Studio iPhone Software" style="width: 200px; height: 150px;">
+              </li>
+              <li>
+                <strong>USB Web Cameras for OBS:</strong> Simple plug-and-play option for OBS streaming setups.
+                <img src="placeholder-for-usb-web-cameras.jpg" class="bg-yellow-200" alt="USB Web Cameras for OBS" style="width: 200px; height: 150px;">
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4 class="font-semibold text-lg">Camera Functionality and Event Considerations</h4>
+        <p>Assess if the camera can zoom and if it can be moved during the event without difficulty. For events with a single, stationary camera, ensure a wide enough shot to capture all presenters and significant activities.</p>
       </div>
+
     </div>
     <!-- Live Stream Software and Tools -->
     <div class="role-card">

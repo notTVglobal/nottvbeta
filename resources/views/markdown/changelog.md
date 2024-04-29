@@ -3,6 +3,12 @@
 Last Update: April 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.77
+April 28, 2024
+* Update Live Stream Guide.
+* Make it so Team Members can Go Live for a show.
+* Minor CSS Fixes to Teams pages.
+
 ## v0.8.7.76
 April 28, 2024
 * Fix Chat Input CSS
@@ -14,12 +20,12 @@ April 28, 2024
 
 ## v0.8.7.74
 April 26, 2024
-* Finish the Public pages for Team
+* Finish the Public pages for Team.
 
 ## v0.8.7.73
 April 26, 2024
-* Added public pages for schedule, teams index, teams.show and show.show
-* Working on the schedule
+* Added public pages for schedule, teams index, teams.show and show.show.
+* Working on the schedule.
 
 ## v0.8.7.72
 April 26, 2024
@@ -32,12 +38,12 @@ April 25, 2024
 
 ## v0.8.7.70
 April 25, 2024
-* Fix the logo, something was breaking the login page
+* Fix the logo, something was breaking the login page.
 
 ## v0.8.7.69
 April 25, 2024
-* Fix the Recordings prefix for playback
-* Created a Live Streaming Guide
+* Fix the Recordings prefix for playback.
+* Created a Live Streaming Guide.
 
 ## v0.8.7.68
 April 24, 2024
@@ -61,18 +67,18 @@ April 23, 2024
 
 ## v0.8.7.64
 April 14, 2024
-* Rebuilt the way scheduling is handled. We have new Scheduling Jobs
+* Rebuilt the way scheduling is handled. We have new Scheduling Jobs.
 * A shows broadcast schedule is now processed and stored in the schedule.
 
 ## v0.8.7.63
 April 14, 2024
-* Changed the schedule column name for scalability and solve some problems
-* Added a public message to the Teams page
-* Added buttons for Team managers to more easily find and return to the Team Manage page
-* Added social media links to teams
+* Changed the schedule column name for scalability and solve some problems.
+* Added a public message to the Teams page.
+* Added buttons for Team managers to more easily find and return to the Team Manage page.
+* Added social media links to teams.
 * Hid creators/credits from teams, shows and episode pages.
-* Creators have a toggle to choose if they want their profile to be public
-* Revised broadcast schedule logic
+* Creators have a toggle to choose if they want their profile to be public.
+* Revised broadcast schedule logic.
 
 ## v0.8.7.62
 April 11, 2024
@@ -81,19 +87,19 @@ April 11, 2024
 
 ## v0.8.7.61
 April 11, 2024
-* Setup an environment variable for recordings
+* Setup an environment variable for recordings.
 
 ## v0.8.7.60
 April 11, 2024
-* Move user_recordings to another folder
+* Move user_recordings to another folder.
 
 ## v0.8.7.59
 April 11, 2024
-* Fix recording download problems by creating a new folder for user initiated recordings vs system auto push recordings
+* Fix recording download problems by creating a new folder for user initiated recordings vs system auto push recordings.
 
 ## v0.8.7.58
 April 11, 2024
-* Attempted fix of download files by switching urlencode() to rawurlencode()
+* Attempted fix of download files by switching urlencode() to rawurlencode().
 
 ## v0.8.7.57
 April 11, 2024
@@ -102,7 +108,7 @@ April 11, 2024
 ## v0.8.7.56
 April 11, 2024
 * Added Start Recording and Stop Recording ability on Go Live page.
-* The recordings list on the Show Manage page now has download buttons for the recordings
+* The recordings list on the Show Manage page now has download buttons for the recordings.
 * Recordings that are created by the Auto Push feature are labelled as "automatic recording" in the recordings list.
 * Fixed the Log Out button to run 1 method instead of 2.
 
@@ -117,19 +123,19 @@ April 9, 2024
 
 ## v0.8.7.53
 April 8, 2024
-* Fixed the login modal width and added a bg gradient
+* Fixed the login modal width and added a bg gradient.
 * Hide the movies sections 'new releases' and 'coming soon', and the links at the top.
   * This is temporary until we have more movies.
 
 ## v0.8.7.52
 April 6, 2024
-* Minor adjustment to the Login css, width
-* Fix contribution page
+* Minor adjustment to the Login css, width.
+* Fix contribution page.
 
 ## v0.8.7.51
 April 6, 2024
-* Update the Contribution Page
-* Update the Upgrade panel and which OTT components are visible
+* Update the Contribution Page.
+* Update the Upgrade panel and which OTT components are visible.
 
 ## v0.8.7.50
 April 6, 2024
@@ -142,20 +148,20 @@ April 6, 2024
 
 ## v0.8.7.49
 April 5, 2024
-* Adjust FetchRssFeedJob to handle images in the media:group tag
+* Adjust FetchRssFeedJob to handle images in the media:group tag.
 
 ## v0.8.7.48
 April 5, 2024
-* Create dedicated cloud folder for video uploads that are Creator user video uploads
-* Mount Spaces to Mistserver to test creating streams from S3
-* Add new cloud_private_folder as database column to AppSettings and Videos
+* Create dedicated cloud folder for video uploads that are Creator user video uploads.
+* Mount Spaces to Mistserver to test creating streams from S3.
+* Add new cloud_private_folder as database column to AppSettings and Videos.
 
 ## v0.8.7.47
 April 3, 2024
-* Remove Toast Notifications for 'Push Destinations Updated' and 'Stream Info Loaded'
-* Updated Terms of Service
-* Update error pages
-* Team Leader, Managers and Show Runners can now change the Published Date on Show Episodes. (This will be temporary up until the blockchain registration comes into effect)
+* Remove Toast Notifications for 'Push Destinations Updated' and 'Stream Info Loaded'.
+* Updated Terms of Service.
+* Update error pages.
+* Team Leader, Managers and Show Runners can now change the Published Date on Show Episodes. (This will be temporary up until the blockchain registration comes into effect).
 * Adjusted Add Show To Schedule, must be 24 hours in the future (not just tomorrow or later). This is to ensure time for promoting shows on notTV.
 
 ## v0.8.7.46
@@ -164,12 +170,12 @@ April 3, 2024
 
 ## v0.8.7.45
 April 1, 2024
-* Update Whitepaper
+* Update Whitepaper.
 
 ## v0.8.7.44
 April 1, 2024
-* Playback a recording now displays the recording name in NowPlayingInfo
-* OTT TopRight now defaults to Info
+* Playback a recording now displays the recording name in NowPlayingInfo.
+* OTT TopRight now defaults to Info.
 
 ## v0.8.7.43
 April 1, 2024
@@ -186,13 +192,13 @@ April 1, 2024
 
 ## v0.8.7.40
 March 31, 2024
-* Use the MistServerService to fetchStreamInfo
+* Use the MistServerService to fetchStreamInfo.
 * Fixes to the Add Push, Remove Push, fetchPushDestinations and Background Fetch methods.
 * Start troubleshooting the recordings bugs. 
 
 ## v0.8.7.39
 March 31, 2024
-* Fix Recording Unique error
+* Fix Recording Unique error.
 
 ## v0.8.7.38
 March 31, 2024
@@ -200,17 +206,17 @@ March 31, 2024
 
 ## v0.8.7.37
 March 31, 2024
-* Fix duplicate recordings bug
-* Fix fetchStreamInfo()
+* Fix duplicate recordings bug.
+* Fix fetchStreamInfo().
 
 ## v0.8.7.36
 March 31, 2024
-* Remove debugging lines from MistPushCommand
+* Remove debugging lines from MistPushCommand.
 * Change the way fetchStreamInfo handles the Server Uri.
 
 ## v0.8.7.35
 March 31, 2024
-* Add additional line to the environment for mist server
+* Add additional line to the environment for mist server.
 
 ## v0.8.7.34
 March 31, 2024
@@ -231,16 +237,16 @@ March 30, 2024
 
 ## v0.8.7.32
 March 29, 2024
-* Video Recordings on shows can now be played back
-* Added a share button to the video recordings which copies the url to the stream playback page
-* Added modals for the download, save to premium and add to episode buttons
+* Video Recordings on shows can now be played back.
+* Added a share button to the video recordings which copies the url to the stream playback page.
+* Added modals for the download, save to premium and add to episode buttons.
 
 ## v0.8.7.31
 March 29, 2024
-* Add refreshing loader icons on the Push Destinations page
-* Added a Disable All Auto Pushes button
-  * Having some challenges with removing single auto pushes
-* Start push and End push should be working and Enable Auto Push
+* Add refreshing loader icons on the Push Destinations page.
+* Added a Disable All Auto Pushes button.
+  * Having some challenges with removing single auto pushes.
+* Start push and End push should be working and Enable Auto Push.
 * Push destinations refreshes every 10 seconds. This will need to be optimized to just have the server do the refreshing, cache the data for the client.
 * Changed the colour of the TopRight Chat background and Now Playing Info background.
 * Fixed the Websocket bootstrap settings.
@@ -248,27 +254,27 @@ March 29, 2024
 ## v0.8.7.29
 March 28, 2024
 * Fix the GoLive Component to fetch push destinations in a new way.
-* The Push Start and Push Stop buttons seem to be working
-* The Enable Auto Push seems to be adding it to the MistServer
+* The Push Start and Push Stop buttons seem to be working.
+* The Enable Auto Push seems to be adding it to the MistServer.
 * Disable Auto Push does not work.
 * Disable All Auto Pushes does not work.
-* Added Toast Notifications to Push starts/stops
-* Added a mist_server_auto_pushes table to track auto pushes and make removing individual pushes easier
-* Added a mist_server_active_pushes table to track active pushes
-  * This table can get updated every n seconds through a scheduled command
-  * The GoLive component can make an api call to retrieve the data that is updated by the command to stay up-to-date
+* Added Toast Notifications to Push starts/stops.
+* Added a mist_server_auto_pushes table to track auto pushes and make removing individual pushes easier.
+* Added a mist_server_active_pushes table to track active pushes.
+  * This table can get updated every n seconds through a scheduled command.
+  * The GoLive component can make an api call to retrieve the data that is updated by the command to stay up-to-date.
   * This is the most efficient way to handle polling the MistServer for accurate push data.
-* There is a bug in the mist server... The trigger settings with blocking needs to be just right
+* There is a bug in the mist server... The trigger settings with blocking needs to be just right.
   * Additionally, if a recording is started and then stopped right away and the Stream Resume is enabled then the recording will not start again.
 
 ## v0.8.7.28
 March 28, 2024
-* Fixed the type hints for the MistTriggerController functions
-* Update Log debug messages for testing in MistTriggerController
+* Fixed the type hints for the MistTriggerController functions.
+* Update Log debug messages for testing in MistTriggerController.
 
 ## v0.8.7.27
 March 28, 2024
-* Turn on all debugging logs for Mist Push Triggers (Start, Stop, End Record)
+* Turn on all debugging logs for Mist Push Triggers (Start, Stop, End Record).
 
 ## v0.8.7.26
 March 28, 2024
@@ -276,17 +282,17 @@ March 28, 2024
   * Added an app_setting for the Admin to easily change this in settings.
 * Change the color of the disable auto push button to make it easier to see when push is enabled.
 * Add a Live Analytics button on the Go Live page that opens a new tab with the live analytics of notTV.
-* Add debug lines to the MistTriggerController, handleRecordingEnd
+* Add debug lines to the MistTriggerController, handleRecordingEnd.
 
 ## v0.8.7.25
 March 26, 2024
-* Fix FirstPlay and Video Player problem
-  * Aux video player is working on Go Live page
-  * First Play video on Main Player is working
-  * Channels with Mist streams are working
-  * Start Push to destination on Go Live page is working
-  * Stop Push to destination on Go Live page is also working
-  * Add Auto Push button works
+* Fix FirstPlay and Video Player problem.
+  * Aux video player is working on Go Live page.
+  * First Play video on Main Player is working.
+  * Channels with Mist streams are working.
+  * Start Push to destination on Go Live page is working.
+  * Stop Push to destination on Go Live page is also working.
+  * Add Auto Push button works.
   * Remove Auto Push button IS NOT WORKING!
   * Event Broadcast to Go Live Page to update the Push button status IS NOT WORKING!
 
@@ -311,7 +317,7 @@ March 26, 2024
 ## v0.8.7.21
 March 26, 2024
 * Hot Fix
-  * Create a one-time command to get the FirstPlaySettings from the existing AppSetting columns into the new FirstPlaySettings Json column
+  * Create a one-time command to get the FirstPlaySettings from the existing AppSetting columns into the new FirstPlaySettings Json column.
   * $ php artisan settings:migrate-first-play
 
 ## v0.8.7.20
@@ -327,8 +333,8 @@ March 26, 2024
 
 ## v0.8.7.19
 March 25, 2024
-* Adjust style on Navigation Menu
-* Restructure the Admin/Channels page and components
+* Adjust style on Navigation Menu.
+* Restructure the Admin/Channels page and components.
 
 ## v0.8.7.18
 March 24, 2024

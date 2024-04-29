@@ -1,18 +1,18 @@
 <template>
   <div class="p-6">
 
-    <div class="flex flex-row w-full justify-between items-center">
+    <div class="flex flex-col lg:flex-row w-full justify-between items-center mb-6 lg:mb-0">
       <!-- Paginator -->
       <!--                    <Pagination :data="teams" class=""/>-->
 
-      <h1 class="text-3xl font-semibold pb-3 text-white">Browse Teams</h1>
+      <h1 class="text-3xl font-semibold pb-3 text-white">Teams</h1>
       <div class="gap-x-4 mb-4">
         <input v-model="search" type="search" placeholder="Search Teams..."
                class="border px-2 rounded-lg"/>
       </div>
     </div>
 
-    <div class="gap-2 flex flex-row flex-wrap w-full overflow-x-none">
+    <div class="gap-4 flex flex-row flex-wrap justify-center w-full overflow-x-none">
       <div v-for="team in teams.data"
            :key="team.id"
            @click="Inertia.visit(`/teams/${team.slug}`)"

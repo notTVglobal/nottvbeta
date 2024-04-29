@@ -13,7 +13,7 @@
       <TeamIdIndexHeader :team="team" :image="image"/>
       <div class="flex justify-between mb-1 pt-6">
 
-        <div class="flex flex-col">
+        <div class="flex flex-col px-5 items-start">
           <div class="flex flex-wrap-reverse justify-end gap-2 mb-2">
             <div>
               <button
