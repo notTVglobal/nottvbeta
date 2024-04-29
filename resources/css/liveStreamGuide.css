@@ -25,7 +25,7 @@
 .role-card {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Vertically centers content within the container */
+    align-items: start; /* Vertically centers content within the container */
     padding: 15px;
     background-color: #ffffff; /* For high contrast */
     border-radius: 8px;
@@ -37,6 +37,12 @@
     font-weight: bold;  /* Makes text bold */
     font-size: 1.25em;
     color: #333;
+}
+
+.role-info h2 {
+    font-size: 1.8rem;
+    color: #111;
+    margin-bottom: 10px;
 }
 
 .role-info h3 {
@@ -54,6 +60,19 @@
 .role-info ul, .role-info ol {
     list-style-type: disc;
     margin-left: 20px;
+
+}
+
+.role-info ul li, .role-info ol li {
+    margin-bottom: 10px;  /* Adjust this value to increase or decrease spacing */
+}
+
+.role-info ul li a:hover {
+    border: 3px solid blue;  /* This gives a more substantial look */
+}
+
+.role-info ul li a {
+    transition: border 0.1s ease-in-out;  /* Smooth transition for border appearance */
 }
 
 .role-info ol {
@@ -66,6 +85,7 @@
 
 .role-icon {
     flex-shrink: 0; /* Keeps icon size consistent */
+    margin-top: 10px;
 }
 
 /* Additional styles for Troubleshooting and Support section */
