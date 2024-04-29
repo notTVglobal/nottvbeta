@@ -9,7 +9,8 @@
   >
     <div>
       <transition name="fade">
-        <div v-if="chatStore.errorMessage" class="absolute w-96 px-6 right-0 bottom-24 z-999 py-1 error-message text-yellow-500 bg-black bg-opacity-80">
+        <div v-if="chatStore.errorMessage"
+             class="absolute w-96 px-6 right-0 bottom-24 z-999 py-1 error-message text-yellow-500 bg-black bg-opacity-80">
           {{ chatStore.errorMessage }}
         </div>
       </transition>
@@ -17,20 +18,23 @@
 
         <OttChatMessages/>
 
-<!--        <OttChatInput-->
-<!--            :user="user"-->
-<!--            class="fixed bottom-5 left-1/2 transform -translate-x-1/2 lg:left-auto lg:transform-none w-full"-->
-<!--            :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"-->
-<!--        />-->
+        <!--        <OttChatInput-->
+        <!--            :user="user"-->
+        <!--            class="fixed bottom-5 left-1/2 transform -translate-x-1/2 lg:left-auto lg:transform-none w-full"-->
+        <!--            :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"-->
+        <!--        />-->
 
         <OttChatInput
             :user="user"
-            class="absolute w-full lg:w-96 px-6 right-0 bottom-5"
-            :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
+            class="fixed w-full lg:w-96 px-6 right-0"
+            :class="[
+              bottomClass,
+              { 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }
+            ]"
         />
 
 
-          <button v-if="appSettingStore.fullPage" @click="closeChat"
+        <button v-if="appSettingStore.fullPage" @click="closeChat"
                 :class="chatCloseClass">
           CLOSE CHAT
         </button>
@@ -92,8 +96,22 @@ const divClass = computed(() => {
 })
 
 const chatCloseClass = computed(() => {
-    return userStore.isMobile ? 'chatCloseButtonIsMobile' : 'chatCloseButton'
+  return userStore.isMobile ? 'chatCloseButtonIsMobile' : 'chatCloseButton'
 })
+
+const bottomClass = computed(() => {
+  if (appSettingStore.pipChatMode && appSettingStore.fullPage) {
+    return 'bottom-4'
+  } else if (appSettingStore.fullPage && appSettingStore.isSmallScreen) {
+    return 'bottom-8'
+  } else if (appSettingStore.fullPage) {
+    return 'bottom-14'
+  } else
+  {
+    return 'bottom-5'
+  }
+})
+
 
 onMounted(() => {
   chatStore.errorMessage = ''
@@ -105,7 +123,9 @@ onMounted(() => {
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
+{
   opacity: 0;
 }
 </style>

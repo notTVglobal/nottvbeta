@@ -1281,6 +1281,10 @@ Route::get('/join', function () {
   return redirect('/newsletterSignup');
 });
 
+Route::get('/live-stream-guide', function () {
+  return redirect('/live-streaming-guide');
+});
+
 Route::get('/coffee', function () {
   return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });
