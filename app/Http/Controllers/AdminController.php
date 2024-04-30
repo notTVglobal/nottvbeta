@@ -84,6 +84,7 @@ class AdminController extends Controller {
         if ($stream && $stream->show && $stream->show->image) {
           $imageResource = new ImageResource($stream->show->image);
           $activeStreamsWithShowData[] = [
+              'mediaType'      => 'mistStream',
               'streamName'     => $stream->name,
               'streamMimeType' => $stream->mime_type,
               'showId'         => $stream->show->id ?? null,
@@ -240,6 +241,7 @@ class AdminController extends Controller {
         'customVideoSource'     => 'required_if:useCustomVideo,true|nullable|string',
         'customVideoSourceType' => 'required_if:useCustomVideo,true|nullable|string',
         'customVideoName'       => 'required_if:useCustomVideo,true|nullable|string',
+        'customMediaType'       => 'required_if:useCustomVideo,true|nullable|string',
     ]);
 
     // Check if validation fails
@@ -269,6 +271,7 @@ class AdminController extends Controller {
             'customVideoSource'     => $request->customVideoSource,
             'customVideoSourceType' => $request->customVideoSourceType,
             'customVideoName'       => $request->customVideoName,
+            'customMediaType'       => $request->customMediaType,
         ],
         'first_play_channel_id' => $request->channelId,
     ];
@@ -279,6 +282,7 @@ class AdminController extends Controller {
           'first_play_video_source'      => $request->customVideoSource,
           'first_play_video_source_type' => $request->customVideoSourceType, // Ensure this should not be $request->videoSourceType instead
           'first_play_video_name'        => $request->customVideoName, // Ensure this is the correct request field
+          'first_play_media_type'        => $request->customMediaType, // Ensure this is the correct request field
       ]);
     }
 
@@ -296,14 +300,36 @@ class AdminController extends Controller {
         'custom_video_source'          => $appSetting->first_play_settings['customVideoSource'],
         'custom_video_source_type'     => $appSetting->first_play_settings['customVideoSourceType'],
         'custom_video_name'            => $appSetting->first_play_settings['customVideoName'],
+        'custom_media_type'            => $appSetting->first_play_settings['customMediaType'],
     ];
 
     $jsonFilePath = 'json/firstPlayData.json';
     Cache::forget('firstPlayData');
     Storage::disk('local')->put($jsonFilePath, json_encode($cacheDataToUpdate, JSON_PRETTY_PRINT));
 
-    // broadcast the updated firstPlay
-    $videoDetails = null;
+
+    // Check if custom video should be used
+    if ($cacheDataToUpdate['use_custom_video']) {
+      $videoDetails = (object)[
+          'source' => $cacheDataToUpdate['custom_video_source'],
+          'mediaType' => $cacheDataToUpdate['custom_media_type'],
+          'type' => $cacheDataToUpdate['custom_video_source_type'],
+          'name' => $cacheDataToUpdate['custom_video_name'],
+      ];
+    } else {
+      // Fallback to default video data if custom video is not used
+      $videoDetails = (object)[
+          'source' => $cacheDataToUpdate['first_play_video_source'],
+          'mediaType' => 'default_media_type', // Assuming a default, adjust as necessary
+          'type' => $cacheDataToUpdate['first_play_video_source_type'],
+          'name' => $cacheDataToUpdate['first_play_video_name'],
+      ];
+    }
+
+// Log the video details before dispatching
+    Log::debug('Video data before dispatch', ['videoData' => $videoDetails]);
+
+// Broadcast the updated firstPlay
     event(new ChangeFirstPlayVideo($videoDetails));
 
     // Return a success response

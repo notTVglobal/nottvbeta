@@ -1,4 +1,4 @@
-<template>
+  <template>
 
   <div class="w-full bg-yellow-200 px-2 py-1">
     <span class="font-semibold uppercase">⚠️ NOTICE: </span> The first time you playback a recording it will take a long time to load. This only happens the first time!

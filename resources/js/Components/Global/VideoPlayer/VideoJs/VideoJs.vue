@@ -1,6 +1,6 @@
 <template>
   <div >
-
+    <img id="custom-overlay" src="/storage/images/logo_white.svg" alt="notTV logo" class="hidden"/>
     <!-- iPhone needs the options loaded from the video tag here to autoplay. -->
     <video-js id="main-player"
               class="video-js vjs-fit"
@@ -75,6 +75,8 @@ onMounted(() => {
   //     },
   //   },
   // }
+
+  const customOverlay = document.getElementById('custom-overlay');
   const videoElementId = videoPlayerStore.videoElementId
   const playerOptions = videoPlayerStore.playerOptions
   // Initialize Video.js player
@@ -86,6 +88,18 @@ onMounted(() => {
 
   // Access the video DOM element controlled by VideoJS
   const videoDomElement = videoPlayer.el();
+  videoDomElement.appendChild(customOverlay);
+
+  videoPlayer.on('fullscreenchange', function() {
+    if (videoPlayer.isFullscreen()) {
+      videoPlayer.el().appendChild(customOverlay);
+      customOverlay.classList.remove('hidden');
+      customOverlay.classList.add('visible');
+    } else {
+      customOverlay.classList.remove('visible');
+      customOverlay.classList.add('hidden');
+    }
+  })
 
   // Disable right-click on the video element
   videoDomElement.addEventListener('contextmenu', (event) => {
@@ -100,6 +114,17 @@ onMounted(() => {
 <style scoped>
 .video-js {
   all: initial;
+}
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+  position: absolute;
+  top: 2.5rem;
+  left: 2.5rem;
+  width: 5rem;
+  z-index: 1000; /* Ensure it's above other elements */
 }
 </style>
 

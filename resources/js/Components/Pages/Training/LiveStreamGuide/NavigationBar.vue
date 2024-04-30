@@ -1,6 +1,6 @@
 <template>
   <nav class="nav-bar">
-    <div @click="toggleDropdown" class="dropdown-button" v-if="appSettingStore.isSmallScreen">
+    <div @click="toggleDropdown" class="dropdown-button mt-16" v-if="appSettingStore.isSmallScreen">
       <font-awesome-icon icon="bars" /> <!-- FontAwesome icon for menu -->
       {{ currentSectionName }}
     </div>

@@ -402,6 +402,7 @@ export const useAdminStore = defineStore('adminStore', {
                 this.firstPlaySettings.customVideoSource = videoPlayerStore.mistServerUri + 'hls/test/index.m3u8'
                 this.firstPlaySettings.customVideoSourceType = 'application/x-mpegURL'
                 this.firstPlaySettings.customVideoName = 'Test Stream'
+                this.firstPlaySettings.customMediaType = 'firstPlay'
             } else {
                 // axios.post save firstPlaySettings and broadcast an event.
                 // this.
@@ -409,6 +410,7 @@ export const useAdminStore = defineStore('adminStore', {
                 this.firstPlaySettings.customVideoSource = videoPlayerStore.mistServerUri + 'hls/' + activeStream.streamName + '/index.m3u8'
                 this.firstPlaySettings.customVideoSourceType = activeStream.streamMimeType
                 this.firstPlaySettings.customVideoName = activeStream.showName
+                this.firstPlaySettings.customMediaType = 'firstPlay'
             }
             await this.updateFirstPlaySettings()
             // broadcast

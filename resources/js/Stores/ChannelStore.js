@@ -17,7 +17,7 @@ const initialState = () => ({
     mistStream: null,
     externalSourceId: null,
     channelPlaylistId: null,
-    currentChannel: null,
+    currentChannel: 'firstPlay',
     channel_list: {},
     userAddedToChannels: false,
     channelsLoaded: false,
@@ -68,6 +68,7 @@ export const useChannelStore = defineStore('channelStore', {
 
             this.currentChannel = channel
             // oldChannelId is used to determine whether to disconnect the viewer from the chat channel or not.
+            console.log('current channel; ' + this.currentChannel)
             let oldChannelId = 0
             oldChannelId = this.currentChannelId
 

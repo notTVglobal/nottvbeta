@@ -5,6 +5,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useAudioStore } from '@/Stores/AudioStore'
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import videojs from 'video.js'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { nextTick } from 'vue'
@@ -70,8 +71,9 @@ const initialState = () => ({
     videoSourceTypeSrc1: '',
     videoSourceTypeSrc2: '',
     videoSourceTypeSrc3: '',
-    firstPlayVideoSourceType: '',
+    firstPlayVideoName: '',
     firstPlayVideoSource: '',
+    firstPlayVideoSourceType: '',
     key: '',
     videoName: '',
     videoSource: '',
@@ -157,6 +159,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         // Attach event listeners to the player
         attachEventListeners() {
+            const nowPlayingStore = useNowPlayingStore()
             if (!this.player || this.eventListenersAttached) {
                 console.log('Event listeners are already attached or video player is not initialized.')
                 return
@@ -171,10 +174,38 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             //  I (tec21) was using it to loop the FirstPlay Test video.
             //  But, that causes problems with playback on Recording files
             //  that are short or won't play because of bad file path.
-            // this.player.on('ended', () => {
-            //     console.log('Video has ended. Refreshing the player...');
-            //     this.refreshVideoPlayer();
-            // });
+            this.player.on('ended', () => {
+                const channelStore = useChannelStore();
+                const userStore = useUserStore();
+                console.log('Video has ended. Evaluating next steps based on the current channel...');
+                if (channelStore.currentChannel === 'firstPlay') {
+                    console.log('Reloading firstPlay video...');
+                    userStore.videoSettings.firstPlay = true
+                    const source = {
+                        name: this.firstPlayVideoName,
+                        source: this.firstPlayVideoSource,
+                        type: this.firstPlayVideoSourceType,
+                        mediaType: 'firstPlay' // Hardcoded as this is specifically for firstPlay
+                    };
+                    nowPlayingStore.reset()
+                    nowPlayingStore.activeMedia.details.primaryName = source.name
+                    this.loadNewVideo(source);
+                } else if (channelStore.currentChannel && channelStore.currentChannel.id) {
+                    console.log('Changing to the next video in the current channel...');
+                    channelStore.changeChannel(channelStore.currentChannel);
+                } else {
+                    console.log('No specific channel or firstPlay detected, handling default scenario...');
+                    // Optionally handle a default case
+                    const defaultSource = {
+                        videoSrc: this.firstPlayVideoSource,
+                        videoType: this.firstPlayVideoSourceType,
+                        mediaType: 'firstPlay'
+                    };
+                    this.loadNewVideo(defaultSource);
+                }
+                // this.refreshVideoPlayer();
+
+            });
             // console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')
@@ -191,8 +222,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             })
             videoJs.ready(() => {
                 videoJs.play().catch(error => {
-                    useNotificationStore().setGeneralServiceNotification('Error', 'Playback initiation error: ' + error)
-                    console.error('Playback initiation error: ', error)
+                    useNotificationStore().setGeneralServiceNotification('Error', 'Code: 456. Playback initiation error: ' + error)
+                    console.error('Code: 456. Playback initiation error: ', error)
                 })
                 console.log('Player refreshed...')
             })
@@ -212,7 +243,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.off('pause', this.handlePause)
             // TODO: If you use the .on 'ended', remember
             //  to detach it here:
-            // this.player.off('ended', this.handleEnd)
+            this.player.off('ended', this.handleEnd)
             this.player.off('error', this.handleError)
 
             this.eventListenersAttached = false
@@ -354,6 +385,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         //     console.log(type)
         //     console.log(src)
         // },
+        updateFirstPlay(newFirstPlay) {
+            this.firstPlayVideoName = newFirstPlay.name
+            this.firstPlayVideoSource = newFirstPlay.source
+            this.firstPlayVideoSourceType = newFirstPlay.type
+        },
         // Toggle mute state
         toggleMute() {
             if (this.muted) {
@@ -476,26 +512,36 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
 
         getSourceDetails(source) {
+            const userStore = useUserStore() // Make sure you import useUserStore at the top
+            console.log(source)
             let videoSrc, videoSourceType
-            // console.log('getSourceDetails called with source:', JSON.stringify(source, null, 2));
+
             // Default to 'video/mp4' if type is not specified or is empty
             videoSourceType = source.type || 'video/mp4'
-            // console.log(`Determined Video Source Type: ${videoSourceType}`)
 
-            if (source.mediaType === 'externalVideo') {
+            // Early return if the mediaType is 'firstPlay' and the user setting for firstPlay is false
+
+            if (source.mediaType === 'firstPlay' && userStore.videoSettings?.firstPlay === false) {
+                // TODO: We should stop listening to the firstPlayVideo channel instead or as well.
+                console.log('Skipping first play video based on user settings')
+                return null  // Signal to not proceed in the parent function
+            } else if (source.mediaType === 'firstPlay') {
+                videoSrc = source.source
+                videoSourceType = source.type
+                return {videoSrc, videoSourceType}
+            } else if (source.mediaType === 'externalVideo') {
                 // For external videos, use the URL as provided without encoding
                 // videoSrc = source.video_url
                 // console.log('Using external video source:', videoSrc)
-            } else if (source.mediaType === 'mistStream') {
-                videoSrc = source.source
-                videoSourceType = source.type
             } else if (source.mediaType === 'recording') {
                 // console.log('Video is a recording.')
                 videoSrc = this.mistServerUri + source.recording.source
                 videoSourceType = source.recording.sourceType
                 // console.log(videoSrc)
                 // console.log(videoSourceType)
-
+            } else if (source.mediaType === 'mistStream') {
+                videoSrc = source.source
+                videoSourceType = source.type
             } else {
                 // console.log('CDN Endpoint:', source.cdn_endpoint)
                 // console.log('Cloud Folder:', source.cloud_folder)
@@ -520,6 +566,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             }
 
             // console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`)
+            userStore.setFirstPlayFalse()
             return {videoSrc, videoSourceType}
         },
 
@@ -530,7 +577,21 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 console.log('LOAD NEW VIDEO')
                 const audioStore = useAudioStore()
 
-                const {videoSrc, videoSourceType} = this.getSourceDetails(source)
+                // First check if the source details are valid
+                const sourceDetails = this.getSourceDetails(source);
+                if (!sourceDetails) {
+                    console.log('Exiting loadNewVideo due to getSourceDetails returning null.');
+                    return; // Exit the function silently
+                }
+
+                // Now that we know sourceDetails is not null, destructure it
+                const { videoSrc, videoSourceType } = sourceDetails;
+
+                // Proceed only if videoSrc and videoSourceType are valid
+                if (!videoSrc || !videoSourceType) {
+                    // console.log('Exiting loadNewVideo due to no video source or type.');
+                    return; // Exit the function silently
+                }
 
                 // Example: Stopping and cleaning up the current video and audio setup
                 if (videoJs) {
@@ -544,20 +605,20 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
                             // Only attempt to play the video after ensuring the AudioContext is ready
                             videoJs.play().catch(error => {
-                                useNotificationStore().setGeneralServiceNotification('Error', 'Playback initiation error: ' + error)
-                                console.error('Playback initiation error: ', error)
+                                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 123. Playback initiation error: ' + error)
+                                console.error('Code 123. Playback initiation error: ', error)
                             })
 
                             // Consider toggling mute based on the user's preference or previous state
-                            videoJs.muted(false)
-                            this.muted = false
+                            // videoJs.muted(false)
+                            // this.muted = false
                         })
                     })
                 }
             } catch (error) {
                 // Log the error or perform any other error handling
-                useNotificationStore().setGeneralServiceNotification('Error', 'Error loading new video: ' + error)
-                console.error('Error loading new video: ', error)
+                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 789. Error loading new video: ' + error)
+                console.error('Code: 789. Error loading new video: ', error)
             }
         },
 
@@ -638,6 +699,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.controls(false)
             this.unMute()
             this.paused = false
+            useUserStore().setFirstPlayFalse()
         },
         loadNewLiveSourceFromRumble(source) {
             this.videoIsYoutube = true
@@ -649,6 +711,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.controls(false)
             this.unMute()
             this.paused = false
+            useUserStore().setFirstPlayFalse()
         },
         loadNewSourceFromUrl(source) {
             try {
@@ -667,6 +730,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
                 this.unMute()
                 this.paused = false
+                useUserStore().setFirstPlayFalse()
             } catch (error) {
                 useNotificationStore().setGeneralServiceNotification('Error', 'Failed to load new source: ' + error)
                 console.error('Failed to load new source:', error)
@@ -682,6 +746,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
             this.unMute()
             this.paused = false
+            useUserStore().setFirstPlayFalse()
         },
         loadNewSourceFromFile(source) {
             this.videoIsYoutube = false
@@ -693,6 +758,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.src({'src': filePath + this.videoSource, 'type': this.videoSourceType})
             this.unMute()
             this.paused = false
+            useUserStore().setFirstPlayFalse()
         },
 
         // The new load video functions (2024-02-09 tec21 and ChatGPT)

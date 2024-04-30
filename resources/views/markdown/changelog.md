@@ -3,6 +3,19 @@
 Last Update: April 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.83
+April 29, 2024
+* Add notTV bug to top left of screen in fullscreen mode.
+* Change first play from Admin Settings now broadcasts the event and automatically loads and plays the new video for users that are watching firstPlay.
+  * This will need to be tweaked... to only change the video if people are currently watch the 'FirstPlayVideo' stream
+  * We can extrapolate this to implement our schedule to automatically change videos in the channel.
+* When currently playing video ends we resume playing the channel the user was on. For free users this is the firstPlay channel.
+  * This will need to be amended at some point to also start playback at the current time position of the video, depending on the schedule and time of day if the video/stream is not live. This will take some more logic to develop properly.
+
+## v0.8.7.82
+April 29, 2024
+* Update Live Streaming Guide.
+
 ## v0.8.7.81
 April 29, 2024
 * Update Live Streaming Guide.
