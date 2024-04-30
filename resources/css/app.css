@@ -908,7 +908,8 @@ hr {
     .videoControlsWelcomeMobile {
         bottom: 12rem;
         z-index: 200;
-        @apply absolute mx-auto flex left-3 justify-center space-x-4
+        width: calc(100% - 3rem); /* Adjust width to account for left and right margins */
+        @apply absolute mx-auto flex flex-wrap-reverse left-3 justify-center gap-4
     }
     .ottDisplayMobile {
         z-index: 199;

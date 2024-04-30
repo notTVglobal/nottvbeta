@@ -6766,17 +6766,7 @@ hr {
     .videoControlsWelcomeMobile {
         bottom: 12rem;
         z-index: 200;
-        position: absolute;
-        left: 0.75rem;
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        justify-content: center}
-    .videoControlsWelcomeMobile > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(1rem * var(--tw-space-x-reverse));
-    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
-  }
+        width: calc(100% - 3rem); /* Adjust width to account for left and right margins */ position: absolute; left: 0.75rem; margin-left: auto; margin-right: auto; display: flex; flex-wrap: wrap-reverse; justify-content: center; gap: 1rem}
     .ottDisplayMobile {
         z-index: 199;
         height: calc(100vh - 10rem)}
@@ -7426,6 +7416,14 @@ hr {
   top: 14rem;
 }
 
+.left-20 {
+  left: 5rem;
+}
+
+.left-10 {
+  left: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -7444,6 +7442,10 @@ hr {
 
 .z-50 {
   z-index: 50;
+}
+
+.-z-10 {
+  z-index: -10;
 }
 
 .order-last {
@@ -8181,6 +8183,10 @@ hr {
   min-height: 100vh;
 }
 
+.min-h-24 {
+  min-height: 6rem;
+}
+
 .w-0 {
   width: 0px;
 }
@@ -8397,6 +8403,10 @@ hr {
 .min-w-max {
   min-width: -webkit-max-content;
   min-width: max-content;
+}
+
+.min-w-24 {
+  min-width: 6rem;
 }
 
 .max-w-12 {

@@ -108,6 +108,7 @@ onMounted(() => {
 // 5. Consider adding event listeners to the video player to update the user's settings in real-time as they adjust their playback preferences.
 
   const pageProps = usePage().props
+  videoPlayerStore.firstPlayVideoName = pageProps.value.firstPlay.first_play_video_name
   videoPlayerStore.firstPlayVideoSource = pageProps.value.firstPlay.first_play_video_source
   videoPlayerStore.firstPlayVideoSourceType = pageProps.value.firstPlay.first_play_video_source_type
 

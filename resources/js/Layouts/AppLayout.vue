@@ -107,24 +107,25 @@ onMounted(async () => {
 // schedule updates.
 
 const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
-    firstPlayVideoEcho.subscribed(() => {
-    }).listen('.changeFirstPlayVideo', (e) => {
-      console.log('Broadcast notification, first play video changed to: ' + e.showName);
+firstPlayVideoEcho.subscribed(() => {
+  console.log('Subscribed to firstPlayVideo channel');
+}).listen('.changeFirstPlayVideo', (e) => {
+  console.log('Broadcast notification, first play video changed:', e);
 
-      // Check if 'skip_first_playback_video' is not enabled
-      if (userStore.videoSettings.skip_first_playback_video !== 1) {
-        // Define the source object correctly
-        const source = {
-          source: e.source,
-          mediaType: 'mistStream',
-          type: e.type,
-          name: e.name,
-        };
+  // Check if 'skip_first_playback_video' is not enabled
+  if (userStore.videoSettings.skip_first_playback_video !== 1) {
+    const source = {
+      source: e.firstPlayVideo.source,
+      mediaType: e.firstPlayVideo.mediaType || 'mistStream', // Default to 'mistStream' if not specified
+      type: e.firstPlayVideo.type,
+      name: e.firstPlayVideo.name,
+    };
 
-        // Assuming `loadNewVideo` might need the `source` as a parameter
-        videoPlayerStore.loadNewVideo(source);
-      }
-    });
+    videoPlayerStore.updateFirstPlay(source);
+    // Load new video with the source data
+    videoPlayerStore.loadNewVideo(source);
+  }
+});
 
 
 

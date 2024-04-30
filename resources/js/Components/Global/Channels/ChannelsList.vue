@@ -11,7 +11,7 @@
            :key="channel.id"
            class="channel">
 
-        <button :class="[ channelClass, {activeChannelFullPage:channelStore.currentChannelId===channel.id }]"
+        <button :class="[ channelClass, {activeChannelFullPage:channelStore?.currentChannel?.id===channel.id }]"
                 @click="channelStore.changeChannel(channel)">
           {{ channel.name }}
         </button>

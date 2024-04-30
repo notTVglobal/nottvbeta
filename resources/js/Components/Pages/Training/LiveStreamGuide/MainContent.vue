@@ -107,7 +107,7 @@ onMounted(() => {
   background-color: #6495ED; /* Bright, engaging background color */
 }
 
-@media (min-width: 1020px) {
+@media (min-width: 1024px) {
   .main-container {
     flex-direction: row; /* Changes layout to horizontal at wider screens */
   }
@@ -119,7 +119,7 @@ onMounted(() => {
   padding: 20px; /* Uniform padding, may need adjustment based on content */
 }
 
-@media (min-width: 1020px) {
+@media (min-width: 1024px) {
   .content {
     flex: 4; /* Allocates more space to the content in larger screens */
     padding: 20px 40px; /* Increased padding on larger screens for better readability */

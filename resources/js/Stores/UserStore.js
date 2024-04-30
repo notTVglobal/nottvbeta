@@ -99,6 +99,21 @@ export const useUserStore = defineStore('userStore', {
                 console.error(error.response ? error.response.data : error)
             }
         },
+        loadVideoSettings(settingsJson) {
+            // Assuming settingsJson is a JSON string from the database
+            this.videoSettings = JSON.parse(settingsJson);
+        },
+        updateVideoSettings(newSettings) {
+            // Merge new settings into the existing settings
+            this.videoSettings = { ...this.videoSettings, ...newSettings };
+        },
+        resetVideoSettings() {
+            // Reset to default or empty settings
+            this.videoSettings = {};
+        },
+        setFirstPlayFalse() {
+            this.videoSettings.firstPlay = false
+        },
         toggleNavDropdown() {
             this.showNavDropdown = !this.showNavDropdown
             // appSettingStore.osd = true
