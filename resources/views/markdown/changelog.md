@@ -1,7 +1,26 @@
 # not.tv Changelog
 
-Last Update: April 29, 2024\
+Last Update: May 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.84
+May 1, 2024
+* Fix the UpdateScheduleBroadcastDates jobs.
+  * We now have an array of broadcast dates for each schedule
+  * The schedule indexes hold the date of the next broadcast for a team.
+
+## v0.8.7.84
+April 30, 2024
+* Keyboard shortcuts added to VideoPlayer
+  * 'J' skips back 1 second
+  * 'K' pauses/plays
+  * 'L' increases the playback speed each time it is pressed, 1.5x, 2x, 5x, 10x
+  * 'Spacebar' pauses/plays
+  * 'M' mutes/unmutes
+  * 'LeftArrow' skips back 5 seconds
+  * 'RightArrow' skips forward 5 seconds
+  * 'UpArrow' increase volume
+  * 'DownArrow' decrease volume
 
 ## v0.8.7.83
 April 29, 2024

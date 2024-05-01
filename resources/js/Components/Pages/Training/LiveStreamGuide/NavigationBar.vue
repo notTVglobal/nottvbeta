@@ -27,7 +27,7 @@ const emit = defineEmits(['navigate']);
 const currentHash = ref(window.location.hash.replace('#', ''));
 const dropdownOpen = ref(false);
 
-appSettingStore.checkScreenSize()
+// appSettingStore.checkScreenSize()
 
 // Reactive window size check
 const updateMobileState = () => {

@@ -246,7 +246,7 @@ class AddContentToSchedule implements ShouldQueue {
       DB::commit();
 
       // Dispatch the job to update broadcast dates for this schedule
-      UpdateBroadcastDatesOnSchedules::dispatch($schedule);
+      ScheduleUpdateShowBroadcastDates::dispatch($schedule);
 
     } catch (\Exception $e) {
       // Rollback the transaction
@@ -264,6 +264,7 @@ class AddContentToSchedule implements ShouldQueue {
   // Function to generate a user-friendly string of days
   protected function formatDaysOfWeek($daysOfWeek): string {
     $orderedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    $pluralDays = ['Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays', 'Sundays'];
     usort($daysOfWeek, function ($a, $b) use ($orderedDays) {
       return array_search($a, $orderedDays) - array_search($b, $orderedDays);
     });
@@ -275,7 +276,14 @@ class AddContentToSchedule implements ShouldQueue {
     } elseif (count($daysOfWeek) == 2 && in_array('Saturday', $daysOfWeek) && in_array('Sunday', $daysOfWeek)) {
       return 'Weekends';
     } else {
-      return implode(', ', $daysOfWeek);
+      // Convert each day to its plural form
+      $pluralizedDays = array_map(function ($day) use ($orderedDays, $pluralDays) {
+        $index = array_search($day, $orderedDays);
+        return $pluralDays[$index] ?? $day;  // Fallback to original if something goes wrong
+      }, $daysOfWeek);
+
+      // Join the pluralized days with commas
+      return implode(', ', $pluralizedDays);
     }
   }
 

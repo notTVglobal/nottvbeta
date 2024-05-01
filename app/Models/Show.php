@@ -123,8 +123,8 @@ class Show extends Model
     return $this->morphMany(Recording::class, 'model');
   }
 
-  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
-    return $this->hasMany(SchedulesIndex::class, 'show_id');
+  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+    return $this->morphMany(SchedulesIndex::class, 'content');
   }
 
   /**

@@ -29,6 +29,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
+import { ref } from 'vue'
 
 // Extend dayjs with the plugins
 dayjs.extend(relativeTime)
@@ -55,6 +56,13 @@ function convertScheduleToTimezone(scheduleData) {
             }
         }
 
+        // Add debug logging to help trace conversion issues or confirm correct conversions
+        console.log(`Converted times for ${item.id}:`, {
+            startTimeInUserTz,
+            endTimeInUserTz,
+            recurrenceDetailsInUserTz
+        });
+
         return {
             ...item,
             start_time: startTimeInUserTz,
@@ -62,6 +70,11 @@ function convertScheduleToTimezone(scheduleData) {
             recurrenceDetails: recurrenceDetailsInUserTz,
         }
     })
+}
+
+function convertDateTimeToGridTime(dateTime, format = 'YYYY-MM-DD HH:mm:ss') {
+    const userStore = useUserStore(); // Access the UserStore
+    return userStore.formatDateTimeFromUtcToUserTimezone(dateTime, format);
 }
 
 // Helper function to get dates within the next 6 hours from viewingWindowStart
@@ -90,23 +103,38 @@ function fetchShowsScheduledBetween(state, startDateTime, endDateTime) {
     const userStore = useUserStore() // Access user-specific settings and utilities
 
     if (!(startDateTime instanceof Date && endDateTime instanceof Date)) {
-        throw new TypeError('startDateTime and endDateTime must be Date objects.');
+        console.error('startDateTime and endDateTime must be Date objects.');
+        throw new TypeError('startDateTime and endDateTime must be Date objects.')
     }
 
     // Convert start and end DateTime to the user's timezone for accurate comparison
     const startInUserTZ = userStore.convertUtcToUserTimezone(startDateTime.toISOString())
     const endInUserTZ = userStore.convertUtcToUserTimezone(endDateTime.toISOString())
 
+    console.log('Comparing shows between:', startInUserTZ, 'and', endInUserTZ);
+
     return state.weeklyContent.filter(show => {
         if (typeof show.start_time !== 'string') {
-            console.warn('Expected show.start_time to be a string in ISO format.');
-            return false;
+            console.warn('Expected show.start_time to be a string in ISO format, found:', show.start_time)
+            return false
         }
-        const showStartTimeInUserTZ = userStore.convertUtcToUserTimezone(show.start_time);
+        const showStartTimeInUserTZ = userStore.convertUtcToUserTimezone(show.start_time)
+        console.log('Show start time in user timezone:', showStartTimeInUserTZ);
 
         // Check if the show's start time is within the specified datetime range, inclusive of start and exclusive of end
-        return new Date(showStartTimeInUserTZ) >= new Date(startInUserTZ) && new Date(showStartTimeInUserTZ) < new Date(endInUserTZ);
-    });
+        const showStart = new Date(showStartTimeInUserTZ);
+        const rangeStart = new Date(startInUserTZ);
+        const rangeEnd = new Date(endInUserTZ);
+
+        // Check if the show's start time is within the specified datetime range, inclusive of start and exclusive of end
+        // return new Date(showStartTimeInUserTZ) >= new Date(startInUserTZ) && new Date(showStartTimeInUserTZ) < new Date(endInUserTZ)
+
+        const isInTimeRange = showStart >= rangeStart && showStart < rangeEnd;
+        console.log(`Show ${show.id}: ${isInTimeRange ? 'within' : 'out of'} range`);
+
+        return isInTimeRange;
+
+    })
 }
 
 function resolveSchedulingConflicts(shows) {
@@ -124,16 +152,19 @@ function resolveSchedulingConflicts(shows) {
 
     // Group shows by their start time
     sortedShows.forEach(show => {
-        const startTime = new Date(show.start_time).toISOString()
+        const startTime = new Date(show.start_time).toISOString() // Ensure it's in ISO format for keying
         if (!showsByStartTime[startTime]) {
             showsByStartTime[startTime] = []
         }
         showsByStartTime[startTime].push(show)
     })
 
+    console.log("Shows grouped by start time:", showsByStartTime);
+
     // For each start time, select the show with the highest priority (lowest priority number)
     Object.values(showsByStartTime).forEach(group => {
         if (group.length > 1) {
+            console.log("Conflict at time", group[0].start_time, "- resolving with:", group[0]);
             // If there are conflicts, push only the show with the highest priority
             resolvedShows.push(group[0]) // Assuming the group is already sorted by priority
         } else {
@@ -147,19 +178,33 @@ function resolveSchedulingConflicts(shows) {
 
 function adjustShowsForGrid(shows, timeSlots) {
     return shows.map(show => {
-        // Your existing logic for calculating show placement
         const showStart = new Date(show.start_time)
         const showEnd = new Date(show.start_time)
         showEnd.setMinutes(showEnd.getMinutes() + show.durationMinutes)
-        const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000))
-        let span = Math.ceil(show.durationMinutes / 30)
+
+        // Find the index of the slot that this show starts in
+        // const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000))
+        // let span = Math.ceil(show.durationMinutes / 30)
+        // if (slotIndex + span > timeSlots.length) {
+        //     span = timeSlots.length - slotIndex
+        // }
+
+        const slotIndex = timeSlots.findIndex(slot => {
+            let slotEnd = new Date(slot.getTime() + 30 * 60000);
+            return showStart >= slot && showStart < slotEnd;
+        });
+
+        let span = Math.ceil(show.durationMinutes / 30);
         if (slotIndex + span > timeSlots.length) {
-            span = timeSlots.length - slotIndex
+            span = timeSlots.length - slotIndex;
         }
 
+        console.log(`Adjusting show for grid placement. Show Start: ${show.start_time}, Duration: ${show.durationMinutes}, Calculated Slot Index: ${slotIndex}, Span: ${span}`);
+
+        // Return the show with additional grid positioning information
         return {
             ...show,
-            gridStart: slotIndex + 1,
+            gridStart: slotIndex + 1, // Grid positioning is often 1-based in CSS
             gridSpan: span,
         }
     })
@@ -170,11 +215,11 @@ function fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
 
     timeSlots.forEach((slot, index) => {
         // Ensure every slot is a Date object, convert if necessary
-        console.log('type of slot: ' + slot, typeof slot); // Check what `slot` contains and its type
+        console.log('type of slot: ' + slot, typeof slot) // Check what `slot` contains and its type
 
         if (!(slot instanceof Date)) {
-            console.error('slot is not a Date object:', slot);
-            return; // Skip this iteration if `slot` is not a Date object
+            console.error('slot is not a Date object:', slot)
+            return // Skip this iteration if `slot` is not a Date object
         }
 
         const slotStart = slot
@@ -188,6 +233,7 @@ function fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
             gridItems.push({
                 placeholder: true,
                 start_time: slot.toISOString(),
+                priority: 1,
                 gridStart: index + 1,
                 gridSpan: 1,
                 content: {show: {name: 'Nothing scheduled.'}},
@@ -201,6 +247,7 @@ function fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
 
 
 const initialState = () => ({
+    baseTime: new Date(),
     viewingWindowStart: new Date(),
     currentMonth: new Date(),
     selectedDay: new Date(),
@@ -424,28 +471,33 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
                 const newData = convertScheduleToTimezone(response.data, timezone) // Ensure you are accessing the correct data property from the response
 
-                // Update the fetch log with the current fetch
-                const weekStart = startOfWeek(new Date(date), {weekStartsOn: 0}).toISOString()
-                const weekEnd = endOfWeek(new Date(date), {weekStartsOn: 0}).toISOString()
-                const fetchTime = new Date().toISOString()
-
-                const existingLogIndex = this.dataFetchLog.findIndex(log => log.weekStart === weekStart && log.weekEnd === weekEnd)
-                if (existingLogIndex !== -1) {
-                    this.dataFetchLog[existingLogIndex].lastFetch = fetchTime
-                } else {
-                    this.dataFetchLog.push({weekStart, weekEnd, lastFetch: fetchTime})
-                }
-
                 // Merge newData into weeklyContent, avoiding duplicates
                 this.weeklyContent = [...this.weeklyContent, ...newData].filter((value, index, self) =>
                         index === self.findIndex((t) => (
                             t.id === value.id && t.start_time === value.start_time
                         )),
                 )
+
+                // Optionally update fetch logs or perform additional state updates
+                this.updateFetchLogs(date);
+
                 this.scheduleIsLoading = false
             } catch (error) {
                 console.error(`Failed to load content for week starting ${formattedDate}:`, error)
                 this.scheduleIsLoading = false
+            }
+        },
+        updateFetchLogs(date) {
+            // Update the fetch log with the current fetch
+            const weekStart = startOfWeek(new Date(date), {weekStartsOn: 0}).toISOString()
+            const weekEnd = endOfWeek(new Date(date), {weekStartsOn: 0}).toISOString()
+            const fetchTime = new Date().toISOString()
+
+            const existingLogIndex = this.dataFetchLog.findIndex(log => log.weekStart === weekStart && log.weekEnd === weekEnd)
+            if (existingLogIndex !== -1) {
+                this.dataFetchLog[existingLogIndex].lastFetch = fetchTime
+            } else {
+                this.dataFetchLog.push({weekStart, weekEnd, lastFetch: fetchTime})
             }
         },
         needsDataForWeek() {
@@ -607,20 +659,38 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 }
             })
         },
+        updateBaseTime(time) {
+            this.baseTime = time;
+        },
+        setBaseTime(newTime) {
+            this.baseTime = new Date(newTime);
+        },
 
     },
 
     getters: {
+        currentTime: (state) => {
+            return dayjs(state.baseTime).format('h:mm A');
+        },
+        currentHalfHour: (state) => {
+            const date = dayjs(state.baseTime);
+            const minutes = date.minute();
+            const roundedMinutes = minutes < 30 ? 0 : 30;
+            return date.minute(roundedMinutes).second(0).format('h:mm A');
+        },
         nextFourHoursOfContent: (state) => {
-            const now = new Date()
-            const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0))
-            const fourHoursLater = new Date(startOfCurrentHour.getTime() + 4 * 60 * 60 * 1000)
+            const userStore = useUserStore();
+            const timezone = userStore.timezone || 'UTC';  // Ensure you have a fallback timezone
+            const startOfCurrentHour = dayjs(state.baseTime).startOf('hour').tz(timezone);
+            const fourHoursLater = startOfCurrentHour.add(4, 'hour');
 
-            const timeSlots = createTimeSlots(startOfCurrentHour, 4, 30)
-            let shows = fetchShowsScheduledBetween(state, startOfCurrentHour, fourHoursLater)
-            let resolvedShows = resolveSchedulingConflicts(shows)
-            let adjustedShows = adjustShowsForGrid(resolvedShows, timeSlots)
-            return fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots)
+            console.log(`Generating content for next four hours from ${startOfCurrentHour.toDate()} to ${fourHoursLater.toDate()}, Timezone: ${timezone}`);
+
+            const timeSlots = createTimeSlots(startOfCurrentHour.toDate(), 4, 30, timezone);
+            let shows = fetchShowsScheduledBetween(state, startOfCurrentHour.toDate(), fourHoursLater.toDate());
+            let resolvedShows = resolveSchedulingConflicts(shows);
+            let adjustedShows = adjustShowsForGrid(resolvedShows, timeSlots);
+            return fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots);
         },
         // nextFourHoursOfContent: (state) => {
         //     const userStore = useUserStore()
@@ -807,9 +877,11 @@ export const useScheduleStore = defineStore('scheduleStore', {
             const userTimezone = userStore.timezone // Get the user's timezone
 
             const intervals = []
-            const now = dayjs().tz(userTimezone) // Get the current time in the user's timezone
-            // Use dayjs to handle time correctly in the specified timezone
-            let current = now.startOf('hour') // Set to the top of the current hour
+            const now = dayjs(state.baseTime).tz(userTimezone) // Get the current time in the user's timezone
+
+            // Determine if the current minute is less than 30 to start at the top of the hour or at the half-hour
+            let current = now.minute() < 30 ? now.startOf('hour') : now.startOf('hour').add(30, 'minutes');
+
 
             // Generate intervals for the next 4 hours, each 30 minutes apart
             for (let i = 0; i < 8; i++) { // 4 hours / 30 minutes = 8 intervals
