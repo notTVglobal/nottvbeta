@@ -840,12 +840,34 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
 
 
+        /**
+         * This method orchestrates the update of show scheduling data for the next four hours.
+         * It is designed to be triggered when there are changes to the base time or when a manual refresh is needed.
+         * The method handles loading and organizing the scheduling data to be ready for display in the grid.
+         */
         async updateNextFourHours() {
-            this.scheduleIsLoading = true
-            this.updateTimeRange()
-            this.prepareShowsForGrid()
-            this.scheduleIsLoading = false
+            // Set the loading state to true to indicate that data processing is underway.
+            // This can be used to display a loading spinner or disable user interaction temporarily.
+            this.scheduleIsLoading = true;
+
+            // Update the time range for the scheduling grid. This adjusts `currentHalfHour` and `fourHoursLater`
+            // based on the current `baseTime`. These values define the range of time for which shows will be displayed.
+            this.updateTimeRange();
+
+            // Update the time slots
+            this.setTimeSlots();
+
+            // Prepares the shows for the grid display by filtering, calculating grid slots,
+            // resolving conflicts, and optionally filling empty grid slots with placeholders.
+            // This step involves several functions that ensure shows are positioned correctly according to their
+            // start time, duration, and conflicts with other shows.
+            this.prepareShowsForGrid();
+
+            // Reset the loading state to false indicates that the data processing is complete.
+            // This allows the user interface to be interactive again and shows the updated data in the grid.
+            this.scheduleIsLoading = false;
         },
+
 
         updateTimeRange() {
             // Ensure the baseTime is interpreted correctly in the current user's timezone
@@ -865,6 +887,35 @@ export const useScheduleStore = defineStore('scheduleStore', {
             this.fourHoursLater = fourHoursLater.toDate()
 
             console.log('Fetching shows between:', currentHalfHour.format('YYYY-MM-DD HH:mm:ss'), 'and', fourHoursLater.format('YYYY-MM-DD HH:mm:ss'))
+        },
+
+        setTimeSlots() {
+            const appSettingStore = useAppSettingStore()
+            let slotHours
+
+            // Determine the number of slot hours based on screen size
+            if (appSettingStore.isVerySmallScreen) {
+                slotHours = this.verySmallScreenSlotHours
+            } else if (appSettingStore.isSmallScreen) {
+                slotHours = this.smallScreenSlotHours
+            } else {
+                slotHours = this.mediumScreenSlotHours
+            }
+
+            const intervalMinutes = this.slotIntervalMinutes
+            const slots = []
+            const totalSlots = (slotHours * 60) / intervalMinutes
+
+            // Ensure state.currentHalfHour is a Day.js object
+            const currentHalfHour = dayjs(this.currentHalfHour)
+
+            // Calculate the time for each slot using Day.js
+            for (let i = 0; i < totalSlots; i++) {
+                let slotTime = currentHalfHour.add(i * intervalMinutes, 'minute')
+                slots.push(slotTime.toDate())  // Convert back to JavaScript Date if necessary
+            }
+            this.timeSlots = slots
+            return slots.length
         },
 
         prepareShowsForGrid() {
@@ -916,51 +967,55 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
 
         calculateGridSlots(shows, timeSlots) {
-            // Ensure timeSlots is valid
+            // Validate the timeSlots array to prevent errors
             if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
                 console.error('Invalid or empty timeSlots array')
-                return [] // Return empty or handle as best fits your application context
+                return [] // Exit if no valid time slots to work with
             }
 
-            const cols = timeSlots.length
             return shows.map(show => {
-                const showStart = dayjs(show.startTime)
-                const showEnd = showStart.add(show.durationMinutes, 'minutes')
+                const showStart = dayjs(show.startTime);
+                const showEnd = dayjs(show.endTime);
+                console.log('************************************')
+                console.log(`Processing show: ${show.content.name}, Start: ${show.startTime}, End: ${show.endTime}`);
 
-                // Find the slot where the show should start
-                let slotIndex = timeSlots.findIndex(slot =>
-                    showStart.isSameOrAfter(dayjs(slot)) &&
-                    showStart.isBefore(dayjs(slot).add(30, 'minutes')),
-                )
+                // Find the index of the slot where the show should start
+                let slotIndex = timeSlots.findIndex(slot => showStart.isSameOrBefore(dayjs(slot)));
 
-                // If the show starts before the first slot, place it in the first slot
-                if (slotIndex === -1 && showStart.isBefore(dayjs(timeSlots[0]))) {
-                    slotIndex = 0
+                // Adjust if the show starts exactly at a slot time or just after the last checked slot time
+                if (slotIndex === -1 || showStart.isAfter(dayjs(timeSlots[slotIndex]))) {
+                    slotIndex = Math.max(0, slotIndex);
                 }
 
-                // Calculate the span based on the ending time of the show
-                const endSlotIndex = timeSlots.findIndex(slot =>
-                    showEnd.isSameOrBefore(dayjs(slot).add(30, 'minutes')),
-                )
+                console.log(`Comparing show start ${showStart.format()} to timeSlot index ${slotIndex} at ${dayjs(timeSlots[slotIndex]).format()}`);
 
-                let span
-                if (endSlotIndex === -1) {
-                    // If the show ends after the last slot, span till the end of the grid
-                    span = cols - slotIndex
-                } else {
-                    // Calculate span normally
-                    span = endSlotIndex - slotIndex + 1
+                // Calculate the end slot index
+                let endSlotIndex = timeSlots.findIndex(slot => showEnd.isSameOrBefore(dayjs(slot).add(30, 'minutes')));
+
+                // If the end slot index points to a slot that starts after the show ends, subtract one
+                if (endSlotIndex !== -1 && showEnd.isBefore(dayjs(timeSlots[endSlotIndex]))) {
+                    endSlotIndex--;
                 }
 
-                // Prevent overflow of the grid
-                span = Math.min(span, cols - slotIndex)
+                // Handle cases where the show ends after the last slot
+                if (endSlotIndex === -1 || showEnd.isSame(dayjs(timeSlots[timeSlots.length - 1]).add(30, 'minutes'))) {
+                    endSlotIndex = timeSlots.length - 1;
+                }
+
+                console.log(`Comparing show end ${showEnd.format()} to timeSlot index ${endSlotIndex} at ${endSlotIndex !== -1 ? dayjs(timeSlots[endSlotIndex]).format() : 'out of range'}`);
+
+
+                // Calculate the number of slots the show should span
+                let span = endSlotIndex - slotIndex + 1;
+
+                console.log(`Calculated gridStart: ${slotIndex + 1}, gridSpan: ${span}`);
 
                 return {
                     ...show,
-                    gridStart: slotIndex + 1,
-                    gridSpan: span,
-                }
-            })
+                    gridStart: slotIndex + 1, // Convert to 1-based index for grid positioning
+                    gridSpan: span
+                };
+            });
         },
 
         updateColumnOccupancy(processedShows, cols) {
@@ -1043,34 +1098,34 @@ export const useScheduleStore = defineStore('scheduleStore', {
             return dayjs(state.baseTime).format('h:mm A')
         },
 
-        setTimeSlots: (state) => {
-            const appSettingStore = useAppSettingStore()
-            let slotHours
-
-            // Determine the number of slot hours based on screen size
-            if (appSettingStore.isVerySmallScreen) {
-                slotHours = state.verySmallScreenSlotHours
-            } else if (appSettingStore.isSmallScreen) {
-                slotHours = state.smallScreenSlotHours
-            } else {
-                slotHours = state.mediumScreenSlotHours
-            }
-
-            const intervalMinutes = state.slotIntervalMinutes
-            const slots = []
-            const totalSlots = (slotHours * 60) / intervalMinutes
-
-            // Ensure state.currentHalfHour is a Day.js object
-            const currentHalfHour = dayjs(state.currentHalfHour)
-
-            // Calculate the time for each slot using Day.js
-            for (let i = 0; i < totalSlots; i++) {
-                let slotTime = currentHalfHour.add(i * intervalMinutes, 'minute')
-                slots.push(slotTime.toDate())  // Convert back to JavaScript Date if necessary
-            }
-            state.timeSlots = slots
-            return slots.length
-        },
+        // setTimeSlots: (state) => {
+        //     const appSettingStore = useAppSettingStore()
+        //     let slotHours
+        //
+        //     // Determine the number of slot hours based on screen size
+        //     if (appSettingStore.isVerySmallScreen) {
+        //         slotHours = state.verySmallScreenSlotHours
+        //     } else if (appSettingStore.isSmallScreen) {
+        //         slotHours = state.smallScreenSlotHours
+        //     } else {
+        //         slotHours = state.mediumScreenSlotHours
+        //     }
+        //
+        //     const intervalMinutes = state.slotIntervalMinutes
+        //     const slots = []
+        //     const totalSlots = (slotHours * 60) / intervalMinutes
+        //
+        //     // Ensure state.currentHalfHour is a Day.js object
+        //     const currentHalfHour = dayjs(state.currentHalfHour)
+        //
+        //     // Calculate the time for each slot using Day.js
+        //     for (let i = 0; i < totalSlots; i++) {
+        //         let slotTime = currentHalfHour.add(i * intervalMinutes, 'minute')
+        //         slots.push(slotTime.toDate())  // Convert back to JavaScript Date if necessary
+        //     }
+        //     state.timeSlots = slots
+        //     return slots.length
+        // },
 
         nextFourHoursWithHalfHourIntervals: (state) => {
             const userStore = useUserStore() // Access the user store

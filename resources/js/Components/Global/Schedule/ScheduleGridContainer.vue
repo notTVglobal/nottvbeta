@@ -22,13 +22,11 @@
     </div>
 
 
-    <template>
-      <div class="grid-container">
         <!-- Loop through combinedShows directly -->
         <div v-for="item in scheduleStore.nextFourHoursOfContent"
              :key="item.id"
              :style="gridItemStyle(item)"
-             class="grid-item"
+             class="show-cell"
              @click="handleShowClick(item)">
           <div class="item-content">
             <h3>{{ item.content.name || 'No Show Name' }}</h3>
@@ -40,8 +38,8 @@
                          :alt="item.content.name"/>
           </div>
         </div>
-      </div>
-    </template>
+
+
 
 
     <!-- Loop through each row -->
@@ -141,15 +139,17 @@ watch(
 );
 //
 
-// watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
-//   // Check both newTimeSlots and oldTimeSlots for null or undefined before proceeding
-//   if (newTimeSlots && oldTimeSlots && !areTimeSlotsEffectivelyEqual(newTimeSlots, oldTimeSlots)) {
-//     console.log('timeSlots changed', newTimeSlots);
-//     scheduleStore.updateNextFourHours();
-//   }
-// }, { deep: true });
-
-
+// Watch for changes in screen size indicators
+watch(
+    [() => appSettingStore.isVerySmallScreen, () => appSettingStore.isSmallScreen],
+    ([newVerySmall, newSmall], [oldVerySmall, oldSmall]) => {
+      if (newVerySmall !== oldVerySmall || newSmall !== oldSmall) {
+        console.log(`Screen size change detected: VerySmallScreen: ${newVerySmall}, SmallScreen: ${newSmall}`);
+        scheduleStore.updateNextFourHours();
+      }
+    },
+    { immediate: true }  // Optionally run on initial setup
+)
 
 // watch(
 //     () => scheduleStore.baseTime,
@@ -160,20 +160,20 @@ watch(
 //     { immediate: true }
 // );
 
-const combinedShows = computed(() => {
-  // Assuming you have a method to get sorted and grouped shows
-  return scheduleStore.nextFourHoursOfContent;
-});
 
 watchEffect(() => {
   console.log('nextFourHoursOfContent:', scheduleStore.nextFourHoursOfContent);
 });
 
-const gridItemStyle = (item) => ({
-  gridColumnStart: item.gridStart,
-  gridColumnEnd: `span ${item.gridSpan}`,
-  gridRowStart: `row ${item.gridRow}`, // Ensure row placement is correct in CSS
-});
+// Define the function to calculate grid style directly
+function gridItemStyle(item) {
+  const style = {
+    gridColumn: `${item.gridStart} / span ${item.gridSpan}`,
+    gridRow: `row ${item.gridRow}`,
+  };
+  console.log(style);  // Log to see what styles are being returned
+  return style;
+}
 
 
 // Computed property to ensure reactivity
@@ -406,10 +406,15 @@ function openModal(modalName) {
 }
 
 .show-cell {
-  display: flex;
-  flex-direction: column;
-  width: 100%; /* Fills the full width of the grid column */
-  height: 100%; /* Optionally ensure it fills the height as needed */
+  display: flex; /* Ensure this is set to flex to control child elements with flex properties */
+  flex-direction: column; /* Align children in a column */
+  justify-content: center; /* Center children vertically */
+  align-items: center; /* Center children horizontally */
+  border: 1px solid #ccc;
+
+  background-color: #f8f8f8;
+  width: 100%; /* Ensures cell uses full width of its grid column */
+  height: 100%; /* Ensures cell uses full height */
 }
 
 .time-cell {
@@ -462,17 +467,18 @@ function openModal(modalName) {
   align-items: center;
   justify-content: center;
   border: 1px solid #ccc;
-  padding: 8px;
 }
 
 .item-content {
   padding: 8px;
   background: linear-gradient(to right, rgba(68, 68, 68, 0.9), rgba(68, 68, 68, 0.7));
-  flex-grow: 1;
+  width: 100%; /* Ensures content fills the full width of its parent */
+  height: 100%; /* Ensures content fills the full height of its parent */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex-grow: 1; /* This will now effectively make the item content expand as needed */
 }
 
 .item-content:hover {
