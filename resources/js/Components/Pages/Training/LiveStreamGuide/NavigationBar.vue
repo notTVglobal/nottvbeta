@@ -1,6 +1,6 @@
 <template>
   <nav class="nav-bar">
-    <div @click="toggleDropdown" class="dropdown-button mt-16" v-if="appSettingStore.isSmallScreen">
+    <div @click="toggleDropdown" class="fixed dropdown-button top-16 w-full" v-if="appSettingStore.isSmallScreen">
       <font-awesome-icon icon="bars" /> <!-- FontAwesome icon for menu -->
       {{ currentSectionName }}
     </div>
@@ -93,7 +93,6 @@ updateCurrentHash();
 }
 
 .dropdown-button {
-  //display: none; /* Hidden by default */
   cursor: pointer;
   padding: 10px;
   background-color: #FFD700;

@@ -3,7 +3,7 @@
 Last Update: May 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.8.7.84
+## v0.8.7.85
 May 1, 2024
 * Fix the UpdateScheduleBroadcastDates jobs.
   * We now have an array of broadcast dates for each schedule

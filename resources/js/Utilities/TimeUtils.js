@@ -25,7 +25,7 @@ dayjs.extend(timezone);
  * `08:00`, `08:30`, `09:00`, and `09:30`.
  */
 export function createTimeSlots(start, durationHours = 4, intervalMinutes = 30, timezone) {
-    console.log(`Creating time slots starting from ${start}, for ${durationHours} hours, every ${intervalMinutes} minutes in timezone ${timezone}.`);
+    // console.log(`Creating time slots starting from ${start}, for ${durationHours} hours, every ${intervalMinutes} minutes in timezone ${timezone}.`);
     let slots = [];
     let startTime = dayjs(start).tz(timezone);  // Convert start time to the correct time zone
     for (let i = 0; i < (durationHours * 60) / intervalMinutes; i++) {

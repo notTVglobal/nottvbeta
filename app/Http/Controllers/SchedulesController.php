@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Http\Resources\ShowResource;
+use App\Http\Resources\SimpleMovieResource;
+use App\Http\Resources\SimpleShowEpisodeResource;
+use App\Http\Resources\SimpleShowResource;
 use App\Jobs\AddContentToSchedule;
 use App\Models\Show;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
 use App\Models\User;
 use Carbon\CarbonInterface;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -70,8 +76,6 @@ class SchedulesController extends Controller {
 //        'data'    => $schedule,
 //    ]);
   }
-
-
 
 
   /**
@@ -164,9 +168,36 @@ class SchedulesController extends Controller {
     ]);
   }
 
-  public function loadWeekFromDate(Request $request): JsonResponse {
-//    $date = Carbon::createFromFormat('Y-m-d', $request->formattedDate)->format('Y-m-d');
+  public function validateDate($formattedDateTimeUtc): ?JsonResponse {
+    $validator = Validator::make(['formattedDateTimeUtc' => $formattedDateTimeUtc], [
+        'formattedDateTimeUtc' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
+    ]);
 
+    if ($validator->fails()) {
+      return response()->json(['errors' => $validator->errors()], 422);
+    }
+    return null; // return null if no errors
+  }
+
+  public function loadWeekFromDate($formattedDateTimeUtc): JsonResponse {
+
+    // Validate the date format directly
+    $validationError = $this->validateDate($formattedDateTimeUtc);
+    if ($validationError) {
+      // If validation fails, return an error response
+      return $validationError;
+    }
+
+    try {
+      // If validation is successful, parse the date using Carbon
+      $userRequestedDate = Carbon::parse($formattedDateTimeUtc);
+      // Proceed with your business logic, such as loading data for the week based on this date
+    } catch (\Exception $e) {
+      // Handle any exceptions related to date parsing
+      return response()->json(['error' => 'Invalid date provided', 'details' => $e->getMessage()], 400);
+    }
+
+    // Cache
     // tec21: commenting out the Cache for testing purposes. (2024-04-09)
     // TODO: This needs to be rebuilt to use our Redis cache instead of a file.
 
@@ -183,21 +214,18 @@ class SchedulesController extends Controller {
 //      ]);
 //    }
 
-//    $userTimezone = auth()->user()->timezone;
-
-    // Assume the frontend sends the full ISO date-time string and timezone, e.g., "2024-04-10T06:57:00-07:00"
-    $dateTimeFromFrontend = $request->formattedDateTimeUtc; // Full ISO string from the frontend
-    $userRequestedDate = Carbon::parse($dateTimeFromFrontend);
-
     // Now adjust to the start and end of the week
-    $userRequestedStartOfWeek = $userRequestedDate->copy()->startOfWeek(CarbonInterface::SUNDAY);
-    $userRequestedEndOfWeek = $userRequestedDate->copy()->endOfWeek(CarbonInterface::SATURDAY);
+    $userRequestedStartOfWeekUTC = $userRequestedDate->copy()->startOfWeek(CarbonInterface::SUNDAY);
+    $userRequestedEndOfWeekUTC = $userRequestedDate->copy()->endOfWeek(CarbonInterface::SATURDAY);
 
     // Since these are already in the user's timezone, convert them directly to UTC for backend processing
 //    $userRequestedStartOfWeekUTC = $userRequestedStartOfWeek->copy()->tz('UTC');
 //    $userRequestedEndOfWeekUTC = $userRequestedEndOfWeek->copy()->tz('UTC');
 
-    $data = $this->fetchSchedules($userRequestedStartOfWeek, $userRequestedEndOfWeek);
+    $schedules = $this->fetchSchedulesFromBroadcastDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
+    $transformedSchedules = $this->transformAndSortSchedules($schedules);
+    $finalSchedules = $this->resolveScheduleConflicts($transformedSchedules);
+
 
     // TODO: If we want to work on this later we can... but it will take some work to be efficient
     // tec21: 2024-04-09 ... in terms of time I'll just focus on the /schedule page.
@@ -207,8 +235,8 @@ class SchedulesController extends Controller {
 
     // Include the user's timezone in the response
     return response()->json([
-        'data'         => $data,
-        'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
+        'data'         => $finalSchedules,
+        'userTimezone' => auth()->user()->timezone ?? null
     ]);
   }
 
@@ -229,6 +257,139 @@ class SchedulesController extends Controller {
 //
 //    return response()->json($schedulesByDay);
 //  }
+
+
+  private function transformAndSortSchedules($schedules) {
+    // Transform schedules and sort them
+    usort($schedules, function ($a, $b) {
+      $startComparison = $a['startTime'] <=> $b['startTime'];
+      if ($startComparison !== 0) return $startComparison;
+
+      $endComparison = $a['endTime'] <=> $b['endTime'];
+      if ($endComparison !== 0) return $endComparison;
+
+      $priorityComparison = $a['priority'] <=> $b['priority'];
+      if ($priorityComparison !== 0) return $priorityComparison;
+
+      return $a['createdAt'] <=> $b['createdAt']; // Older shows have higher priority
+    });
+    return $schedules;
+  }
+
+  private function resolveScheduleConflicts($schedules): array {
+    // Initialize an array to track occupied rows and times for each row
+    $rowOccupancy = [];
+
+    // Sort schedules before handling overlaps to ensure they are processed in the correct order
+    usort($schedules, function ($a, $b) {
+      return $a['startTime'] <=> $b['startTime'] ?: $a['endTime'] <=> $b['endTime'] ?: $a['priority'] <=> $b['priority'] ?: $a['createdAt'] <=> $b['createdAt'];
+    });
+
+    return array_map(function ($item) use (&$rowOccupancy) {
+      $item['gridRow'] = 1; // Start placing each item in the first row
+
+      // Check each row to see if placing the item there would cause a conflict
+      foreach ($rowOccupancy as $row => $times) {
+        $conflict = false;
+        foreach ($times as $time) {
+          if ($item['startTime'] < $time['endTime'] && $item['endTime'] > $time['startTime']) {
+            $conflict = true;
+            break;
+          }
+        }
+        if (!$conflict) {
+          $item['gridRow'] = $row;
+          break;
+        }
+        $item['gridRow']++; // Move to the next row if there is a conflict
+      }
+
+      // Record the item's time in the appropriate row's occupancy data
+      $rowOccupancy[$item['gridRow']][] = ['startTime' => $item['startTime'], 'endTime' => $item['endTime']];
+
+      return $item;
+    }, $schedules);
+  }
+
+
+  private function fetchSchedulesFromBroadcastDates(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
+    // Load schedules with general content and direct relations only
+    $schedules = Schedule::with([
+        'content.category',
+        'content.subCategory',
+        'content.image.appSetting'
+    ])->where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
+      $query->where('start_time', '<=', $userRequestedEndOfWeekUTC)
+          ->where('end_time', '>=', $userRequestedStartOfWeekUTC);
+    })->orderBy('start_time')->get();
+
+    // After fetching, dynamically load additional relationships based on content type
+    foreach ($schedules as $schedule) {
+      if ($schedule->content_type === 'App\Models\ShowEpisode' && isset($schedule->content->show_id)) {
+        // Dynamically load related show data for ShowEpisodes
+        $schedule->load('content.show.category', 'content.show.subCategory', 'content.show.image.appSetting');
+      }
+    }
+
+    // Transform schedules to include necessary date calculations and timezone adjustments
+    return $schedules->flatMap(function ($schedule) {
+      $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
+      $timezone = $broadcastData['timezone'] ?? 'UTC'; // Default to 'UTC' if not specified
+
+      return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
+        // Create a DateTime object from the start time assuming it's already in UTC
+        $startTime = new DateTime($date, new DateTimeZone('UTC'));
+
+        // Calculate endTime by adding duration in minutes to startTime
+        $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
+
+        return [
+            'id'              => $schedule->content_id,
+            'createdAt'       => $schedule->created_at,
+            'type'            => $schedule->type,
+            'startTime'       => $startTime->format('c'),  // ISO 8601 format, still in UTC
+            'endTime'         => $endTime->format('c'),    // ISO 8601 format, still in UTC
+            'priority'        => $schedule->priority,
+            'durationMinutes' => $schedule->duration_minutes,
+            'timezone'        => $timezone, // Include timezone information
+            'content'         => $this->transformSchedule($schedule->content),
+        ];
+      });
+    })->all(); // Get all results into an array first before any processing.
+//
+//    // Sort schedules by start time, end time, priority, and creation time
+//    usort($transformedSchedules, function ($a, $b) {
+//      $startComparison = $a['startTime'] <=> $b['startTime'];
+//      if ($startComparison !== 0) return $startComparison;
+//
+//      $endComparison = $a['endTime'] <=> $b['endTime'];
+//      if ($endComparison !== 0) return $endComparison;
+//
+//      $priorityComparison = $a['priority'] <=> $b['priority'];
+//      if ($priorityComparison !== 0) return $priorityComparison;
+//
+//      return $a['createdAt'] <=> $b['createdAt'];  // Older shows have higher priority
+//    });
+//
+//    // Handle overlapping shows
+//    $previousItem = null;
+//    $transformedSchedules = collect($transformedSchedules)->map(function ($item) use (&$previousItem) {
+//      if ($previousItem && $item['startTime'] < $previousItem['endTime']) {
+//        // Overlapping detected
+//        if ($item['priority'] == $previousItem['priority']) {
+//          // When priorities are the same, the show created later will be adjusted to a higher priority number
+//          if ($item['createdAt'] > $previousItem['createdAt']) {
+//            $item['priority']++;  // Current item is newer, so it gets a lower precedence
+//          } else {
+//            $previousItem['priority']++;  // Previous item is newer, adjust it accordingly
+//          }
+//        }
+//      }
+//      $previousItem = $item;
+//      return $item;
+//    })->toArray();
+  }
+
 
   private function fetchSchedulesByDay(): array {
     $schedulesByDay = [];
@@ -726,64 +887,31 @@ class SchedulesController extends Controller {
 //  }
 
 
-  private function transformSchedule($schedule): array {
-    $schedule->load('content');
-    // Handle polymorphic relationship and other transformations
-    $content = [];
-    if ($schedule->content_type) {
-      // Conditionally preload additional relationships based on content type
-      switch ($schedule->content_type) {
-
-        case 'App\Models\ShowEpisode':
-          $schedule->content->loadMissing([
-              'appSetting', 'show.category', 'show.subCategory',
-              'show.image.appSetting', 'creativeCommons',
-              'mistStreamWildcard', 'image.appSetting',
-              'video.appSetting', 'video.mistStream',
-              'video.mistStreamWildcard'
-          ]);
-          $content = new ShowEpisodeResource($schedule->content);
-          break;
-        case 'App\Models\Movie':
-          $schedule->content->loadMissing([
-              'appSetting', 'category', 'subCategory',
-              'creativeCommons', 'trailers', 'image.appSetting',
-              'video.appSetting', 'video.mistStream',
-              'video.mistStreamWildcard'
-          ]);
-          $content = new MovieResource($schedule->content);
-          break;
-        case 'App\Models\Show':
-          // Load missing relationships for the Show model
-          $schedule->content->loadMissing([
-              'appSetting', 'category', 'subCategory',
-              'image.appSetting', // Assuming this is correct, though it's duplicated in your snippet
-              'mistStreamWildcard', // Ensure this relationship exists in your Show model
-          ]);
-
-          // Prepare the content array with a ShowResource
-          $content = [
-              'show' => new ShowResource($schedule->content),
-          ];
-          break;
-        // Add more cases as needed
-      }
-      // Transform the content based on its type
-      // You can adjust this logic based on how your resources are structured
+  private function transformSchedule($content): array {
+    if (!$content) {
+      return []; // Return empty array if no content is associated
     }
 
-    return [
-        'content'            => $content,
-        'type'               => $schedule->type ?? null,
-        'start_time'         => $schedule->start_time->toDateTimeString() ?? null,
-        'end_time'           => $schedule->end_time->toDateTimeString() ?? null,
-        'status'             => $schedule->status ?? null,
-        'priority'           => $schedule->priority ?? null,
-        'recurrence_flag'    => $schedule->recurrence_flag ?? null,
-        'recurrence_details' => $schedule->scheduleRecurrenceDetails ? $schedule->scheduleRecurrenceDetails->toArray() : null,
-        'id'                 => $schedule->id,
-        'durationMinutes'    => $schedule->duration_minutes,
-    ];
+    // Direct transformation using appropriate resource based on content type
+    return match ($content->getMorphClass()) {
+      'App\Models\ShowEpisode' => (new SimpleShowEpisodeResource($content))->resolve(),
+      'App\Models\Movie' => (new SimpleMovieResource($content))->resolve(),
+      'App\Models\Show' => (new SimpleShowResource($content))->resolve(),
+      default => [],
+    };
+
+//    return [
+//        'id'                 => $schedule->id,
+//        'type'               => $schedule->type ?? null,
+//        'start_time'         => $schedule->start_time->toDateTimeString() ?? null,
+//        'end_time'           => $schedule->end_time->toDateTimeString() ?? null,
+//        'durationMinutes'    => $schedule->duration_minutes,
+//        'status'             => $schedule->status ?? null,
+//        'priority'           => $schedule->priority ?? null,
+////        'recurrence_flag'    => $schedule->recurrence_flag ?? null,
+////        'recurrence_details' => $schedule->scheduleRecurrenceDetails ? $schedule->scheduleRecurrenceDetails->toArray() : null,
+//        'content'            => $content,
+//    ];
   }
 
   public function removeFromSchedule(Request $request): JsonResponse {

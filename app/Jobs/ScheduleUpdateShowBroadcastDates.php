@@ -89,6 +89,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue
         'modelId' => $schedule->content_id,
         'priority' => $schedule->priority, // Assuming the same priority for all schedules for simplicity
         'timezone' => 'UTC',
+        'durationMinutes' => $schedule->duration_minutes,
         'broadcastDates' => $broadcastDates
     ];
 
@@ -114,7 +115,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue
         ->setTimezone('UTC');
 //    $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->end_time, $schedule->timezone)
 //        ->setTimezone('UTC');
-
+    Log::info('Converted time to UTC', ['localTime' => $schedule->start_time, 'UTCTime' => $startTimeUTC->toDateTimeString(), 'timezone' => $schedule->timezone]);
     if (!$schedule->recurrence_flag) {
       // Handle non-recurring schedules
       $oneTimeDates[] = $startTimeUTC->toDateTimeString();
@@ -221,13 +222,16 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue
       $startDate = Carbon::parse($details->start_date, $details->timezone)->setTimezone('UTC');
       $endDate = Carbon::parse($details->end_date, $details->timezone)->setTimezone('UTC');
 
+      // Parse the start time to get the time portion
+      $startTime = Carbon::createFromFormat('H:i:s', $details->start_time, $details->timezone)->setTimezone('UTC');
+
       // Ensure the start date is not before the current date
       $effectiveStartDate = $startDate->isPast() ? $currentDateUTC : $startDate;
 
       while ($effectiveStartDate->lte($endDate)) {
         $dayOfWeek = strtolower($effectiveStartDate->format('l')); // 'monday', 'tuesday', etc.
         if ($details->$dayOfWeek) { // Check if the day is scheduled using the boolean columns
-          $dateTime = $effectiveStartDate->copy()->setTimeFromTimeString($details->start_time)->setTimezone('UTC');
+          $dateTime = $effectiveStartDate->copy()->setTime($startTime->hour, $startTime->minute, $startTime->second); // Copy retains the time information
           $recurrentDates[] = $dateTime->toDateTimeString();
         }
 

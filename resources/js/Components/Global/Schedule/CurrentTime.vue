@@ -1,7 +1,7 @@
 <template>
   <div class="tracking-wide">
-    <p>CURRENT TIME: {{ scheduleStore.currentTime }} {{userStore.timezoneAbbreviation}}</p>
-    <p v-if="userStore.isAdmin" >CURRENT TIME (for testing): <input type="time" v-model="formattedTime" @input="handleTimeInput"
+    <p>CURRENT TIME: {{ scheduleStore.currentTime }} {{ userStore.timezoneAbbreviation }}</p>
+    <p>CURRENT TIME (for testing): <input type="time" v-model="formattedTime" @input="stopAutoUpdateTime"
                                           class="text-black"></p></div>
 </template>
 
@@ -9,20 +9,21 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useUserStore } from '@/Stores/UserStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';  // for UTC support
-import timezone from 'dayjs/plugin/timezone';  // for timezone support
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'  // for UTC support
+import timezone from 'dayjs/plugin/timezone'  // for timezone support
 
 const userStore = useUserStore()
 const scheduleStore = useScheduleStore()
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 // const baseTime = ref(new Date());
 // const currentTime = ref(baseTime.value.toISOString().substring(11, 16));
 let intervalId = null
-let initialUpdateDone = false;  // Flag to track if the first update has been done
+let timeoutId = null  // Variable to store the timeout reference
+let initialUpdateDone = false  // Flag to track if the first update has been done
 
 // const updateShows = () => {
 //   const [hour, minute] = currentTime.value.split(':');
@@ -32,44 +33,47 @@ let initialUpdateDone = false;  // Flag to track if the first update has been do
 
 // Function to update current time
 function updateCurrentTime() {
-  const timezone = userStore.timezone || 'UTC';  // Default to 'UTC' if no timezone is set
+  const timezone = userStore.timezone || 'UTC'  // Default to 'UTC' if no timezone is set
 
   // Use dayjs to handle the timezone conversion
-  const currentTime = dayjs().tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+  const currentTime = dayjs().tz(timezone).format('YYYY-MM-DD HH:mm:ss')
 
-  scheduleStore.setBaseTime(currentTime);
-  console.log("Time updated:", currentTime);
+  scheduleStore.setBaseTime(currentTime)
+  console.log('Time updated:', currentTime)
 }
 
 // Function to start auto-update interval
 function startAutoUpdateTime(updateImmediately = true) {
-  clearInterval(intervalId);  // Clear any existing interval first
+  clearInterval(intervalId)  // Clear any existing interval first
   if (updateImmediately && !initialUpdateDone) {
-    updateCurrentTime();  // Optionally update time immediately
-    initialUpdateDone = true;  // Set the flag after the first update
+    updateCurrentTime()  // Optionally update time immediately
+    initialUpdateDone = true  // Set the flag after the first update
   }
   intervalId = setInterval(() => {
-    updateCurrentTime();  // Continue updating every minute
-  }, 60000);
-  console.log('Interval started, ID:', intervalId);
+    updateCurrentTime()  // Continue updating every minute
+  }, 60000)
+  console.log('Interval started, ID:', intervalId)
 }
 
 // Function to clear the interval
 function stopAutoUpdateTime() {
-  if (intervalId) {
-    clearInterval(intervalId);
-    console.log('Interval stopped, ID:', intervalId);
-    intervalId = null;  // Reset the interval ID
-  }
+  clearInterval(intervalId)
+  console.log('Interval stopped, ID:', intervalId)
+  intervalId = null  // Reset the interval ID
+  clearTimeout(timeoutId)  // Use clearTimeout to stop the timeout
+  timeoutId = null         // Reset the variable after cancelling
+  console.log('Auto-update canceled.')
 }
 
 onMounted(() => {
+  // Use dayjs to get the current time
+  const now = dayjs();
+
   // Calculate milliseconds until the next minute to align updates
-  const now = new Date();
-  const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+  const msUntilNextMinute = (60 - now.second()) * 1000 - now.millisecond();
 
   // Delay the start of regular updates to align with the start of the next minute
-  setTimeout(() => {
+  timeoutId = setTimeout(() => {
     startAutoUpdateTime();  // Start regular updates at the next minute
   }, msUntilNextMinute);
 });
@@ -80,21 +84,18 @@ onUnmounted(() => {
 
 const formattedTime = computed({
   get() {
-    const hours = scheduleStore.baseTime.getHours().toString().padStart(2, '0')
-    const minutes = scheduleStore.baseTime.getMinutes().toString().padStart(2, '0')
-    return `${hours}:${minutes}`
+    // Use dayjs to format the time from the baseTime in scheduleStore
+    return dayjs(scheduleStore.baseTime).format('HH:mm');
   },
   set(value) {
-    const [hours, minutes] = value.split(':').map(Number)
-    const newTime = new Date(scheduleStore.baseTime)
-    newTime.setHours(hours, minutes)
-    scheduleStore.setBaseTime(newTime)
+    // Parse the hours and minutes from the input value
+    const [hours, minutes] = value.split(':').map(Number);
+    // Use dayjs to update the time while keeping the date part unchanged
+    const newTime = dayjs(scheduleStore.baseTime).hour(hours).minute(minutes).toDate();
+    // Update the baseTime in the scheduleStore
+    scheduleStore.setBaseTime(newTime);
   },
 })
-
-function handleTimeInput(event) {
-  stopAutoUpdateTime()  // Properly stop the updating when manual input is provided
-}
 
 
 </script>

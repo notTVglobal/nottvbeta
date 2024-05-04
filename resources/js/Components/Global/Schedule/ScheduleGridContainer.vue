@@ -1,119 +1,234 @@
 <template>
 
-<!--  We need the CurrenTime component to keep our ScheduleStore currentTime up to date
-      it has a SetInterval in it. -->
-  <CurrentTime />
+  <!--  We need the CurrenTime component to keep our ScheduleStore currentTime up to date
+        it has a SetInterval in it. -->
+  <CurrentTime/>
 
   <div class="mb-2 tracking-wide">
     <span class="text-sm uppercase text-purple-500">All times are listed in your timezone.</span>
   </div>
 
-  <div class="schedule-grid">
-    <div class="header-row">
+  <div class="schedule-grid" :style="{ 'grid-template-columns': gridTemplateColumns }">
+    <div class="header-row" :style="{ 'grid-template-columns': gridTemplateColumns }">
       <!-- Time slots header -->
       <div class="time-cell bg-gray-900 px-3 py-2 text-center font-bold"
            v-for="interval in nextFourHoursWithHalfHourIntervals" :key="interval.dateTime">
         {{ interval.formatted }}
       </div>
     </div>
-  </div>
-  <div class="schedule-grid">
-    <div v-if="scheduleStore.scheduleIsLoading && scheduleStore.nextFourHoursOfContent.length === 0"
+    <div v-if="scheduleIsLoading && nextFourHoursOfContent.length === 0"
          class="w-full flex justify-center text-center items-center">
       <span class="loading loading-ball loading-xl text-info"></span>
     </div>
 
-    <div class="content-row">
-      <!-- Scheduled shows -->
-      <template v-for="item in nextFourHoursOfContent" :key="item.id">
-        <div
-            class="show-cell flex flex-col w-full h-full"
-            :class="getCellClasses(item.type)"
-            :style="gridPlacement(item.start_time, item.durationMinutes)"
-            @click="handleShowClick(item)"
-        >
-          <div class="item-content flex flex-col items-center justify-center gap-y-2 flex-grow">
-            <h3>{{ item.content.show?.name || 'No Show Name' }}</h3>
-            <!-- Display the image if available -->
-            <SingleImage v-if="item.content.show?.image"
-                         :image="item.content.show?.image"
-                         :alt="item.content.show?.name"
-                         class="content-image"/>
-            <!-- Fallback placeholder if no image -->
-            <div v-else class="placeholder"></div>
+
+    <template>
+      <div class="grid-container">
+        <!-- Loop through combinedShows directly -->
+        <div v-for="item in scheduleStore.nextFourHoursOfContent"
+             :key="item.id"
+             :style="gridItemStyle(item)"
+             class="grid-item"
+             @click="handleShowClick(item)">
+          <div class="item-content">
+            <h3>{{ item.content.name || 'No Show Name' }}</h3>
+            <p>{{ item.startTime }} - {{ item.durationMinutes }} minutes</p>
+            <p>{{ item.content.id }}</p>
+            <p>Row: {{ item.gridRow }}</p>
+            <SingleImage v-if="item.content.image"
+                         :image="item.content.image"
+                         :alt="item.content.name"/>
           </div>
         </div>
-      </template>
-    </div>
+      </div>
+    </template>
 
 
-    <!-- Status Row -->
-    <div class="status-row">
-      <!-- Status for each show -->
-      <template v-for="(item, index) in nextFourHoursOfContent" :key="`status-${item.id}`">
-        <div
-            :class="getStatusCellClasses(index)" :style="gridPlacement(item.start_time, item.durationMinutes)"
-        >
-          <!-- Use the index to determine the status -->
-          <span v-if="index === 0">NOW PLAYING</span>
-          <span v-else-if="index === 1">COMING UP NEXT</span>
+    <!-- Loop through each row -->
+<!--    <template v-for="(row, rowIndex) in nextFourHoursOfContent" :key="`row-${rowIndex}`">-->
+<!--      <div class="content-row">-->
+<!--        &lt;!&ndash; Loop through each item in the row &ndash;&gt;-->
+<!--        <template v-for="item in row" :key="item.id">-->
+<!--          <div-->
+<!--              class="show-cell flex flex-col w-full h-full"-->
+<!--              :class="getCellClasses(item.type)"-->
+<!--              :style="gridPlacement(item.gridStart, item.gridSpan)"-->
+<!--              @click="handleShowClick(item)"-->
+<!--          >-->
+<!--            <div class="item-content flex flex-col items-center justify-center gap-y-2 flex-grow">-->
+<!--              <h3>{{ item.content?.name || 'No Show Name' }}</h3>-->
+<!--              <p>{{ item.startTime }} - {{ item.durationMinutes }} minutes</p>-->
+<!--              <p></p>-->
+<!--              <p>{{ item.content?.id }}</p>-->
+<!--              <p>{{ item.gridRow }}</p>-->
+<!--              <SingleImage v-if="item.content?.image"-->
+<!--                           :image="item.content?.image"-->
+<!--                           :alt="item.content?.name"-->
+<!--                           :class="`w-full h-auto object-cover`"/>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </template>-->
+<!--      </div>-->
+<!--    </template>-->
 
-        </div>
-      </template>
-    </div>
+<!--    <div class="status-row">-->
+<!--      <div v-if="nowPlayingShow">-->
+<!--        <div :class="getStatusCellClasses(nowPlayingShow.gridStart, true, false)"-->
+<!--             :style="gridPlacement(nowPlayingShow.gridStart, nowPlayingShow.gridSpan)">-->
+<!--          <span>NOW PLAYING</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div v-if="comingUpNextShow">-->
+<!--        <div :class="getStatusCellClasses(comingUpNextShow.gridStart, false, true)"-->
+<!--             :style="gridPlacement(comingUpNextShow.gridStart, comingUpNextShow.gridSpan)">-->
+<!--          <span>COMING UP NEXT</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
 
   </div>
 
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch, watchEffect } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
+import { debounce } from 'lodash';
 import dayjs from 'dayjs'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import CurrentTime from '@/Components/Global/Schedule/CurrentTime.vue'
 
 const scheduleStore = useScheduleStore()
+const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
+
+let initialLoadHandled = false;
+
+watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
+  if (newTimeSlots && newTimeSlots.length > 0 && !initialLoadHandled) {
+    console.log('Time slots are ready, updating next four hours.');
+    scheduleStore.updateNextFourHours();
+    initialLoadHandled = true;
+  }
+}, { immediate: true });
+
+// watch(() => scheduleStore.currentHalfHour, (newTimeSlots, oldTimeSlots) => {
+//   if (newTimeSlots && newTimeSlots.length > 0) {
+//     console.log('Time slots are ready, updating next four hours.');
+//     scheduleStore.updateNextFourHours();
+//   }
+// });
+
+// const debouncedUpdate = debounce(() => {
+//   scheduleStore.updateNextFourHours();
+// }, 100); // Adjust debounce time as needed
+//
+// Watch for baseTime changes to update the schedule
+watch(
+    () => scheduleStore.baseTime,
+    (newBaseTime, oldBaseTime) => {
+      if (newBaseTime !== oldBaseTime && scheduleStore.timeSlots && scheduleStore.timeSlots.length > 0) { // This check may be redundant but adds clarity
+        console.log(`Base time updated from ${oldBaseTime} to ${newBaseTime}`);
+        scheduleStore.updateNextFourHours();
+      }
+    },
+    { immediate: true }
+);
+//
+
+// watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
+//   // Check both newTimeSlots and oldTimeSlots for null or undefined before proceeding
+//   if (newTimeSlots && oldTimeSlots && !areTimeSlotsEffectivelyEqual(newTimeSlots, oldTimeSlots)) {
+//     console.log('timeSlots changed', newTimeSlots);
+//     scheduleStore.updateNextFourHours();
+//   }
+// }, { deep: true });
+
+
+
+// watch(
+//     () => scheduleStore.baseTime,
+//     (newTime, oldTime) => {
+//       console.log(`Time updated from ${oldTime} to ${newTime}`);
+//       scheduleStore.updateNextFourHours();
+//     },
+//     { immediate: true }
+// );
+
+const combinedShows = computed(() => {
+  // Assuming you have a method to get sorted and grouped shows
+  return scheduleStore.nextFourHoursOfContent;
+});
+
+watchEffect(() => {
+  console.log('nextFourHoursOfContent:', scheduleStore.nextFourHoursOfContent);
+});
+
+const gridItemStyle = (item) => ({
+  gridColumnStart: item.gridStart,
+  gridColumnEnd: `span ${item.gridSpan}`,
+  gridRowStart: `row ${item.gridRow}`, // Ensure row placement is correct in CSS
+});
+
 
 // Computed property to ensure reactivity
-const nextFourHours = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
-const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
-const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
+const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals);
+const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent);
+const scheduleIsLoading = computed(() => scheduleStore.scheduleIsLoading);
 
-const gridPlacement = (startTime, durationMinutes) => {
-  // Convert startTime to a comparable format if necessary
-  const startDateTime = new Date(startTime)
-  const timeSlots = nextFourHoursWithHalfHourIntervals.value.map(interval => new Date(interval.dateTimeString))
-
-  // Find the index of the time slot that matches the item's start time
-  let startColumn = timeSlots.findIndex(slot => startDateTime >= slot && startDateTime < new Date(slot.getTime() + 30 * 60000))
-  if (startColumn === -1) {
-    console.error('Start time does not match any interval:', startTime)
-    return {} // Fallback or error handling
-  }
-
-  // Adjust startColumn for 1-based indexing in CSS Grid
-  startColumn += 1
-
-  // Calculate span based on duration
-  const span = Math.ceil(durationMinutes / 30)
-
-  // Return CSS style object for grid placement
+const gridPlacement = (gridStart, gridSpan) => {
   return {
-    'gridColumn': `${startColumn} / span ${span}`,
+    gridColumnStart: gridStart,
+    gridColumnEnd: `span ${gridSpan}`,
+    gridRowStart: 'auto',
+    gridRowEnd: 'span 1', // Assuming each item occupies one row height-wise
   }
 }
 
-// Determines the classes for a status cell
-const getStatusCellClasses = (index) => {
-  const classes = ['status-cell']
-  if (index === 0) classes.push('now-playing')
-  else if (index === 1) classes.push('coming-up-next')
-  else classes.push('status-cell-empty') // For cells without specific content
-  return classes
-}
+const gridTemplateColumns = computed(() => {
+  const cols = appSettingStore.isVerySmallScreen ? 4 :
+      appSettingStore.isSmallScreen ? 6 : 8;
+  return `repeat(${cols}, 1fr)`;
+});
 
+
+// const gridPlacement = (startTime, durationMinutes) => {
+//   // Convert startTime to a comparable format if necessary
+//   const startDateTime = new Date(startTime)
+//   const timeSlots = nextFourHoursWithHalfHourIntervals.value.map(interval => new Date(interval.dateTimeString))
+//
+//   // Find the index of the time slot that matches the item's start time
+//   let startColumn = timeSlots.findIndex(slot => startDateTime >= slot && startDateTime < new Date(slot.getTime() + 30 * 60000))
+//   if (startColumn === -1) {
+//     console.error('Start time does not match any interval:', startTime)
+//     return {} // Fallback or error handling
+//   }
+//
+//   // Adjust startColumn for 1-based indexing in CSS Grid
+//   startColumn += 1
+//
+//   // Calculate span based on duration
+//   const span = Math.ceil(durationMinutes / 30)
+//
+//   // Return CSS style object for grid placement
+//   return {
+//     'gridColumn': `${startColumn} / span ${span}`,
+//   }
+// }
+
+// // Determines the classes for a status cell
+// const getStatusCellClasses = (index) => {
+//   const classes = ['status-cell']
+//   if (index === 0) classes.push('now-playing')
+//   else if (index === 1) classes.push('coming-up-next')
+//   else classes.push('status-cell-empty') // For cells without specific content
+//   return classes
+// }
 
 function getCellClasses(type) {
   const baseClass = 'column-width text-sm 2xl:text-md border border-0.5 border-green-300 hover:border-blue-500 cursor-pointer'
@@ -129,9 +244,9 @@ function getCellClasses(type) {
 }
 
 function handleShowClick(item) {
-  if (isNowPlaying(item.start_time, item.durationMinutes)) {
+  if (isNowPlaying(item.startTime, item.durationMinutes)) {
     // Redirect to the show's page if it's currently playing
-    Inertia.visit(`/shows/${item.content.show.slug}/`)
+    Inertia.visit(`/shows/${item.content.slug}/`)
   } else {
     // Open the reminder modal for shows that are not currently playing
     openModal('getReminderModal')
@@ -143,13 +258,105 @@ function isNowPlaying(showStartTime, durationMinutes) {
   const now = dayjs()
   const startTime = dayjs(showStartTime)
   const endTime = startTime.add(durationMinutes, 'minute')
-  console.log('ShowStartTime Time: ' + showStartTime)
+  console.log('Now Playing Show Start Time: ' + showStartTime)
   console.log('Duration Minutes: ' + durationMinutes)
-  console.log('Now: ' + now)
-  console.log('Start Time: ' + startTime)
-  console.log('End Time: ' + endTime)
   return now.isAfter(startTime) && now.isBefore(endTime)
 }
+
+// Helper function to determine the appropriate classes based on the gridStart and certain conditions
+const getStatusCellClasses = (gridStart, isFirst, isSecond) => {
+  const classes = ['status-cell'] // Base class for all status cells
+  if (isFirst && gridStart === 1) {
+    // 'Now Playing' is only assigned if it's the first item and it starts at the first grid column
+    classes.push('now-playing')
+  } else if (isSecond && gridStart !== 1) {
+    // 'Coming Up Next' is only assigned to the second item and it should not start at the first grid column
+    classes.push('coming-up-next')
+  } else {
+    // Default class for other cells or when no specific condition is met
+    classes.push('status-cell-empty')
+  }
+  return classes
+}
+// Ensure the data structure is what you expect
+console.log('All items in store:', scheduleStore.nextFourHoursOfContent)
+
+//
+// const actualShows = computed(() => {
+//   // Flatten the nested arrays, filter out placeholders, and ignore specific content names
+//   return scheduleStore.nextFourHoursOfContent.flat().filter(item =>
+//       !item.placeholder && item.content.name !== "Nothing scheduled." && item.content.name !== "Blank Spot"
+//   );
+// });
+//
+// const nowPlayingShow = computed(() => {
+//   // Traverse through nested arrays to find the currently playing show
+//   for (const row of scheduleStore.nextFourHoursOfContent) {
+//     for (const show of row) {
+//       if (!show.placeholder &&
+//           show.content.name !== "Nothing scheduled." &&
+//           show.content.name !== "Blank Spot" &&
+//           isNowPlaying(show.startTime, show.durationMinutes) &&
+//           show.gridStart === 1) {
+//         console.log('Now Playing Show:', show);
+//         return show;  // Return the first matching show
+//       }
+//     }
+//   }
+//   console.log('No show is currently playing.');
+//   return null;  // Return null if no show is currently playing
+// });
+//
+//
+// const comingUpNextShow = computed(() => {
+//   let foundPlaying = false;
+//   // Traverse through nested arrays to find the upcoming show
+//   for (const row of scheduleStore.nextFourHoursOfContent) {
+//     for (const show of row) {
+//       if (!show.placeholder &&
+//           show.content.name !== "Nothing scheduled." &&
+//           show.content.name !== "Blank Spot") {
+//         if (foundPlaying && show.gridStart > 1) {
+//           console.log('Coming Up Next Show:', show);
+//           return show; // Return the first relevant upcoming show
+//         }
+//         if (isNowPlaying(show.startTime, show.durationMinutes)) {
+//           foundPlaying = true; // Flag found when the currently playing show is identified
+//         }
+//       }
+//     }
+//   }
+//   console.log('No upcoming show found.');
+//   return null; // Return null if no upcoming show is found
+// });
+
+
+// watch(nowPlayingShow, (newVal, oldVal) => {
+//   console.log('Now Playing Show changed from:', oldVal, 'to:', newVal);
+// });
+//
+// watch(comingUpNextShow, (newVal, oldVal) => {
+//   console.log('Coming Up Next Show changed from:', oldVal, 'to:', newVal);
+// });
+
+// Optional: Watch the entire content array if changes are frequent and need to trigger reevaluations
+watch(() => scheduleStore.nextFourHoursOfContent, () => {
+  console.log('Content changed, recomputing shows...');
+}, { deep: true });
+
+
+//
+// // Watch for changes in actualShows and log or react accordingly
+// watch(actualShows, (newShows, oldShows) => {
+//   console.log("Actual shows have updated:", newShows);
+//   // Additional reactions can be performed here
+// });
+//
+// // Optionally, watch for changes in previousItemGridEnd if needed
+// watch(previousItemGridEnd, (newEnd, oldEnd) => {
+//   console.log("Previous item grid end has updated:", newEnd);
+//   // React to changes in the end of the first show, if necessary
+// });
 
 
 function openModal(modalName) {
@@ -198,9 +405,17 @@ function openModal(modalName) {
   grid-row: 1; /* Ensures all time slots are in the first row */
 }
 
+.show-cell {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Fills the full width of the grid column */
+  height: 100%; /* Optionally ensure it fills the height as needed */
+}
+
 .time-cell {
   border: 1px solid #fff;
   text-align: center; /* Center text if desired */
+  padding: 10px;
 }
 
 .content {
@@ -220,7 +435,6 @@ function openModal(modalName) {
   display: grid;
   grid-template-columns: repeat(8, 1fr); /* Keep this as it correctly sets up the columns */
   width: 100%;
-
 }
 
 .header-row {
@@ -228,9 +442,7 @@ function openModal(modalName) {
 }
 
 .content-row {
-  grid-column: 1 / -1; /* Stretch across all columns */
-  display: grid;
-  grid-template-columns: repeat(8, 1fr); /* This might be redundant if the parent grid already specifies column structure */
+  display: contents; /* This makes the row container disappear, directly using the grid defined in parent */
 }
 
 .schedule-cell {
@@ -240,9 +452,27 @@ function openModal(modalName) {
   padding: 8px;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-gap: 10px;
+}
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
 .item-content {
   padding: 8px;
   background: linear-gradient(to right, rgba(68, 68, 68, 0.9), rgba(68, 68, 68, 0.7));
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .item-content:hover {
@@ -250,22 +480,11 @@ function openModal(modalName) {
   /* Adjust the colors above to match your desired hover effect */
 }
 
-.content-image {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
+.status-row {
+  display: contents; /* This makes the row container disappear, directly using the grid defined in parent */
+
 }
 
-.status-row {
-  grid-column: 1 / -1; /* Stretch across all columns */
-  grid-row: 3; /* If you have a status row, assign it to a new grid row */
-  width: 100%; /* Ensure the row takes the full width of its container */
-  text-align: center;
-  font-size: 1rem; /* Adjust as needed */
-  color: white; /* Adjust as needed */
-  padding: 10px 0; /* Adjust as needed */
-  background-color: rgba(0, 0, 0, 0.7); /* Adjust as needed for visibility */
-}
 
 .status-cell {
   display: flex;
@@ -284,7 +503,7 @@ function openModal(modalName) {
   display: block;
   padding: 4px 8px;
   border-radius: 4px;
-  background-color: black;
+  text-align: center;
 }
 
 /* Optional: If you want the empty cells to have a slight indication they are there */

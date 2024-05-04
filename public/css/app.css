@@ -7394,10 +7394,6 @@ hr {
   top: 14rem;
 }
 
-.right-8 {
-  right: 2rem;
-}
-
 .z-0 {
   z-index: 0;
 }
@@ -8159,6 +8155,10 @@ hr {
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-6 {
+  min-height: 1.5rem;
 }
 
 .w-0 {
@@ -10467,6 +10467,11 @@ hr {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .font-bold {
@@ -12839,6 +12844,11 @@ hr {
 
   .lg\:text-left {
     text-align: left;
+  }
+
+  .lg\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 

@@ -3,6 +3,7 @@
     <NavigationBar :sections="sections" :activeSection="currentHash" @navigate="handleNavigation"/>
     <div class="content" v-if="currentSection">
       <SectionComponent :section="currentSection"
+                        :navigateToPrev="navigateToPrevSection"
                         :navigateToNext="navigateToNextSection"
                         :currentIndex="currentIndex"
                         :totalSections="sections.length"/>
@@ -63,6 +64,15 @@ function handleNavigation(section) {
   currentSection.value = findSection(section.id); // Update the current section directly
 }
 
+// Function to navigate to the previous section
+const navigateToPrevSection = () => {
+  const currentIndex = sections.findIndex(s => s.id === currentSectionId.value);
+  if (currentIndex > 0) {  // Ensure there is a previous section
+    const prevSection = sections[currentIndex - 1];
+    handleNavigation(prevSection);  // Reuse the existing navigation handler
+  }
+};
+
 // Function to navigate to the next section
 const navigateToNextSection = () => {
   const currentIndex = sections.findIndex(s => s.id === currentSectionId.value);
@@ -116,7 +126,7 @@ onMounted(() => {
 .content {
   flex: 1;
   overflow-y: auto; /* Enables scrolling within the content area */
-  padding: 20px; /* Uniform padding, may need adjustment based on content */
+  padding: 5px; /* Uniform padding, may need adjustment based on content */
 }
 
 @media (min-width: 1024px) {

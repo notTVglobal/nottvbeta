@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from '@/Stores/UserStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { createTimeSlots } from '@/Utilities/TimeUtils'
 import {
     addDays,
@@ -26,233 +27,468 @@ import {
 
 // Import dayjs and its plugins
 import dayjs from 'dayjs'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore' // To check if the day is the same
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
-import { ref } from 'vue'
+import weekOfYear from 'dayjs/plugin/weekOfYear' // For week start and end calculations
+import advancedFormat from 'dayjs/plugin/advancedFormat' // For more complex formatting options
 
 // Extend dayjs with the plugins
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
+dayjs.extend(weekOfYear)
+dayjs.extend(advancedFormat)
 dayjs.extend(utc)
+dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
 
 function convertScheduleToTimezone(scheduleData) {
     const userStore = useUserStore() // Access the UserStore
 
     return scheduleData.data.map(item => {
         // Convert top-level start_time and end_time using UserStore methods
-        const startTimeInUserTz = item.start_time ? userStore.formatDateTimeFromUtcToUserTimezone(item.start_time, 'YYYY-MM-DD HH:mm:ss') : null
-        const endTimeInUserTz = item.end_time ? userStore.formatDateTimeFromUtcToUserTimezone(item.end_time, 'YYYY-MM-DD HH:mm:ss') : null
-
-        // Check and convert recurrenceDetails if present
-        let recurrenceDetailsInUserTz = null
-        if (item.recurrenceDetails) {
-            const {start_time, start_date, end_date} = item.recurrenceDetails
-            recurrenceDetailsInUserTz = {
-                ...item.recurrenceDetails,
-                start_time: start_time ? userStore.formatTimeInUserTimezone(start_time, 'HH:mm:ss') : null,
-                start_date: start_date ? userStore.formatDateTimeFromUtcToUserTimezone(start_date, 'YYYY-MM-DD') : null,
-                end_date: end_date ? userStore.formatDateTimeFromUtcToUserTimezone(end_date, 'YYYY-MM-DD') : null,
-            }
-        }
-
+        // console.log(`Original startTime for ${item.id}: ${item.startTime}`);
+        const startTimeInUserTz = item.startTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.startTime, 'YYYY-MM-DD HH:mm:ss') : null
+        const endTimeInUserTz = item.endTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.endTime, 'YYYY-MM-DD HH:mm:ss') : null
         // Add debug logging to help trace conversion issues or confirm correct conversions
-        console.log(`Converted times for ${item.id}:`, {
-            startTimeInUserTz,
-            endTimeInUserTz,
-            recurrenceDetailsInUserTz
-        });
+        // console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`);
 
         return {
             ...item,
-            start_time: startTimeInUserTz,
-            end_time: endTimeInUserTz,
-            recurrenceDetails: recurrenceDetailsInUserTz,
+            startTime: startTimeInUserTz,
+            endTime: endTimeInUserTz,
+            timezone: userStore.timezone,
         }
     })
 }
 
 function convertDateTimeToGridTime(dateTime, format = 'YYYY-MM-DD HH:mm:ss') {
-    const userStore = useUserStore(); // Access the UserStore
-    return userStore.formatDateTimeFromUtcToUserTimezone(dateTime, format);
+    const userStore = useUserStore() // Access the UserStore
+    return userStore.formatDateTimeFromUtcToUserTimezone(dateTime, format)
 }
 
 // Helper function to get dates within the next 6 hours from viewingWindowStart
 function getUpcomingContentDates(viewingWindowStart) {
     let dates = []
-    let start = new Date(viewingWindowStart)
+    let start = dayjs(viewingWindowStart) // Ensure viewingWindowStart is a Day.js object
+
     for (let i = 0; i < 6; i++) {
-        dates.push(new Date(start.setHours(start.getHours() + i)))
+        // Add i hours to the start time, each time creating a new Day.js object
+        dates.push(start.add(i, 'hour').toDate()) // Convert to Date if necessary; otherwise keep as Day.js object
     }
+
     return dates
 }
 
-/**
- * Filters shows that are scheduled within a specified datetime range, adjusted to the user's timezone.
- *
- * This function ensures that show scheduling comparisons are made accurately by converting all involved
- * datetime values to the user's local timezone using functions from the userStore. It includes type checking
- * to ensure input dates are valid and handles edge cases where shows start or end at the boundary times.
- *
- * @param {Object} state - The state object containing the shows' data.
- * @param {Date} startDateTime - The start datetime from which to filter shows, expected to be a Date object.
- * @param {Date} endDateTime - The end datetime up to which to filter shows, expected to be a Date object.
- * @returns {Array} An array of shows that start within the specified datetime range.
- */
-function fetchShowsScheduledBetween(state, startDateTime, endDateTime) {
-    const userStore = useUserStore() // Access user-specific settings and utilities
 
-    if (!(startDateTime instanceof Date && endDateTime instanceof Date)) {
-        console.error('startDateTime and endDateTime must be Date objects.');
-        throw new TypeError('startDateTime and endDateTime must be Date objects.')
-    }
+// function resolveSchedulingConflicts(shows) {
+//     // Sort shows by start time, then by priority for shows with the same start time
+//     const sortedShows = shows.sort((a, b) => {
+//         const startTimeComparison = new Date(a.startTime) - new Date(b.startTime)
+//         if (startTimeComparison === 0) { // If start times are the same
+//             return a.priority - b.priority // Compare by priority
+//         }
+//         return startTimeComparison
+//     })
+//
+//     const resolvedShows = []
+//     const showsByStartTime = {}
+//
+//     // Group shows by their start time
+//     sortedShows.forEach(show => {
+//         const startTime = new Date(show.startTime).toISOString() // Ensure it's in ISO format for keying
+//         if (!showsByStartTime[startTime]) {
+//             showsByStartTime[startTime] = []
+//         }
+//         showsByStartTime[startTime].push(show)
+//     })
+//
+//     console.log("Shows grouped by start time:", showsByStartTime);
+//
+//     // For each start time, select the show with the highest priority (lowest priority number)
+//     Object.values(showsByStartTime).forEach(group => {
+//         if (group.length > 1) {
+//             console.log("Conflict at time", group[0].startTime, "- resolving with:", group[0]);
+//             // If there are conflicts, push only the show with the highest priority
+//             resolvedShows.push(group[0]) // Assuming the group is already sorted by priority
+//         } else {
+//             // No conflict, push the single show
+//             resolvedShows.push(group[0])
+//         }
+//     })
+//
+//     return resolvedShows
+// }
 
-    // Convert start and end DateTime to the user's timezone for accurate comparison
-    const startInUserTZ = userStore.convertUtcToUserTimezone(startDateTime.toISOString())
-    const endInUserTZ = userStore.convertUtcToUserTimezone(endDateTime.toISOString())
+// function resolveSchedulingConflicts(shows) {
+//     // Convert start times to timestamps for sorting and conflict detection
+//     shows.forEach(show => {
+//         show.timestamp = new Date(show.startTime).getTime() // Add a timestamp property
+//     })
+//
+//     // Sort shows by timestamp, then by priority for shows with the same timestamp
+//     const sortedShows = shows.sort((a, b) => {
+//         const startTimeComparison = a.timestamp - b.timestamp
+//         if (startTimeComparison === 0) { // If timestamps are the same
+//             return a.priority - b.priority // Compare by priority
+//         }
+//         return startTimeComparison
+//     })
+//
+//     const resolvedShows = []
+//     const showsByStartTime = {}
+//
+//     // Group shows by their timestamp
+//     sortedShows.forEach(show => {
+//         if (!showsByStartTime[show.timestamp]) {
+//             showsByStartTime[show.timestamp] = []
+//         }
+//         showsByStartTime[show.timestamp].push(show)
+//     })
+//
+//     // console.log('Shows grouped by timestamp:', showsByStartTime)
+//
+//     // For each group of shows with the same start time, select the show with the highest priority (lowest priority number)
+//     Object.values(showsByStartTime).forEach(group => {
+//         if (group.length > 1) {
+//             console.log('Conflict at time', group[0].startTime, '- priority goes to:', group[0].content.name)
+//             // If there are conflicts, push only the show with the highest priority
+//             resolvedShows.push(group[0]) // Assuming the group is already sorted by priority
+//         } else {
+//             // No conflict, push the single show
+//             resolvedShows.push(group[0])
+//         }
+//     })
+//
+//     return resolvedShows.map(show => {
+//         // Return the show in its original format, without the temporary timestamp property
+//         const {timestamp, ...originalShow} = show
+//         return originalShow
+//     })
+// }
 
-    console.log('Comparing shows between:', startInUserTZ, 'and', endInUserTZ);
+//
+// function adjustShowsForGrid(shows) {
+//     const userStore = useUserStore()
+//     const appSettingStore = useAppSettingStore()
+//     const timezone = userStore.timezone || 'UTC'
+//     const now = dayjs()
+//     const startOfCurrentHalfHour = now.subtract(now.minute() % 30, 'minutes').startOf('minute').tz(timezone).toDate()
+//     const cols = appSettingStore.isVerySmallScreen ? 4 : appSettingStore.isSmallScreen ? 6 : 8
+//
+//     // Make sure the timeSlots are logged to verify their correctness
+//     console.log('Time Slots:', this.timeSlots.map(slot => new Date(slot).toString()))
+//
+//
+//     // Sort shows by their start times to ensure they are processed in chronological order
+//     shows.sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
+//
+//     // Initialize an array to keep track of column and row availability
+//     let colOccupancy = new Array(cols).fill(null).map(() => [])
+//
+//     // Processing each show for grid placement
+//     return shows.map(show => {
+//         const showStart = new Date(show.startTime)
+//         const showEnd = new Date(showStart.getTime() + show.durationMinutes * 60000)
+//
+//         let adjustedStart = (showStart < startOfCurrentHalfHour && showEnd > startOfCurrentHalfHour) ? startOfCurrentHalfHour : showStart
+//         let effectiveEnd = showEnd > now.toDate() ? now.toDate() : showEnd // Ensure end is no later than now
+//
+//         let slotIndex = this.timeSlots.findIndex(slot => adjustedStart >= slot && adjustedStart < new Date(slot.getTime() + 30 * 60000))
+//         if (slotIndex === -1) {
+//             slotIndex = adjustedStart < this.timeSlots[0] ? 0 : this.timeSlots.length - 1 // Handle out of range start times
+//         }
+//
+//         let durationInMilliseconds = effectiveEnd.getTime() - adjustedStart.getTime()
+//         let totalMinutes = durationInMilliseconds / (30 * 60000)
+//         let span = Math.ceil(totalMinutes)
+//         span = Math.max(1, span) // Ensure span is at least 1
+//         span = slotIndex + span > cols ? cols - slotIndex : span // Adjust span to not exceed total columns
+//
+//         // Find the minimum unoccupied row
+//         let minRow = 1
+//         for (let i = slotIndex; i < slotIndex + span; i++) {
+//             while (colOccupancy[i].includes(minRow)) {
+//                 minRow++
+//             }
+//         }
+//
+//         // Register this show in the occupied columns
+//         for (let i = slotIndex; i < slotIndex + span; i++) {
+//             colOccupancy[i].push(minRow)
+//         }
+//
+//         console.log(`Show: ${show.content.name}, Start: ${showStart}, Adjusted Start: ${adjustedStart}, End: ${showEnd}, Now: ${now.toDate()}, Slot Index: ${slotIndex}, Span: ${span}, Row: ${minRow}`)
+//         return {
+//             ...show,
+//             gridStart: slotIndex + 1,
+//             gridSpan: span,
+//             gridRow: minRow,  // Assign shows to rows based on availability and priority
+//         }
+//     }).filter(show => show.gridSpan > 0)
+// }
 
-    return state.weeklyContent.filter(show => {
-        if (typeof show.start_time !== 'string') {
-            console.warn('Expected show.start_time to be a string in ISO format, found:', show.start_time)
-            return false
-        }
-        const showStartTimeInUserTZ = userStore.convertUtcToUserTimezone(show.start_time)
-        console.log('Show start time in user timezone:', showStartTimeInUserTZ);
 
-        // Check if the show's start time is within the specified datetime range, inclusive of start and exclusive of end
-        const showStart = new Date(showStartTimeInUserTZ);
-        const rangeStart = new Date(startInUserTZ);
-        const rangeEnd = new Date(endInUserTZ);
+// function adjustShowsForGrid(shows, timeSlots) {
+//     const userStore = useUserStore()
+//     const appSettingStore = useAppSettingStore()
+//
+//     const timezone = userStore.timezone || 'UTC'
+//     const now = dayjs();
+//     // const minutes = now.minute();
+//     // const startOfCurrentHalfHour = now.subtract(minutes % 30, 'minute').startOf('minute').tz(timezone).toDate();
+//     const startOfCurrentHalfHour = now.subtract(now.minute() % 30, 'minutes').startOf('minute').tz(timezone).toDate();
+//     // const startOfCurrentHalfHour = now.subtract(minutes % 30, 'minute').startOf('minute').tz(timezone);
+//     const cols = appSettingStore.isVerySmallScreen ? 4 : appSettingStore.isSmallScreen ? 6 : 8;
+//
+//     // Initialize an array to keep track of column availability
+//     let colOccupancy = new Array(cols).fill(null);
+//
+//     // Sort shows by start time to ensure proper handling of overlaps
+//     shows.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
-        // Check if the show's start time is within the specified datetime range, inclusive of start and exclusive of end
-        // return new Date(showStartTimeInUserTZ) >= new Date(startInUserTZ) && new Date(showStartTimeInUserTZ) < new Date(endInUserTZ)
+// return shows.map(show => {
+//     const showStart = new Date(show.startTime);
+//     const showEnd = new Date(showStart.getTime() + show.durationMinutes * 60000);
+//
+//     // Adjusting showStart if the show is ongoing but started before the current grid view
+//     let adjustedStart = showStart < startOfCurrentHalfHour && now < showEnd ? startOfCurrentHalfHour : showStart;
+//
+//     // Calculating the grid start index
+//     let slotIndex = timeSlots.findIndex(slot => adjustedStart >= slot && adjustedStart < new Date(slot.getTime() + 30 * 60000));
+//     if (slotIndex === -1) {
+//         slotIndex = adjustedStart < timeSlots[0] ? 0 : timeSlots.length - 1; // Place at the start or the end based on timing
+//     }
+//
+//     // Calculating the duration to display in the grid based on current time
+//     let span = Math.ceil(((showEnd.getTime() > now.toDate().getTime() ? now.toDate().getTime() : showEnd.getTime()) - adjustedStart.getTime()) / (30 * 60000));
+//     span = Math.max(1, span); // Ensure at least one grid slot is used
+//
+//     // Ensure the span does not exceed available columns from the slot index
+//     span = slotIndex + span > cols ? cols - slotIndex : span;
+//
+//     // Set or clear show placement in grid
+//     for (let i = slotIndex; i < slotIndex + span && i < cols; i++) {
+//         if (colOccupancy[i] !== null) {
+//             // Logic to handle overlapping shows, if necessary
+//             colOccupancy[i] = null;
+//         }
+//         colOccupancy[i] = { gridStart: slotIndex + 1, gridSpan: span, show };
+//     }
+//
+//     console.log(`Show placement: Show: ${show.content.name}, Start: ${showStart}, Adjusted Start: ${adjustedStart}, End: ${showEnd}, Slot Index: ${slotIndex}, Span: ${span}`);
+//
+//     return {
+//         ...show,
+//         gridStart: slotIndex + 1,
+//         gridSpan: span,
+//     };
+// }).filter(show => show.gridSpan > 0);
 
-        const isInTimeRange = showStart >= rangeStart && showStart < rangeEnd;
-        console.log(`Show ${show.id}: ${isInTimeRange ? 'within' : 'out of'} range`);
+//     return shows.map(show => {
+//         const showStart = new Date(show.startTime); // Parse start time to a Date object
+//         const showEnd = new Date(show.startTime);  // Initialize end time as a copy of start time
+//         showEnd.setMinutes(showStart.getMinutes() + show.durationMinutes);
+//
+//         let span = Math.ceil(show.durationMinutes / 30)
+//
+//         // Find the index of the slot that intersects or follows the show start
+//         let slotIndex = timeSlots.findIndex(slot => showStart < new Date(slot.getTime() + 30 * 60000));
+//         if (slotIndex === -1) {
+//             // If no slot is found, and the show starts before the first slot and ends after it, start from the first column.
+//             slotIndex = 0; // Default to the first column if no exact match is found
+//         }
+//
+//         if (showStart < startOfCurrentHalfHour && showEnd > startOfCurrentHalfHour) {
+//             // Adjust the slotIndex to the first column and span based on the remaining time if show starts before but ends after startOfCurrentHalfHour
+//             slotIndex = 0;
+//             const effectiveStart = Math.max(showStart.getTime(), startOfCurrentHalfHour.getTime());
+//             const remainingDuration = (showEnd.getTime() - effectiveStart) / 60000; // Convert to minutes
+//             span = Math.ceil(remainingDuration / 30);
+//         }
+//
+//         // const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000));
+//
+//         // const slotIndex = timeSlots.findIndex(slot => {
+//         //     let slotEnd = new Date(slot.getTime() + 30 * 60000)
+//         //     return showStart >= slot && showStart < slotEnd
+//         // })
+//
+//         // if (slotIndex + span > cols) { // Ensure the span does not exceed the number of available columns
+//         //     span = cols - slotIndex
+//         // }
+//         //
+//         //
+//         // if (slotIndex + span > cols) { // Ensure the span does not exceed the number of available columns
+//         //     span = cols - slotIndex;
+//         // }
+//
+//         // Adjust col span based on overlapping shows
+//     //     for (let i = slotIndex; i < Math.min(slotIndex + span, cols); i++) {
+//     //         if (colOccupancy[i] != null) {
+//     //             if (showStart.getTime() === startOfCurrentHalfHour.getTime()) {
+//     //                 colOccupancy[i] = null; // Clear earlier show
+//     //             } else {
+//     //                 colOccupancy[i].gridSpan = Math.min(colOccupancy[i].gridSpan, i - colOccupancy[i].gridStart + 1);
+//     //             }
+//     //         }
+//     //         colOccupancy[i] = { gridStart: slotIndex + 1, gridSpan: span, show };
+//     //     }
+//     //     // console.log('time slots: ' + timeSlots)
+//     //     // console.log(`Adjusting show for grid placement. Show Start: ${showStart}, Show End: ${showEnd}, Duration: ${show.durationMinutes}, Calculated Slot Index: ${slotIndex}, Span: ${span}`)
+//     //     console.log(`Adjusting show for grid placement. Show: ${show.content.name}, Show Start: ${showStart}, Duration: ${show.durationMinutes}, Calculated Slot Index: ${slotIndex}, Span: ${span}`)
+//     //
+//     //     // Return the show with additional grid positioning information
+//     //     return {
+//     //         ...show,
+//     //         gridStart: slotIndex + 1, // Grid positioning is often 1-based in CSS
+//     //         gridSpan: span,
+//     //     }
+//     // }).filter(show => {
+//     //     const endCol = show.gridStart + show.gridSpan - 1;
+//     //     return colOccupancy.slice(show.gridStart - 1, endCol).every(cell => cell && cell.show.id === show.id);
+//     // });
+// }
 
-        return isInTimeRange;
 
-    })
+// timeSlots.forEach((slot, index) => {
+//     if (!(slot instanceof Date)) {
+//         console.error('Slot is not a Date object:', slot);
+//         return; // Skip this iteration if `slot` is not a Date object
+//     }
+//
+//     const slotStart = slot;
+//     const slotEnd = new Date(slot.getTime() + 30 * 60000); // Each slot is 30 minutes long
+//
+//     const showExistsInSlot = showsWithPlacement.some(show => {
+//         const showStart = new Date(show.startTime);
+//         const showEnd = new Date(showStart.getTime() + show.durationMinutes * 60000);
+//         const overlaps = (slotStart <= showEnd && slotEnd > showStart) || (showStart <= slotEnd && showEnd > slotStart);
+//         return overlaps;
+//     });
+//
+//     if (!showExistsInSlot) {
+//         const formattedStartTime = dayjs(slotStart).format('YY-MM-DD HH:mm:ss');
+//         gridItems.push({
+//             placeholder: true,
+//             startTime: formattedStartTime,
+//             priority: 1,
+//             gridStart: index + 1, // Ensure gridStart aligns correctly with the CSS grid (1-based index)
+//             gridSpan: 1,
+//             content: { name: 'Nothing scheduled.' },
+//         });
+//     }
+// });
+//
+// const combinedShows = [...showsWithPlacement, ...gridItems];
+// combinedShows.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+// return combinedShows;
+// }
+
+// Helper function to create a placeholder with a given start and span
+// function createPlaceholder(start, span, row) {
+//     return {
+//         placeholder: true,
+//         startTime: 'Placeholder',
+//         priority: 0,
+//         gridStart: start,
+//         gridSpan: span,
+//         gridRow: row,
+//         content: {name: 'Nothing scheduled.'},
+//     }
+// }
+//
+// function createBlankSpotPlaceholder(column, span, row) {
+//     return {
+//         placeholder: true,
+//         startTime: 'BlankSpot',
+//         priority: 0,
+//         gridStart: column,
+//         gridSpan: span,
+//         gridRow: row,
+//         content: {name: 'Blank Spot'},
+//     }
+// }
+
+// function fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
+//     const gridItems = []
+//
+//     timeSlots.forEach((slot, index) => {
+//         // Ensure every slot is a Date object, convert if necessary
+//         // console.log('type of slot: ' + slot, typeof slot) // Check what `slot` contains and its type
+//
+//         // console.log('Debugging time slots and shows alignment');
+//         if (!(slot instanceof Date)) {
+//             console.error('slot is not a Date object:', slot)
+//             return // Skip this iteration if `slot` is not a Date object
+//         }
+//
+//         const slotStart = slot
+//         const slotEnd = new Date(slot.getTime() + 30 * 60000); // Assuming each slot is 30 minutes long
+//         // console.log(`Checking slot from ${slotStart} to ${slotEnd}`);
+//
+//         const showExistsInSlot = showsWithPlacement.some(show => {
+//             const showStart = new Date(show.startTime);
+//             const showEnd = new Date(showStart.getTime() + show.durationMinutes * 60000);
+//             // console.log(`Comparing against show from ${showStart} to ${showEnd}`);
+//             // return slotStart < showEnd && slotEnd > showStart;
+//             // Checking overlap more carefully, including exact boundary conditions
+//             const overlaps = (slotStart <= showEnd && slotEnd > showStart) || (showStart <= slotEnd && showEnd > slotStart);
+//             if (overlaps) {
+//                 // console.log(`Show overlaps with slot: ${show.id}`);
+//             }
+//             return overlaps;
+//
+//         });
+//
+//         if (!showExistsInSlot) {
+//             // Format the slot start time as YY-MM-DD HH:MM:ss
+//             const formattedStartTime = dayjs(slotStart).format('YY-MM-DD HH:mm:ss');
+//             console.log(`No show found for slot starting at ${formattedStartTime}, inserting placeholder.`);
+//
+//             // Insert a placeholder show for this slot
+//             gridItems.push({
+//                 placeholder: true,
+//                 startTime: formattedStartTime,
+//                 priority: 1,
+//                 gridStart: index + 1,
+//                 gridSpan: 1,
+//                 content: {name: 'Nothing scheduled.'},
+//             })
+//         }
+//     })
+//
+//     // Merge and sort the grid items by their start time/gridStart to maintain chronological order
+//     // return [...showsWithPlacement, ...gridItems].sort((a, b) => a.gridStart - b.gridStart)
+//
+//     // Merge and sort the grid items by their start time/gridStart to maintain chronological order
+//     const combinedShows = [...showsWithPlacement, ...gridItems];
+//     combinedShows.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+//     return combinedShows;
+// }
+
+const getTimeZone = () => {
+    const userStore = useUserStore()
+    // This function should return the timezone of the user.
+    // This could be dynamic based on the user's settings or browser settings.
+    // return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return userStore.timezone
 }
-
-function resolveSchedulingConflicts(shows) {
-    // Sort shows by start time, then by priority for shows with the same start time
-    const sortedShows = shows.sort((a, b) => {
-        const startTimeComparison = new Date(a.start_time) - new Date(b.start_time)
-        if (startTimeComparison === 0) { // If start times are the same
-            return a.priority - b.priority // Compare by priority
-        }
-        return startTimeComparison
-    })
-
-    const resolvedShows = []
-    const showsByStartTime = {}
-
-    // Group shows by their start time
-    sortedShows.forEach(show => {
-        const startTime = new Date(show.start_time).toISOString() // Ensure it's in ISO format for keying
-        if (!showsByStartTime[startTime]) {
-            showsByStartTime[startTime] = []
-        }
-        showsByStartTime[startTime].push(show)
-    })
-
-    console.log("Shows grouped by start time:", showsByStartTime);
-
-    // For each start time, select the show with the highest priority (lowest priority number)
-    Object.values(showsByStartTime).forEach(group => {
-        if (group.length > 1) {
-            console.log("Conflict at time", group[0].start_time, "- resolving with:", group[0]);
-            // If there are conflicts, push only the show with the highest priority
-            resolvedShows.push(group[0]) // Assuming the group is already sorted by priority
-        } else {
-            // No conflict, push the single show
-            resolvedShows.push(group[0])
-        }
-    })
-
-    return resolvedShows
-}
-
-function adjustShowsForGrid(shows, timeSlots) {
-    return shows.map(show => {
-        const showStart = new Date(show.start_time)
-        const showEnd = new Date(show.start_time)
-        showEnd.setMinutes(showEnd.getMinutes() + show.durationMinutes)
-
-        // Find the index of the slot that this show starts in
-        // const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000))
-        // let span = Math.ceil(show.durationMinutes / 30)
-        // if (slotIndex + span > timeSlots.length) {
-        //     span = timeSlots.length - slotIndex
-        // }
-
-        const slotIndex = timeSlots.findIndex(slot => {
-            let slotEnd = new Date(slot.getTime() + 30 * 60000);
-            return showStart >= slot && showStart < slotEnd;
-        });
-
-        let span = Math.ceil(show.durationMinutes / 30);
-        if (slotIndex + span > timeSlots.length) {
-            span = timeSlots.length - slotIndex;
-        }
-
-        console.log(`Adjusting show for grid placement. Show Start: ${show.start_time}, Duration: ${show.durationMinutes}, Calculated Slot Index: ${slotIndex}, Span: ${span}`);
-
-        // Return the show with additional grid positioning information
-        return {
-            ...show,
-            gridStart: slotIndex + 1, // Grid positioning is often 1-based in CSS
-            gridSpan: span,
-        }
-    })
-}
-
-function fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
-    const gridItems = []
-
-    timeSlots.forEach((slot, index) => {
-        // Ensure every slot is a Date object, convert if necessary
-        console.log('type of slot: ' + slot, typeof slot) // Check what `slot` contains and its type
-
-        if (!(slot instanceof Date)) {
-            console.error('slot is not a Date object:', slot)
-            return // Skip this iteration if `slot` is not a Date object
-        }
-
-        const slotStart = slot
-        const showExistsInSlot = showsWithPlacement.some(show =>
-            slotStart >= new Date(show.start_time) &&
-            slotStart < new Date(new Date(show.start_time).getTime() + show.durationMinutes * 60000),
-        )
-
-        if (!showExistsInSlot) {
-            // Insert a placeholder show for this slot
-            gridItems.push({
-                placeholder: true,
-                start_time: slot.toISOString(),
-                priority: 1,
-                gridStart: index + 1,
-                gridSpan: 1,
-                content: {show: {name: 'Nothing scheduled.'}},
-            })
-        }
-    })
-
-    // Merge and sort the grid items by their start time/gridStart to maintain chronological order
-    return [...showsWithPlacement, ...gridItems].sort((a, b) => a.gridStart - b.gridStart)
-}
-
 
 const initialState = () => ({
-    baseTime: new Date(),
-    viewingWindowStart: new Date(),
-    currentMonth: new Date(),
-    selectedDay: new Date(),
-    currentWeekStart: null,
-    currentWeekEnd: null,
+    baseTime: dayjs().tz(getTimeZone()).toDate(),
+    currentHalfHour: dayjs().tz(getTimeZone()).startOf('hour').add(dayjs().minute() >= 30 ? 30 : 0, 'minute').toDate(),
+    fourHoursLater: dayjs().tz(getTimeZone()).startOf('hour').add(dayjs().minute() >= 30 ? 30 : 0, 'minute').add(4, 'hour').toDate(),
+    viewingWindowStart: dayjs().tz(getTimeZone()).startOf('hour').toDate(),
+    currentMonth: dayjs().tz(getTimeZone()).startOf('month').toDate(),
+    selectedDay: dayjs().tz(getTimeZone()).toDate(),
+    currentWeekStart: dayjs().tz(getTimeZone()).startOf('week').toDate(),
+    currentWeekEnd: dayjs().tz(getTimeZone()).endOf('week').toDate(),
+    nextFourHoursOfContent: [],
+    nextFourHoursOfContentWithPlaceholders: [],
+    // nextFourHoursWithHalfHourIntervals: [],
     // viewingMode: 'automatic', // or 'userSelected'
     fiveDaySixHourSchedule: [], // Holds the schedule shows 5 day / 6 hour structured data
     todaysContent: [],
@@ -260,6 +496,11 @@ const initialState = () => ({
     dataFetchLog: [],
     scheduleIsLoading: false,
     savingToSchedule: false,
+    slotIntervalMinutes: 30,
+    mediumScreenSlotHours: 4, // 4 hours = 8 slots
+    smallScreenSlotHours: 2, // 2 hours = 4 slots
+    verySmallScreenSlotHours: 1, // 1 hour = 2 slots
+    timeSlots: null,
 })
 
 export const useScheduleStore = defineStore('scheduleStore', {
@@ -270,53 +511,53 @@ export const useScheduleStore = defineStore('scheduleStore', {
             Object.assign(this, initialState())
         },
         reset() {
-            const now = new Date()
-            this.viewingWindowStart = now
-            this.currentMonth = now
-            this.selectedDay = now
+            this.viewingWindowStart = dayjs().tz(getTimeZone()).startOf('hour').toDate()
+            this.currentMonth = dayjs().tz(getTimeZone()).startOf('month').toDate()
+            this.selectedDay = dayjs().tz(getTimeZone()).toDate()
         },
         async setSelectedDay(day) {
-            this.selectedDay = day
-            // Explicitly set the viewingWindowStart to 4 AM for the selected day
-            this.viewingWindowStart = addHours(startOfDay(day), 4)
-            this.currentWeekStart = startOfWeek(day, {weekStartsOn: 0})
-            this.currentWeekEnd = endOfWeek(day, {weekStartsOn: 0})
+            // Ensure that 'day' is a Day.js object, convert if coming as a native Date or string
+            const selectedDay = dayjs(day)
 
-            // // Check if the week of the selected day is already loaded
-            // this.currentWeekStart = startOfWeek(day, {weekStartsOn: 0});
-            // this.currentWeekEnd = endOfWeek(day, {weekStartsOn: 0});
+            // Set the selected day
+            this.selectedDay = selectedDay.toDate() // Convert back to Date if necessary; otherwise keep as Day.js object
+
+            // Explicitly set the viewingWindowStart to 4 AM for the selected day
+            this.viewingWindowStart = selectedDay.startOf('day').add(4, 'hours').toDate()
+
+            // Set the start and end of the week based on the selected day
+            this.currentWeekStart = selectedDay.startOf('week').toDate() // Consider week starting on Sunday
+            this.currentWeekEnd = selectedDay.endOf('week').toDate() // Consider week ending on Saturday
 
             // Use the updated fetch logic
             await this.fetchWeekDataIfNeeded()
-
-            // // First, check if we need to load data for the new week
-            // if (this.needsDataForWeek(weekStart, weekEnd)) {
-            //     // If new data is needed for the week, load it
-            //     await this.loadWeekFromDate(day).catch(error => {
-            //         console.error("Failed to load data for the new week:", error);
-            //     });
-            // }
-
-            // Then, check and fetch for any missing upcoming content
-            // This is necessary in case the week data is present but specific upcoming content within the week is missing
-            // await this.checkAndFetchForUpcomingContent();
         },
         setSelectedDayToToday(day) {
-            const now = new Date()
-            this.selectedDay = now
-            this.viewingWindowStart = startOfHour(now)
+            const now = dayjs()  // Create a Day.js object for the current date and time
+
+            // Set selectedDay to the current date and time
+            this.selectedDay = now.toDate() // Convert back to Date if necessary; otherwise keep as Day.js object
+
+            // Set viewingWindowStart to the start of the current hour using Day.js
+            this.viewingWindowStart = now.startOf('hour').toDate()
         },
         async changeDay(days) {
-            const currentTime = this.viewingWindowStart.getHours() * 60 + this.viewingWindowStart.getMinutes()
-            let newDay = addDays(startOfDay(this.viewingWindowStart), days)
-            newDay = new Date(newDay.setMinutes(currentTime)) // Preserve time of day
+            const currentTimeZone = getTimeZone() // or however you obtain the timezone
+            // Extract the time component from the current viewing window start
+            const currentTime = dayjs(this.viewingWindowStart).hour() * 60 + dayjs(this.viewingWindowStart).minute()
 
-            this.selectedDay = newDay
+            // Create a new day and set it to the start of that day
+            let newDay = dayjs(this.viewingWindowStart).tz(currentTimeZone).add(days, 'day').startOf('day')
+
+            // Set the time back to the original time
+            newDay = newDay.add(currentTime, 'minute')
+
+            // Depending on your application's needs, you may or may not need to convert it back to a JavaScript Date object
+            // If you need a Date object:
+            this.viewingWindowStart = newDay.toDate()
+
+            // If you can use dayjs objects directly (preferred if possible):
             this.viewingWindowStart = newDay
-
-            // Update the week's range based on the new day
-            this.currentWeekStart = startOfWeek(newDay, {weekStartsOn: 0})
-            this.currentWeekEnd = endOfWeek(newDay, {weekStartsOn: 0})
 
             // // Check if the week of the new day is already loaded
             // const weekStart = startOfWeek(newDay, {weekStartsOn: 0});
@@ -343,52 +584,34 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // await this.checkAndFetchForUpcomingContent();
         },
         async shiftHours(hours) {
-            // Shift the viewing window
-            this.viewingWindowStart = addHours(this.viewingWindowStart, hours)
-            this.currentWeekStart = startOfWeek(this.viewingWindowStart, {weekStartsOn: 0})
-            this.currentWeekEnd = endOfWeek(this.viewingWindowStart, {weekStartsOn: 0})
+            // Shift the viewing window by the specified number of hours
+            this.viewingWindowStart = dayjs(this.viewingWindowStart).add(hours, 'hour').toDate()
 
-            // // Update selectedDay if the day has changed
-            // if (!isSameDay(this.viewingWindowStart, this.selectedDay)) {
-            //     this.selectedDay = startOfDay(this.viewingWindowStart);
-            // }
+            // Set the current week start and end based on the new viewing window start
+            this.currentWeekStart = dayjs(this.viewingWindowStart).startOf('week').toDate()
+            this.currentWeekEnd = dayjs(this.viewingWindowStart).endOf('week').toDate()
 
             // If the day has changed, update selectedDay and the week's range
-            if (!isSameDay(this.viewingWindowStart, this.selectedDay)) {
-                this.selectedDay = startOfDay(this.viewingWindowStart)
+            if (!dayjs(this.viewingWindowStart).isSame(dayjs(this.selectedDay), 'day')) {
+                this.selectedDay = dayjs(this.viewingWindowStart).startOf('day').toDate()
             }
-
-            // // Check if the week of the new viewing window is already loaded
-            // this.currentWeekStart = startOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
-            // this.currentWeekEnd = endOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
 
             // Use the updated fetch logic
             await this.fetchWeekDataIfNeeded()
-
-            // // Check for the need to load data for the new week
-            // if (!this.needsDataForWeek()) {
-            //     // Data for the current week has already been loaded; skip fetching
-            //     console.log("Data for the current week has already been loaded; skipping redundant fetch.");
-            //     return;
-            // }
-
-            //
-            // await this.loadWeekFromDate(this.viewingWindowStart).catch(error => {
-            //     console.error("Failed to load data for the new week:", error);
-            // });
-
-            // Proceed with data fetching if needed
-            // await this.checkAndFetchForUpcomingContent();
         },
         isElevenPM(date) {
-            return getHours(date) === 23 // Checks if the hour is 23 (11 PM)
+            // Convert the date to a Day.js object if it's not already one
+            const time = dayjs(date)
+            // Check if the hour is 23 (11 PM)
+            return time.hour() === 23
         },
         // Actions to change the month
         async subtractMonth() {
-            // Subtract one month from the currentMonth
-            this.currentMonth = subMonths(this.currentMonth, 1)
+            // Convert currentMonth to a Day.js object if it's not already and subtract one month
+            this.currentMonth = dayjs(this.currentMonth).subtract(1, 'month').toDate()
 
             try {
+                // Pass the new currentMonth to setSelectedDay
                 await this.setSelectedDay(this.currentMonth)
                 console.log('Set selected day based on current month:', this.currentMonth)
             } catch (error) {
@@ -396,8 +619,11 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
         async addMonth() {
-            this.currentMonth = addMonths(this.currentMonth, 1)
+            // Convert currentMonth to a Day.js object if it's not already and add one month
+            this.currentMonth = dayjs(this.currentMonth).add(1, 'month').toDate()
+
             try {
+                // Pass the new currentMonth to setSelectedDay
                 await this.setSelectedDay(this.currentMonth)
                 console.log('Set selected day based on current month:', this.currentMonth)
             } catch (error) {
@@ -436,11 +662,11 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
         async preloadWeeklyContent() {
             // Use the current date to preload content for the current week
-            const currentDate = new Date()
+            const currentDate = dayjs() // Creates a Day.js object representing the current date and time
 
             try {
-                // Call loadWeekFromDate with the current date
-                await this.loadWeekFromDate(currentDate)
+                // Call loadWeekFromDate with the current Day.js date object, converted to a Date if necessary
+                await this.loadWeekFromDate(currentDate.toDate()) // Convert to JavaScript Date if loadWeekFromDate expects a Date object
             } catch (error) {
                 console.error('Failed to preload weekly content:', error)
             }
@@ -451,35 +677,39 @@ export const useScheduleStore = defineStore('scheduleStore', {
             try {
                 const userStore = useUserStore()
                 // Ensure the date is in UTC format for the request
-                console.log('Date before formatted: ' + date)
-                const fullISODate = date.toISOString()
+                // console.log('Date before formatted: ' + date)
+                // Convert date to Day.js object and format it in ISO string with UTC
+                const dayDate = dayjs(date)
+                const fullISODate = dayDate.toISOString()
+                // console.log(`Loading week data for date in UTC: ${fullISODate}`)
 
-                console.log(`Loading week data for date in UTC: ${fullISODate}`)
-
+                // Fetch the week's schedule data
                 // Send the dateTime and timezone as a JSON object in a POST request
                 const response = await axios.post(`/api/schedule/week/${fullISODate}`)
 
                 // const formattedDate = date.toISOString().split('T')[0];
+                // Log and error handling
+                const formattedDate = dayDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading week data for date: ${formattedDate}`); // Log the date being requested
                 //
                 // const response = await axios.get(`/api/schedule/week/${formattedDate}`);
-                console.log('Received response:', response.data) // Log the raw response data
+                // console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone || 'UTC' // Additional fallback to 'UTC'
-                console.log(`Using timezone: ${timezone}`) // Log the timezone being used
+                // console.log(`Using timezone: ${timezone}`) // Log the timezone being used
 
                 const newData = convertScheduleToTimezone(response.data, timezone) // Ensure you are accessing the correct data property from the response
 
                 // Merge newData into weeklyContent, avoiding duplicates
                 this.weeklyContent = [...this.weeklyContent, ...newData].filter((value, index, self) =>
                         index === self.findIndex((t) => (
-                            t.id === value.id && t.start_time === value.start_time
+                            t.id === value.id && t.startTime === value.startTime
                         )),
                 )
 
                 // Optionally update fetch logs or perform additional state updates
-                this.updateFetchLogs(date);
+                this.updateFetchLogs(date)
 
                 this.scheduleIsLoading = false
             } catch (error) {
@@ -488,23 +718,31 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
         updateFetchLogs(date) {
-            // Update the fetch log with the current fetch
-            const weekStart = startOfWeek(new Date(date), {weekStartsOn: 0}).toISOString()
-            const weekEnd = endOfWeek(new Date(date), {weekStartsOn: 0}).toISOString()
-            const fetchTime = new Date().toISOString()
+            // Convert date to a Day.js object if it's not already one
+            const dayDate = dayjs(date)
 
-            const existingLogIndex = this.dataFetchLog.findIndex(log => log.weekStart === weekStart && log.weekEnd === weekEnd)
+            // Use Day.js to calculate the start and end of the week
+            const weekStart = dayDate.startOf('week').toISOString() // Assumes the week starts on Sunday
+            const weekEnd = dayDate.endOf('week').toISOString() // Assumes the week ends on Saturday
+            const fetchTime = dayjs().toISOString() // Current time in ISO format
+
+            // Find existing log entry for the week
+            const existingLogIndex = this.dataFetchLog.findIndex(log =>
+                log.weekStart === weekStart && log.weekEnd === weekEnd)
+
             if (existingLogIndex !== -1) {
+                // Update the last fetch time if the log already exists
                 this.dataFetchLog[existingLogIndex].lastFetch = fetchTime
             } else {
+                // Add a new log entry if it does not exist
                 this.dataFetchLog.push({weekStart, weekEnd, lastFetch: fetchTime})
             }
         },
         needsDataForWeek() {
-            // Helper function to format ISO date strings for easier comparison
-            const formatISODate = date => date.toISOString().split('T')[0]
+            // Helper function to format dates to 'YYYY-MM-DD' for easier comparison
+            const formatISODate = (date) => dayjs(date).format('YYYY-MM-DD')
 
-            // Current week range in ISO date string format
+            // Current week range in 'YYYY-MM-DD' format
             const weekStartStr = formatISODate(this.currentWeekStart)
             const weekEndStr = formatISODate(this.currentWeekEnd)
 
@@ -514,9 +752,9 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Iterate through the fetch log to check if the current week has been fetched
             const weekHasBeenFetched = this.dataFetchLog.some(log => {
-                // Convert log dates to ISO string format for comparison
-                const logWeekStartStr = formatISODate(new Date(log.weekStart))
-                const logWeekEndStr = formatISODate(new Date(log.weekEnd))
+                // Convert log dates to 'YYYY-MM-DD' format for comparison
+                const logWeekStartStr = formatISODate(log.weekStart)
+                const logWeekEndStr = formatISODate(log.weekEnd)
 
                 // Log each comparison for insight
                 console.log(`Comparing to fetched range: ${logWeekStartStr} to ${logWeekEndStr}`)
@@ -528,60 +766,48 @@ export const useScheduleStore = defineStore('scheduleStore', {
             console.log(`Week from ${weekStartStr} to ${weekEndStr} has ${weekHasBeenFetched ? '' : 'not '}been fetched.`)
 
             return !weekHasBeenFetched
-            // // Extend weekEnd to cover the span of upcoming content from viewingWindowStart
-            // const extendedEnd = this.calculateExtendedEndForUpcomingContent();
-            // let checkWeekEnd = new Date(this.currentWeekEnd); // Work with a copy to avoid side effects
-            //
-            // if (extendedEnd > checkWeekEnd) {
-            //     checkWeekEnd = extendedEnd;
-            // }
-            //
-            // // Now weekEnd includes any additional day(s) that might be displayed
-            // // Adjust the checkWeekEnd to include the entire day
-            // checkWeekEnd.setHours(23, 59, 59, 999);
-            //
-            // const hasDataForExtendedWeek = this.weeklyContent.some(content => {
-            //     const contentDate = new Date(content.start_time);
-            //     return contentDate >= this.currentWeekStart && contentDate <= checkWeekEnd;
-            // });
-            //
-            // console.log('Has data for extended week range:', hasDataForExtendedWeek);
-            // return !hasDataForExtendedWeek;
         },
         calculateExtendedEndForUpcomingContent() {
-            // Assuming viewingWindowStart is the reference start time for upcoming content
-            const baseStartTime = new Date(this.viewingWindowStart)
+            // Convert viewingWindowStart to a Day.js object if it's not already one
+            const baseStartTime = dayjs(this.viewingWindowStart)
+
             // Extend by 6 hours to cover the upcoming content span
-            // Return the extended end time, potentially adjusting into the next day
-            return new Date(baseStartTime.getTime() + (6 * 60 * 60 * 1000))
+            // Day.js handles date and time addition cleanly, returning a new Day.js object
+            const extendedEndTime = baseStartTime.add(6, 'hour')
+
+            // Return the extended end time as a Date object, if needed elsewhere as a Date
+            return extendedEndTime.toDate()
         },
         // Function to check for and fetch missing upcoming content
         async checkAndFetchForUpcomingContent() {
-            const upcomingDates = getUpcomingContentDates(this.viewingWindowStart)
-            const now = new Date()
-            const fifteenMinutesAgo = new Date(now.getTime() - 15 * 60000)
+            const upcomingDates = getUpcomingContentDates(this.viewingWindowStart) // Assuming this returns Day.js objects
+            const now = dayjs()
+            const fifteenMinutesAgo = now.subtract(15, 'minutes')
 
             for (const date of upcomingDates) {
-                const dateString = date.toISOString().split('T')[0]
+                const dateString = date.format('YYYY-MM-DD')  // Day.js format for 'YYYY-MM-DD'
                 const contentCoverageAndFreshness = this.weeklyContent.some(content => {
-                    const contentDate = new Date(content.start_time).toDateString()
+                    const contentDate = dayjs(content.startTime).format('YYYY-MM-DD')  // Convert and compare as 'YYYY-MM-DD'
                     const lastFetchedTime = this.dataFetchLog[dateString]
-                    const isFresh = lastFetchedTime && new Date(lastFetchedTime) > fifteenMinutesAgo
-                    return date.toDateString() === contentDate && isFresh
+                    const isFresh = lastFetchedTime && dayjs(lastFetchedTime) > fifteenMinutesAgo
+                    return dateString === contentDate && isFresh
                 })
 
                 if (!contentCoverageAndFreshness) {
                     // This date needs data fetching
-                    await this.fetchDataAndUpdateLog(dateString, date)
+                    await this.fetchDataAndUpdateLog(dateString, date.toDate()) // Pass as Date if needed, or adjust downstream functions to accept Day.js objects
                     break // Assuming you fetch data for the week, so no need to check further dates within the same week
                 }
             }
         },
         async fetchDataAndUpdateLog(dateString, date) {
             try {
-                await this.loadWeekFromDate(date)
+                // Assuming 'date' is already a Day.js object; if not, convert it
+                const dayDate = dayjs(date)
+
+                await this.loadWeekFromDate(dayDate.toDate())  // Pass as a Date if needed, or adjust 'loadWeekFromDate' to accept Day.js objects
                 // Successfully fetched, so update the log
-                this.dataFetchLog[dateString] = new Date().toISOString()
+                this.dataFetchLog[dateString] = dayjs().toISOString()  // Use Day.js to get the current time in ISO format
                 console.log('Data fetched successfully for date:', dateString)
             } catch (error) {
                 console.error(`Failed to fetch data for date ${dateString}:`, error)
@@ -596,296 +822,274 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     console.error('Failed to load data for the week:', error)
                     return false // Indicates failure to fetch when an error occurs
                 })
-                // await this.loadWeekFromDate(this.currentWeekStart).catch(error => {
-                //     console.error("Failed to load data for the week:", error);
-                //     return false; // Indicates failure to fetch when an error occurs
-                // });
             } else {
                 console.log('Week data already loaded; no need to fetch.')
             }
-
-            // Conditionally check for missing upcoming content within the current week
-            // only if new week data hasn't been fetched.
-            // if (!dataFetched) {
-            //     await this.checkAndFetchForUpcomingContent();
-            // }
         },
-        // createTimeSlots(start, durationHours = 4, intervalMinutes = 30) {
-        //     let slots = [];
-        //     for (let i = 0; i < (durationHours * 60) / intervalMinutes; i++) {
-        //         let slotTime = new Date(start.getTime() + i * intervalMinutes * 60000);
-        //         slots.push(slotTime);
-        //     }
-        //     return slots;
-        // },
+
+        // Function to simply update baseTime with the given time (expected to be a Day.js object or compatible input)
+        updateBaseTime(time) {
+            // Ensure the time is a Day.js object when setting baseTime
+            this.baseTime = dayjs(time).toDate()  // Convert to Date if necessary; consider keeping it as Day.js object if possible
+        },
+
+        // Function to set baseTime based on a new time input (expected to be a string, Date, etc.)
+        setBaseTime(newTime) {
+            // Convert newTime to a Day.js object and then to Date if necessary
+            this.baseTime = dayjs(newTime).toDate()  // This handles various input formats and ensures consistency
+        },
 
 
-        mapShowsToTimeSlots(shows, timeSlots) {
-            const showsWithAdjustedSpans = shows.map(show => {
-                const showStart = new Date(show.start_time)
-                const showEnd = new Date(show.start_time)
-                showEnd.setMinutes(showEnd.getMinutes() + show.durationMinutes)
-                const slotIndex = timeSlots.findIndex(slot => showStart >= slot && showStart < new Date(slot.getTime() + 30 * 60000))
+        async updateNextFourHours() {
+            this.scheduleIsLoading = true
+            this.updateTimeRange()
+            this.prepareShowsForGrid()
+            this.scheduleIsLoading = false
+        },
 
-                // Initially set the span based on the show's duration
-                let span = Math.ceil(show.durationMinutes / 30)
+        updateTimeRange() {
+            // Ensure the baseTime is interpreted correctly in the current user's timezone
+            const baseDate = dayjs(this.baseTime).tz(getTimeZone())
 
-                // Adjust the span if there's an overlap with the next show's start time
-                if (slotIndex + span > timeSlots.length) {
-                    span = timeSlots.length - slotIndex // Adjust to not exceed the grid
+            // Calculate the rounded minutes to either 0 or 30 based on the current time
+            const roundedMinutes = baseDate.minute() < 30 ? 0 : 30
+
+            // Set the current half hour, rounding down to the nearest half-hour mark
+            const currentHalfHour = baseDate.minute(roundedMinutes).second(0).millisecond(0).startOf('minute')
+
+            // Calculate four hours later from the current half-hour mark
+            const fourHoursLater = currentHalfHour.add(4, 'hours')
+
+            // Update the store's currentHalfHour and fourHoursLater ensuring they are Date objects if required
+            this.currentHalfHour = currentHalfHour.toDate()
+            this.fourHoursLater = fourHoursLater.toDate()
+
+            console.log('Fetching shows between:', currentHalfHour.format('YYYY-MM-DD HH:mm:ss'), 'and', fourHoursLater.format('YYYY-MM-DD HH:mm:ss'))
+        },
+
+        prepareShowsForGrid() {
+            // Step 1: Filter shows within the desired time range
+            const shows = this.filterShowsForTimeRange()
+
+            // Step 2: Calculate initial grid slots for these shows
+            const processedShows = this.calculateGridSlots(shows, this.timeSlots)
+
+            if (!this.timeSlots || !Array.isArray(this.timeSlots) || this.timeSlots.length === 0) {
+                console.error('timeSlots is not properly initialized.')
+                // Handle this scenario, e.g., by initializing timeSlots, or skipping the update
+                return
+            }
+
+            // Step 3: Update column occupancy and find the maximum row used
+            const {colOccupancy, maxRowUsed} = this.updateColumnOccupancy(processedShows, this.timeSlots.length)
+
+            // Step 4: Fill gaps in the grid with placeholders
+            const gridItems = this.fillGapsAndCreatePlaceholders(colOccupancy, maxRowUsed, this.timeSlots.length)
+
+            // Step 5: Combine processed shows with the placeholders
+            const combinedShows = [...processedShows, ...gridItems]
+
+            // Step 6: Sort and group shows by rows
+            this.nextFourHoursOfContent = this.sortShowsByPosition(combinedShows)
+        },
+
+        filterShowsForTimeRange() {
+            return this.weeklyContent.filter(show => {
+                // Validate show data integrity
+                if (typeof show.startTime !== 'string' || typeof show.durationMinutes !== 'number') {
+                    console.warn('Invalid show data:', show.startTime, show.durationMinutes)
+                    return false // Skip this show if it doesn't meet data expectations
                 }
 
-                // Return the show with adjusted span and calculated start index
+                const showStart = dayjs(show.startTime)
+                const showEnd = dayjs(show.endTime)
+                const isInTimeRange = showStart.isBefore(this.fourHoursLater) && showEnd.isAfter(this.currentHalfHour)
+
+                // Detailed logging for debugging
+                if (isInTimeRange) {
+                    const hasStarted = showStart.isBefore(this.currentHalfHour) ? 'already started' : 'starts within range'
+                    console.log(`Show: ${show.content.name}, ${hasStarted}, Start: ${showStart.format('HH:mm:ss')}, End: ${showEnd.format('HH:mm:ss')}, Duration: ${show.durationMinutes}`)
+                }
+
+                return isInTimeRange
+            })
+        },
+
+        calculateGridSlots(shows, timeSlots) {
+            // Ensure timeSlots is valid
+            if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
+                console.error('Invalid or empty timeSlots array')
+                return [] // Return empty or handle as best fits your application context
+            }
+
+            const cols = timeSlots.length
+            return shows.map(show => {
+                const showStart = dayjs(show.startTime)
+                const showEnd = showStart.add(show.durationMinutes, 'minutes')
+
+                // Find the slot where the show should start
+                let slotIndex = timeSlots.findIndex(slot =>
+                    showStart.isSameOrAfter(dayjs(slot)) &&
+                    showStart.isBefore(dayjs(slot).add(30, 'minutes')),
+                )
+
+                // If the show starts before the first slot, place it in the first slot
+                if (slotIndex === -1 && showStart.isBefore(dayjs(timeSlots[0]))) {
+                    slotIndex = 0
+                }
+
+                // Calculate the span based on the ending time of the show
+                const endSlotIndex = timeSlots.findIndex(slot =>
+                    showEnd.isSameOrBefore(dayjs(slot).add(30, 'minutes')),
+                )
+
+                let span
+                if (endSlotIndex === -1) {
+                    // If the show ends after the last slot, span till the end of the grid
+                    span = cols - slotIndex
+                } else {
+                    // Calculate span normally
+                    span = endSlotIndex - slotIndex + 1
+                }
+
+                // Prevent overflow of the grid
+                span = Math.min(span, cols - slotIndex)
+
                 return {
                     ...show,
                     gridStart: slotIndex + 1,
                     gridSpan: span,
                 }
             })
+        },
 
-            // Now handle placing the shows with adjusted spans in the grid, including placeholders for empty slots
-            return timeSlots.map((slot, index) => {
-                const showForSlot = showsWithAdjustedSpans.find(show => show.gridStart === index + 1)
-                if (showForSlot) {
-                    return showForSlot
-                } else {
-                    // If no show for this slot, return a placeholder
-                    return {
-                        placeholder: true,
-                        gridStart: index + 1,
-                        gridSpan: 1,
-                        content: {show: {name: 'Nothing scheduled.'}},
+        updateColumnOccupancy(processedShows, cols) {
+            let colOccupancy = new Array(cols).fill(null).map(() => new Set())
+            let maxRowUsed = 0
+            processedShows.forEach(show => {
+                for (let i = show.gridStart - 1; i < show.gridStart - 1 + show.gridSpan; i++) {
+                    if (i >= 0 && i < cols) {
+                        colOccupancy[i].add(show.gridRow)
+                        maxRowUsed = Math.max(maxRowUsed, show.gridRow)
                     }
                 }
             })
+            return {colOccupancy, maxRowUsed}
         },
-        updateBaseTime(time) {
-            this.baseTime = time;
+
+        fillGapsAndCreatePlaceholders(colOccupancy, maxRowUsed, cols) {
+            let gridItems = []
+            for (let row = 1; row <= maxRowUsed; row++) {
+                gridItems.push(...this.findAndFillGapsForSingleRow(colOccupancy, row, cols))
+            }
+            return gridItems
         },
-        setBaseTime(newTime) {
-            this.baseTime = new Date(newTime);
+
+        findAndFillGapsForSingleRow(colOccupancy, row, cols) {
+            let gridItems = []
+            let gapStart = -1
+            for (let i = 0; i < cols; i++) {
+                if (!colOccupancy[i].has(row)) {
+                    gapStart = gapStart === -1 ? i : gapStart
+                } else if (gapStart !== -1) {
+                    gridItems.push(this.createPlaceholder(gapStart + 1, i - gapStart, row))
+                    gapStart = -1
+                }
+            }
+            if (gapStart !== -1) {
+                gridItems.push(this.createPlaceholder(gapStart + 1, cols - gapStart, row))
+            }
+            return gridItems
+        },
+
+        sortShowsByPosition(combinedShows) {
+            if (!Array.isArray(combinedShows)) {
+                console.error('Expected an array of shows, received:', combinedShows)
+                return [] // Return an empty array if not an array to prevent errors
+            }
+
+            // Sort shows directly by row and then by start position within each row
+            return combinedShows.sort((a, b) => a.gridRow - b.gridRow || a.gridStart - b.gridStart)
+        },
+
+        createPlaceholder(start, span, row) {
+            return {
+                placeholder: true,
+                startTime: 'Placeholder',
+                priority: 0,
+                gridStart: start,
+                gridSpan: span,
+                gridRow: row,
+                content: {name: 'Nothing scheduled.'},
+            }
+        },
+
+        createBlankSpotPlaceholder(start, span, row) {
+            return {
+                placeholder: true,
+                startTime: 'Blank Spot',
+                priority: 0,
+                gridStart: start,
+                gridSpan: span,
+                gridRow: row,
+                content: {name: 'Blank Spot'}, // Ensure it is differentiated from normal placeholders
+            }
         },
 
     },
 
     getters: {
         currentTime: (state) => {
-            return dayjs(state.baseTime).format('h:mm A');
+            return dayjs(state.baseTime).format('h:mm A')
         },
-        currentHalfHour: (state) => {
-            const date = dayjs(state.baseTime);
-            const minutes = date.minute();
-            const roundedMinutes = minutes < 30 ? 0 : 30;
-            return date.minute(roundedMinutes).second(0).format('h:mm A');
+
+        setTimeSlots: (state) => {
+            const appSettingStore = useAppSettingStore()
+            let slotHours
+
+            // Determine the number of slot hours based on screen size
+            if (appSettingStore.isVerySmallScreen) {
+                slotHours = state.verySmallScreenSlotHours
+            } else if (appSettingStore.isSmallScreen) {
+                slotHours = state.smallScreenSlotHours
+            } else {
+                slotHours = state.mediumScreenSlotHours
+            }
+
+            const intervalMinutes = state.slotIntervalMinutes
+            const slots = []
+            const totalSlots = (slotHours * 60) / intervalMinutes
+
+            // Ensure state.currentHalfHour is a Day.js object
+            const currentHalfHour = dayjs(state.currentHalfHour)
+
+            // Calculate the time for each slot using Day.js
+            for (let i = 0; i < totalSlots; i++) {
+                let slotTime = currentHalfHour.add(i * intervalMinutes, 'minute')
+                slots.push(slotTime.toDate())  // Convert back to JavaScript Date if necessary
+            }
+            state.timeSlots = slots
+            return slots.length
         },
-        nextFourHoursOfContent: (state) => {
-            const userStore = useUserStore();
-            const timezone = userStore.timezone || 'UTC';  // Ensure you have a fallback timezone
-            const startOfCurrentHour = dayjs(state.baseTime).startOf('hour').tz(timezone);
-            const fourHoursLater = startOfCurrentHour.add(4, 'hour');
 
-            console.log(`Generating content for next four hours from ${startOfCurrentHour.toDate()} to ${fourHoursLater.toDate()}, Timezone: ${timezone}`);
-
-            const timeSlots = createTimeSlots(startOfCurrentHour.toDate(), 4, 30, timezone);
-            let shows = fetchShowsScheduledBetween(state, startOfCurrentHour.toDate(), fourHoursLater.toDate());
-            let resolvedShows = resolveSchedulingConflicts(shows);
-            let adjustedShows = adjustShowsForGrid(resolvedShows, timeSlots);
-            return fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots);
-        },
-        // nextFourHoursOfContent: (state) => {
-        //     const userStore = useUserStore()
-        //     const now = new Date() // Current time
-        //     // const startOfCurrentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
-        //     const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0))
-        //     const fourHoursLater = new Date(startOfCurrentHour.getTime() + 4 * 60 * 60 * 1000)
-        //
-        //
-        //     // Create time slots for the next four hours, at 30-minute intervals, in UTC
-        //     const utcTimeSlots = createTimeSlots(startOfCurrentHour, 4, 30)
-        //     // Convert each UTC time slot to the user's local timezone
-        //     const timeSlots = utcTimeSlots.map(slot =>
-        //         new Date(userStore.convertUtcToUserTimezone(slot)),
-        //     )
-        //
-        //     // Iterate over each time slot to either find a show that matches or insert a placeholder
-        //     const filledShows = timeSlots.map((slot, index) => {
-        //         const slotStart = dayjs(slot).format('YYYY-MM-DD HH:mm:ss')
-        //         const matchingShow = state.weeklyContent.find(show => {
-        //             const showStart = dayjs(show.start_time).format('YYYY-MM-DD HH:mm:ss')
-        //             return showStart === slotStart
-        //         })
-        //
-        //         if (matchingShow) {
-        //             // Calculate grid placement based on the show's start time and duration
-        //             return {
-        //                 ...matchingShow,
-        //                 gridStart: index + 1,
-        //                 gridSpan: Math.ceil(matchingShow.durationMinutes / 30),
-        //             }
-        //         } else {
-        //             // Create a placeholder for empty time slots
-        //             return {
-        //                 placeholder: true,
-        //                 start_time: slot.toISOString(),
-        //                 durationMinutes: 30,
-        //                 gridStart: index + 1,
-        //                 gridSpan: 1,
-        //                 content: {show: {name: 'Nothing scheduled.'}},
-        //             }
-        //         }
-        //     })
-        //
-        //     return filledShows
-        // },
-
-        // // Group shows by start time
-        // const showsGroupedByStartTime = state.weeklyContent.reduce((acc, item) => {
-        //     const itemStart = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss');
-        //     if (!acc[itemStart]) {
-        //         acc[itemStart] = [];
-        //     }
-        //     acc[itemStart].push(item);
-        //     return acc;
-        // }, {});
-        //
-        // // Select the show with the lowest priority for each start time
-        // const selectedShows = Object.values(showsGroupedByStartTime).map(group => {
-        //     return group.reduce((selected, item) => {
-        //         return !selected || item.priority < selected.priority ? item : selected;
-        //     }, null);
-        // });
-        //
-        // // Sort, adjust for overlaps, and calculate grid placement as before
-        // let sortedShows = selectedShows
-        //     .filter(item => {
-        //         const itemStart = new Date(item.start_time);
-        //         return itemStart >= startOfCurrentHour && itemStart < fourHoursLater;
-        //     })
-        //     .sort((a, b) => {
-        //         const startDiff = new Date(a.start_time) - new Date(b.start_time);
-        //         return startDiff !== 0 ? startDiff : a.priority - b.priority;
-        //     })
-        //     .map((item, index, array) => {
-        //         // Grid placement logic remains the same as before
-        //         // Ensure the span doesn't exceed the grid or become negative
-        //         const itemStart = new Date(item.start_time);
-        //         const slotIndex = timeSlots.findIndex(slot => new Date(item.start_time) >= slot && new Date(item.start_time) < new Date(slot.getTime() + 30 * 60000));
-        //         let durationSlots = Math.ceil(item.durationMinutes / 30);
-        //         if (index < array.length - 1) {
-        //             // Adjust for overlaps with subsequent shows
-        //         }
-        //         const adjustedSpan = Math.max(1, Math.min(durationSlots, timeSlots.length - slotIndex));
-        //         return {
-        //             ...item,
-        //             gridStart: slotIndex + 1,
-        //             gridSpan: adjustedSpan
-        //         };
-        //     });
-
-        // Filter, sort, and adjust shows based on start time, duration, and priority
-        // let sortedShows = state.weeklyContent
-        //     .filter(item => {
-        //         const itemStart = new Date(item.start_time);
-        //         return itemStart >= startOfCurrentHour && itemStart < fourHoursLater;
-        //     })
-        //     .sort((a, b) => {
-        //         // Sort by start time; if equal, then by priority
-        //         const startDiff = new Date(a.start_time) - new Date(b.start_time);
-        //         return startDiff !== 0 ? startDiff : a.priority - b.priority;
-        //     })
-        //     .map((item, index, array) => {
-        //         // Convert back to string format matching start_time format
-        //         const formattedItemStartTime = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss');
-        //
-        //         console.log('itemStartTimeInUserTZ: ' + formattedItemStartTime)
-        //         // Calculate grid placement for each show
-        //         const itemStart = new Date(item.start_time);
-        //         const itemEnd = new Date(item.start_time);
-        //         itemEnd.setMinutes(itemEnd.getMinutes() + item.durationMinutes);
-        //
-        //         // Find the index of the slot that the item starts in
-        //         // const slotIndex = timeSlots.findIndex(slot => itemStart >= slot && itemStart < new Date(slot.getTime() + 30 * 60000));
-        //
-        //         // Find the index of the slot that the item starts in
-        //         const slotIndex = timeSlots.findIndex(slot => {
-        //             return formattedItemStartTime >= slot && formattedItemStartTime < new Date(slot.getTime() + 30 * 60000);
-        //         });
-        //
-        //         let durationSlots = Math.ceil(item.durationMinutes / 30);
-        //         // Adjust for overlaps with subsequent shows
-        //         if (index < array.length - 1) {
-        //             const nextItemStart = new Date(array[index + 1].start_time);
-        //             if (itemEnd > nextItemStart) {
-        //                 // If overlap, reduce durationSlots
-        //                 const overlap = Math.ceil((itemEnd - nextItemStart) / (30 * 60000));
-        //                 durationSlots -= overlap;
-        //             }
-        //         }
-        //
-        //         // Ensure the span doesn't exceed the grid or become negative
-        //         const adjustedSpan = Math.max(1, Math.min(durationSlots, timeSlots.length - slotIndex));
-        //
-        //         // Return the adjusted show with grid placement information
-        //         return {
-        //             ...item,
-        //             gridStart: slotIndex + 1, // Grid is 1-indexed
-        //             gridSpan: adjustedSpan
-        //         };
-        //     });
-
-        // Create placeholders for each time slot if there's no show scheduled
-        // const filledShows = timeSlots.map(slot => {
-        //     const formattedSlot = dayjs(slot).format('YYYY-MM-DD HH:mm:ss');
-        //     const showForSlot = sortedShows.find(show => dayjs(show.start_time).format('YYYY-MM-DD HH:mm:ss') === formattedSlot);
-        //
-        //     if (showForSlot) {
-        //         return showForSlot; // Return the actual show if it exists
-        //     } else {
-        //         // Return a placeholder show for empty slots
-        //         return {
-        //             placeholder: true, // Indicate this is a placeholder
-        //             start_time: slot.toISOString(),
-        //             durationMinutes: 30, // Assuming a standard 30-minute slot
-        //             gridStart: timeSlots.indexOf(slot) + 1,
-        //             gridSpan: 1,
-        //             content: {
-        //                 show: {
-        //                     name: "Nothing scheduled."
-        //                 }
-        //             }
-        //         };
-        //     }
-        // });
-
-        // Return the filled array of shows and placeholders
-        // return filledShows;
-        // return sortedShows;
-        // },
-        // nextFourHoursOfContent: (state) => {
-        //     const now = new Date(); // Get the current date and time
-        //     const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()); // Set to the top of the current hour
-        //     const end = new Date(start.getTime() + 4 * 60 * 60 * 1000); // 4 hours later from the start
-        //
-        //     // Filter weeklyContent for the next 6 hours window
-        //     return state.weeklyContent.filter(item => {
-        //         const itemStart = new Date(item.start_time);
-        //         return itemStart >= start && itemStart < end;
-        //     }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-        // },
         nextFourHoursWithHalfHourIntervals: (state) => {
             const userStore = useUserStore() // Access the user store
+            const appSettingStore = useAppSettingStore() // Access the settings store
             const userTimezone = userStore.timezone // Get the user's timezone
+            const cols = appSettingStore.isVerySmallScreen ? 4 :
+                appSettingStore.isSmallScreen ? 6 : 8
+
 
             const intervals = []
             const now = dayjs(state.baseTime).tz(userTimezone) // Get the current time in the user's timezone
 
             // Determine if the current minute is less than 30 to start at the top of the hour or at the half-hour
-            let current = now.minute() < 30 ? now.startOf('hour') : now.startOf('hour').add(30, 'minutes');
+            let current = now.minute() < 30 ? now.startOf('hour') : now.startOf('hour').add(30, 'minutes')
 
 
             // Generate intervals for the next 4 hours, each 30 minutes apart
-            for (let i = 0; i < 8; i++) { // 4 hours / 30 minutes = 8 intervals
-                // Push an object with both the formatted time for display and the actual DateTime object
+            // Adjust the loop count based on the number of columns/ intervals needed
+            for (let i = 0; i < cols; i++) { // Adjust the number of intervals based on the screen size
                 intervals.push({
                     formatted: current.format('hh:mm A'), // Formatted time for display
                     dateTimeString: current.format('YYYY-MM-DD HH:mm:ss'), // Y-m-d H:m:s format for comparisons
@@ -895,13 +1099,15 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             return intervals
         },
-        upcomingContent: (state) => {
-            const start = new Date(state.viewingWindowStart.getTime() - 60 * 60 * 1000) // 1 hour earlier
-            const end = new Date(start.getTime() + 7 * 60 * 60 * 1000) // 6 hours later
 
-            // Group shows by start time
+        upcomingContent: (state) => {
+            // Since viewingWindowStart is now a Day.js object, use Day.js methods directly
+            const start = dayjs(state.viewingWindowStart).subtract(1, 'hour') // 1 hour earlier
+            const end = start.add(7, 'hours') // 6 hours later from the start
+
+            // Group shows by start time using Day.js
             const showsGroupedByStartTime = state.weeklyContent.reduce((acc, item) => {
-                const itemStart = new Date(item.start_time).getTime()
+                const itemStart = dayjs(item.startTime).valueOf() // Use .valueOf() to get the timestamp
                 if (!acc[itemStart]) {
                     acc[itemStart] = []
                 }
@@ -916,25 +1122,36 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 }, null)
             })
 
-            // Filter, ensuring they fall within the next 6-hour window, and sort
+            // Filter shows that fall within the next 6-hour window and sort them
             return selectedShows
                 .filter(item => {
-                    const itemStart = new Date(item.start_time)
-                    return itemStart >= start && itemStart < end
+                    const itemStart = dayjs(item.startTime)
+                    return itemStart.isSameOrAfter(start) && itemStart.isBefore(end)
                 })
-                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+                .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix()) // Sorting by Unix timestamp
+        },
 
-            // // Filter weeklyContent for the next 6 hours window
-            // return state.weeklyContent.filter(item => {
-            //     const itemStart = new Date(item.start_time);
-            //     return itemStart >= start && itemStart < end;
-            // }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-        },
+
         nextSixHours: (state) => {
-            let adjustedStart = state.viewingWindowStart
-            const end = addHours(adjustedStart, 5)
-            return eachHourOfInterval({start: adjustedStart, end})
+            // Assuming state.viewingWindowStart is already a Day.js object.
+            // If it's still a native Date, convert it first:
+            let adjustedStart = dayjs(state.viewingWindowStart)
+
+            // Add 6 hours to the adjusted start time
+            const end = adjustedStart.add(6, 'hours')
+
+            // Generate each hour of the interval between adjustedStart and end
+            const hours = []
+            let hour = adjustedStart
+
+            while (hour.isBefore(end)) {
+                hours.push(hour.toDate()) // Convert back to Date if necessary; otherwise, just use `hour` if you can use Day.js objects directly
+                hour = hour.add(1, 'hour')
+            }
+
+            return hours
         },
+
         dateMessage: (state) => {
             const startDay = startOfDay(state.viewingWindowStart)
             const formattedDate = format(startDay, 'EEEE MMMM do, yyyy')
@@ -948,25 +1165,57 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 return formattedDate
             }
         },
-        currentMonthIndex: (state) => getMonth(state.currentMonth), // Adds a getter to get the current month's index
-        currentMonthName: (state) => format(state.currentMonth, 'MMMM'),
-        currentYear: (state) => getYear(state.currentMonth),
-        daysInMonth: (state) => {
-            const startOfCurrentMonth = startOfMonth(state.currentMonth)
-            const endOfCurrentMonth = endOfMonth(state.currentMonth)
 
-            // Adjust these to ensure the grid starts on Sunday and ends on Saturday
-            const startOfGrid = startOfWeek(startOfCurrentMonth, {weekStartsOn: 0})
-            const endOfGrid = endOfWeek(endOfCurrentMonth, {weekStartsOn: 0})
+        currentMonthIndex: (state) => {
+            // Ensure state.currentMonth is converted to a Day.js object
+            const month = dayjs(state.currentMonth)
+            // Day.js months are 0-indexed just like JavaScript Date, returns the month (0-11)
+            return month.month()
+        },
 
-            // Generate the days for the calendar grid
-            return eachDayOfInterval({start: startOfGrid, end: endOfGrid})
+        currentMonthName: (state) => {
+            // Ensure state.currentMonth is converted to a Day.js object
+            const month = dayjs(state.currentMonth)
+            // Returns the full name of the month, e.g., 'January', 'February', etc.
+            return month.format('MMMM')
+        },
+
+        currentYear: (state) => {
+            // Ensure state.currentMonth is converted to a Day.js object
+            const month = dayjs(state.currentMonth)
+            // Returns the year
+            return month.year()
         },
         isToday: (state) => {
-            const today = new Date()
-            const viewingStart = new Date(state.viewingWindowStart)
+            const today = dayjs()  // Gets today's date as a Day.js object
+            const viewingStart = dayjs(state.viewingWindowStart)  // Convert to Day.js object if not already
 
-            return today.toDateString() === viewingStart.toDateString()
+            // Compare if both dates are the same calendar day
+            return today.isSame(viewingStart, 'day')
         },
+
+        daysInMonth: (state) => {
+            // Assuming state.currentMonth is a Day.js object; if it's a Date, convert it:
+            const currentMonth = dayjs(state.currentMonth)
+
+            const startOfCurrentMonth = currentMonth.startOf('month')
+            const endOfCurrentMonth = currentMonth.endOf('month')
+
+            // Adjust these to ensure the grid starts on Sunday and ends on Saturday
+            const startOfGrid = startOfCurrentMonth.startOf('week')  // Assumes the week starts on Sunday by default
+            const endOfGrid = endOfCurrentMonth.endOf('week')        // Assumes the week ends on Saturday by default
+
+            // Generate the days for the calendar grid
+            const days = []
+            let day = startOfGrid
+
+            while (day.isBefore(endOfGrid) || day.isSame(endOfGrid, 'day')) {
+                days.push(day.toDate()) // Collect days as Date objects; remove toDate() if you can use Day.js objects directly
+                day = day.add(1, 'day')
+            }
+
+            return days
+        },
+
     },
 })

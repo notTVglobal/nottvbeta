@@ -131,18 +131,22 @@ onMounted(() => {
   videoDomElement.addEventListener('contextmenu', (event) => {
     event.preventDefault()
   })
+
+  // Watch for changes in appSettingStore.fullPage and appSettingStore.ott
+  watch(() => [appSettingStore.fullPage, appSettingStore.ott], ([fullPage, ott]) => {
+    if (fullPage && !ott) {
+      // If fullPage is true and ott is falsy (0 or undefined), attach keydown listener
+      if (appSettingStore.loggedIn) {
+        document.addEventListener('keydown', handleKeydown);
+      }
+    } else {
+      // Otherwise, remove the keydown listener
+      document.removeEventListener('keydown', handleKeydown);
+    }
+  }, { immediate: true });
+
 })
 
-// Watch for changes in appSettingStore.fullPage and appSettingStore.ott
-watch(() => [appSettingStore.fullPage, appSettingStore.ott], ([fullPage, ott]) => {
-  if (fullPage && !ott) {
-    // If fullPage is true and ott is falsy (0 or undefined), attach keydown listener
-    document.addEventListener('keydown', handleKeydown);
-  } else {
-    // Otherwise, remove the keydown listener
-    document.removeEventListener('keydown', handleKeydown);
-  }
-}, { immediate: true });
 
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', handleKeydown)

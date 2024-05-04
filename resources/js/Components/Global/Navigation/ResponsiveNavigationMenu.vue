@@ -252,6 +252,12 @@
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
+                :href="route('admin.settings') + '?section=firstPlaySettings'">
+              First Play Settings
+            </JetResponsiveNavLink>
+
+            <JetResponsiveNavLink
+                @click="appSettingStore.closeNavDropdown()"
                 :href="route('admin.schedule')"
                 :active="route().current('admin.schedule')">
               Schedule
