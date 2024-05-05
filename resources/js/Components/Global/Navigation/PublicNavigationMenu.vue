@@ -22,7 +22,7 @@
 <!--                  ><Link :href="`/teams`">Browse</Link></JetNavLink>-->
 <!--                </h3>-->
 
-                <h3 class="hidden inline-flex items-center relative">
+                <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="route('schedule')"
                       :active="route().current('schedule')">

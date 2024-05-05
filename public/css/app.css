@@ -8085,10 +8085,6 @@ hr {
   max-height: 15rem;
 }
 
-.max-h-96 {
-  max-height: 24rem;
-}
-
 .max-h-\[24rem\] {
   max-height: 24rem;
 }
@@ -9982,12 +9978,12 @@ hr {
   --tw-gradient-to: #be185d var(--tw-gradient-to-position);
 }
 
-.to-transparent {
-  --tw-gradient-to: transparent var(--tw-gradient-to-position);
-}
-
 .to-tan-600 {
   --tw-gradient-to: #d2b48c var(--tw-gradient-to-position);
+}
+
+.to-transparent {
+  --tw-gradient-to: transparent var(--tw-gradient-to-position);
 }
 
 .bg-cover {

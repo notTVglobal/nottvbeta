@@ -66,7 +66,7 @@
             Watch Now
           </JetResponsiveNavLink>
 
-          <JetResponsiveNavLink hidden
+          <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="route('schedule')"
               :active="route().current('schedule')">
