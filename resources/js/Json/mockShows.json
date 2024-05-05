@@ -1,12 +1,12 @@
 {
-  "mockShows": [
-    { "id": 1, "name": "Early Morning Show", "span": 2, "startTime": "06:00" },
-    { "id": 2, "name": "Morning Show", "span": 4, "startTime": "08:00" },
-    { "id": 3, "name": "Late Morning Show", "span": 3, "startTime": "12:00" },
-    { "id": 4, "name": "Noon News", "span": 2, "startTime": "14:30" },
-    { "id": 5, "name": "Afternoon Talk", "span": 6, "startTime": "15:00" },
-    { "id": 6, "name": "Evening Special", "span": 1, "startTime": "18:00" },
-    { "id": 7, "name": "Late Show", "span": 3, "startTime": "20:00" },
-    { "id": 8, "name": "Night Owl Movie", "span": 2, "startTime": "23:00" }
+  "timeBanners": [
+    { "id": 1, "name": "Early Morning Show", "gridSpan": 1, "startTime": "06:00", "endTime": "08:00" },
+    { "id": 2, "name": "Morning Show", "gridSpan": 1, "startTime": "08:00", "endTime": "12:00"  },
+    { "id": 3, "name": "Late Morning Show", "gridSpan": 1, "startTime": "12:00", "endTime": "14:30"  },
+    { "id": 4, "name": "Noon News", "gridSpan": 1, "startTime": "14:30", "endTime": "15:00"  },
+    { "id": 5, "name": "Afternoon Talk", "gridSpan": 1, "startTime": "15:00", "endTime": "18:00"  },
+    { "id": 6, "name": "Evening Special", "gridSpan": 1, "startTime": "18:00", "endTime": "20:00"  },
+    { "id": 7, "name": "Late Show", "gridSpan": 1, "startTime": "20:00", "endTime": "23:00"  },
+    { "id": 8, "name": "Night Owl Movie", "gridSpan": 1, "startTime": "23:00", "endTime": "06:00"  }
   ]
 }

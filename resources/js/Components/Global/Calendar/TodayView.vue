@@ -1,6 +1,6 @@
 <template>
   <!-- Today view layout -->
-  <div class="today-view container mx-auto px-4 py-8 flex flex-col">
+  <div class=" hidden today-view container mx-auto px-4 py-8 flex flex-col">
     <div id="topDivForTodayView"></div>
     <button  v-if="!scheduleStore.isToday"
              @click="scheduleStore.setSelectedDayToToday(new Date());"

@@ -7851,10 +7851,6 @@ hr {
   margin-top: 2rem;
 }
 
-.mb-0 {
-  margin-bottom: 0px;
-}
-
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -8089,6 +8085,10 @@ hr {
   max-height: 15rem;
 }
 
+.max-h-96 {
+  max-height: 24rem;
+}
+
 .max-h-\[24rem\] {
   max-height: 24rem;
 }
@@ -8155,10 +8155,6 @@ hr {
 
 .min-h-screen {
   min-height: 100vh;
-}
-
-.min-h-6 {
-  min-height: 1.5rem;
 }
 
 .w-0 {
@@ -9812,6 +9808,12 @@ hr {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-gray-900 {
+  --tw-gradient-from: #111827 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(17 24 39 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .from-green-100 {
   --tw-gradient-from: #dcfce7 var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(220 252 231 / 0) var(--tw-gradient-to-position);
@@ -9896,6 +9898,12 @@ hr {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-tan-800 {
+  --tw-gradient-from: #a67b5b var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(166 123 91 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .via-orange-100 {
   --tw-gradient-to: rgb(255 237 213 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), #ffedd5 var(--tw-gradient-via-position), var(--tw-gradient-to);
@@ -9920,6 +9928,10 @@ hr {
 
 .to-blue-700 {
   --tw-gradient-to: #1d4ed8 var(--tw-gradient-to-position);
+}
+
+.to-gray-700 {
+  --tw-gradient-to: #374151 var(--tw-gradient-to-position);
 }
 
 .to-green-300 {
@@ -9974,6 +9986,10 @@ hr {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
 }
 
+.to-tan-600 {
+  --tw-gradient-to: #d2b48c var(--tw-gradient-to-position);
+}
+
 .bg-cover {
   background-size: cover;
 }
@@ -9988,10 +10004,6 @@ hr {
 
 .fill-current {
   fill: currentColor;
-}
-
-.fill-primary {
-  fill: var(--fallback-p,oklch(var(--p)/1));
 }
 
 .stroke-current {
@@ -10467,11 +10479,6 @@ hr {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
 }
 
 .font-bold {
@@ -11590,6 +11597,10 @@ hr {
 
 .hover\:opacity-75:hover {
   opacity: 0.75;
+}
+
+.hover\:opacity-80:hover {
+  opacity: 0.8;
 }
 
 .hover\:shadow:hover {

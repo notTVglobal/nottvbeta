@@ -1,8 +1,16 @@
 <template>
   <div class="tracking-wide">
-    <p>CURRENT TIME: {{ scheduleStore.currentTime }} {{ userStore.timezoneAbbreviation }}</p>
-    <p>CURRENT TIME (for testing): <input type="time" v-model="formattedTime" @input="stopAutoUpdateTime"
-                                          class="text-black"></p></div>
+    <!-- Day of the week in large, semi-bold letters -->
+    <p class="tracking-wide text-4xl font-semibold mb-2">{{ currentDay }}</p>
+
+    <!-- Current time display -->
+    <p class="tracking-wide text-xl text-gray-300">Current Time:  <span class="text-white font-medium">{{ scheduleStore.currentTime }} {{ userStore.timezoneAbbreviation }}</span></p>
+
+    <!-- Input for testing current time -->
+<!--    <p>CURRENT TIME (for testing): <input type="time" v-model="formattedTime" @input="stopAutoUpdateTime"-->
+<!--                                          class="text-black"></p>-->
+
+  </div>
 </template>
 
 <script setup>
@@ -24,6 +32,11 @@ dayjs.extend(timezone)
 let intervalId = null
 let timeoutId = null  // Variable to store the timeout reference
 let initialUpdateDone = false  // Flag to track if the first update has been done
+
+// Computed property to get the current day of the week
+const currentDay = computed(() => {
+  return dayjs().format('dddd'); // 'dddd' for full day name according to dayjs formatting
+});
 
 // const updateShows = () => {
 //   const [hour, minute] = currentTime.value.split(':');

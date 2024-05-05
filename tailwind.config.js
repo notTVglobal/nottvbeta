@@ -21,6 +21,12 @@ module.exports = {
                 '76': '19rem',
                 '78': '19.25rem',
             },
+            colors: {
+                tan: {
+                    600: '#d2b48c', // A light brown tan color
+                    800: '#a67b5b'  // A darker brown tan color
+                }
+            },
         },
         listStyleType: {
             disc: 'disc',

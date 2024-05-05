@@ -9,38 +9,38 @@
       <div class="container mx-auto px-4 gap-y-3 rounded sm:rounded-lg shadow">
 
         <header class="flex justify-end">
-  <div class="relative w-32 h-32 mr-8">
-    <div class="absolute top-3 left-0 w-full h-full flex justify-center items-center z-20"><h1
-        class="text-4xl font-bold text-white bg-black bg-opacity-80 px-4 py-1 text-center">Broadcast<br/>Schedule
-    </h1></div>
-    <div class="absolute top-3 left-0 w-full h-full flex justify-center items-center z-10"><img
-        src="/storage/images/Ping.png" alt="notTV Ping"/></div>
+          <div class="relative w-32 h-32 mr-8">
+            <div class="absolute top-3 left-0 w-full h-full flex justify-center items-center z-20"><h1
+                class="text-4xl font-bold text-white bg-black bg-opacity-80 px-4 py-1 text-center">Broadcast<br/>Schedule
+            </h1></div>
+            <div class="absolute top-3 left-0 w-full h-full flex justify-center items-center z-10"><img
+                src="/storage/images/Ping.png" alt="notTV Ping"/></div>
 
-</div>
+          </div>
         </header>
 
-      <ScheduleGridContainer />
+        <ScheduleGridContainer/>
 
 
-      <PopUpModal :id="`goToNowPlayingModal`">
-        <template v-slot:header>Now Playing</template>
-        <template v-slot:main><span class="text-orange-500">This modal is temporary. This will take you to the now playing show or episode page.</span>
-        </template>
-      </PopUpModal>
-      <PopUpModal :id="`getReminderModal`">
-        <template v-slot:header>Set Reminder</template>
-        <template v-slot:main><span class="text-orange-500">This modal is temporary. Set a reminder when this show starts and/or subscribe to the show to get all notifications when new episodes are released or the show goes live. <br/><br/><span
-            class="font-semibold text-yellow-600">NOTE: Monthly and Yearly contributors get first access to new features.</span></span>
-        </template>
-      </PopUpModal>
+        <PopUpModal :id="`goToNowPlayingModal`">
+          <template v-slot:header>Now Playing</template>
+          <template v-slot:main><span class="text-orange-500">This modal is temporary. This will take you to the now playing show or episode page.</span>
+          </template>
+        </PopUpModal>
+        <PopUpModal :id="`getReminderModal`">
+          <template v-slot:header>Set Reminder</template>
+          <template v-slot:main><span class="text-orange-500">This modal is temporary. Set a reminder when this show starts and/or subscribe to the show to get all notifications when new episodes are released or the show goes live. <br/><br/><span
+              class="font-semibold text-yellow-600">NOTE: Monthly and Yearly contributors get first access to new features.</span></span>
+          </template>
+        </PopUpModal>
 
-      <div class="bg-gray-600 rounded-lg shadow m-10 p-4">
-
-
-        <TodayView/>
+        <div class="bg-gray-600 rounded-lg shadow m-10 p-4">
 
 
-      </div>
+          <TodayView/>
+
+
+        </div>
       </div>
       <Footer/>
     </div>
@@ -77,7 +77,6 @@ appSettingStore.currentPage = `schedule`
 appSettingStore.setPrevUrl()
 
 
-
 // Function to handle scrolling
 const scrollToTop = () => {
   requestAnimationFrame(() => {
@@ -108,7 +107,6 @@ onMounted(() => {
 })
 
 
-
 const timeIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const shows = computed(() => scheduleStore.nextFourHoursOfContent)
 
@@ -120,11 +118,6 @@ let comingUpNextIndex = -1
 // Provide these indexes for template usage
 // const isNowPlaying = (index) => index === nowPlayingIndex;
 const isComingUpNext = (index) => index === comingUpNextIndex
-
-
-
-
-
 
 
 // const isComingUpNext = (shows) => {
@@ -384,7 +377,6 @@ function calculateColspan(durationMinutes) {
   // and that each content item's duration in minutes can determine its span
   return Math.ceil(durationMinutes / 30)
 }
-
 
 
 </script>
