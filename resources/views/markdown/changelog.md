@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: May 4, 2024\
+Last Update: May 5, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.1
+May 5, 2024
+* Fix the Scheduling problem with broadcastDates not properly saving to UTC and not iterating through the reccurence schedule properly. This is fixed now, plus some formatting fixes on the schedule page.
 
 ## v0.9.0.0
 May 4, 2024
