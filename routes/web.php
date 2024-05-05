@@ -1269,6 +1269,10 @@ Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::c
 //    return Inertia::location('https://99fd701b.sibforms.com/serve/MUIFAAAMUBfnlUf5rgaD2zSTE_76pHldyCCXhQvz-CBNZwd9lLYST4jcuwwsudQEHOkX1isAFHV6iXvtIepJSh5RkVrZY1wUQ5yaf1j6kWyzMJ75s2FZfHOZMdO7mkE-pDv96yW4bekMX67ZevIlWsjQvdDgEXUEKqfAvvQieIM3WxRCFru3o3y3Z9K2_6N17EaTq5eAHP04AIgp');
 //});
 
+Route::get('/shows/bc-rising-undrip', function () {
+  return redirect('/shows/bc-rising');
+});
+
 Route::get('/subscribe', function () {
   return redirect('/newsletterSignup');
 });

@@ -227,6 +227,16 @@ export const useUserStore = defineStore('userStore', {
             }
             return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
         },
+        formatDateTimeSimpleInUserTimezone(dateTime, formatString = 'ddd DD MMM  h:mm a') {
+            if (!this.timezone) {
+                console.error('Timezone is not set.')
+                return dateTime // Or handle this case as appropriate for your app
+            }
+            if (!dateTime) {
+                return ''; // Return an empty string for invalid or null dates
+            }
+            return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
+        },
         formatDateToISOInUserTimezone(dateTime) {
             if (!this.timezone) {
                 console.error('Timezone is not set.')

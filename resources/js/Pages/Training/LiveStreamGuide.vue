@@ -7,6 +7,7 @@
       <TitlePage v-if="!hasStarted" @navigate="handleStart"/>
       <MainContent v-else :currentSectionId="currentSectionId"/>
     </div>
+
   </template>
   <script setup>
   import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'

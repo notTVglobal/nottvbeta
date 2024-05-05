@@ -4,7 +4,10 @@ namespace App\Console;
 
 use App\Jobs\CheckSubscriptionStatuses;
 use App\Jobs\FetchRssFeedItemsJob;
-use App\Jobs\UpdateNextBroadcastDatesOnScheduleIndexes;
+use App\Jobs\SchedulePurgeExpiredSchedules;
+use App\Jobs\ScheduleUpdateAllScheduleBroadcastDates;
+use App\Jobs\ScheduleUpdateIndex;
+use App\Jobs\ScheduleUpdateSchedulesIndexesDELETEME;
 use App\Jobs\UpdateNextScheduledForBroadcast;
 use App\Models\NewsRssFeed;
 use Illuminate\Console\Scheduling\Schedule;
@@ -25,11 +28,14 @@ class Kernel extends ConsoleKernel {
     $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('archive:rssFeeds')->hourly();
-//    $schedule->job(new UpdateNextBroadcastDatesOnScheduleIndexes)->everyFourHours();
+
+    $schedule->job(new ScheduleUpdateAllScheduleBroadcastDates)->everySixHours();
 
     $schedule->command('purge:rssFeed')->daily();
-    $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('expire:inviteCodes')->daily();
+
+    $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
+    $schedule->job(new SchedulePurgeExpiredSchedules())->daily();
   }
 
   /**

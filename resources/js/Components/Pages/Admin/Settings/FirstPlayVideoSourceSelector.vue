@@ -68,12 +68,9 @@
           </div>
         </div>
 
-        <div v-if="adminStore.fetchingActiveStreams" class="flex w-full pt-6 justify-center items-center gap-4">
-          <span class="loading loading-spinner loading-lg text-info"></span>
-          Loading Active Streams ...
-        </div>
 
-        <div v-else class="space-y-3 pt-6 mb-12">
+
+        <div  class="space-y-3 pt-6 mb-12">
           <div class="test-stream">
             <label for="customVideoName"
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
@@ -82,7 +79,7 @@
             <div class="mb-2 text-xs">Note: Requires a stream with the name 'test'</div>
             <div @click.prevent="adminStore.setActiveStreamAsFirstPlay('test')"
                  class="stream-image w-40 gap-2 break-words hover:cursor-pointer hover:text-blue-500 relative group">
-              <img src="/storage/images/EBU_Colorbars.svg.png" alt="`test pattern`" :class="`w-40 h-40 object-cover rounded-xl`"/>
+              <img src="/storage/images/EBU_Colorbars.svg.png" alt="" :class="`skeleton w-40 h-40 object-cover rounded-xl`"/>
               <!-- Overlay div for dimming effect -->
               <div class="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-300 rounded-xl group-hover:bg-opacity-50 pl-1"></div>
               <div class="absolute inset-0 flex items-center justify-center opacity-50 group-hover:opacity-100 pl-1">
@@ -92,7 +89,12 @@
 
           </div>
 
-          <div class="active-streams pt-4">
+          <div v-if="adminStore.fetchingActiveStreams" class="flex w-full pt-6 justify-center items-center gap-4">
+            <span class="loading loading-spinner loading-lg text-info"></span>
+            Loading Active Streams ...
+          </div>
+
+          <div v-else class="active-streams pt-4">
             <label for="customVideoName"
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               Active Streams

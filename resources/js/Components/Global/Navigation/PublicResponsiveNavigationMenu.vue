@@ -9,7 +9,7 @@
           </Link>
         </div>
         <!-- Hamburger -->
-        <div class="absolute top-3 right-4 hamburgerMask">
+        <div class="absolute top-3 right-10 hamburgerMask">
           <div class="-mr-2 flex items-center lg:hidden z-50">
 
             <button

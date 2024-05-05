@@ -98,6 +98,7 @@ const initialState = () => ({
     blue: false, // DO NOT REMOVE
     videoIsYoutube: false,
     videoUploadComplete: false,
+    isFullScreen: false,
 })
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
@@ -121,7 +122,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         setPlayer(playerInstance) {
             this.player = playerInstance
             this.initializePlayer().then(() => {
-                this.attachEventListeners() // Attach event listeners after initialization
+                // Use player.ready() to ensure the player is fully initialized
+                this.player.ready(() => {
+                    this.attachEventListeners() // Attach event listeners after the player is fully ready
+                })
             }).catch(error => {
                 console.error('Error during video player initialization:', error)
             })
@@ -138,24 +142,30 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 return
             }
 
-            await nextTick() // Ensure Vue's DOM updates are processed
+            try {
+                await nextTick() // Ensure Vue's DOM updates are processed
 
-            // Perform any necessary audio context and node setup
-            await useAudioStore().ensureAudioContextAndNodesReady(this.player)
+                // Perform any necessary audio context and node setup
+                const audioStore = useAudioStore()
+                await audioStore.ensureAudioContextAndNodesReady(this.player)
 
-            // Apply initial player settings
-            this.player.controls(false)
-            this.player.muted(this.muted)
+                // Apply initial player settings
+                this.player.controls(false)
+                this.player.muted(this.muted)
 
-            // Attempt to start playback
-            this.player.ready(() => {
-                this.player.play().then(() => {
-                    console.log('Playback started successfully')
-                }).catch(error => {
-                    console.error('Error trying to play the video:', error)
-                    // Handle the error (e.g., showing a user-friendly message)
-                })
-            })
+
+                // Await the player to be ready
+                await new Promise(resolve => this.player.ready(resolve))
+
+                // Attempt to start playback
+                await this.player.play()
+                console.log('Playback started successfully')
+
+            } catch (error) {
+                console.error('Error during player initialization or playback:', error)
+                // Handle the error (e.g., showing a user-friendly message)
+            }
+
         },
         // Attach event listeners to the player
         attachEventListeners() {
@@ -166,50 +176,65 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             }
 
             this.player.on('timeupdate', this.handleTimeUpdate)
-            this.player.on('fullscreenchange', this.handleFullscreenChange)
             this.player.on('play', this.handlePlay)
             this.player.on('pause', this.handlePause)
             this.player.on('error', this.handleError)
+
+            // this.player.on('fullscreenchange', () => {
+            //     if (this.player.isFullscreen()) {
+            //         this.enterFullscreen()
+            //     } else {
+            //         this.exitFullscreen()
+            //         if (!this.player.paused()) {
+            //             this.player.play() // Resume playback
+            //         }
+            //     }
+            // })
+
+            // Ensure keydown listener is managed by the fullscreen change handler
+            // this.handleFullscreenChange();  // Call to ensure initial setup
+
             // TODO: This .on ended will be useful for something.
             //  I (tec21) was using it to loop the FirstPlay Test video.
             //  But, that causes problems with playback on Recording files
             //  that are short or won't play because of bad file path.
             this.player.on('ended', () => {
-                const channelStore = useChannelStore();
-                const userStore = useUserStore();
-                console.log('Video has ended. Evaluating next steps based on the current channel...');
+                const channelStore = useChannelStore()
+                const userStore = useUserStore()
+                console.log('Video has ended. Evaluating next steps based on the current channel...')
                 if (channelStore.currentChannel === 'firstPlay') {
-                    console.log('Reloading firstPlay video...');
+                    console.log('Reloading firstPlay video...')
                     userStore.videoSettings.firstPlay = true
                     const source = {
                         name: this.firstPlayVideoName,
                         source: this.firstPlayVideoSource,
                         type: this.firstPlayVideoSourceType,
-                        mediaType: 'firstPlay' // Hardcoded as this is specifically for firstPlay
-                    };
+                        mediaType: 'firstPlay', // Hardcoded as this is specifically for firstPlay
+                    }
                     nowPlayingStore.reset()
                     nowPlayingStore.activeMedia.details.primaryName = source.name
-                    this.loadNewVideo(source);
+                    this.loadNewVideo(source)
                 } else if (channelStore.currentChannel && channelStore.currentChannel.id) {
-                    console.log('Changing to the next video in the current channel...');
-                    channelStore.changeChannel(channelStore.currentChannel);
+                    console.log('Changing to the next video in the current channel...')
+                    channelStore.changeChannel(channelStore.currentChannel)
                 } else {
-                    console.log('No specific channel or firstPlay detected, handling default scenario...');
+                    console.log('No specific channel or firstPlay detected, handling default scenario...')
                     // Optionally handle a default case
                     const defaultSource = {
                         videoSrc: this.firstPlayVideoSource,
                         videoType: this.firstPlayVideoSourceType,
-                        mediaType: 'firstPlay'
-                    };
-                    this.loadNewVideo(defaultSource);
+                        mediaType: 'firstPlay',
+                    }
+                    this.loadNewVideo(defaultSource)
                 }
                 // this.refreshVideoPlayer();
 
-            });
+            })
             // console.log('video source: ' + this.videoSource)
             this.eventListenersAttached = true
             console.log('Event listeners attached.')
         },
+
         refreshVideoPlayer() {
             let videoJs = videojs('main-player')
             const currentSource = this.videoSource
@@ -314,32 +339,41 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             const parts = [hours, minutes, seconds].map(part => part.toString().padStart(2, '0'))
             return parts.join(':')
         },
-        handleFullscreenChange() {
-            console.log('Handling fullscreenchange...')
-            // Implement your logic
-            this.player?.on('fullscreenchange', () => {
-                if (this.player.isFullscreen()) {
-                    // Video is entering fullscreen mode
-                    // You can add custom behavior for entering fullscreen here if needed
-                } else {
-                    // Video is exiting fullscreen mode
-                    // Check if the video was playing before entering fullscreen
-                    if (this.player.paused() === false) {
-                        // Resume playback after exiting fullscreen
-                        this.player.play()
-                    }
-                }
-            })
+        enterFullscreen() {
+            this.isFullscreen = true
         },
+        exitFullscreen() {
+            this.isFullscreen = false
+        },
+        // handleFullscreenChange() {
+        //     console.log('Handling fullscreenchange...')
+        //     // Implement your logic
+        //     this.player?.on('fullscreenchange', () => {
+        //         if (this.player.isFullscreen()) {
+        //             // Video is entering fullscreen mode
+        //             console.log('Entering fullscreen mode.');
+        //             this.enterFullscreen()
+        //         } else {
+        //             // Video is exiting fullscreen mode
+        //             console.log('Exiting fullscreen mode.');
+        //             this.exitFullscreen()
+        //             // Check if the video was playing before entering fullscreen
+        //             if (!this.player.paused()) {
+        //                 // Resume playback after exiting fullscreen
+        //                 this.player.play()
+        //             }
+        //         }
+        //     })
+        // },
         handlePlay() {
-            console.log('Handling play...')
+            // console.log('Handling play...')
             // Implement your logic
             this.player?.on('play', () => {
                 this.paused = false
             })
         },
         handlePause() {
-            console.log('Handling pause...')
+            // console.log('Handling pause...')
             // Implement your logic
             this.player?.on('pause', () => {
                 this.paused = true
@@ -576,21 +610,22 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 let videoJs = videojs('main-player')
                 console.log('LOAD NEW VIDEO')
                 const audioStore = useAudioStore()
+                const userStore = useUserStore()
 
                 // First check if the source details are valid
-                const sourceDetails = this.getSourceDetails(source);
+                const sourceDetails = this.getSourceDetails(source)
                 if (!sourceDetails) {
-                    console.log('Exiting loadNewVideo due to getSourceDetails returning null.');
-                    return; // Exit the function silently
+                    console.log('Exiting loadNewVideo due to getSourceDetails returning null.')
+                    return // Exit the function silently
                 }
 
                 // Now that we know sourceDetails is not null, destructure it
-                const { videoSrc, videoSourceType } = sourceDetails;
+                const {videoSrc, videoSourceType} = sourceDetails
 
                 // Proceed only if videoSrc and videoSourceType are valid
                 if (!videoSrc || !videoSourceType) {
                     // console.log('Exiting loadNewVideo due to no video source or type.');
-                    return; // Exit the function silently
+                    return // Exit the function silently
                 }
 
                 // Example: Stopping and cleaning up the current video and audio setup
@@ -607,6 +642,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                             videoJs.play().catch(error => {
                                 useNotificationStore().setGeneralServiceNotification('Error', 'Code: 123. Playback initiation error: ' + error)
                                 console.error('Code 123. Playback initiation error: ', error)
+                                // if an
+                                if (!userStore.isSubscriber || !userStore.isVip) {
+                                    userStore.videoSettings.firstPlay = true
+                                }
                             })
 
                             // Consider toggling mute based on the user's preference or previous state
@@ -933,5 +972,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
     },
 
-    getters: {},
+    getters:
+        {}
+    ,
 })

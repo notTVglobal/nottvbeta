@@ -26,7 +26,7 @@ class SchedulesIndex extends Model
   }
 
   public function content(): \Illuminate\Database\Eloquent\Relations\MorphTo {
-    return $this->morphTo(__FUNCTION__, 'content_type', 'content_id');
+    return $this->morphTo();
   }
 
   public function schedule(): \Illuminate\Database\Eloquent\Relations\BelongsTo {

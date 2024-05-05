@@ -9,6 +9,13 @@
 </template>
 
 <script setup>
+import { onBeforeMount } from 'vue'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 
+const appSettingStore = useAppSettingStore()
+
+onBeforeMount(() => {
+  appSettingStore.checkScreenSize()
+})
 
 </script>
