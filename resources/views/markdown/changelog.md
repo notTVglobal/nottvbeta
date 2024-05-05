@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: May 1, 2024\
+Last Update: May 4, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.0
+May 4, 2024
+* Version 1 of the Schedule is now live. This isn't production tested, so we'll see how it goes!
 
 ## v0.8.7.85
 May 1, 2024
