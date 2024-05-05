@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Jobs\ScheduleUpdateAllScheduleBroadcastDates;
 use Illuminate\Console\Command;
 
-class ScheduleRunUpdateShowBroadcastDatesJob extends Command
+class ScheduleUpdate extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'schedule:update-all-broadcast-dates';
+    protected $signature = 'schedule:update';
 
     /**
      * The console command description.

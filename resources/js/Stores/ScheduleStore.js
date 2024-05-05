@@ -51,11 +51,11 @@ function convertScheduleToTimezone(scheduleData) {
 
     return scheduleData.data.map(item => {
         // Convert top-level start_time and end_time using UserStore methods
-        // console.log(`Original startTime for ${item.id}: ${item.startTime}`);
+        console.log(`Original startTime for ${item.id}: ${item.startTime}`)
         const startTimeInUserTz = item.startTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.startTime, 'YYYY-MM-DD HH:mm:ss') : null
         const endTimeInUserTz = item.endTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.endTime, 'YYYY-MM-DD HH:mm:ss') : null
         // Add debug logging to help trace conversion issues or confirm correct conversions
-        // console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`);
+        console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`)
 
         return {
             ...item,
@@ -119,7 +119,7 @@ const initialState = () => ({
         {id: 5, name: 'Late Prime Time', startTime: '20:00', duration: 3},
         {id: 6, name: 'Late Night', startTime: '23:00', duration: 2}, // Spans midnight to 01:00
         {id: 7, name: 'Overnight', startTime: '01:00', duration: 3}, // Spans from 01:00 to 04:00
-    ]
+    ],
 })
 
 export const useScheduleStore = defineStore('scheduleStore', {
@@ -281,11 +281,11 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
         async preloadWeeklyContent() {
             // Use the current date to preload content for the current week
-            const currentDate = dayjs() // Creates a Day.js object representing the current date and time
+            const currentDate = dayjs(this.baseTime) // Creates a Day.js object representing the current date and time
 
             try {
-                // Call loadWeekFromDate with the current Day.js date object, converted to a Date if necessary
-                await this.loadWeekFromDate(currentDate.toDate()) // Convert to JavaScript Date if loadWeekFromDate expects a Date object
+                // Call loadWeekFromDate with the current Day.js date object
+                await this.loadWeekFromDate(currentDate) // loadWeekFromDate uses dayjs
             } catch (error) {
                 console.error('Failed to preload weekly content:', error)
             }
@@ -309,14 +309,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedDate = date.toISOString().split('T')[0];
                 // Log and error handling
                 const formattedDate = dayDate.format('YYYY-MM-DD') // For potential error messages and logging
-                // console.log(`Loading week data for date: ${formattedDate}`); // Log the date being requested
+                console.log(`Loading week data for date: ${formattedDate}`) // Log the date being requested
                 //
                 // const response = await axios.get(`/api/schedule/week/${formattedDate}`);
-                // console.log('Received response:', response.data) // Log the raw response data
+                console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
-                const timezone = userStore.timezone || response.data.userTimezone || 'UTC' // Additional fallback to 'UTC'
-                // console.log(`Using timezone: ${timezone}`) // Log the timezone being used
+                const timezone = userStore.timezone || response.data.userTimezone
+                console.log(`Using timezone: ${timezone}`) // Log the timezone being used
 
                 const newData = convertScheduleToTimezone(response.data, timezone) // Ensure you are accessing the correct data property from the response
 
@@ -763,66 +763,54 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
         // Prepare banners with grid positions based on current time slots
         preparedTimeBanners: (state) => {
-            const timeZone = getTimeZone(); // Ensure this is defined
-            let now = dayjs().tz(timeZone);
-            let todayStart = now.startOf('day');
-            let tomorrowStart = todayStart.add(1, 'day');
+            const timeZone = getTimeZone() // Ensure this is defined
+            let now = dayjs().tz(timeZone)
+            let todayStart = now.startOf('day')
+            let tomorrowStart = todayStart.add(1, 'day')
 
-            console.log('Current Time Slots:', state.timeSlots.map(slot => dayjs(slot).format('HH:mm')));
+            console.log('Current Time Slots:', state.timeSlots.map(slot => dayjs(slot).format('HH:mm')))
 
             return state.timeBanners.flatMap(banner => {
                 // Create banner times for today and tomorrow to handle overnight spans
-                let bannerTodayStart = todayStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]));
-                let bannerTodayEnd = bannerTodayStart.clone().add(banner.duration, 'hours');
-                let bannerTomorrowStart = tomorrowStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]));
-                let bannerTomorrowEnd = bannerTomorrowStart.clone().add(banner.duration, 'hours');
+                let bannerTodayStart = todayStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]))
+                let bannerTodayEnd = bannerTodayStart.clone().add(banner.duration, 'hours')
+                let bannerTomorrowStart = tomorrowStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]))
+                let bannerTomorrowEnd = bannerTomorrowStart.clone().add(banner.duration, 'hours')
 
                 // Create an array of potential banners for today and tomorrow
                 let potentialBanners = [
-                    { ...banner, start: bannerTodayStart, end: bannerTodayEnd },
-                    { ...banner, start: bannerTomorrowStart, end: bannerTomorrowEnd }
-                ];
+                    {...banner, start: bannerTodayStart, end: bannerTodayEnd},
+                    {...banner, start: bannerTomorrowStart, end: bannerTomorrowEnd},
+                ]
 
                 return potentialBanners.map(banner => {
-                    const startSlotIndex = state.timeSlots.findIndex(slot => banner.start.isSameOrBefore(dayjs(slot)) && banner.end.isAfter(dayjs(slot)));
-                    let endSlotIndex = state.timeSlots.findIndex(slot => banner.end.isSameOrBefore(dayjs(slot)));
+                    const startSlotIndex = state.timeSlots.findIndex(slot => banner.start.isSameOrBefore(dayjs(slot)) && banner.end.isAfter(dayjs(slot)))
+                    let endSlotIndex = state.timeSlots.findIndex(slot => banner.end.isSameOrBefore(dayjs(slot)))
 
                     // Adjust the end index to be inclusive of the end time
                     if (endSlotIndex === -1 || banner.end.isAfter(dayjs(state.timeSlots[state.timeSlots.length - 1]))) {
-                        endSlotIndex = state.timeSlots.length - 1;
+                        endSlotIndex = state.timeSlots.length - 1
                     } else {
-                        endSlotIndex -= 1;
+                        endSlotIndex -= 1
                     }
 
-                    const gridStart = startSlotIndex + 1;
-                    const gridSpan = endSlotIndex - startSlotIndex + 1;
+                    const gridStart = startSlotIndex + 1
+                    const gridSpan = endSlotIndex - startSlotIndex + 1
 
-                    console.log(`Processing Banner: ${banner.name}`);
-                    console.log(`StartTime: ${banner.start.format('HH:mm')}, EndTime: ${banner.end.format('HH:mm')}`);
-                    console.log(`StartSlotIndex: ${startSlotIndex}, EndSlotIndex: ${endSlotIndex}`);
-                    console.log(`Calculated gridStart: ${gridStart}, gridSpan: ${gridSpan}`);
+                    console.log(`Processing Banner: ${banner.name}`)
+                    console.log(`StartTime: ${banner.start.format('HH:mm')}, EndTime: ${banner.end.format('HH:mm')}`)
+                    console.log(`StartSlotIndex: ${startSlotIndex}, EndSlotIndex: ${endSlotIndex}`)
+                    console.log(`Calculated gridStart: ${gridStart}, gridSpan: ${gridSpan}`)
 
                     // Ensure the banner should be displayed within the current time slots
                     if (gridStart && gridSpan > 0) {
-                        return { ...banner, gridStart, gridSpan };
+                        return {...banner, gridStart, gridSpan}
                     }
-                    return null;
-                });
-            }).filter(banner => banner != null); // Filter out banners that don't fit within the current time slots
+                    return null
+                })
+            }).filter(banner => banner != null) // Filter out banners that don't fit within the current time slots
+              . sort((a, b) => a.gridStart - b.gridStart) // Sort by gridStart, with the lowest number first
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         // setTimeSlots: (state) => {

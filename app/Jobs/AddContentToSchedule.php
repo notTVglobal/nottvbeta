@@ -245,9 +245,6 @@ class AddContentToSchedule implements ShouldQueue {
       // Commit the transaction
       DB::commit();
 
-      // Dispatch the job to update broadcast dates for this schedule
-      ScheduleUpdateShowBroadcastDates::dispatch($schedule);
-
     } catch (\Exception $e) {
       // Rollback the transaction
       DB::rollback();
@@ -259,6 +256,8 @@ class AddContentToSchedule implements ShouldQueue {
       // Optionally, rethrow the exception or handle it as needed
       throw $e;
     }
+    // Dispatch the job to update broadcast dates for this schedule
+    ScheduleUpdateShowBroadcastDates::dispatch($schedule);
   }
 
   // Function to generate a user-friendly string of days

@@ -313,18 +313,29 @@ class SchedulesController extends Controller {
 
 
   private function fetchSchedulesFromBroadcastDates(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
-    // Load schedules with general content and direct relations only
+    // Convert UTC time to schedule's local timezone !!! IMPORTANT > Schedules are stored in the user's preferred timezone.
+    // NOTE: BroadcastDates are converted to UTC when they are created and marked with the UTC timezone in the array.
+    // NOTE: Start dates and times in the schedule tables other than BroadcastDates are stored in UTC as part of our standardization.
+    // NOTE: The reason Schedules are saved in a specific timezone is to prevent daylight savings changes causing issues.
+
+    // Eager load schedules but limit the initially fetched set
     $schedules = Schedule::with([
         'content.category',
         'content.subCategory',
         'content.image.appSetting'
-    ])->where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
-      $query->where('start_time', '<=', $userRequestedEndOfWeekUTC)
-          ->where('end_time', '>=', $userRequestedStartOfWeekUTC);
-    })->orderBy('start_time')->get();
+    ])->whereBetween('start_time', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])->get(); // Adjust the range as necessary
+
+
+    $filteredSchedules = $schedules->filter(function ($schedule) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
+      // Convert the UTC times to the schedule's timezone
+      $localStart = $userRequestedStartOfWeekUTC->copy()->setTimezone($schedule->timezone);
+      $localEnd = $userRequestedEndOfWeekUTC->copy()->setTimezone($schedule->timezone);
+
+      return $schedule->start_time <= $localEnd && $schedule->end_time >= $localStart;
+    })->sortBy('start_time');
 
     // After fetching, dynamically load additional relationships based on content type
-    foreach ($schedules as $schedule) {
+    foreach ($filteredSchedules as $schedule) {
       if ($schedule->content_type === 'App\Models\ShowEpisode' && isset($schedule->content->show_id)) {
         // Dynamically load related show data for ShowEpisodes
         $schedule->load('content.show.category', 'content.show.subCategory', 'content.show.image.appSetting');
@@ -332,13 +343,13 @@ class SchedulesController extends Controller {
     }
 
     // Transform schedules to include necessary date calculations and timezone adjustments
-    return $schedules->flatMap(function ($schedule) {
+    return $filteredSchedules->flatMap(function ($schedule) {
       $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
       $timezone = $broadcastData['timezone'] ?? 'UTC'; // Default to 'UTC' if not specified
 
       return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
-        // Create a DateTime object from the start time assuming it's already in UTC
-        $startTime = new DateTime($date, new DateTimeZone('UTC'));
+        // Adjust the timezone for start time creation
+        $startTime = new DateTime($date, new DateTimeZone($timezone));
 
         // Calculate endTime by adding duration in minutes to startTime
         $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
@@ -347,8 +358,8 @@ class SchedulesController extends Controller {
             'id'              => $schedule->content_id,
             'createdAt'       => $schedule->created_at,
             'type'            => $schedule->type,
-            'startTime'       => $startTime->format('c'),  // ISO 8601 format, still in UTC
-            'endTime'         => $endTime->format('c'),    // ISO 8601 format, still in UTC
+            'startTime'       => $startTime->setTimezone(new DateTimeZone('UTC'))->format('c'),  // Convert back to UTC for standardization
+            'endTime'         => $endTime->setTimezone(new DateTimeZone('UTC'))->format('c'),
             'priority'        => $schedule->priority,
             'durationMinutes' => $schedule->duration_minutes,
             'timezone'        => $timezone, // Include timezone information
