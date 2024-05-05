@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel {
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('archive:rssFeeds')->hourly();
 
-    $schedule->job(new ScheduleUpdateAllScheduleBroadcastDates)->everySixHours();
+    $schedule->job(new ScheduleUpdateAllScheduleBroadcastDates)->everyFourHours();
 
     $schedule->command('purge:rssFeed')->daily();
     $schedule->command('expire:inviteCodes')->daily();

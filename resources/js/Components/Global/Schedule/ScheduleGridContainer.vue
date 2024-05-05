@@ -70,7 +70,7 @@
 
     </div>
 
-    <div v-if="allPlaceholders && nextScheduledShow" class="next-show-highlight p-5 my-2 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center">
+    <div v-if="allPlaceholders && nextScheduledShow" class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center">
       <div class="bg-green-500 text-white py-2">
         <h2>Playing Soon</h2>
       </div>
@@ -78,11 +78,12 @@
         <h3 class="text-3xl mb-1">{{ nextScheduledShow.content.name }}</h3>
         <p class="text-lg">{{ formatLongDate(nextScheduledShow.startTime) }}</p> <!-- Formatted start date -->
         <p class="text-lg">{{ formatTime(nextScheduledShow.startTime, true) }} - {{ formatTime(nextScheduledShow.endTime, true) }}</p>
-        <div class="w-full flex justify-center items-center mt-4">
+        <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer"
+             @click="handleShowClick(nextScheduledShow)">
           <SingleImage v-if="nextScheduledShow.content.image"
                :image="nextScheduledShow.content.image"
                :alt="nextScheduledShow.content.name"
-               :class="`w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto`"/>
+               :class="`w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80`"/>
         </div>
         <p class="text-lg">{{ formatDuration(nextScheduledShow.durationMinutes) }}</p>
       </div>
@@ -225,7 +226,7 @@ function formatTime(time, showMeridiem = false) {
 }
 
 function formatLongDate(date) {
-  return dayjs(date).format('dddd, MMM, YYYY');
+  return dayjs(date).format('dddd MMM D, YYYY');
 }
 
 // Method to format duration into a readable format
