@@ -1,6 +1,6 @@
 <template>
   <div
-      class="editor-textarea editor-container bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus-within:ring-blue-500 focus-within:border-blue-500"
+      class="editor-textarea editor-container bg-gray-50 border border-gray-400 text-gray-900 text-sm w-full rounded-lg focus-within:ring-blue-500 focus-within:border-blue-500"
       @click="focusEditor">
     <EditorContent :editor="editor"/>
   </div>
@@ -9,7 +9,6 @@
 <script setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import { TabExtension } from '@/Utilities/TabExtension'
 import Document from '@tiptap/extension-document'
 import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
@@ -20,7 +19,7 @@ import Underline from '@tiptap/extension-underline'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import Link from '@tiptap/extension-link'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const emits = defineEmits(['updateContent'])
 
@@ -31,6 +30,7 @@ const props = defineProps({
 const initialContent = props.description ? props.description : '<p>Start typing the description...</p>'
 
 const editor = useEditor({
+  autofocus: true, // Setting autofocus to true
   extensions: [
     StarterKit,
     Document,
@@ -46,12 +46,13 @@ const editor = useEditor({
 
   ],
   content: initialContent,
-  autofocus: false,
   onUpdate: ({ editor }) => {
     const htmlOutput = editor.getHTML();
     emits('updateContent', htmlOutput);
   },
 });
+
+
 
 const hasFocused = ref(false) // State to track if the editor has been focused
 
@@ -81,6 +82,8 @@ onMounted(() => {
   // Ensure the editor is focused when needed and adjusts height accordingly
   editor.value?.commands.focus();
   adjustHeight();
+  const editorElement = document.querySelector('.ProseMirror');  // Adjust the selector as needed
+
 });
 
 const adjustHeight = () => {

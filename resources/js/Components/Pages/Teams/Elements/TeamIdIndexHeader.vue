@@ -38,14 +38,9 @@
       <div class="flex flex-row flex-wrap justify-between gap-2">
         <div class="flex flex-row w-full justify-center lg:justify-end pb-6 lg:pb-0">
           <button @click="Inertia.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
-
-
-
-
-
         </div>
 
-        <div class="flex flex-row flex-wrap gap-2 justify-center">
+        <div class="flex flex-row flex-wrap gap-2 justify-center mb-4">
           <SingleImage :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-h-40 mr-4'"/>
           <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
             {{ team.name }}

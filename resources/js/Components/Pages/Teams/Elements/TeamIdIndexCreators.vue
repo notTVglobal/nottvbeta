@@ -7,7 +7,7 @@
     is to enhance privacy and give more control to the individuals involved. -->
 
     <div class="flex flex-wrap justify-center bg-gray-800 px-4 pt-2 pb-8 rounded-lg w-full mx-auto mb-8">
-      <div v-for="creator in creators.data" :key="creator.id" class="p-4 ">
+      <div v-for="creator in creators.data" :key="creator.id" class="p-4">
         <div class="flex flex-col items-center">
           <div>
             <img v-if="creator.profile_photo_path"

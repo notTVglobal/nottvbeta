@@ -147,13 +147,14 @@ class Team extends Model {
               'show' => [
                   'name'        => $scheduleIndex->content->show->name,
                   'slug'        => $scheduleIndex->content->show->slug,
+                  'description' => $scheduleIndex->content->show->description,
                   'image'       => $scheduleIndex->content->show->image ? (new ImageResource($scheduleIndex->content->show->image))->resolve() : null,
-                  'category'         => $scheduleIndex->content->show->getCachedCategory() ? [
+                  'category'    => $scheduleIndex->content->show->getCachedCategory() ? [
                       'id'          => $scheduleIndex->content->show->getCachedCategory()->id,
                       'name'        => $scheduleIndex->content->show->getCachedCategory()->name,
                       'description' => $scheduleIndex->content->show->getCachedCategory()->description,
                   ] : null,
-                  'subCategory'      => $scheduleIndex->content->show->getCachedSubCategory() ? [
+                  'subCategory' => $scheduleIndex->content->show->getCachedSubCategory() ? [
                       'id'          => $scheduleIndex->content->show->getCachedSubCategory()->id,
                       'name'        => $scheduleIndex->content->show->getCachedSubCategory()->name,
                       'description' => $scheduleIndex->content->show->getCachedSubCategory()->description,
@@ -171,13 +172,14 @@ class Team extends Model {
           'slug'          => $scheduleIndex->content->slug ?? "No slug",
           'type'          => $content_type,
           'broadcastDate' => $scheduleIndex->next_broadcast ?? "No broadcast date",
-          'image'       => $scheduleIndex->content->image ? (new ImageResource($scheduleIndex->content->image))->resolve() : null,
-          'category'         => $scheduleIndex->content->getCachedCategory() ? [
+          'image'         => $scheduleIndex->content->image ? (new ImageResource($scheduleIndex->content->image))->resolve() : null,
+          'description'   => $scheduleIndex->content->description,
+          'category'      => $scheduleIndex->content->getCachedCategory() ? [
               'id'          => $scheduleIndex->content->getCachedCategory()->id,
               'name'        => $scheduleIndex->content->getCachedCategory()->name,
               'description' => $scheduleIndex->content->getCachedCategory()->description,
           ] : null,
-          'subCategory'      => $scheduleIndex->content->getCachedSubCategory() ? [
+          'subCategory'   => $scheduleIndex->content->getCachedSubCategory() ? [
               'id'          => $scheduleIndex->content->getCachedSubCategory()->id,
               'name'        => $scheduleIndex->content->getCachedSubCategory()->name,
               'description' => $scheduleIndex->content->getCachedSubCategory()->description,

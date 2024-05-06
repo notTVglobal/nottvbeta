@@ -35,7 +35,7 @@
       <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
       <GeneralServiceNotification v-if="user"/>
-      <OrangeFeedbackBox v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent"/>
+      <OrangeFeedbackBox v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage"/>
       <ToastNotification/>
 
     </div>

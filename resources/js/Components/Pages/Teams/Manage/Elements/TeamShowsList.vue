@@ -34,14 +34,14 @@
             Edit
           </button>
         </div>
-        <div class="mb-2">
-          <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-full w-auto object-contain" />
+        <div class="flex w-full justify-center mb-2">
+          <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-full max-h-1/2screen w-auto object-contain" />
         </div>
         <div class="flex justify-between text-sm text-gray-600 mb-1">
           <div>
             <b>Category:</b> {{ show?.category?.name }}
           </div>
-          <div>
+          <div v-if="show.status">
             <b>Show Status:</b> {{ show.status }}
           </div>
         </div>

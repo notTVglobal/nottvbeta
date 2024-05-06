@@ -1,14 +1,13 @@
 <template>
-  <div class="px-5">
-    <div v-if="!hideTitle" class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">
+  <div class="" :class="props.class">
+    <div v-if="!hideTitle" class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl mb-4 p-4">
       DESCRIPTION
     </div>
-    <div v-if="description" class="description mb-6 p-5">
+    <div v-if="description" class="description mb-6">
       <!-- Use v-html to render the description with HTML formatting -->
 <!--      <span v-html="showFullDescription ? description : truncatedDescription"></span>-->
-      <tip-tap-description-render :description="showFullDescription ? description : truncatedDescription" />
-      <span v-if="!showFullDescription && needsTruncation">...</span>
-      <br><br>
+      <!-- Use TipTapDescriptionRender component to render HTML content -->
+      <tip-tap-description-render :description="displayedDescription" :key="showFullDescription"/>
       <button v-if="needsTruncation && !showFullDescription"
               @click="toggleDescription"
               class="btn btn-wide justify-self-center">
@@ -26,12 +25,16 @@ import TipTapDescriptionRender from '@/Components/Global/TextEditor/TipTapDescri
 const props = defineProps({
   description: String,
   hideTitle: Boolean,
+  class: String,
 });
 
 const showFullDescription = ref(false);
 
 const truncatedDescription = computed(() => {
-  return props.description.length > 300 ? props.description.substring(0, 300) : props.description;
+  if (props.description.length > 300) {
+    return props.description.substring(0, 300) + '...';  // Add ellipsis directly here
+  }
+  return props.description;
 });
 
 const needsTruncation = computed(() => {
@@ -40,7 +43,13 @@ const needsTruncation = computed(() => {
 
 const toggleDescription = () => {
   console.log('Toggling Description:', showFullDescription.value);
+  console.log(props.description)
   showFullDescription.value = !showFullDescription.value;
 };
+
+// Ensure rendering triggers
+const displayedDescription = computed(() => {
+  return showFullDescription.value ? props.description : truncatedDescription.value;
+});
 
 </script>

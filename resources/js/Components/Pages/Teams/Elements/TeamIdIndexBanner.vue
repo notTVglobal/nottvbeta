@@ -43,17 +43,21 @@
         </svg>
       </button>
       <div v-if="activeIndex === index" class="accordion-content bg-gray-600 rounded-b-lg p-4">
-        <div class="flex flex-col sm:flex-row">
+        <div class="flex flex-row flex-wrap-reverse justify-center items-end gap-4">
+
           <SingleImage :image="broadcast.image" :alt="`Broadcast Image`" :class="`max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto mb-4 sm:mb-0 sm:mr-4 object-cover rounded-lg`" />
           <div class="text-left">
-            <p>{{ broadcast.description }}</p>
-            <p>{{ dayjs(broadcast.broadcastDate).format('h:mm A') }}</p>
-            <p>Timezone: {{ userStore.timezoneAbbreviation }}</p>
+            <p class="text-white dark:text-white">{{ dayjs(broadcast.broadcastDate).format('h:mm A') }} {{ userStore.timezoneAbbreviation }}</p>
+            <p class="text-white dark:text-white">Timezone: {{ userStore.canadianTimezoneDescription }}</p>
+            <p class="text-white dark:text-white">{{ dayjs(broadcast.broadcastDate).format('dddd, MMMM D') }}</p>
             <p class="font-semibold uppercase tracking-wider text-yellow-600">Category: {{ broadcast.category.name }}</p>
             <p class="font-semibold tracking-wide text-yellow-500">Subcategory: {{ broadcast.subCategory.name }}</p>
-            <button @click="goToBroadcast(broadcast)" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            <button @click="goToBroadcast(broadcast)" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mx-auto">
               Go to Page
             </button>
+<!--            <p class="text-white dark:text-white py-6">{{ broadcast.description }}</p>-->
+            <ExpandableDescription :description="broadcast.description" :hideTitle="true" :class="`text-white dark:text-white py-6`"/>
+
           </div>
         </div>
       </div>
@@ -69,6 +73,7 @@ import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import { computed, ref } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
+import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -134,14 +139,14 @@ const formattedTime = computed(() => {
   return dayjs(nextBroadcast.value.broadcastDate).tz(userStore.timezone).format('h:mm a');
 })
 
-const goToBroadcast = () => {
+const goToBroadcast = (broadcast) => {
   if (!nextBroadcast.value) return;
   const baseLink = {
-    'show': `/shows/${nextBroadcast.value.slug}/`,
-    'movie': `/movies/${nextBroadcast.value.slug}/`,
-    'showEpisode': `/shows/${nextBroadcast.value.show?.slug}/episode/${nextBroadcast.value.slug}/`
+    'show': `/shows/${broadcast.slug}/`,
+    'movie': `/movies/${broadcast.slug}/`,
+    'showEpisode': `/shows/${broadcast?.show?.slug}/episode/${broadcast.slug}/`
   }
-  const url = baseLink[nextBroadcast.value.type] || '/';
+  const url = baseLink[broadcast.type] || '/';
   Inertia.visit(url)
 }
 </script>

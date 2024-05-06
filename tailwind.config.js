@@ -27,6 +27,9 @@ module.exports = {
                     800: '#a67b5b'  // A darker brown tan color
                 }
             },
+            maxHeight: {
+                '1/2screen': '50vh',
+            },
         },
         listStyleType: {
             disc: 'disc',
