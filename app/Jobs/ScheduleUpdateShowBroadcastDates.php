@@ -36,22 +36,22 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
    */
 
   public function handle(): void {
-    $schedule = $this->schedule;
 
-    // Check if the polymorphic relationship 'content' is loaded and not null
-    if (!$schedule->relationLoaded('content') || is_null($schedule->content)) {
-      Log::info('Content relationship not loaded or content is null', ['scheduleId' => $schedule->id]);
+    // Reload the schedule and ensure it's not null before proceeding
+    $reloadedSchedule = Schedule::with('content')->find($this->schedule->id);
 
+    if (!$reloadedSchedule || is_null($reloadedSchedule->content)) {
+      Log::info('Failed to load schedule with content or content is null', ['scheduleId' => $this->schedule->id]);
       return;
     }
 
     // Check if content is actually loaded and contains elements
     // This is useful if content is expected to be a collection, not typical in morphTo relationships
-    if ($schedule->content instanceof Collection && $schedule->content->isEmpty()) {
-      Log::info('Content is loaded but contains no elements', ['scheduleId' => $schedule->id]);
-
-      return;
-    }
+//    if ($this->schedule->content instanceof Collection && $this->schedule->content->isEmpty()) {
+//      Log::info('Content is loaded but contains no elements', ['scheduleId' => $schedule->id]);
+//
+//      return;
+//    }
 
 //    if (!$schedule) {
 //      Log::warning('No schedule found', ['scheduleId' => $this->schedule->id]);
@@ -80,25 +80,25 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
       $this->updateSchedulesIndex($closestBroadcastDate);
     } else {
       // Log or handle the scenario where no future broadcast dates are found
-      Log::info('No upcoming broadcast dates found for schedule.', ['scheduleId' => $this->schedule->id]);
+      Log::info('No upcoming broadcast dates found for schedule.', ['scheduleId' => $reloadedSchedule->id]);
     }
 
 
     // Format for storage
     $broadcastDates = [
-        'modelType'       => $schedule->content_type,
-        'modelId'         => $schedule->content_id,
-        'priority'        => $schedule->priority, // Assuming the same priority for all schedules for simplicity
+        'modelType'       => $reloadedSchedule->content_type,
+        'modelId'         => $reloadedSchedule->content_id,
+        'priority'        => $reloadedSchedule->priority, // Assuming the same priority for all schedules for simplicity
         'timezone'        => 'UTC',
-        'durationMinutes' => $schedule->duration_minutes,
+        'durationMinutes' => $reloadedSchedule->duration_minutes,
         'broadcastDates'  => $broadcastDates
     ];
 
     // Update the compiled dates into the database
-    $schedule->broadcast_dates = json_encode($broadcastDates);
-    $schedule->save();
+    $reloadedSchedule->broadcast_dates = json_encode($broadcastDates);
+    $reloadedSchedule->save();
 
-    Log::info('Updated broadcast dates', ['scheduleId' => $schedule->id, 'dates' => $broadcastDates]);
+//    Log::info('Updated broadcast dates', ['scheduleId' => $reloadedSchedule->id, 'dates' => $broadcastDates]);
   }
 
   /**
@@ -129,11 +129,11 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, new DateTimeZone($schedule->timezone))
         ->setTimezone('UTC');
 
-    Log::info('Converted time to UTC', [
-        'localTime' => $schedule->start_time,
-        'UTCTime'   => $startTimeUTC->toDateTimeString(),  // Should log '2024-05-09 02:30:00'
-        'timezone'  => $schedule->timezone
-    ]);
+//    Log::info('Converted time to UTC', [
+//        'localTime' => $schedule->start_time,
+//        'UTCTime'   => $startTimeUTC->toDateTimeString(),  // Should log '2024-05-09 02:30:00'
+//        'timezone'  => $schedule->timezone
+//    ]);
 
     // Output should confirm the correct UTC time of '2024-05-09 02:30:00'
 
@@ -265,13 +265,13 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
               'team_id'        => $teamId
           ]
       );
-      Log::info('Schedule index updated with next broadcast date', [
-          'date'         => $closestBroadcastDate->toDateTimeString(),
-          'scheduleId'   => $schedule->id,
-          'team_id'      => $teamId,
-          'content_type' => $contentType,
-          'content_id'   => $contentId
-      ]);
+//      Log::info('Schedule index updated with next broadcast date', [
+//          'date'         => $closestBroadcastDate->toDateTimeString(),
+//          'scheduleId'   => $schedule->id,
+//          'team_id'      => $teamId,
+//          'content_type' => $contentType,
+//          'content_id'   => $contentId
+//      ]);
     } catch (Exception $e) {
       Log::error('Failed to update schedule index', [
           'scheduleId' => $schedule->id,
@@ -337,11 +337,11 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
         return $date->setTimezone(new DateTimeZone('UTC'))->toIso8601String();
       }, $recurrentDates);
 
-      Log::info('Recurrent schedule processed successfully', [
-          'scheduleId' => $schedule->id,
-          'datesProcessed' => count($recurrentDates),
-          'UTC DatesAdded' => implode(', ', $recurrentDatesUTC)  // Log the converted dates
-      ]);
+//      Log::info('Recurrent schedule processed successfully', [
+//          'scheduleId' => $schedule->id,
+//          'datesProcessed' => count($recurrentDates),
+//          'UTC DatesAdded' => implode(', ', $recurrentDatesUTC)  // Log the converted dates
+//      ]);
     } catch (Exception $e) {
       Log::error('Failed to process recurrent schedule', [
           'scheduleId' => $schedule->id,
