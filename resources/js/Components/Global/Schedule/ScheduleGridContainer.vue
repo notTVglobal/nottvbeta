@@ -25,7 +25,7 @@
     <div class="schedule-grid" :style="{ 'grid-template-columns': gridColumns }">
       <!-- Render time banners -->
       <div v-for="banner in scheduleStore.preparedTimeBanners" :key="banner.id"
-           :style="gridItemStyle(banner)" class="time-banner">
+           :style="gridItemStyle(banner)" class="time-banner align-center">
         {{ banner.name }}
       </div>
     </div>
