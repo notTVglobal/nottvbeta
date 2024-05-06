@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Uid\Ulid;
@@ -198,6 +199,28 @@ class Show extends Model
       // Rethrow the exception for the controller to handle
       throw new \Exception('Failed to generate the stream key.');
     }
+  }
+
+  // Retrieves the cached category or loads it if not cached
+  public function getCachedCategory()
+  {
+    return Cache::rememberForever('show_category_' . $this->show_category_id, function () {
+      return $this->category()->withDefault([
+          'name' => '',
+          'description' => ''
+      ])->first();  // Assuming the relationship could return null, handle it with a default.
+    });
+  }
+
+  // Retrieves the cached subcategory or loads it if not cached
+  public function getCachedSubCategory()
+  {
+    return Cache::rememberForever('show_subcategory_' . $this->show_category_sub_id, function () {
+      return $this->subCategory()->withDefault([
+          'name' => '',
+          'description' => ''
+      ])->first();
+    });
   }
 
 }

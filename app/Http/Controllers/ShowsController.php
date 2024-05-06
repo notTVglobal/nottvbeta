@@ -88,7 +88,7 @@ class ShowsController extends Controller {
   }
 
   private function fetchShows(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
-    return Show::with(['team', 'user', 'image', 'status', 'category', 'subCategory', 'appSetting', 'showRunner.user'])
+    return Show::with(['team.user', 'image.appSetting', 'status', 'showRunner.user'])
         ->where(function ($query) {
           // Apply filter for shows based on show_status_id and episodes' status
           $query->where(function ($q) {
@@ -149,7 +149,7 @@ class ShowsController extends Controller {
             'id'   => $show->showRunner->id ?? null,
             'name' => $show->showRunner->user->name ?? null,
         ],
-        'image'              => $this->transformImage($show->image, $show->appSetting),
+        'image'              => $this->transformImage($show->image),
         'slug'               => $show->slug,
         'totalEpisodes'      => $show->showEpisodes->count(),
         'status'             => $show->status->name ?? null,
@@ -157,8 +157,8 @@ class ShowsController extends Controller {
         'copyrightYear'      => $show->created_at->format('Y'),
         'first_release_year' => $show->first_release_year,
         'last_release_year'  => $show->last_release_year,
-        'category'           => $show->category ? $show->category->toArray() : null,
-        'subCategory'        => $show->subCategory ? $show->subCategory->toArray() : null,
+        'category'           => $show->getCachedCategory() ? $show->getCachedCategory()->toArray() : null,
+        'subCategory'        => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
         'isNew'              => $isNew,
         'can'                => [
             'editShow' => Auth::user()->can('editShow', $show),
@@ -170,7 +170,7 @@ class ShowsController extends Controller {
   private function fetchNewestEpisodes() {
     $oneWeekAgo = now()->subWeek(); // Calculate the date one week ago from today
 
-    return ShowEpisode::with('show', 'image', 'show.category', 'show.subCategory', 'appSetting')
+    return ShowEpisode::with('show', 'image.appSetting', 'show.category', 'show.subCategory')
         ->where('show_episode_status_id', 7) // Assuming 7 is the status ID for published episodes
         ->where('release_dateTime', '>=', $oneWeekAgo) // Only episodes released in the last week
         ->whereHas('show', function ($query) {
@@ -184,6 +184,8 @@ class ShowsController extends Controller {
   }
 
   private function transformShowEpisode($showEpisode): array {
+    $show = $showEpisode->show; // Assuming the 'show' relationship is loaded or handled appropriately
+
     return [
         'id'                => $showEpisode->id,
         'ulid'              => $showEpisode->ulid,
@@ -196,12 +198,12 @@ class ShowsController extends Controller {
         'showSlug'          => $showEpisode->show->slug,
 //        'releaseDate' => $showEpisode->release_dateTime,
         'category'          => [
-            'name'        => $showEpisode->show->category->name,
-            'description' => $showEpisode->show->category->description,
+            'name'        => $show->getCachedCategory()->name,
+            'description' => $show->getCachedCategory()->description,
         ],
         'subCategory'       => [
-            'name'        => $showEpisode->show->subCategory->name,
-            'description' => $showEpisode->show->subCategory->description,
+            'name'        => $show->getCachedSubCategory()->name,
+            'description' => $show->getCachedSubCategory()->description,
         ],
         'releaseDateTime'   => $showEpisode->release_dateTime,
         'scheduledDateTime' => $showEpisode->scheduled_release_dateTime,
@@ -211,7 +213,7 @@ class ShowsController extends Controller {
   private function fetchComingSoon() {
     $threeMonthsAgo = now()->subMonths(3);
 
-    return Show::with(['team', 'user', 'image', 'showEpisodes', 'status', 'category', 'subCategory', 'appSetting'])
+    return Show::with(['team.user', 'image.appSetting', 'showEpisodes', 'status'])
         ->whereHas('showEpisodes', function ($query) {
           // Instead of filtering by status, directly check for future scheduled_release_dateTime
           $query->where('scheduled_release_dateTime', '>', now());
@@ -232,12 +234,12 @@ class ShowsController extends Controller {
         ->map(fn($show) => $this->transformShow($show)); // Transform each show if needed
   }
 
-  private function transformImage($image, $appSetting): array {
+  private function transformImage($image): array {
     return [
         'id'              => $image->id,
         'name'            => $image->name,
         'folder'          => $image->folder,
-        'cdn_endpoint'    => $appSetting->cdn_endpoint,
+        'cdn_endpoint'    => $image->appSetting->cdn_endpoint,
         'cloud_folder'    => $image->cloud_folder,
         'placeholder_url' => $image->placeholder_url,
     ];
@@ -452,23 +454,23 @@ class ShowsController extends Controller {
 
     // Eager load necessary relationships for the Show model
     $show->load([
-        'user',
         'image.appSetting',
-        'showEpisodes.video.appSetting',
-        'category',
-        'subCategory',
         'status',
         'showEpisodes' => function ($query) {
           // Apply conditions or sorting to episodes here
-          $query->with(['show', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'image.appSetting', 'mistStreamWildcard'])->orderBy('release_dateTime', 'desc');
+          $query->with([
+              'video' => function ($query) {
+                $query->with(['appSetting', 'mistStream', 'mistStreamWildcard']);
+              },
+              'image.appSetting'
+          ])->orderBy('release_dateTime', 'desc');
         },
-        'team'         => function ($query) {
+        'team' => function ($query) {
           // Eager load team members and their user details
           $query->with(['members' => function ($query) {
-            $query->select(['users.id', 'users.name', 'users.profile_photo_path']);
+            $query->select(['id', 'name', 'profile_photo_path']);
           }]);
-        },
-        'showRunner.user'
+        }
     ]);
 
 //    // Determine the order dynamically based on the show's 'episode_play_order' attribute
@@ -521,7 +523,7 @@ class ShowsController extends Controller {
                 });
               });
         })
-        ->with(['image', 'video']) // Eager load related models for efficiency
+        ->with(['image.appSetting', 'video.appSetting']) // Eager load related models for efficiency
         ->orderBy('release_dateTime', $orderDirection) // Apply dynamic ordering
         ->first();
   }
@@ -546,8 +548,8 @@ class ShowsController extends Controller {
             'name' => $show->showRunner->user->name ?? null,
         ],
         'image'              => $this->transformImage($show->image, $show->appSetting),
-        'category'           => $show->category ? $show->category->toArray() : null,
-        'subCategory'        => $show->subCategory ? $show->subCategory->toArray() : null,
+        'category'           => $show->getCachedCategory() ? $show->getCachedCategory()->toArray() : null,
+        'subCategory'        => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
         'firstPlayEpisode'   => $firstPlayEpisode ? $this->transformEpisodeData($firstPlayEpisode) : null,
         'copyrightYear'      => $show->created_at->format('Y'),
         'first_release_year' => $show->first_release_year ?? null,
@@ -567,7 +569,7 @@ class ShowsController extends Controller {
         'name'             => $episode->name ?? '',
         'slug'             => $episode->slug ?? '',
         'description'      => $episode->description ?? '',
-        'image'            => $this->transformImage($episode->image, $episode->appSetting),
+        'image'            => $this->transformImage($episode->image),
         'creative_commons' => $episode->creativeCommons,
         'copyrightYear'    => $episode->copyrightYear,
         'release_dateTime' => $episode->release_dateTime,
@@ -622,7 +624,7 @@ class ShowsController extends Controller {
     // Determine the episode play order from the Show model
     $episodePlayOrder = $show->episode_play_order; // Assume 'oldest' or 'newest'
 
-    $episodesQuery = ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
+    $episodesQuery = ShowEpisode::with(['image.appSetting', 'show', 'showEpisodeStatus'])
         ->where('show_id', $show->id)
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
@@ -724,13 +726,14 @@ class ShowsController extends Controller {
     return [
         'name'   => $team->name,
         'slug'   => $team->slug,
-        'poster' => $team->image ? $this->transformImage($team->image, $team->appSetting) : null,
+        'poster' => $team->image ? $this->transformImage($team->image) : null,
       // Include additional team-related fields as needed
     ];
   }
 
   private function getPermissions(Show $show) {
     $user = Auth::user();
+
     return [
         'manageShow'  => optional($user)->can('manage', $show),
         'editShow'    => optional($user)->can('edit', $show),
@@ -743,7 +746,7 @@ class ShowsController extends Controller {
 
   public function manage(Show $show): \Inertia\Response {
     // Eager load related entities for the Show model
-    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules', 'recordings']);
+    $show->load(['image.appSetting', 'showRunner.user', 'team.user', 'schedules', 'recordings']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
@@ -788,11 +791,12 @@ class ShowsController extends Controller {
         } else {
           // Log error if user ID is missing or not numeric
           Log::error('Invalid or missing user ID in path', ['path' => $recording->path]);
+
           return null; // Skip this iteration if user ID is not valid
         }
       } else {
         // It's an automatic recording NOTE: $show->ulid is the show streamName
-        $streamPrefix = 'recordings_show_'. strtolower($show->ulid) .'%2B';
+        $streamPrefix = 'recordings_show_' . strtolower($show->ulid) . '%2B';
       }
 
       // Extract the filename including the extension from the recording path
@@ -814,7 +818,6 @@ class ShowsController extends Controller {
 
 
       $settings = AppSetting::find(1);
-
 
 
       // delete these:
@@ -944,17 +947,17 @@ class ShowsController extends Controller {
             'name'            => $show->name,
             'description'     => $show->description,
             'slug'            => $show->slug,
-            'image'           => $this->transformImage($show->image, $show->appSetting),
+            'image'           => $this->transformImage($show->image),
             'copyrightYear'   => $show->created_at->format('Y'),
             'category'        => [
-                'id'          => $show->category->id,
-                'name'        => $show->category->name,
-                'description' => $show->category->description,
+                'id'          => $show->getCachedCategory()->id,
+                'name'        => $show->getCachedCategory()->name,
+                'description' => $show->getCachedCategory()->description,
             ],
             'subCategory'     => [
-                'id'          => $show->subCategory->id,
-                'name'        => $show->subCategory->name,
-                'description' => $show->subCategory->description,
+                'id'          => $show->getCachedSubCategory()->id,
+                'name'        => $show->getCachedSubCategory()->name,
+                'description' => $show->getCachedSubCategory()->description,
             ],
             'notes'           => $show->notes,
             'isScheduled'     => $show->schedules->isNotEmpty(),
@@ -970,7 +973,7 @@ class ShowsController extends Controller {
             'name' => $show->team->name,
             'slug' => $show->team->slug,
         ],
-        'episodes'        => ShowEpisode::with('image', 'show', 'showEpisodeStatus', 'recordings')
+        'episodes'        => ShowEpisode::with('image.appSetting', 'show', 'showEpisodeStatus', 'recordings')
             ->where('show_id', $show->id)
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('name', 'like', "%{$search}%");
@@ -982,7 +985,7 @@ class ShowsController extends Controller {
                 'id'                       => $showEpisode->id,
                 'ulid'                     => $showEpisode->ulid,
                 'name'                     => $showEpisode->name,
-                'image'                    => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
+                'image'                    => $this->transformImage($showEpisode->image),
                 'slug'                     => $showEpisode->slug,
                 'episodeNumber'            => $showEpisode->episode_number,
                 'notes'                    => $showEpisode->notes,
@@ -1008,17 +1011,16 @@ class ShowsController extends Controller {
 
   public function edit(Show $show) {
 
-    DB::table('users')->where('id', Auth::user()->id)->update([
+    Auth::user()->update([
         'isEditingShow_id' => $show->id,
     ]);
 
-    DB::table('shows')->where('id', $show->id)->update([
-        'isBeingEditedByUser_id' => Auth::user()->id,
+    $show->update([
+        'isBeingEditedByUser_id' => Auth::id(),
     ]);
 
-
     // Assuming 'creator' or 'showRunner' is the correct relationship name
-    $show->load('image.appSetting', 'category', 'subCategory', 'team.members', 'showRunner.user');
+    $show->load('image.appSetting', 'team.members', 'showRunner.user');
 
     // Fetch categories and statuses separately as they are not part of the ShowResource
     $categories = ShowCategory::with('subCategories')->get(); // Efficiently fetch categories with sub-categories
@@ -1076,38 +1078,6 @@ class ShowsController extends Controller {
     ]);
 
   }
-
-//  public function edit(Show $show) {
-//    DB::table('users')->where('id', Auth::user()->id)->update([
-//        'isEditingShow_id' => $show->id,
-//    ]);
-//
-//    DB::table('shows')->where('id', $show->id)->update([
-//        'isBeingEditedByUser_id' => Auth::user()->id,
-//    ]);
-//
-//    $categories = ShowCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
-//    $statuses = ShowStatus::all();
-//    $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
-//
-//    return Inertia::render('Shows/{$id}/Edit', [
-//        'show'        => $show,
-//        'team'        => Team::query()->where('id', $show->team_id)->firstOrFail(),
-////        'showRunner'  => User::query()->where('id', $show->user_id)->pluck('id', 'name')->firstOrFail(),
-////        'showRunner'  => [
-////                        'name' => $show->user->name,
-////                        'id' => $show->user->id,
-////        ],
-//        'image'       => $this->transformImage($show->image, $show->appSetting),
-//        'categories'  => $categories,
-//        'statuses'    => $statuses,
-//        'category'    => $show->category ? $show->category->toArray() : null,
-//        'subCategory' => $show->subCategory ? $show->subCategory->toArray() : null,
-//        'can'         => [
-//            'editShow' => Auth::user()->can('edit', $show),
-//        ],
-//    ]);
-//  }
 
 ////////////  UPDATE
 ////////////////////
@@ -1262,7 +1232,7 @@ class ShowsController extends Controller {
 
     $creativeCommons = CreativeCommons::all();
 
-    $show->load('user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user'); // Eager load necessary relationships
+    $show->load('image.appSetting', 'showRunner.user'); // Eager load necessary relationships
 
     return Inertia::render('Shows/{$id}/Episodes/Create', [
         'show'             => [
@@ -1272,10 +1242,10 @@ class ShowsController extends Controller {
             'showRunner'  => [
                 'name' => $show->showRunner->user->name ?? null,
             ],
-            'image'       => $this->transformImage($show->image, $show->appSetting),
+            'image'       => $this->transformImage($show->image),
             'category'    => [
-                'name'        => $show->category->name,
-                'description' => $show->category->description,
+                'name'        => $show->getCachedCategory()->name,
+                'description' => $show->getCachedCategory()->description,
             ],
             'subCategory' => [
                 'name'        => $show->subCategory->name,
@@ -1312,10 +1282,10 @@ class ShowsController extends Controller {
 //    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     // Eager load relationships for the Show model
-    $show->load(['team', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user']);
+    $show->load(['team', 'image.appSetting', 'showRunner.user']);
 
     // Eager load relationships for the ShowEpisode model
-    $showEpisode->load(['creativeCommons', 'video.appSetting', 'image', 'showEpisodeStatus', 'mistStreamWildcard']);
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'image.appSetting', 'showEpisodeStatus', 'mistStreamWildcard']);
 
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
@@ -1325,7 +1295,7 @@ class ShowsController extends Controller {
             'showRunner'    => [
                 'name' => $show->showRunner->user->name ?? null,
             ],
-            'image'         => $this->transformImage($show->image, $show->appSetting),
+            'image'         => $this->transformImage($show->image),
             'copyrightYear' => $show->created_at->format('Y'),
         ],
         'team'              => [
@@ -1362,7 +1332,7 @@ class ShowsController extends Controller {
                 'type'             => $showEpisode->video->type ?? '',
                 'storage_location' => $showEpisode->video->storage_location ?? '',
             ],
-            'image'                      => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
+            'image'                      => $this->transformImage($showEpisode->image),
         ],
         'releaseDateTime'   => $this->formattedReleaseDateTime ?? null,
         'scheduledDateTime' => $this->formattedScheduledDateTime ?? null,

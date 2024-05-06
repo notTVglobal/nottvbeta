@@ -17,7 +17,7 @@
 <template>
   <Head title="Schedule"/>
 
-  <div class="place-self-center flex flex-col w-full overscroll-x-none pb-64 px-4">
+  <div ref="scrollContainer" class="place-self-center flex flex-col w-full overscroll-x-none pb-64 px-4">
     <div id="topDiv" class="flex justify-end px-5">
       <div class="relative w-32 h-32 mt-8 -mb-8 mr-8">
         <div class="absolute top-3 left-0 w-full h-full flex justify-center items-center z-20"><h1 class="text-4xl font-bold text-white bg-black bg-opacity-80 px-4 py-1 text-center">Broadcast<br />Schedule</h1></div>
@@ -131,6 +131,7 @@ import PopUpModal from '@/Components/Global/Modals/PopUpModal'
 import TodayView from '@/Components/Global/Calendar/TodayView.vue'
 // import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import ScheduleGridContainer from '@/Components/Global/Schedule/ScheduleGridContainer.vue'
+import { ref } from 'vue'
 
 usePageSetup('schedule')
 

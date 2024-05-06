@@ -23,13 +23,13 @@ class SimpleShowResource extends JsonResource {
           // Directly return the array representation of the ImageResource
           return (new ImageResource($this->image))->resolve();
         }),
-        'category'         => $this->category ? [
-            'name'        => $this->category->name,
-            'description' => $this->category->description,
+        'category'         => $this->resource->getCachedCategory() ? [
+            'name'        => $this->resource->getCachedCategory()->name,
+            'description' => $this->resource->getCachedCategory()->description,
         ] : null,
-        'subCategory'      => $this->subCategory ? [
-            'name'        => $this->subCategory->name,
-            'description' => $this->subCategory->description,
+        'subCategory'      => $this->resource->getCachedSubCategory() ? [
+            'name'        => $this->resource->getCachedSubCategory()->name,
+            'description' => $this->resource->getCachedSubCategory()->description,
         ] : null,
     ];
   }

@@ -78,7 +78,7 @@
                       <span v-if="!show.last_release_year && !show.first_release_year">({{ show.copyrightYear }})</span>
                     </div>
                   </div>
-                  <div class="tracking-wide text-yellow-500 mt-1">{{ show.subCategory.name }}</div>
+                  <div class="tracking-wide text-yellow-500 mt-1">{{ show?.subCategory?.name }}</div>
                 </div>
 
 
@@ -157,7 +157,7 @@
                     <div class="ml-4">
                       <Link :href="`/shows/${show.slug}`" class="tracking-wide hover:text-gray-300">{{ show.name }}</Link>
                       <div class="uppercase tracking-wider text-yellow-700 text-sm mt-1">{{ show.category.name }}</div>
-                      <div class="tracking-wide text-yellow-500 text-sm font-thin mt-1">{{ show.subCategory.name }}</div>
+                      <div class="tracking-wide text-yellow-500 text-sm font-thin mt-1">{{ show?.subCategory?.name }}</div>
                     </div>
 
                 </button>

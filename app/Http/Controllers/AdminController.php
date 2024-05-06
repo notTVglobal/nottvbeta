@@ -475,7 +475,7 @@ class AdminController extends Controller {
   public function moviesIndex() {
 
     return Inertia::render('Admin/Movies', [
-        'movies'  => Movie::with('team', 'user', 'image', 'status', 'category', 'subCategory')
+        'movies'  => Movie::with('team.user', 'image.appSetting', 'status')
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('name', 'like', "%{$search}%");
             })

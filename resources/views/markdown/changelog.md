@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: May 5, 2024\
+Last Update: May 6, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.2
+May 6, 2024
+* Added Next Broadcast to the public Teams page.
+* Added caching to the show and movie categories
+* Added infinite scroll to the Schedule page.
 
 ## v0.9.0.1
 May 5, 2024

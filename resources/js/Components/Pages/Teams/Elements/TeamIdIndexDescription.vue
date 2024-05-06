@@ -6,18 +6,23 @@
   </div>
 
     <p v-if="team.description" class="description mb-6 p-5">
-      {{ truncatedDescription }}
-      <span v-if="team.description.length > 300 && !showFullDescription">
-              ...
-            </span>
+      <!-- Display either the truncated or full description based on the state -->
+      {{ showFullDescription ? team.description : truncatedDescription }}
+      <!-- Ellipsis for truncated text -->
+      <span v-if="!showFullDescription && needsTruncation">...</span>
+
       <br/><br/>
-      <button v-if="team.description.length > 300 && !showFullDescription"
-              @click="showFullDescription = true"
-              class="btn btn-wide justify-self-center">Read the full description
+
+      <!-- Toggle button for showing full description -->
+      <button v-if="needsTruncation && !showFullDescription"
+              @click="toggleDescription"
+              class="btn btn-wide justify-self-center">
+        Read the full description
       </button>
-      <span v-if="showFullDescription">
-              {{ team.description }}
-            </span>
+
+<!--      <span v-if="showFullDescription">-->
+<!--              {{ team.description }}-->
+<!--            </span>-->
     </p>
   </div>
 </template>
@@ -31,10 +36,14 @@ let props = defineProps({
 const showFullDescription = ref(false)
 
 const truncatedDescription = computed(() => {
-  if (props.team.description.length <= 300 || showFullDescription) {
-    return props.team.description
-  } else {
-    return props.team.description.slice(0, 300)
-  }
+  return props.team.description.slice(0, 300)
 })
+
+const needsTruncation = computed(() => {
+  return props.team.description.length > 300
+})
+
+const toggleDescription = () => {
+  showFullDescription.value = !showFullDescription.value
+}
 </script>

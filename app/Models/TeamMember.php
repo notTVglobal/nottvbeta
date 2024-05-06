@@ -35,16 +35,16 @@ class TeamMember extends Pivot {
 
   // THE PREVIOUS RELATIONSHIPS (Feb.28, 2024)
 
-  public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
-    return $this->belongsToMany(Team::class);
+  public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    return $this->belongsTo(Team::class);
   }
 
   /**
    * The users that belong to the team.
    */
 
-  public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
-    return $this->belongsToMany(User::class);
+  public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    return $this->belongsTo(User::class);
   }
 
 //    public function users()

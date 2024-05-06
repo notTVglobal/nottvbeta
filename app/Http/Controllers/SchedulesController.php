@@ -320,8 +320,6 @@ class SchedulesController extends Controller {
 
     // Eager load schedules but limit the initially fetched set
     $schedules = Schedule::with([
-        'content.category',
-        'content.subCategory',
         'content.image.appSetting'
     ])->whereBetween('start_time', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])->get(); // Adjust the range as necessary
 
@@ -338,7 +336,7 @@ class SchedulesController extends Controller {
     foreach ($filteredSchedules as $schedule) {
       if ($schedule->content_type === 'App\Models\ShowEpisode' && isset($schedule->content->show_id)) {
         // Dynamically load related show data for ShowEpisodes
-        $schedule->load('content.show.category', 'content.show.subCategory', 'content.show.image.appSetting');
+        $schedule->load('content.show.image.appSetting');
       }
     }
 

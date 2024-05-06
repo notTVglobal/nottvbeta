@@ -22,8 +22,8 @@
                          class="h-64 min-w-[8rem] mb-4 object-cover hover:opacity-75 transition ease-in-out duration-150 hover:cursor-pointer"/>
             {{ show.name }}
 
-            <div class="uppercase tracking-wider text-yellow-700 mt-1">{{ show.categoryName[0] }}</div>
-            <div class="text-sm text-yellow-500">{{ show.categorySubName[0] }}</div>
+            <div class="uppercase tracking-wider text-yellow-700 mt-1">{{ show.categoryName }}</div>
+            <div class="text-sm text-yellow-500">{{ show.categorySubName }}</div>
           </div>
 
       </div>
@@ -36,7 +36,6 @@
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import { Inertia } from '@inertiajs/inertia'
-import { onMounted } from 'vue'
 
 defineProps({
   shows: Object,
