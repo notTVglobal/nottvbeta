@@ -18,48 +18,34 @@
       <!--      </p>-->
       <TeamIdIndexBanner :team="team"/>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2">
-        <div class="order-last lg:order-none">
-          <TeamIdIndexDescription :team="team"/>
-        </div>
-        <div class="px-5">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Description section with ExpandableDescription component -->
+        <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
+          <div class="min-h-80">
+            <ExpandableDescription :description="team.description"/>
+          </div>
 
-          <SearchShowEpisodesComponent :modelType="`team`" :modelId="props.team.id" :modelSlug="props.team.slug"
-                                       :shows="shows">
-            <!-- Provide custom title -->
-            <template v-slot:title>
-              <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
-            </template>
-            <!-- Provide custom description -->
-            <template v-slot:description>
-              <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes.</p>
-            </template>
-          </SearchShowEpisodesComponent>
-
-
-          <TeamShowsList :shows="shows"/>
+          <div class="min-h-80">
+            <!-- TeamIdIndexCreators component with proper spacing -->
+            <TeamIdIndexCreators :creators="creators"/>
+          </div>
         </div>
 
-      </div>
-
-
-      <div class="flex flex-col">
-        <div class="overflow-x-auto">
-          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-
-
-            <!--                            For now, we are just displaying the team members here.
-                                            This will make a good component that can be re-used across
-                                            the Show and Episode Index pages. Just pass in the creators prop.
-
-                                            We will add this when we have our Creators model setup
-                                            and creators attached to the credits table for this
-                                            show.                                                       -->
-
-            <!--                            <ShowCreatorsList />-->
-
-            <!--  <TeamFooter />  -->
-            <TeamIdIndexCreators :creators="creators" v-if="showCreators"/>
+        <!-- Search and list section with minimum height -->
+        <div class="px-5 bg-gray-800 p-4 rounded-lg shadow-lg min-h-64">
+          <div class="min-h-80">
+            <SearchShowEpisodesComponent :modelType="'team'" :modelId="props.team.id" :modelSlug="props.team.slug"
+                                         :shows="shows">
+              <template v-slot:title>
+                <h2 class="text-white text-lg font-semibold mb-2">Advanced Episode Search</h2>
+              </template>
+              <template v-slot:description>
+                <p class="text-gray-400 text-sm mb-4">Search through all of our shows to find episodes.</p>
+              </template>
+            </SearchShowEpisodesComponent>
+          </div>
+          <div class="min-h-80">
+            <TeamShowsList :shows="shows"/>
           </div>
         </div>
       </div>
@@ -73,29 +59,25 @@
 
 
 <script setup>
-import { usePageSetup } from '@/Utilities/PageSetup'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
-import Message from '@/Components/Global/Modals/Messages'
-
 import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
-import { Inertia } from '@inertiajs/inertia'
+
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import TeamIdIndexHeader from '@/Components/Pages/Teams/Elements/TeamIdIndexHeader.vue'
 import TeamIdIndexBanner from '@/Components/Pages/Teams/Elements/TeamIdIndexBanner.vue'
-import TeamIdIndexDescription from '@/Components/Pages/Teams/Elements/TeamIdIndexDescription.vue'
 import TeamIdIndexCreators from '@/Components/Pages/Teams/Elements/TeamIdIndexCreators.vue'
+import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import ShowCreatorsList from '@/Components/Pages/Shows/Elements/ShowCreatorsList.vue'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
-const videoPlayerStore = useVideoPlayerStore()
 
 const props = defineProps({
   user: Object,
@@ -112,9 +94,6 @@ appSettingStore.setPrevUrl()
 
 teamStore.setActiveTeam(props.team)
 teamStore.can = props.can
-
-
-const showCreators = false
 
 
 // Function to handle scrolling

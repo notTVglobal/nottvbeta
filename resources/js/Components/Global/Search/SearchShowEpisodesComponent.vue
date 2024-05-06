@@ -1,7 +1,7 @@
 <template>
 <div>
   <div v-if="shows.data.length !== 0"
-       class="w-full bg-gray-900 text-white text-center  text-2xl p-4 mb-4">
+       class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">
     SEARCH
     EPISODES
   </div>
@@ -36,7 +36,7 @@
     <transition name="slide-out">
       <!-- Show results conditionally -->
       <div v-if="showResultsContainer"
-           class="results-container mt-4 bg-gray-700 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+           class="results-container mt-4 bg-gray-700 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Use a component to render search results dynamically -->
         <component
             :is="currentResultComponent"
@@ -58,10 +58,9 @@
 </div>
 </template>
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useSearchStore } from '@/Stores/SearchStore'
 import { debounce } from 'lodash'
-import _ from 'lodash'
 import TeamShowEpisodesResult from '@/Components/Global/Search/TeamShowEpisodesResult.vue'
 import ShowShowEpisodesResult from '@/Components/Global/Search/ShowShowEpisodesResult.vue'
 import DefaultSearchResult from '@/Components/Global/Search/DefaultSearchResult.vue'
@@ -87,6 +86,8 @@ const currentResultComponent = computed(() => {
   // Retrieve the component based on the current model or default to DefaultSearchResult
   return componentMap[searchStore.currentModel] || DefaultSearchResult
 })
+
+searchStore.reset()
 
 // Debounce the search function
 const debounceSearch = debounce(() => {

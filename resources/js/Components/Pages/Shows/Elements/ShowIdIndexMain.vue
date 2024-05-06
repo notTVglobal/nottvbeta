@@ -7,7 +7,7 @@
         <div class="mb-6 p-5">
 
 
-          <ShowEpisodesList :episodes="episodes" :show="show"/>
+          <ShowEpisodesList v-if="episodes.length" :episodes="episodes" :show="show"/>
 
           <div hidden class="container mx-auto px-4 mb-12">
             <div class="w-full bg-gray-800 text-2xl p-4 mb-4">CREDITS</div>

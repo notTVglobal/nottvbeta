@@ -8,19 +8,19 @@
             <CreatorsOnlyBadge/>
           </div>
           <SingleImage :image="props.show.image" :alt="'show cover'"
-                       class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
+                       class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
 
         </div>
         <div class="lg:ml-12 lg:mr-0">
           <div @click="Inertia.visit(`/teams/${team.slug}`)"
-               class="text-gray-200 hover:text-blue-500 hover:cursor-pointer tracking-wide"> {{ team.name }}
+               class="text-center lg:text-left text-gray-200 hover:text-blue-500 hover:cursor-pointer tracking-wide"> {{ team.name }}
           </div>
           <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
           <div class="text-gray-400 text-center lg:text-left">
             <div class="mt-1">
               <span class="uppercase tracking-wider text-yellow-700">{{ show.category.name }}</span>
               &nbsp;&middot;&nbsp;
-              <span class="tracking-wide text-yellow-500">{{ show.subCategory.name }}</span>
+              <span class="tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
               <span v-if="show.last_release_year"> &nbsp;&middot;&nbsp; {{
                   show.first_release_year
                 }}-{{ show.last_release_year }}</span>
@@ -75,7 +75,7 @@
 
           <SocialMediaBadgeLinks :socialMediaLinks="show.socialMediaLinks"/>
 
-          <div class="description mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
+          <div class="description mt-4 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
             {{ show.description }}
           </div>
 
@@ -128,7 +128,7 @@ let playEpisode = () => {
     team: props.team,
     creative_commons: props.show.firstPlayEpisode.creative_commons,
     category: props.show.category,
-    subCategory: props.show.subCategory,
+    subCategory: props.show?.subCategory,
     release_year: '',
     copyrightYear: props.show.firstPlayEpisode.copyrightYear,
     description: props.show.firstPlayEpisode.description,

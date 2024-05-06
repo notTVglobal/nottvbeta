@@ -19,6 +19,7 @@ use App\Http\Resources\ImageResource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Facades\DB;
@@ -71,24 +72,25 @@ class TeamsController extends Controller {
 
     $canViewCreator = optional($user)->can('viewCreator', User::class);
 
-    function getLogo($team) {
-      $getLogo = Image::query()
-          ->where('team_id', $team->id)
-          ->pluck('name')
-          ->first();
-      if (!empty($getLogo)) {
-        $logo = $getLogo;
-      } else {
-        $logo = 'Ping.png';
-      }
-
-      return $logo;
-    }
+//    function getLogo($team) {
+//      $getLogo = Image::query()
+//          ->where('team_id', $team->id)
+//          ->pluck('name')
+//          ->first();
+//      if (!empty($getLogo)) {
+//        $logo = $getLogo;
+//      } else {
+//        $logo = 'Ping.png';
+//      }
+//
+//      return $logo;
+//    }
 
     $component = $user ? 'Teams/Index' : 'LoggedOut/Teams/Index';
 
     return Inertia::render($component, [
-        'teams'   => Team::with('user', 'image', 'shows', 'teamStatus')
+        'teams'   => Team::with('user', 'image.appSetting', 'shows', 'teamStatus')
+            ->where('is_demo', false)
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('name', 'like', "%{$search}%");
             })
@@ -103,7 +105,7 @@ class TeamsController extends Controller {
                     'id'           => $team->image->id,
                     'name'         => $team->image->name,
                     'folder'       => $team->image->folder,
-                    'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                    'cdn_endpoint' => $team->image->appSetting->cdn_endpoint,
                     'cloud_folder' => $team->image->cloud_folder,
                 ],
                 'teamCreator' => $team->user->name,
@@ -193,77 +195,139 @@ class TeamsController extends Controller {
 
     $component = $user ? 'Teams/{$id}/Index' : 'LoggedOut/Teams/{$id}/Index';
 
-    // Define a cache key based on team and user type
-    $cacheKey = 'shows_for_team_' . $team->id . '_user_' . ($user->creator ? 'creator' : 'guest');
-
-    // Attempt to get cached data
-    $shows = Cache::remember($cacheKey, 3600, function () use ($team, $user) {
-      return Show::with('team', 'image.appSetting')
-        ->where('team_id', $team->id)
-        ->when(auth()->check() && auth()->user()->creator, function ($query) {
-          // For creators, include shows with status 9 and also shows that are new or active with specific episode statuses
-          $query->where('show_status_id', 9)
-              ->orWhere(function ($q) {
-                $q->whereIn('show_status_id', [1, 2])
-                    ->whereExists(function ($query) {
-                      $query->select(DB::raw(1))
-                          ->from('show_episodes')
-                          ->whereColumn('shows.id', 'show_episodes.show_id')
-                          ->where('show_episode_status_id', 7);
-                    });
-              });
-        }, function ($query) {
-          // For all other users, filter for shows that are new or active and have episodes with a specific status
-          $query->whereIn('show_status_id', [1, 2])
-              ->whereExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('show_episodes')
-                    ->whereColumn('shows.id', 'show_episodes.show_id')
-                    ->where('show_episode_status_id', 7);
-              });
-        })
-        ->latest()
-        ->paginate(6, ['*'], 'shows')
-        ->withQueryString()
-        ->through(fn($show) => [
-            'id'              => $show->id,
-            'name'            => $show->name,
-            'description'     => $show->description,
-            'team_id'         => $show->team_id,
-            'image'           => $show->image ? (new ImageResource($show->image))->resolve() : null,
-            'slug'            => $show->slug,
-            'copyrightYear'   => Carbon::parse($show->created_at)->format('Y'),
-            'categoryName'    => $show->getCachedCategory()->name,
-            'categorySubName' => $show->getCachedSubCategory()->name,
-            'statusId'        => $show->status->id,
-        ]);
-    });
-
+    $team->socialMediaLinks = [
+        'www_url'        => $team->www_url,
+        'instagram_name' => $team->instagram_name,
+        'telegram_url'   => $team->telegram_url,
+        'twitter_handle' => $team->twitter_handle,
+    ];
 
     return Inertia::render($component, [
-        'team'          => (new TeamResource($team))->resolve(),
+        'team'     => $team,
+        'image'    => $team->image ? (new ImageResource($team->image))->resolve() : null,
         'nextBroadcast' => $team->nextBroadcast,
-        'image'         => $team->image ? (new ImageResource($team->image))->resolve() : null,
-        'shows'         => $shows,
-//        'creators'      => TeamMember::where('team_id', $team->id)
-//            ->join('users', 'team_members.user_id', '=', 'users.id')
-//            ->select('users.*', 'team_members.user_id')
-//            ->latest()
-//            ->paginate(5, ['*'], 'creator')
-////                ->withQueryString()
-//            ->through(fn($user) => [
-//                'id'                 => $user->id,
-//                'name'               => $user->name,
-//                'profile_photo_path' => $user->profile_photo_path,
-//                'profile_photo_url'  => $user->profile_photo_url,
-//            ]),
-        'filters'       => Request::only(['team_id']),
-        'can'           => [
+        'shows'    => Show::with('team', 'image.appSetting')
+            ->where('team_id', $team->id)
+            ->where(function ($query) {
+              if (auth()->check() && auth()->user()->creator) {
+                // For creators, include shows with status 9 and also shows that are new or active with specific episode statuses
+                $query->where('show_status_id', 9)
+                    ->orWhere(function ($q) {
+                      $q->whereIn('show_status_id', [1, 2])
+                          ->whereHas('showEpisodes', function ($q) {
+                            $q->where('show_episode_status_id', 7);
+                          });
+                    });
+              } else {
+                // For all other users, filter for shows that are new or active and have episodes with a specific status
+                $query->whereIn('show_status_id', [1, 2])
+                    ->whereHas('showEpisodes', function ($q) {
+                      $q->where('show_episode_status_id', 7);
+                    });
+              }
+            })
+            ->latest()
+            ->paginate(6, ['*'], 'shows')
+            ->withQueryString()
+            ->through(fn($show) => [
+                'id'              => $show->id,
+                'name'            => $show->name,
+                'description'     => $show->description,
+                'team_id'         => $show->team_id,
+                'image'           => $show->image ? (new ImageResource($show->image))->resolve() : null,
+                'slug'            => $show->slug,
+                'copyrightYear'   => Carbon::parse($show->created_at)->format('Y'),
+                'categoryName'    => $show->getCachedCategory()->name ?? null,
+                'categorySubName' => $show->getCachedSubCategory()->name ?? null,
+                'statusId'        => $show->status->id,
+            ]),
+        'creators' => TeamMember::where('team_id', $team->id)
+            ->join('users', 'team_members.user_id', '=', 'users.id')
+            ->select('users.*', 'team_members.user_id')
+            ->latest()
+            ->paginate(5, ['*'], 'creator')
+//                ->withQueryString()
+            ->through(fn($user) => [
+                'id'                 => $user->id,
+                'name'               => $user->name,
+                'profile_photo_path' => $user->profile_photo_path,
+                'profile_photo_url'  => $user->profile_photo_url,
+            ]),
+        'filters'  => Request::only(['team_id']),
+        'can'      => [
             'viewTeam'   => optional($user)->can('view', $team),
             'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
             'editTeam'   => optional($user)->can('update', $team),
         ]
     ]);
+
+
+
+//      $shows = Show::with('team', 'image.appSetting')
+//        ->where('team_id', $team->id)
+//        ->when(auth()->check() && auth()->user()->creator, function ($query) {
+//          // For creators, include shows with status 9 and also shows that are new or active with specific episode statuses
+//          $query->where('show_status_id', 9)
+//              ->orWhere(function ($q) {
+//                $q->whereIn('show_status_id', [1, 2])
+//                    ->whereExists(function ($query) {
+//                      $query->select(DB::raw(1))
+//                          ->from('show_episodes')
+//                          ->whereColumn('shows.id', 'show_episodes.show_id')
+//                          ->where('show_episode_status_id', 7);
+//                    });
+//              });
+//        }, function ($query) {
+//          // For all other users, filter for shows that are new or active and have episodes with a specific status
+//          $query->whereIn('show_status_id', [1, 2])
+//              ->whereExists(function ($query) {
+//                $query->select(DB::raw(1))
+//                    ->from('show_episodes')
+//                    ->whereColumn('shows.id', 'show_episodes.show_id')
+//                    ->where('show_episode_status_id', 7);
+//              });
+//        })
+//        ->latest()
+//        ->paginate(6, ['*'], 'shows')
+//        ->withQueryString()
+//        ->through(fn($show) => [
+//            'id'              => $show->id,
+//            'name'            => $show->name,
+//            'description'     => $show->description,
+//            'team_id'         => $show->team_id,
+//            'image'           => $show->image ? (new ImageResource($show->image))->resolve() : null,
+//            'slug'            => $show->slug,
+//            'copyrightYear'   => Carbon::parse($show->created_at)->format('Y'),
+//            'categoryName'    => $show->getCachedCategory()->name ?? null,
+//            'categorySubName' => $show->getCachedSubCategory()->name ?? null,
+//            'statusId'        => $show->status->id,
+//        ]);
+//
+//    Log::debug('Shows data:', ['shows' => $shows]);
+//    return Inertia::render($component, [
+//        'team'          => (new TeamResource($team))->resolve(),
+//        'nextBroadcast' => $team->nextBroadcast,
+//        'image'         => $team->image ? (new ImageResource($team->image))->resolve() : null,
+//        'shows'         => $shows,
+////        'creators'      => TeamMember::where('team_id', $team->id)
+////            ->join('users', 'team_members.user_id', '=', 'users.id')
+////            ->select('users.*', 'team_members.user_id')
+////            ->latest()
+////            ->paginate(5, ['*'], 'creator')
+//////                ->withQueryString()
+////            ->through(fn($user) => [
+////                'id'                 => $user->id,
+////                'name'               => $user->name,
+////                'profile_photo_path' => $user->profile_photo_path,
+////                'profile_photo_url'  => $user->profile_photo_url,
+////            ]),
+//        'filters'       => Request::only(['team_id']),
+//        'can'           => [
+//            'viewTeam'   => optional($user)->can('view', $team),
+//            'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
+//            'editTeam'   => optional($user)->can('update', $team),
+//        ]
+//    ]);
   }
 
 ////////////  MANAGE

@@ -39,7 +39,7 @@
         </div>
         <div class="flex justify-between text-sm text-gray-600 mb-1">
           <div>
-            <b>Category:</b> {{ show.category.name }}
+            <b>Category:</b> {{ show?.category?.name }}
           </div>
           <div>
             <b>Show Status:</b> {{ show.status }}
