@@ -49,8 +49,8 @@
               >
                 Category
               </label>
-              <div class="font-bold text-orange-600">{{ props.show.category.name }}</div>
-              <div class="font-bold text-yellow-700">{{ props.show.subCategory.name }}</div>
+              <div class="font-bold text-orange-600">{{ props?.show?.category?.name }}</div>
+              <div class="font-bold text-yellow-700">{{ props?.show?.subCategory?.name }}</div>
             </div>
 
             <div class="mb-6">

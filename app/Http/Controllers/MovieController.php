@@ -61,7 +61,7 @@ class MovieController extends Controller {
   // The goal is to fetch movies, apply a search filter if necessary,
   // paginate the results, and transform each movie with the required data.
   private function fetchMovies() {
-    return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
+    return Movie::with(['image.appSetting', 'status'])
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
         })
@@ -79,7 +79,7 @@ class MovieController extends Controller {
   // timestamp, or simply by the created_at or updated_at timestamps
   // if reviewed_at is not available.
   private function fetchRecentlyReviewed() {
-    return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
+    return Movie::with(['image.appSetting', 'status'])
         // Optionally, you can filter by a 'reviewed_at' field if available
         // ->whereNotNull('reviewed_at')
         ->where($this->applyStatusFilter())
@@ -93,7 +93,7 @@ class MovieController extends Controller {
   // It might be determined by user ratings, the number of pre-orders, a specific flag
   // in the database, or upcoming release dates.
   private function fetchMostAnticipated() {
-    return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
+    return Movie::with(['image.appSetting', 'status'])
         ->where($this->applyStatusFilter())
         ->where('release_year', '>', now()->year) // Assuming future release years indicate anticipation
         ->orderBy('release_year', 'asc') // Order by soonest release
@@ -109,7 +109,7 @@ class MovieController extends Controller {
   private function fetchComingSoon() {
     $tomorrow = now()->addDay(); // Get the date and time for 24 hours in the future
 
-    return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
+    return Movie::with(['image.appSetting', 'status'])
         ->where($this->applyStatusFilter())
         ->where('release_date', '>', $tomorrow) // Fetch movies with a release date more than 24 hours away
         ->orderBy('release_date', 'asc') // Order by soonest release date
@@ -131,12 +131,12 @@ class MovieController extends Controller {
       // 'teamSlug'   => $movie->team->slug, // Uncomment if 'team' relationship is loaded
         'userId'        => $movie->user_id,
       // 'userName'   => $movie->user->name, // Uncomment if 'user' relationship is loaded
-        'image'         => $this->transformImage($movie->image, $movie->appSetting),
+        'image'         => $this->transformImage($movie->image),
         'slug'          => $movie->slug,
         'copyrightYear' => $movie->created_at->format('Y'),
         'release_year'  => $movie->release_year,
-        'category'      => $movie->category ? $movie->category->toArray() : null,
-        'subCategory'   => $movie->subCategory ? $movie->subCategory->toArray() : null,
+        'category'      => $movie->getCachedCategory() ? $movie->getCachedCategory()->toArray() : null,
+        'subCategory'   => $movie->getCachedSubCategory() ? $movie->getCachedSubCategory()->toArray() : null,
         'statusId'      => $movie->status->id,
         'isNew'         => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
     ];
@@ -144,13 +144,13 @@ class MovieController extends Controller {
 
   // transformImage is a helper method to structure the image data.
   // It's called within transformMovie
-  private function transformImage($image, $appSetting) {
+  private function transformImage($image) {
     return [
-        'id'           => $image->id,
-        'name'         => $image->name,
-        'folder'       => $image->folder,
-        'cdn_endpoint' => $appSetting->cdn_endpoint,
-        'cloud_folder' => $image->cloud_folder,
+        'id'              => $image->id,
+        'name'            => $image->name,
+        'folder'          => $image->folder,
+        'cdn_endpoint'    => $image->appSetting->cdn_endpoint,
+        'cloud_folder'    => $image->cloud_folder,
         'placeholder_url' => $image->placeholder_url,
     ];
   }
@@ -203,7 +203,7 @@ class MovieController extends Controller {
         'name'        => 'unique:movies|required|string|max:255',
         'logline'     => 'required|string',
         'description' => 'required|string',
-        'video_url'    => 'nullable|active_url|ends_with:.mp4',
+        'video_url'   => 'nullable|active_url|ends_with:.mp4',
     ]);
 
     // Generate the slug
@@ -253,7 +253,7 @@ class MovieController extends Controller {
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
 
-    $movie->load('trailers.video', 'video.appSetting', 'image', 'video', 'team', 'appSetting', 'category', 'subCategory', 'status', 'creativeCommons'); // Eager load necessary relationships
+    $movie->load('trailers.video', 'video.appSetting', 'image.appSetting', 'team', 'status', 'creativeCommons'); // Eager load necessary relationships
 
     // Determine the media type based on its storage location.
     // If the storage location is marked as 'external', categorize it as 'externalVideo';
@@ -308,11 +308,11 @@ class MovieController extends Controller {
                 'slug' => $movie->team->slug ?? null,
             ],
             'image'            => [
-                'id'           => $movie->image->id,
-                'name'         => $movie->image->name,
-                'folder'       => $movie->image->folder,
-                'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
-                'cloud_folder' => $movie->image->cloud_folder,
+                'id'              => $movie->image->id,
+                'name'            => $movie->image->name,
+                'folder'          => $movie->image->folder,
+                'cdn_endpoint'    => $movie->image->appSetting->cdn_endpoint,
+                'cloud_folder'    => $movie->image->cloud_folder,
                 'placeholder_url' => $movie->image->placeholder_url,
             ],
           // need to link the Movie and Team models.
@@ -329,13 +329,13 @@ class MovieController extends Controller {
             'twitter_handle'   => $movie->twitter_handle ?? null,
 //            'category'       => $movie->category ? $movie->category->toArray() : null,
             'category'         => [
-                'name'        => $movie->category->name ?? null,
-                'description' => $movie->category->description ?? null,
+                'name'        => $movie->getCachedCategory()->name ?? null,
+                'description' => $movie->getCachedCategory()->description ?? null,
             ],
 //            'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
             'subCategory'      => [
-                'name'        => $movie->subCategory->name ?? null,
-                'description' => $movie->subCategory->description ?? null,
+                'name'        => $movie->getCachedSubCategory()->name ?? null,
+                'description' => $movie->getCachedSubCategory()->description ?? null,
             ],
             'status'           => [
                 'id'   => $movie->status->id ?? null,
@@ -380,19 +380,15 @@ class MovieController extends Controller {
    */
   public function edit(Movie $movie) {
 
-    DB::table('users')->where('id', Auth::user()->id)->update([
-        'isEditingMovie_id' => $movie->id,
-    ]);
+    Auth::user()->update(['isEditingMovie_id' => $movie->id]);
 
-    DB::table('shows')->where('id', $movie->id)->update([
-        'isBeingEditedByUser_id' => Auth::user()->id,
-    ]);
+    $movie->update(['isBeingEditedByUser_id' => Auth::id()]);
 
     $categories = MovieCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
     $movieStatuses = MovieStatus::all();
     $creativeCommons = CreativeCommons::all();
 
-    $movie->load('trailers.video', 'video.appSetting', 'creativeCommons', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $movie->load('trailers.video', 'video.appSetting', 'creativeCommons', 'image.appSetting'); // Eager load necessary relationships
 
     return Inertia::render('Movies/{$id}/Edit', [
         'movie'            => $movie,
@@ -420,7 +416,7 @@ class MovieController extends Controller {
             'id'           => $movie->image->id ?? '',
             'name'         => $movie->image->name ?? '',
             'folder'       => $movie->image->folder ?? '',
-            'cdn_endpoint' => $movie->appSetting->cdn_endpoint ?? '',
+            'cdn_endpoint' => $movie->image->appSetting->cdn_endpoint ?? '',
             'cloud_folder' => $movie->image->cloud_folder ?? '',
         ],
         'categories'       => $categories,
@@ -449,7 +445,7 @@ class MovieController extends Controller {
         'description'         => 'required',
         'logline'             => 'required|string',
         'release_date'        => 'date|after:tomorrow',
-        'release_year' => [
+        'release_year'        => [
             'required_if:status,2',
             'nullable',
             'integer',
@@ -468,15 +464,15 @@ class MovieController extends Controller {
         'notes'               => 'nullable|string|max:1024',
         'status'              => 'required|integer|exists:movie_statuses,id',
     ], [
-        'category.required'   => 'The category is required.',
-        'creative_commons_id.required'   => 'The creative commons selection is required.',
-        'status.exists'         => 'The selected status is invalid.',
-        'copyrightYear.integer' => 'Please choose a copyright year',
-        'release_date.after'    => 'The release date must be at least 24 hours in the future.',
-        'release_year.required_if' => 'The release year is required when the status is active.',
-        'release_year.integer' => 'The release year must be an number.',
-        'release_year.min' => 'The release year must be greater than 1900.',
-        'release_year.max' => 'The release year cannot be beyond this year.',
+        'category.required'            => 'The category is required.',
+        'creative_commons_id.required' => 'The creative commons selection is required.',
+        'status.exists'                => 'The selected status is invalid.',
+        'copyrightYear.integer'        => 'Please choose a copyright year',
+        'release_date.after'           => 'The release date must be at least 24 hours in the future.',
+        'release_year.required_if'     => 'The release year is required when the status is active.',
+        'release_year.integer'         => 'The release year must be an number.',
+        'release_year.min'             => 'The release year must be greater than 1900.',
+        'release_year.max'             => 'The release year cannot be beyond this year.',
     ]);
 
     // Capture the original status before any changes

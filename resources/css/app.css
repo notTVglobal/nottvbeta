@@ -1150,6 +1150,86 @@ hr {
     /* You may add border and shadow styles to match with the header */
 }
 
+/* Paragraphs within TipTap editor */
+.tiptap p {
+    margin-bottom: 1.2em; /* Provides space between paragraphs */
+    font-size: 1rem; /* Standard font size for readability */
+    line-height: 1.6; /* Good line height for text readability */
+}
+
+/* Headings within TipTap editor */
+.tiptap h1 {
+    font-size: 2em; /* Larger for main titles */
+}
+
+.tiptap h2 {
+    font-size: 1.75em; /* Slightly smaller */
+}
+
+.tiptap h3 {
+    font-size: 1.5em;
+}
+
+/* Lists within TipTap editor */
+.tiptap ul {
+    list-style-type: circle; /* Change disc to circle for a different bullet style */
+    padding-left: 30px; /* Increase padding for better visibility of bullets */
+}
+
+.tiptap ol {
+    list-style-type: decimal; /* Confirming decimal style for ordered lists */
+    counter-reset: list-counter; /* Optional: Reset counters for nested lists */
+}
+
+.tiptap li p {
+    counter-increment: list-counter; /* Optional: Use counters for custom numbering */
+    margin-bottom: 0.2em; /* Reduce the space between items more if needed */
+    padding: 0; /* Remove padding to tighten the list */
+}
+
+.tiptap ul, .tiptap ol {
+    padding-left: 30px; /* Adjust for proper indentation */
+    list-style-position: inside; /* Adjusts bullet/number positioning */
+}
+
+/* Example of custom styling for list numbers */
+.tiptap ol li:before {
+    content: counter(list-counter) ". "; /* Display custom counter */
+    color: #555; /* Grey color for list numbers */
+    font-weight: bold; /* Bold list numbers */
+}
+
+.ProseMirror ol {
+    padding-left: 20px;
+    list-style-type: decimal;
+}
+
+.ProseMirror ul {
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.ProseMirror {
+    padding:10px;
+}
+
+/* Links within TipTap editor */
+.tiptap a {
+    color: #1E90FF; /* A distinct color for links to stand out */
+    text-decoration: none; /* No underline to keep it clean */
+}
+
+.tiptap a:hover {
+    text-decoration: underline; /* Underline on hover for usability */
+}
+
+/* Blockquotes within TipTap editor */
+.tiptap blockquote {
+    border-left: 3px solid #ccc;
+    padding-left: 20px;
+    margin: 1.2em 0;
+}
+
 .z-60 {
     z-index: 60;
 }

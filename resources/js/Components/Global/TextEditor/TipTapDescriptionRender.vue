@@ -1,12 +1,12 @@
 <template>
-  <div class="readonly-editor">
-    <editor-content :editor="editor" contenteditable="false"/>
+  <div>
+    <editor-content :editor="editor"/>
   </div>
 </template>
 <script setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import { FontFamily } from '@tiptap/extension-font-family'
@@ -21,7 +21,7 @@ import Link from '@tiptap/extension-link'
 
 
 const props = defineProps({
-  content: String,
+  description: String,
 })
 
 let editor = ref(
@@ -37,29 +37,15 @@ let editor = ref(
         Underline,
         Subscript,
         Superscript,
-        TextAlign.configure({
-          types: ['heading', 'paragraph'],
-        }),
         Link.configure({
           openOnClick: true,
         }),
       ],
-      content: JSON.parse(props.content), // Use the passed Tiptap JSON content
-    })
-);
+      content: props.description, // Use the passed Tiptap HTML content
+      editable: false,
+    }),
+)
 </script>
 
 
-<style scoped>
-.readonly-editor {
-  /* Disable pointer events to prevent user interaction */
-  pointer-events: none;
-}
 
-/* Optionally, apply styles to visually indicate it's read-only */
-.readonly-editor :not(.ProseMirror) {
-  opacity: 1; /* Adjust opacity to make it visually read-only */
-  cursor: not-allowed; /* Change cursor style to indicate non-interactivity */
-}
-
-</style>

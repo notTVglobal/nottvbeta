@@ -24,15 +24,15 @@ class ShowResource extends JsonResource {
           // Directly return the array representation of the ImageResource
           return (new ImageResource($this->image))->resolve();
         }),
-        'category'         => $this->category ? [
-            'id'          => $this->category->id,
-            'name'        => $this->category->name,
-            'description' => $this->category->description,
+        'category'         => $this->resource->getCachedCategory() ? [
+            'id'          => $this->resource->getCachedCategory()->id,
+            'name'        => $this->resource->getCachedCategory()->name,
+            'description' => $this->resource->getCachedCategory()->description,
         ] : null,
-        'subCategory'      => $this->subCategory ? [
-            'id'          => $this->subCategory->id,
-            'name'        => $this->subCategory->name,
-            'description' => $this->subCategory->description,
+        'subCategory'      => $this->resource->getCachedSubCategory() ? [
+            'id'          => $this->resource->getCachedSubCategory()->id,
+            'name'        => $this->resource->getCachedSubCategory()->name,
+            'description' => $this->resource->getCachedSubCategory()->description,
         ] : null,
       // Include video using VideoResource
 //        'video'       => $this->whenLoaded('video') ? new VideoResource($this->video) : null,

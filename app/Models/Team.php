@@ -42,6 +42,8 @@ class Team extends Model {
     return 'slug';
   }
 
+  protected $appends = ['nextBroadcast'];
+
   public function teamStatus(): BelongsTo {
     return $this->belongsTo(TeamStatus::class, 'team_status_id');
   }
@@ -70,7 +72,7 @@ class Team extends Model {
     return $this->belongsToMany(User::class, 'team_members')
         ->using(TeamMember::class)
         ->as('teamMembers')
-        ->withPivot('active')
+        ->withPivot('active', 'team_profile_is_public')
         ->withTimestamps()
         ->select('id', 'name', 'email', 'phone', 'profile_photo_path');
   }
@@ -106,6 +108,93 @@ class Team extends Model {
   public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(SchedulesIndex::class, 'team_id');
   }
+
+  public function getNextBroadcastAttribute() {
+//    Log::info('Fetching next broadcasts for team: ' . $this->id);
+
+    $scheduleIndexes = $this->scheduleIndexes->load('content');
+//    Log::info("Loaded scheduleIndexes count: " . $scheduleIndexes->count());
+
+    if ($scheduleIndexes->isEmpty()) {
+//      Log::info("No scheduleIndexes found for team: " . $this->id);
+      return [];
+    }
+
+    //    Log::info("Final data for team {$this->id}: " . json_encode($broadcasts->toArray()));
+    return $this->scheduleIndexes->load('content.image.appSetting')->map(function ($scheduleIndex) {
+//      Log::info('Processing schedule index: ' . $scheduleIndex->id);
+
+      $contentType = get_class($scheduleIndex->content);
+//      Log::info("Content type for schedule index {$scheduleIndex->id}: $contentType");
+
+      $content_type = match ($contentType) {
+        \App\Models\Show::class => 'show',
+        \App\Models\Movie::class => 'movie',
+        \App\Models\ShowEpisode::class => 'showEpisode',
+        default => null,
+      };
+
+      if ($content_type === null) {
+//        Log::warning("Unrecognized content type for schedule index {$scheduleIndex->id}");
+      }
+
+      $additionalData = [];
+      if ($content_type === 'showEpisode') {
+        // Ensure 'show' relationship is loaded
+        $scheduleIndex->content->loadMissing('show');
+        if ($scheduleIndex->content->show) {
+          $additionalData = [
+              'show' => [
+                  'name'        => $scheduleIndex->content->show->name,
+                  'slug'        => $scheduleIndex->content->show->slug,
+                  'description' => $scheduleIndex->content->show->description,
+                  'image'       => $scheduleIndex->content->show->image ? (new ImageResource($scheduleIndex->content->show->image))->resolve() : null,
+                  'category'    => $scheduleIndex->content->show->getCachedCategory() ? [
+                      'id'          => $scheduleIndex->content->show->getCachedCategory()->id,
+                      'name'        => $scheduleIndex->content->show->getCachedCategory()->name,
+                      'description' => $scheduleIndex->content->show->getCachedCategory()->description,
+                  ] : null,
+                  'subCategory' => $scheduleIndex->content->show->getCachedSubCategory() ? [
+                      'id'          => $scheduleIndex->content->show->getCachedSubCategory()->id,
+                      'name'        => $scheduleIndex->content->show->getCachedSubCategory()->name,
+                      'description' => $scheduleIndex->content->show->getCachedSubCategory()->description,
+                  ] : null,
+              ]
+          ];
+//          Log::info("Added show details for showEpisode {$scheduleIndex->id}");
+        } else {
+//          Log::info("No show linked for showEpisode {$scheduleIndex->id}");
+        }
+      }
+
+      $data = [
+          'name'          => $scheduleIndex->content->name ?? "Unnamed",
+          'slug'          => $scheduleIndex->content->slug ?? "No slug",
+          'type'          => $content_type,
+          'broadcastDate' => $scheduleIndex->next_broadcast ?? "No broadcast date",
+          'image'         => $scheduleIndex->content->image ? (new ImageResource($scheduleIndex->content->image))->resolve() : null,
+          'description'   => $scheduleIndex->content->description,
+          'category'      => $scheduleIndex->content->getCachedCategory() ? [
+              'id'          => $scheduleIndex->content->getCachedCategory()->id,
+              'name'        => $scheduleIndex->content->getCachedCategory()->name,
+              'description' => $scheduleIndex->content->getCachedCategory()->description,
+          ] : null,
+          'subCategory'   => $scheduleIndex->content->getCachedSubCategory() ? [
+              'id'          => $scheduleIndex->content->getCachedSubCategory()->id,
+              'name'        => $scheduleIndex->content->getCachedSubCategory()->name,
+              'description' => $scheduleIndex->content->getCachedSubCategory()->description,
+          ] : null,
+      ];
+
+      if (!empty($additionalData)) {
+        $data['show'] = $additionalData['show'];
+//        Log::info("Appending additional data for schedule index {$scheduleIndex->id}");
+      }
+
+      return $data;
+    });
+  }
+
 
 //  /**
 //   * Search function for handling various search types on the Team model.

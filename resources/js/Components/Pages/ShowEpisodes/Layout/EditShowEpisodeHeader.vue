@@ -29,7 +29,7 @@
         </Link>
       </div>
       <div class=""><span class="text-xs uppercase font-semibold">Category: </span>
-        <span class="font-bold uppercase">{{ show.category }}</span>
+        <span class="font-bold uppercase">{{ show?.category }}</span>
         <span class="text-xs">
                     (change the category on the
                     <Link :href="`/shows/${show.slug}/edit`"
@@ -38,7 +38,7 @@
                 </span>
       </div>
       <div class=""><span class="text-xs uppercase font-semibold">Sub-category: </span>
-        <span class="font-bold uppercase">{{ show.subCategory }}</span>
+        <span class="font-bold uppercase">{{ show?.subCategory }}</span>
       </div>
       <div class=""><span class="text-xs uppercase font-semibold">Team: </span>
         <Link :href="`/teams/${team.slug}/manage`">

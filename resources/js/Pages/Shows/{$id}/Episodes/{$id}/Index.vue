@@ -83,9 +83,9 @@
 
             <div class="flex flex-col text-left md:text-right w-full md:w-1/4">
             <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{
-                show.category.name
+                show?.category?.name
               }}</span>
-              <span class="tracking-wide text-yellow-500">{{ show.subCategory.name }}</span>
+              <span class="tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
             </div>
 
           </div>

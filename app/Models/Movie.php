@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 class Movie extends Model {
 
@@ -89,6 +90,22 @@ class Movie extends Model {
   public function playlistItems()
   {
     return $this->morphMany(ChannelPlaylistItem::class, 'content');
+  }
+
+  // Retrieves the cached category or loads it if not cached
+  public function getCachedCategory()
+  {
+    return Cache::rememberForever('category_' . $this->movie_category_id, function () {
+      return $this->category;
+    });
+  }
+
+  // Retrieves the cached subcategory or loads it if not cached
+  public function getCachedSubCategory()
+  {
+    return Cache::rememberForever('subcategory_' . $this->movie_category_sub_id, function () {
+      return $this->subCategory;
+    });
   }
 }
 

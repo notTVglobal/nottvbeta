@@ -1,22 +1,29 @@
 // Import necessary functions from Pinia
 import { defineStore } from 'pinia';
 
+
+const initialState = () => ({
+    searchResults: [], // Array to hold the search results
+    itemsPerPage: 9,
+    totalVisible: 9,  // Initially visible items
+    showResults: false,
+    isLoading: false, // Boolean to track if a search request is ongoing
+    errorMessage: '', // String to store any error messages from search requests
+    searchQuery: '', // The query string used for the search
+    currentModel: '', // The model currently being searched
+    currentModelId: '', // The slug of the current model item being searched
+    currentModelSlug: '', // The slug of the current model item being searched
+})
+
 // Define the store
 export const useSearchStore = defineStore('searchStore', {
     // Define the initial state of the store
-    state: () => ({
-        searchResults: [], // Array to hold the search results
-        itemsPerPage: 9,
-        totalVisible: 9,  // Initially visible items
-        showResults: false,
-        isLoading: false, // Boolean to track if a search request is ongoing
-        errorMessage: '', // String to store any error messages from search requests
-        searchQuery: '', // The query string used for the search
-        currentModel: '', // The model currently being searched
-        currentModelId: '', // The slug of the current model item being searched
-        currentModelSlug: '', // The slug of the current model item being searched
-    }),
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState());
+        },
         // Perform a search based on a model and slug
         async performShowEpisodeSearch(modelType, id, slug) {
             this.currentModel = modelType; // Update the model being searched

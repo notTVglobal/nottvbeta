@@ -177,18 +177,12 @@
           >
             Description <span class="text-red-500">* REQUIRED</span>
           </label>
-          <textarea v-model="form.description"
-                    class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
-                    type="text"
-                    name="description"
-                    id="description"
-                    required
-                    placeholder="Description"
-          ></textarea>
+          <tip-tap-description-editor @updateContent="handleContentUpdate" />
+
           <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
         </div>
 
-        <SocialMediaLinksStoreUpdateForForm v-model:form="form" />
+        <SocialMediaLinksStoreUpdateForForm v-model:form="form"/>
 
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
@@ -238,6 +232,7 @@ import CheckboxNotification from '@/Components/Global/Modals/CheckboxNotificatio
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import Message from '@/Components/Global/Modals/Messages'
 import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
+import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
 
 usePageSetup('showsCreate')
 
@@ -334,6 +329,14 @@ const toggleShowRunnerInfo = () => {
 // Use watch to react to changes in defaultTeamId computed property
 watch(defaultTeamId, fetchTeamMembers, {immediate: true}) // immediate: true to run on mount
 
+const description = ref('')
+
+const handleContentUpdate = (html) => {
+  description.value = html
+}
+
+
+
 let form = useForm({
   name: '',
   description: '',
@@ -374,6 +377,7 @@ onMounted(() => {
 })
 
 let submit = () => {
+  form.description = description.value
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
   form.team_id = selectedTeamId

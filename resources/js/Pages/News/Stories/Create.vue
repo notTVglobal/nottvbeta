@@ -85,7 +85,7 @@ import { useNewsStore } from '@/Stores/NewsStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 // import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 // import Tiptap from '@/Components/Global/TextEditor/TiptapNewsStoryCreate'
-import TipTapEditor from '@/Components/Global/TextEditor/TipTapEditor'
+import TipTapEditor from '@/Components/Global/TextEditor/TipTapNewsStoryEditor'
 // import Tiptap from "@/Components/Global/TextEditor/TiptapNewsStoryEdit"
 import CategoryCitySelector from '@/Components/Pages/News/CategoryCitySelector.vue'
 import Message from '@/Components/Global/Modals/Messages'

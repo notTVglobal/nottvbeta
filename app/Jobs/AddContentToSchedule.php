@@ -69,7 +69,7 @@ class AddContentToSchedule implements ShouldQueue {
         'scheduleType' => 'required|string',
         'startDate'    => 'required|date',
         'endDate'      => 'required|date',
-        'daysOfWeek'   => 'required|array',
+        'daysOfWeek'   => 'array',
         'timezone'     => 'required|string',
         'duration'     => 'required|integer',
     ]);

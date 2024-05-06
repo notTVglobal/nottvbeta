@@ -25,6 +25,7 @@
         "league/csv": "^9.14",
         "league/flysystem-aws-s3-v3": "^3.12",
         "league/flysystem-path-prefixing": "^3.0",
+        "mews/purifier": "^3.4",
         "pbmedia/laravel-ffmpeg": "^8.1",
         "phenx/php-svg-lib": "^0.5.2",
         "php-ffmpeg/php-ffmpeg": "^1.1",

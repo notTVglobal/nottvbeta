@@ -20,7 +20,7 @@
 <!--    </div>-->
 
 
-    <div v-if="isSmallScreen" class="stacked-table">
+    <div v-if="appSettingStore.isSmallScreen" class="stacked-table">
       <div v-for="show in shows.data" :key="show.id" class="card border-t border-b border-gray-300 my-2 p-2 bg-gray-50">
         <div class="flex justify-between items-center mb-2">
           <Link :href="`/shows/${show.slug}/manage`" class="text-2xl font-semibold text-blue-600 hover:text-blue-900">
@@ -34,14 +34,14 @@
             Edit
           </button>
         </div>
-        <div class="h-auto max-w-full overflow-hidden mb-2">
-          <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-full w-auto object-contain" />
+        <div class="flex w-full justify-center mb-2">
+          <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-full max-h-1/2screen w-auto object-contain" />
         </div>
         <div class="flex justify-between text-sm text-gray-600 mb-1">
           <div>
-            <b>Category:</b> {{ show.category.name }}
+            <b>Category:</b> {{ show?.category?.name }}
           </div>
-          <div>
+          <div v-if="show.status">
             <b>Show Status:</b> {{ show.status }}
           </div>
         </div>
@@ -108,7 +108,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -122,25 +121,12 @@ const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
 
-const isSmallScreen = ref(false)
-
-const checkScreenSize = () => {
-  const width = window.innerWidth;
-  isSmallScreen.value = width < 800; // Adjust this value for your breakpoints
-};
 
 defineProps({
   shows: Object,
   can: Object,
 })
 
-onMounted(() => {
-  checkScreenSize(); // Check screen size on mount
-  window.addEventListener('resize', checkScreenSize); // Add resize listener
-});
 
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkScreenSize); // Clean up listener
-});
 
 </script>

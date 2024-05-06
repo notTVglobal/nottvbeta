@@ -1,6 +1,5 @@
 <template>
-  <div class="flex flex-wrap m-auto space-x-4 space-y-2 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
-    <div></div>
+  <div class="flex flex-wrap m-auto gap-x-4 gap-y-2 lg:ml-0 pt-3 lg:mt-2 2xl:pt-0 justify-center lg:justify-start">
     <div v-if="www_url"
          class="website-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
       <a :href="www_url" class="hover:text-gray-400" target="_blank">

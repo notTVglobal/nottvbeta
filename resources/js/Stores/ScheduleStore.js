@@ -51,11 +51,11 @@ function convertScheduleToTimezone(scheduleData) {
 
     return scheduleData.data.map(item => {
         // Convert top-level start_time and end_time using UserStore methods
-        console.log(`Original startTime for ${item.id}: ${item.startTime}`)
+        // console.log(`Original startTime for ${item.id}: ${item.startTime}`)
         const startTimeInUserTz = item.startTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.startTime, 'YYYY-MM-DD HH:mm:ss') : null
         const endTimeInUserTz = item.endTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.endTime, 'YYYY-MM-DD HH:mm:ss') : null
         // Add debug logging to help trace conversion issues or confirm correct conversions
-        console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`)
+        // console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`)
 
         return {
             ...item,
@@ -309,14 +309,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedDate = date.toISOString().split('T')[0];
                 // Log and error handling
                 const formattedDate = dayDate.format('YYYY-MM-DD') // For potential error messages and logging
-                console.log(`Loading week data for date: ${formattedDate}`) // Log the date being requested
+                // console.log(`Loading week data for date: ${formattedDate}`) // Log the date being requested
                 //
                 // const response = await axios.get(`/api/schedule/week/${formattedDate}`);
-                console.log('Received response:', response.data) // Log the raw response data
+                // console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone
-                console.log(`Using timezone: ${timezone}`) // Log the timezone being used
+                // console.log(`Using timezone: ${timezone}`) // Log the timezone being used
 
                 const newData = convertScheduleToTimezone(response.data, timezone) // Ensure you are accessing the correct data property from the response
 
@@ -366,8 +366,8 @@ export const useScheduleStore = defineStore('scheduleStore', {
             const weekEndStr = formatISODate(this.currentWeekEnd)
 
             // Enhanced logging for debugging
-            console.log(`Current week range: ${weekStartStr} to ${weekEndStr}`)
-            console.log('Existing data fetch log entries:', this.dataFetchLog)
+            // console.log(`Current week range: ${weekStartStr} to ${weekEndStr}`)
+            // console.log('Existing data fetch log entries:', this.dataFetchLog)
 
             // Iterate through the fetch log to check if the current week has been fetched
             const weekHasBeenFetched = this.dataFetchLog.some(log => {
@@ -376,13 +376,13 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 const logWeekEndStr = formatISODate(log.weekEnd)
 
                 // Log each comparison for insight
-                console.log(`Comparing to fetched range: ${logWeekStartStr} to ${logWeekEndStr}`)
+                // console.log(`Comparing to fetched range: ${logWeekStartStr} to ${logWeekEndStr}`)
 
                 return logWeekStartStr <= weekStartStr && logWeekEndStr >= weekEndStr
             })
 
             // Log the final determination
-            console.log(`Week from ${weekStartStr} to ${weekEndStr} has ${weekHasBeenFetched ? '' : 'not '}been fetched.`)
+            // console.log(`Week from ${weekStartStr} to ${weekEndStr} has ${weekHasBeenFetched ? '' : 'not '}been fetched.`)
 
             return !weekHasBeenFetched
         },
@@ -427,7 +427,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 await this.loadWeekFromDate(dayDate.toDate())  // Pass as a Date if needed, or adjust 'loadWeekFromDate' to accept Day.js objects
                 // Successfully fetched, so update the log
                 this.dataFetchLog[dateString] = dayjs().toISOString()  // Use Day.js to get the current time in ISO format
-                console.log('Data fetched successfully for date:', dateString)
+                // console.log('Data fetched successfully for date:', dateString)
             } catch (error) {
                 console.error(`Failed to fetch data for date ${dateString}:`, error)
             }
@@ -505,7 +505,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             this.currentHalfHour = currentHalfHour.toDate()
             this.fourHoursLater = fourHoursLater.toDate()
 
-            console.log('Fetching shows between:', currentHalfHour.format('YYYY-MM-DD HH:mm:ss'), 'and', fourHoursLater.format('YYYY-MM-DD HH:mm:ss'))
+            // console.log('Fetching shows between:', currentHalfHour.format('YYYY-MM-DD HH:mm:ss'), 'and', fourHoursLater.format('YYYY-MM-DD HH:mm:ss'))
         },
 
         setTimeSlots() {
@@ -768,7 +768,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             let todayStart = now.startOf('day')
             let tomorrowStart = todayStart.add(1, 'day')
 
-            console.log('Current Time Slots:', state.timeSlots.map(slot => dayjs(slot).format('HH:mm')))
+            // console.log('Current Time Slots:', state.timeSlots.map(slot => dayjs(slot).format('HH:mm')))
 
             return state.timeBanners.flatMap(banner => {
                 // Create banner times for today and tomorrow to handle overnight spans
@@ -797,10 +797,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     const gridStart = startSlotIndex + 1
                     const gridSpan = endSlotIndex - startSlotIndex + 1
 
-                    console.log(`Processing Banner: ${banner.name}`)
-                    console.log(`StartTime: ${banner.start.format('HH:mm')}, EndTime: ${banner.end.format('HH:mm')}`)
-                    console.log(`StartSlotIndex: ${startSlotIndex}, EndSlotIndex: ${endSlotIndex}`)
-                    console.log(`Calculated gridStart: ${gridStart}, gridSpan: ${gridSpan}`)
+                    // console.log(`Processing Banner: ${banner.name}`)
+                    // console.log(`StartTime: ${banner.start.format('HH:mm')}, EndTime: ${banner.end.format('HH:mm')}`)
+                    // console.log(`StartSlotIndex: ${startSlotIndex}, EndSlotIndex: ${endSlotIndex}`)
+                    // console.log(`Calculated gridStart: ${gridStart}, gridSpan: ${gridSpan}`)
 
                     // Ensure the banner should be displayed within the current time slots
                     if (gridStart && gridSpan > 0) {

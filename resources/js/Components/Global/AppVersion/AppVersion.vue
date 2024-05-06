@@ -11,10 +11,10 @@
       TV &#169; 2009-{{ new Date().getFullYear() }}
     </div>
     <div class="flex justify-center">
-      Beta Preview v0.9.0.1
+      Beta Preview v0.9.0.2
     </div>
     <div class="flex justify-center text-blue-600 hover:text-blue-400 underline">
-      <Link @click="userStore.closeNavDropdown()" :href="route('changelog.show')">changelog</Link>
+      <Link @click="appSettingStore.closeNavDropdown()" :href="route('changelog.show')">changelog</Link>
     </div>
     <!--                                        <div class="flex justify-center">Please send us</div>-->
     <!--                                          <div class="flex justify-center">comments and questions</div>-->
@@ -24,8 +24,8 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 </script>

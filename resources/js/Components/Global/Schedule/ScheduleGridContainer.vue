@@ -25,7 +25,7 @@
     <div class="schedule-grid" :style="{ 'grid-template-columns': gridColumns }">
       <!-- Render time banners -->
       <div v-for="banner in scheduleStore.preparedTimeBanners" :key="banner.id"
-           :style="gridItemStyle(banner)" class="time-banner">
+           :style="gridItemStyle(banner)" class="time-banner align-center">
         {{ banner.name }}
       </div>
     </div>
@@ -60,7 +60,7 @@
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.startTime, true) }}</p>
-<!--              <p>{{ formatTime(item.startTime) }} - {{ formatTime(item.endTime, true) }}</p>-->
+              <!--              <p>{{ formatTime(item.startTime) }} - {{ formatTime(item.endTime, true) }}</p>-->
               <p>{{ formatDuration(item.durationMinutes) }}</p>
             </div>
           </div>
@@ -70,26 +70,24 @@
 
     </div>
 
-    <div v-if="allPlaceholders && nextScheduledShow" class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center">
-      <div class="bg-green-500 text-white py-2">
-        <h2>Playing Soon</h2>
-      </div>
-      <div class="show-details mt-4 mx-auto max-w-4xl">
-        <h3 class="text-3xl mb-1">{{ nextScheduledShow.content.name }}</h3>
-        <p class="text-lg">{{ formatLongDate(nextScheduledShow.startTime) }}</p> <!-- Formatted start date -->
-        <p class="text-lg">{{ formatTime(nextScheduledShow.startTime, true) }} - {{ formatTime(nextScheduledShow.endTime, true) }}</p>
-        <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer"
-             @click="handleShowClick(nextScheduledShow)">
-          <SingleImage v-if="nextScheduledShow.content.image"
-               :image="nextScheduledShow.content.image"
-               :alt="nextScheduledShow.content.name"
-               :class="`w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80`"/>
-        </div>
-        <p class="text-lg">{{ formatDuration(nextScheduledShow.durationMinutes) }}</p>
-      </div>
-    </div>
-
-
+    <!--    <div v-if="nextScheduledShow" class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center">-->
+    <!--      <div class="bg-green-500 text-white py-2">-->
+    <!--        <h2>Playing Soon</h2>-->
+    <!--      </div>-->
+    <!--      <div class="show-details mt-4 mx-auto max-w-4xl">-->
+    <!--        <h3 @click="handleShowClick(nextScheduledShow)" class="text-3xl mb-1 hover:text-blue-300 hover:cursor-pointer">{{ nextScheduledShow.content.name }}</h3>-->
+    <!--        <p class="text-lg">{{ formatLongDate(nextScheduledShow.startTime) }}</p> &lt;!&ndash; Formatted start date &ndash;&gt;-->
+    <!--        <p class="text-lg">{{ formatTime(nextScheduledShow.startTime, true) }} - {{ formatTime(nextScheduledShow.endTime, true) }}</p>-->
+    <!--        <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer"-->
+    <!--             @click="handleShowClick(nextScheduledShow)">-->
+    <!--          <SingleImage v-if="nextScheduledShow.content.image"-->
+    <!--               :image="nextScheduledShow.content.image"-->
+    <!--               :alt="nextScheduledShow.content.name"-->
+    <!--               :class="`w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80`"/>-->
+    <!--        </div>-->
+    <!--        <p class="text-lg">{{ formatDuration(nextScheduledShow.durationMinutes) }}</p>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
     <div class="schedule-grid text-center" :style="{ 'grid-template-columns': gridColumns }">
 
@@ -105,27 +103,57 @@
       </div>
 
     </div>
-  </div>
 
+    <div class="infinite-scroll-container">
+      <div v-for="(show, index) in displayedShows" :key="show.id"
+           class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center"
+           :class="{ 'last-item': index === displayedShows.length - 1 }">
+        <div class="bg-green-500 text-white py-2">
+          <h2>Playing Soon</h2>
+        </div>
+        <div class="show-details mt-4 mx-auto max-w-4xl">
+          <h3 @click="handleShowClick(show)" class="text-3xl mb-1 hover:text-blue-300 hover:cursor-pointer">
+            {{ show.content.name }}</h3>
+          <p class="text-lg">{{ formatLongDate(show.startTime) }}</p>
+          <p class="text-lg">{{ formatTime(show.startTime, true) }} - {{ formatTime(show.endTime, true) }}</p>
+          <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer" @click="handleShowClick(show)">
+            <SingleImage v-if="show.content.image"
+                         :image="show.content.image"
+                         :alt="show.content.name"
+                         class="w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80"/>
+          </div>
+          <p class="text-lg">{{ formatDuration(show.durationMinutes) }}</p>
+        </div>
+      </div>
+      <!-- Loading Indicator -->
+      <div v-if="isLoading" class="w-full text-center mt-4">
+      <span class="loading loading-dots loading-lg text-info">
+      </span>
+      </div>
+      <div v-element-visibility="onElementVisibility"></div> <!-- This element triggers the visibility event -->
+    </div>
+
+  </div>
 </template>
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
-import { debounce } from 'lodash'
+import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
-import advancedFormat from 'dayjs/plugin/advancedFormat'; // for using 'a' for AM/PM format
+import advancedFormat from 'dayjs/plugin/advancedFormat' // for using 'a' for AM/PM format
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import CurrentTime from '@/Components/Global/Schedule/CurrentTime.vue'
+import { throttle } from '@/Utilities/Throttle'
 
 const scheduleStore = useScheduleStore()
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
-dayjs.extend(advancedFormat);
+dayjs.extend(advancedFormat)
 
 let initialLoadHandled = false
 
@@ -157,16 +185,68 @@ let initialLoadHandled = false
 //   return null;
 // });
 
-const allPlaceholders = computed(() => {
-  return scheduleStore.nextFourHoursOfContent.every(item => item.placeholder);
+
+const isVisible = ref(false)
+const displayedShowsCount = ref(6)
+const isLoading = ref(false)
+
+// Function to handle element visibility
+function onElementVisibility(state) {
+  isVisible.value = state;
+}
+
+// Function to load more shows
+function loadMoreShows() {
+  if (isVisible.value && !isLoading.value) {
+    isLoading.value = true;
+    console.log("Loading more shows");
+    setTimeout(() => {  // Simulating asynchronous data fetching
+      displayedShowsCount.value += 6;
+      isLoading.value = false;
+    }, 500);
+  }
+}
+
+// Throttle the loadMoreShows function
+const throttledLoadMoreShows = throttle(loadMoreShows, 200);
+
+
+// Watcher for isVisible.value
+watch(isVisible, (newValue) => {
+  if (newValue) {
+    throttledLoadMoreShows();
+  }
 });
 
-const nextScheduledShow = computed(() => {
-  const now = dayjs();
-  return scheduleStore.weeklyContent.find(show =>
-      dayjs(show.startTime).isAfter(now) && !show.placeholder
-  );
-});
+const allPlaceholders = computed(() => {
+  return scheduleStore.nextFourHoursOfContent.every(item => item.placeholder)
+})
+
+
+
+const upcomingShows = computed(() => {
+  const now = dayjs()
+  return scheduleStore.weeklyContent.filter(show =>
+      dayjs(show.startTime).isAfter(now) && !show.placeholder,
+  ).sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)))
+})
+
+const displayedShows = computed(() => upcomingShows.value.slice(0, displayedShowsCount.value))
+
+// function handleScroll() {
+//   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+//   if (scrollTop + clientHeight >= scrollHeight - 5) { // Check if near bottom
+//     displayedShowsCount.value += 6; // Load more shows
+//   }
+// }
+
+// Phasing out the "nextScheduledShow" in favour of the upcomingShows.
+// const nextScheduledShow = computed(() => {
+//   const now = dayjs()
+//   return scheduleStore.weeklyContent.find(show =>
+//       dayjs(show.startTime).isAfter(now) && !show.placeholder,
+//   )
+// })
 
 function isNowPlaying(startTime, duration) {
   const now = dayjs()
@@ -186,7 +266,7 @@ const comingUpNextShow = computed(() => {
 
 watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
   if (newTimeSlots && newTimeSlots.length > 0 && !initialLoadHandled) {
-    console.log('Time slots are ready, updating next four hours.')
+    // console.log('Time slots are ready, updating next four hours.')
     scheduleStore.updateNextFourHours()
     initialLoadHandled = true
   }
@@ -196,7 +276,7 @@ watch(
     () => scheduleStore.baseTime,
     (newTime, oldTime) => {
       if (newTime !== oldTime) { // This check may be redundant but adds clarity
-        console.log(`Base time updated from ${oldTime} to ${newTime}`)
+        // console.log(`Base time updated from ${oldTime} to ${newTime}`)
         scheduleStore.updateNextFourHours()
       }
     },
@@ -209,16 +289,12 @@ watch(
     [() => appSettingStore.isVerySmallScreen, () => appSettingStore.isSmallScreen],
     ([newVerySmall, newSmall], [oldVerySmall, oldSmall]) => {
       if (newVerySmall !== oldVerySmall || newSmall !== oldSmall) {
-        console.log(`Screen size change detected: VerySmallScreen: ${newVerySmall}, SmallScreen: ${newSmall}`)
+        // console.log(`Screen size change detected: VerySmallScreen: ${newVerySmall}, SmallScreen: ${newSmall}`)
         scheduleStore.updateNextFourHours()
       }
     },
     {immediate: true},  // Optionally run on initial setup
 )
-
-watchEffect(() => {
-  console.log('nextFourHoursOfContent:', scheduleStore.nextFourHoursOfContent)
-})
 
 // Method to format time with conditional AM/PM display
 function formatTime(time, showMeridiem = false) {
@@ -226,7 +302,7 @@ function formatTime(time, showMeridiem = false) {
 }
 
 function formatLongDate(date) {
-  return dayjs(date).format('dddd MMM D, YYYY');
+  return dayjs(date).format('dddd MMM D, YYYY')
 }
 
 // Method to format duration into a readable format
@@ -243,7 +319,7 @@ function gridItemStyle(item) {
     gridColumn: `${item.gridStart} / span ${item.gridSpan}`,
     gridRow: `row ${item.gridRow}`,
   }
-  console.log(style)  // Log to see what styles are being returned
+  // console.log(style)  // Log to see what styles are being returned
   return style
 }
 
@@ -252,7 +328,7 @@ function statusGridItemStyle(item) {
   if (!item) return {}
 
   // Log to debug the grid positions being applied
-  console.log(`Status Item - Grid Start: ${item.gridStart}, Grid Span: ${item.gridSpan}`)
+  // console.log(`Status Item - Grid Start: ${item.gridStart}, Grid Span: ${item.gridSpan}`)
 
   return {
     gridColumn: `${item.gridStart} / span ${item.gridSpan}`,
@@ -314,7 +390,24 @@ function getCellClasses(type) {
 }
 
 function handleShowClick(item) {
-  Inertia.visit(`/shows/${item.content.slug}/`)
+  let url = '' // Initialize url variable
+
+  switch (item.type) {
+    case 'show':
+      url = `/shows/${item.content.slug}/`
+      break
+    case 'movie':
+      url = `/movies/${item.content.slug}/`
+      break
+    case 'showEpisode':
+      url = `/shows/${item.show.slug}/episodes/${item.slug}`
+      break
+    default:
+      // Handle default case or do nothing
+  }
+
+  Inertia.visit(url) // Visit the dynamically created URL
+
   // if (isNowPlaying(item.startTime, item.durationMinutes)) {
   //   // Redirect to the show's page if it's currently playing
   //   Inertia.visit(`/shows/${item.content.slug}/`)
@@ -323,6 +416,7 @@ function handleShowClick(item) {
   //   openModal('getReminderModal')
   // }
 }
+
 
 function updateNowPlayingAndComingUpNext() {
   // Logic to update nowPlaying and comingUpNext based on the current time and show data
@@ -345,7 +439,7 @@ const getStatusCellClasses = (gridStart, isFirst, isSecond) => {
   return classes
 }
 // Ensure the data structure is what you expect
-console.log('All items in store:', scheduleStore.nextFourHoursOfContent)
+// console.log('All items in store:', scheduleStore.nextFourHoursOfContent)
 
 //
 // const actualShows = computed(() => {
@@ -364,11 +458,6 @@ console.log('All items in store:', scheduleStore.nextFourHoursOfContent)
 // watch(comingUpNextShow, (newVal, oldVal) => {
 //   console.log('Coming Up Next Show changed from:', oldVal, 'to:', newVal);
 // });
-
-// Optional: Watch the entire content array if changes are frequent and need to trigger reevaluations
-watch(() => scheduleStore.nextFourHoursOfContent, () => {
-  console.log('Content changed, recomputing shows...')
-}, {deep: true})
 
 
 //

@@ -294,10 +294,10 @@ class ShowEpisodeController extends Controller {
   public function show(Show $show, ShowEpisode $showEpisode) {
 
     // Eager load related entities for the Show model
-    $show->load(['user', 'team.user', 'image', 'appSetting', 'category', 'subCategory', 'team']);
+    $show->load('user', 'team.user', 'image.appSetting');
 
     // Eager load related entities for the ShowEpisode model
-    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'appSetting' ]);
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'image.appSetting' ]);
 
 //      TODO: Add TeamMember to this eager load
 
@@ -354,8 +354,8 @@ class ShowEpisodeController extends Controller {
             'copyrightYear'      => $show->created_at->format('Y'),
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
-            'category'           => $show->category,
-            'subCategory'        => $show->subCategory,
+            'category'           => $show->getCachedCategory() ?? null,
+            'subCategory'        => $show->getCachedSubCategory(),
         ],
         'team'     => [
             'name' => $show->team->name,
@@ -448,13 +448,11 @@ class ShowEpisodeController extends Controller {
     // Currently this queries all images in the database
     // this needs to be changed to limit the query.
     //
-    DB::table('users')->where('id', Auth::user()->id)->update([
-        'isEditingShowEpisode_id' => $showEpisode->id,
-    ]);
+    // Update user editing status securely and efficiently
+    Auth::user()->update(['isEditingShowEpisode_id' => $showEpisode->id]);
 
-    DB::table('show_episodes')->where('id', $showEpisode->id)->update([
-        'isBeingEditedByUser_id' => Auth::user()->id,
-    ]);
+    // Mark the episode as being edited by the user
+    $showEpisode->update(['isBeingEditedByUser_id' => Auth::id()]);
 
 //      // Prepare video data
 //      $videoData = [];
@@ -483,8 +481,13 @@ class ShowEpisodeController extends Controller {
       $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
     }
 
-    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    // Eager load necessary relationships for the show
+    $show->load('team', 'user', 'image.appSetting');
 
+    // Since showEpisode is a specific episode, load related data just for this instance
+    $showEpisode->load('video', 'creativeCommons', 'image.appSetting');
+
+    $creativeCommons = $showEpisode->getCachedCreativeCommons();
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
         'show'             => [
@@ -500,8 +503,8 @@ class ShowEpisodeController extends Controller {
             ],
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
-            'category'           => $show->category->name,
-            'subCategory'        => $show->subCategory->name,
+            'category'           => $show->getCachedCategory()->name?? null,
+            'subCategory'        => $show->getCachedSubCategory()->name ?? null,
         ],
         'team'             => [
             'name' => $show->team->name,

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class ShowCategorySub extends Model
 {
@@ -26,5 +27,18 @@ class ShowCategorySub extends Model
           'description' => 'sub category description'
       ]);
     }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::updated(function ($subCategory) {
+      Cache::forget('show_subcategory_' . $subCategory->id);
+    });
+
+    static::deleted(function ($subCategory) {
+      Cache::forget('show_subcategory_' . $subCategory->id);
+    });
+  }
 
 }

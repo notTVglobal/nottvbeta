@@ -267,6 +267,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         },
         async reloadPlayer() {
             const videoAuxPlayerStore = useVideoAuxPlayerStore()
+            const notificationStore = useNotificationStore()
             this.playerIsReloading = true // Start loading
             try {
                 // First, fetch the URI

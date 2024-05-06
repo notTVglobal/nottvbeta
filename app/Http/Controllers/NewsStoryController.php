@@ -23,6 +23,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Stringable;
 use Inertia\Response;
+use Mews\Purifier\Facades\Purifier;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class NewsStoryController extends Controller {
@@ -288,14 +289,12 @@ class NewsStoryController extends Controller {
   /**
    * Store a newly created resource in storage.
    *
-   * @param Request $request
+   * @param HttpRequest $request
    * @return RedirectResponse
    */
   public function store(HttpRequest $request) {
-
-    $request->validate([
-        'title'                             => 'unique:news_stories|required|string|max:255',
-//        'body'                              => 'required|string',
+    $validatedData = $request->validate([
+        'title'                             => 'required|string|max:255|unique:news_stories',
         'content_json'                      => 'nullable|json',
         'news_category_id'                  => 'required|integer',
         'news_category_sub_id'              => 'nullable|integer',
@@ -303,30 +302,27 @@ class NewsStoryController extends Controller {
         'province_id'                       => 'nullable|integer',
         'federal_electoral_district_id'     => 'nullable|integer',
         'subnational_electoral_district_id' => 'nullable|integer',
-        'type'                              => 'nullable|string|required_if:news_category_id,3' // Require type if news_category_id is 3 (Local News)
+        'type'                              => 'nullable|string|required_if:news_category_id,3' // Type required if news_category_id is 3 (Local News)
     ], [
-        'body.required'             => 'The content is required.',
+        'title.required'            => 'The title is required.',
         'news_category_id.required' => 'The news category is required.',
         'type.required_if'          => 'The news location is required when Local News is selected.',
     ]);
 
+    $newsStory = new NewsStory([
+        'title'                              => htmlentities($validatedData['title']), // Sanitize the title
+        'content_json'                       => $validatedData['content_json'],
+        'slug'                               => \Str::slug($validatedData['title']),
+        'news_category_id'                   => $validatedData['news_category_id'],
+        'news_category_sub_id'               => $validatedData['news_category_sub_id'],
+        'city_id'                            => $validatedData['city_id'] ?? null,
+        'province_id'                        => $validatedData['province_id'] ?? null,
+        'news_federal_electoral_district_id' => $validatedData['federal_electoral_district_id'] ?? null,
+        'country_id'                         => $this->getCountry()->id,
+    ]);
 
-    $country = $this->getCountry();
-    $newsStory = new NewsStory();
-//        $this->fillNewsStoryAttributes($newsStory, $request);
-    $newsStory->user_id = Auth::user()->id;
-    $newsStory->title = htmlentities($request->title);
-//    $newsStory->content = $request->body;
-    $newsStory->content_json = $request->content_json;
-    $newsStory->slug = \Str::slug($request->title);
-    $newsStory->user_id = Auth::user()->id;
+    $newsStory->user_id = Auth::id(); // Directly get the authenticated user's ID
     $newsStory->news_person_id = Auth::user()->newsPerson->id;
-    $newsStory->news_category_id = $request->news_category_id;
-    $newsStory->news_category_sub_id = $request->news_category_sub_id;
-    $newsStory->city_id = $request->city_id;
-    $newsStory->province_id = $request->province_id;
-    $newsStory->news_federal_electoral_district_id = $request->federal_electoral_district_id;
-    $newsStory->country_id = $country->id;
     $newsStory->save();
 
     return redirect()
@@ -480,17 +476,18 @@ class NewsStoryController extends Controller {
     $originalStatus = $newsStory->status;
 
     $validatedData = $request->validate([
-        'title'                             => 'sometimes|required|string|max:255|' . Rule::unique('news_stories')->ignore($newsStory->id),
-        'content_json'                      => 'sometimes|nullable|json',
-        'status'                            => 'sometimes|required|exists:news_statuses,id',
-        'news_category_id'                  => 'sometimes|required|integer',
-        'news_category_sub_id'              => 'sometimes|nullable|integer',
-        'city_id'                           => 'sometimes|nullable|integer',
-        'province_id'                       => 'sometimes|nullable|integer',
-        'federal_electoral_district_id'     => 'sometimes|nullable|integer',
-        'subnational_electoral_district_id' => 'sometimes|nullable|integer',
+        'title'                             => 'required|string|max:255|' . Rule::unique('news_stories')->ignore($newsStory->id),
+        'content_json'                      => 'nullable|json',
+        'status'                            => 'required|exists:news_statuses,id',
+        'news_category_id'                  => 'required|integer',
+        'news_category_sub_id'              => 'nullable|integer',
+        'city_id'                           => 'nullable|integer',
+        'province_id'                       => 'nullable|integer',
+        'federal_electoral_district_id'     => 'nullable|integer',
+        'subnational_electoral_district_id' => 'nullable|integer',
         'news_person_id'                    => 'required|integer'
     ]);
+
 
 //    // Updating the NewsStory
 //    if (array_key_exists('title', $validatedData)) {

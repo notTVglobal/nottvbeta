@@ -22,12 +22,12 @@ class SimpleShowEpisodeResource extends JsonResource {
         'description' => substr($this->description, 0, 300),
         'image'       => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
         'category'        => [
-            'name'        => $this->show->category->name ?? null,
-            'description' => $this->show->category->description ?? null,
+            'name'        => $this->resource->show->getCachedCategory()->name ?? null,
+            'description' => $this->resource->show->getCachedCategory()->description ?? null,
         ],
         'subCategory'     => [
-            'name'        => $this->show->subCategory->name ?? null,
-            'description' => $this->show->subCategory->description ?? null,
+            'name'        => $this->resource->show->getCachedSubCategory()->name ?? null,
+            'description' => $this->resource->show->getCachedSubCategory()->description ?? null,
         ],
         'show'          => [
           'name'        => $this->show->name ?? null,

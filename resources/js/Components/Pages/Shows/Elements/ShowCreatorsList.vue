@@ -2,7 +2,7 @@
 
   <div class="flex flex-row flex-wrap">
     <div
-        v-for="creator in creators.data"
+        v-for="creator in creators?.data"
         :key="creator.id"
         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
     >

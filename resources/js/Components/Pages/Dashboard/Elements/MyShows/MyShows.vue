@@ -18,8 +18,8 @@
             @click="visitShowManagePage(show.slug)"
             class="w-full text-left transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"
         >
-          <div class="flex flew-row gap-y-2 gap-x-2 items-center">
-            <SingleImage :image="show.image" :alt="show.name" class="min-w-24 min-h-24"/>
+          <div class="flex flew-row pt-2 sm:pt-0 gap-y-2 gap-x-2 items-center text-center">
+            <SingleImage :image="show.image" :alt="show.name" class="min-w-24 min-h-24 max-w-24 max-h-24"/>
             <p class="px-4 py-2 break-words font-semibold">
               {{ show.name }}
             </p>

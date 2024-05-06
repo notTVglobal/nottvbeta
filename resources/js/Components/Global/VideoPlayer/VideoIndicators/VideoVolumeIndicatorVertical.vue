@@ -3,7 +3,7 @@
     <div class="flex justify-end custom-volume-indicator"> <!-- Ensure the parent container has a defined height -->
       <!--      <div id="volumeIndicator" class="absolute bottom-0 bg-green-500 w-3 z-999"></div>-->
       <!-- Volume Indicator; shown when volume is not at its default state -->
-      <div v-show="showAudioComponent && !videoPlayerStore.muted" class="flex flex-row">
+      <div v-if="showAudioComponent && !videoPlayerStore.muted && !appSettingStore.isSmallScreen" class="flex flex-row">
         <div>
           <span class="text-xs text-white uppercase tracking-widest pr-2">Audio Signal</span>
         </div>
@@ -17,7 +17,7 @@
 
         </div>
       </div>
-      <div v-if="!showAudioComponent && !videoPlayerStore.muted" class="text-xs text-gray-400 uppercase tracking-widest pr-2">No Audio Signal</div>
+      <div v-if="!showAudioComponent && !videoPlayerStore.muted && !appSettingStore.isSmallScreen" class="text-xs text-gray-400 uppercase tracking-widest pr-2">No Audio Signal</div>
       <div v-if="videoPlayerStore.muted" class="text-xs text-yellow-500 uppercase tracking-widest pr-2">Audio Muted</div>
     </div>
 </div>
@@ -30,10 +30,12 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useAudioStore } from '@/Stores/AudioStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { debounce } from 'lodash'
 
 const audioStore = useAudioStore()
 const videoPlayerStore = useVideoPlayerStore()
+const appSettingStore = useAppSettingStore()
 
 const showAudioComponent = ref(false);
 
