@@ -42,66 +42,63 @@ let editor = ref(
         }),
       ],
       content: props.description, // Use the passed Tiptap HTML content
-      editable: false
-    })
-);
+      editable: false,
+    }),
+)
 </script>
-
-
 <style>
-/* Paragraphs */
-p {
+/* Paragraphs within TipTap editor */
+.tiptap p {
   margin-bottom: 1.2em; /* Provides space between paragraphs */
   font-size: 1rem; /* Standard font size for readability */
   line-height: 1.6; /* Good line height for text readability */
-
 }
 
-
-h1 {
+/* Headings within TipTap editor */
+.tiptap h1 {
   font-size: 2em; /* Larger for main titles */
 }
 
-h2 {
+.tiptap h2 {
   font-size: 1.75em; /* Slightly smaller */
 }
 
-h3 {
+.tiptap h3 {
   font-size: 1.5em;
 }
 
-/* Lists */
-ul {
+/* Lists within TipTap editor */
+.tiptap ul {
   margin-left: 20px; /* Indent lists */
   margin-bottom: 1.2em;
   list-style-type: disc; /* Add disc style for unordered lists */
 }
 
-ol {
+.tiptap ol {
   margin-left: 20px; /* Indent lists */
   margin-bottom: 1.2em;
 }
 
-li {
+.tiptap li {
   margin-bottom: 0.5em; /* Space between list items */
 }
 
-/* Links */
-a {
+/* Links within TipTap editor */
+.tiptap a {
   color: #1E90FF; /* A distinct color for links to stand out */
   text-decoration: none; /* No underline to keep it clean */
 }
 
-a:hover {
+.tiptap a:hover {
   text-decoration: underline; /* Underline on hover for usability */
 }
 
-/* Additional elements */
-blockquote {
+/* Blockquotes within TipTap editor */
+.tiptap blockquote {
   border-left: 3px solid #ccc;
   padding-left: 20px;
   margin: 1.2em 0;
 }
-
-/* Add styles for other elements as needed */
 </style>
+``
+
