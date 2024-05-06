@@ -28,6 +28,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
+use Mews\Purifier\Facades\Purifier;
 
 
 class TeamsController extends Controller {
@@ -162,9 +163,12 @@ class TeamsController extends Controller {
       return redirect()->back()->with('error', 'The creator does not have the required status to create a team.');
     }
 
+    // Sanitize description
+    $sanitizedDescription = Purifier::clean($validatedData['description']);
+
     Team::create([
         'name'                   => $validatedData['name'],
-        'description'            => $validatedData['description'],
+        'description'            => $sanitizedDescription,  // Use the sanitized description
         'user_id'                => $validatedData['user_id'],
       //            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
         'totalSpots'             => $validatedData['totalSpots'],
@@ -203,10 +207,10 @@ class TeamsController extends Controller {
     ];
 
     return Inertia::render($component, [
-        'team'     => $team,
-        'image'    => $team->image ? (new ImageResource($team->image))->resolve() : null,
+        'team'          => (new TeamResource($team))->resolve(),
+        'image'         => $team->image ? (new ImageResource($team->image))->resolve() : null,
         'nextBroadcast' => $team->nextBroadcast,
-        'shows'    => Show::with('team', 'image.appSetting')
+        'shows'         => Show::with('team', 'image.appSetting')
             ->where('team_id', $team->id)
             ->where(function ($query) {
               if (auth()->check() && auth()->user()->creator) {
@@ -241,7 +245,7 @@ class TeamsController extends Controller {
                 'categorySubName' => $show->getCachedSubCategory()->name ?? null,
                 'statusId'        => $show->status->id,
             ]),
-        'creators' => TeamMember::where('team_id', $team->id)
+        'creators'      => TeamMember::where('team_id', $team->id)
             ->join('users', 'team_members.user_id', '=', 'users.id')
             ->select('users.*', 'team_members.user_id')
             ->latest()
@@ -253,14 +257,13 @@ class TeamsController extends Controller {
                 'profile_photo_path' => $user->profile_photo_path,
                 'profile_photo_url'  => $user->profile_photo_url,
             ]),
-        'filters'  => Request::only(['team_id']),
-        'can'      => [
+        'filters'       => Request::only(['team_id']),
+        'can'           => [
             'viewTeam'   => optional($user)->can('view', $team),
             'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
             'editTeam'   => optional($user)->can('update', $team),
         ]
     ]);
-
 
 
 //      $shows = Show::with('team', 'image.appSetting')
@@ -800,6 +803,7 @@ class TeamsController extends Controller {
    * @throws ValidationException
    */
   public function update(HttpRequest $request, Team $team) {
+
     if ($request->totalSpots < $team->memberSpots) {
       return redirect(route('teams.edit', [$team->slug]))->with('message', 'You already have the maximum. Please remove team members or increase the maximum # of team members.');
     }
@@ -818,6 +822,9 @@ class TeamsController extends Controller {
 
     // Initialize the team_leader_id variable
     $team_leader_id = null;
+
+    // Sanitize description
+    $sanitizedDescription = Purifier::clean($validatedData['description']);
 
     // Sanitize social media handles
     $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
@@ -842,7 +849,7 @@ class TeamsController extends Controller {
     // update the team
     $team->update([
         'name'           => $validatedData['name'],
-        'description'    => $validatedData['description'],
+        'description'    => $sanitizedDescription,  // Use the sanitized description
         'totalSpots'     => $validatedData['totalSpots'],
         'team_leader'    => $team_leader_id,  // Optional, handle absence
         'slug'           => \Str::slug($validatedData['name']),  // Creating slug from the validated name

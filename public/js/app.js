@@ -4245,10 +4245,12 @@ var map = {
 	],
 	"./LoggedOut/Shows/{$id}/Index": [
 		"./resources/js/Pages/LoggedOut/Shows/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_LoggedOut_Shows_id_Index_vue"
 	],
 	"./LoggedOut/Shows/{$id}/Index.vue": [
 		"./resources/js/Pages/LoggedOut/Shows/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_LoggedOut_Shows_id_Index_vue"
 	],
 	"./LoggedOut/Teams/Index": [
@@ -4263,10 +4265,12 @@ var map = {
 	],
 	"./LoggedOut/Teams/{$id}/Index": [
 		"./resources/js/Pages/LoggedOut/Teams/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_LoggedOut_Teams_id_Index_vue"
 	],
 	"./LoggedOut/Teams/{$id}/Index.vue": [
 		"./resources/js/Pages/LoggedOut/Teams/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_LoggedOut_Teams_id_Index_vue"
 	],
 	"./Movies/Create": [
@@ -4683,10 +4687,12 @@ var map = {
 	],
 	"./Shows/Create": [
 		"./resources/js/Pages/Shows/Create.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_Create_vue"
 	],
 	"./Shows/Create.vue": [
 		"./resources/js/Pages/Shows/Create.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_Create_vue"
 	],
 	"./Shows/Index": [
@@ -4763,10 +4769,12 @@ var map = {
 	],
 	"./Shows/{$id}/Index": [
 		"./resources/js/Pages/Shows/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Index_vue"
 	],
 	"./Shows/{$id}/Index.vue": [
 		"./resources/js/Pages/Shows/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Index_vue"
 	],
 	"./Shows/{$id}/Manage": [
@@ -4853,10 +4861,12 @@ var map = {
 	],
 	"./Teams/{$id}/Index": [
 		"./resources/js/Pages/Teams/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Teams_id_Index_vue"
 	],
 	"./Teams/{$id}/Index.vue": [
 		"./resources/js/Pages/Teams/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Teams_id_Index_vue"
 	],
 	"./Teams/{$id}/Manage": [

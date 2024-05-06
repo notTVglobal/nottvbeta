@@ -354,7 +354,7 @@ class ShowEpisodeController extends Controller {
             'copyrightYear'      => $show->created_at->format('Y'),
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
-            'category'           => $show->getCachedCategory(),
+            'category'           => $show->getCachedCategory() ?? null,
             'subCategory'        => $show->getCachedSubCategory(),
         ],
         'team'     => [
@@ -503,8 +503,8 @@ class ShowEpisodeController extends Controller {
             ],
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
-            'category'           => $show->getCachedCategory()->name,
-            'subCategory'        => $show->getCachedSubCategory()->name,
+            'category'           => $show->getCachedCategory()->name?? null,
+            'subCategory'        => $show->getCachedSubCategory()->name ?? null,
         ],
         'team'             => [
             'name' => $show->team->name,

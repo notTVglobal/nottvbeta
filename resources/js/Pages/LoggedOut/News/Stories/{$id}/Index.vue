@@ -87,7 +87,7 @@ import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs.vue'
 import BackButton from '@/Components/Global/Buttons/BackButton.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import { useNewsStore } from '@/Stores/NewsStore'
-import TipTapRender from '@/Components/Global/TextEditor/TipTapRender.vue'
+import TipTapRender from '@/Components/Global/TextEditor/TipTapNewsStoryRender.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 // import TipTapViewOnly from '@/Components/Global/TextEditor/TipTapViewOnly.vue'
 

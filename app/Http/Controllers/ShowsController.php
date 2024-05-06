@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Mews\Purifier\Facades\Purifier;
 
 class ShowsController extends Controller {
 
@@ -198,12 +199,12 @@ class ShowsController extends Controller {
         'showSlug'          => $showEpisode->show->slug,
 //        'releaseDate' => $showEpisode->release_dateTime,
         'category'          => [
-            'name'        => $show->getCachedCategory()->name,
-            'description' => $show->getCachedCategory()->description,
+            'name'        => $show->getCachedCategory()->name ?? null,
+            'description' => $show->getCachedCategory()->description ?? null,
         ],
         'subCategory'       => [
-            'name'        => $show->getCachedSubCategory()->name,
-            'description' => $show->getCachedSubCategory()->description,
+            'name'        => $show->getCachedSubCategory()->name ?? null,
+            'description' => $show->getCachedSubCategory()->description ?? null,
         ],
         'releaseDateTime'   => $showEpisode->release_dateTime,
         'scheduledDateTime' => $showEpisode->scheduled_release_dateTime,
@@ -356,6 +357,8 @@ class ShowsController extends Controller {
     $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
     $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
 
+    // Sanitize description
+    $sanitizedDescription = Purifier::clean($validatedData['description']);
 
     // Retrieve the team with the team_id and check its status
     $team = Team::find($teamId);
@@ -950,14 +953,14 @@ class ShowsController extends Controller {
             'image'           => $this->transformImage($show->image),
             'copyrightYear'   => $show->created_at->format('Y'),
             'category'        => [
-                'id'          => $show->getCachedCategory()->id,
-                'name'        => $show->getCachedCategory()->name,
-                'description' => $show->getCachedCategory()->description,
+                'id'          => $show->getCachedCategory()->id ?? null,
+                'name'        => $show->getCachedCategory()->name ?? null,
+                'description' => $show->getCachedCategory()->description ?? null,
             ],
             'subCategory'     => [
-                'id'          => $show->getCachedSubCategory()->id,
-                'name'        => $show->getCachedSubCategory()->name,
-                'description' => $show->getCachedSubCategory()->description,
+                'id'          => $show->getCachedSubCategory()->id ?? null,
+                'name'        => $show->getCachedSubCategory()->name ?? null,
+                'description' => $show->getCachedSubCategory()->description ?? null,
             ],
             'notes'           => $show->notes,
             'isScheduled'     => $show->schedules->isNotEmpty(),
@@ -1129,6 +1132,11 @@ class ShowsController extends Controller {
     // Sanitize the notes to prevent XSS
     $sanitizedNotes = htmlentities($validatedData['notes'] ?? '', ENT_QUOTES, 'UTF-8');
 
+    // Sanitize description
+//    $sanitizedNotes = Purifier::clean($validatedData['notes']);
+
+    // Sanitize description
+    $sanitizedDescription = Purifier::clean($validatedData['description']);
 
     // update the show >>> THE OLD WAY!!
 //    $show->name = $request->name;
@@ -1244,8 +1252,8 @@ class ShowsController extends Controller {
             ],
             'image'       => $this->transformImage($show->image),
             'category'    => [
-                'name'        => $show->getCachedCategory()->name,
-                'description' => $show->getCachedCategory()->description,
+                'name'        => $show->getCachedCategory()->name ?? null,
+                'description' => $show->getCachedCategory()->description ?? null,
             ],
             'subCategory' => [
                 'name'        => $show->subCategory->name,

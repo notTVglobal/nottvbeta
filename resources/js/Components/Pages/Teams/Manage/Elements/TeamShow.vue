@@ -32,7 +32,7 @@
     </td>
 
     <td class="text-left text-gray-600 px-6 py-4 text-sm text-right">
-      {{ show.category.name }}
+      {{ show?.category?.name }}
     </td>
 
     <td class="text-gray-600 px-6 py-4 text-sm text-right">

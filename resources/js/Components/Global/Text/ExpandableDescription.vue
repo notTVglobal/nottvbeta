@@ -1,10 +1,12 @@
 <template>
   <div class="px-5">
-    <div class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">
+    <div v-if="!hideTitle" class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">
       DESCRIPTION
     </div>
-    <p v-if="description" class="description mb-6 p-5">
-      {{ showFullDescription ? description : truncatedDescription }}
+    <div v-if="description" class="description mb-6 p-5">
+      <!-- Use v-html to render the description with HTML formatting -->
+<!--      <span v-html="showFullDescription ? description : truncatedDescription"></span>-->
+      <tip-tap-description-render :description="showFullDescription ? description : truncatedDescription" />
       <span v-if="!showFullDescription && needsTruncation">...</span>
       <br><br>
       <button v-if="needsTruncation && !showFullDescription"
@@ -12,16 +14,18 @@
               class="btn btn-wide justify-self-center">
         Read the full description
       </button>
-    </p>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue'
+import TipTapDescriptionRender from '@/Components/Global/TextEditor/TipTapDescriptionRender.vue'
 
 // Props
 const props = defineProps({
-  description: String
+  description: String,
+  hideTitle: Boolean,
 });
 
 const showFullDescription = ref(false);
@@ -35,10 +39,8 @@ const needsTruncation = computed(() => {
 });
 
 const toggleDescription = () => {
+  console.log('Toggling Description:', showFullDescription.value);
   showFullDescription.value = !showFullDescription.value;
 };
-</script>
 
-<style scoped>
-/* Add any specific styles for this component here */
-</style>
+</script>

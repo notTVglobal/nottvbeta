@@ -11,8 +11,8 @@
         </Link>
         <div class="ml-4">
           <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
-          <div class="text-gray-400 text-sm mt-1">{{ show.categoryName }}</div>
-          <div class="text-gray-400 text-sm font-thin mt-1">{{ show.categorySubName }}</div>
+          <div class="text-gray-400 text-sm mt-1">{{ show?.categoryName }}</div>
+          <div class="text-gray-400 text-sm font-thin mt-1">{{ show?.categorySubName }}</div>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@
           <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
           <div class="text-gray-400 text-center lg:text-left">
             <div class="mt-1">
-              <span class="uppercase tracking-wider text-yellow-700">{{ show.category.name }}</span>
+              <span class="uppercase tracking-wider text-yellow-700">{{ show?.category.name }}</span>
               &nbsp;&middot;&nbsp;
               <span class="tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
               <span v-if="show.last_release_year"> &nbsp;&middot;&nbsp; {{
@@ -76,8 +76,9 @@
           <SocialMediaBadgeLinks :socialMediaLinks="show.socialMediaLinks"/>
 
           <div class="description mt-4 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
-            {{ show.description }}
+            <expandable-description :description="show.description" :hideTitle="true"/>
           </div>
+
 
         </div>
       </div>
@@ -91,6 +92,7 @@ import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 
 const nowPlayingStore = useNowPlayingStore()
 
@@ -127,7 +129,7 @@ let playEpisode = () => {
     image: props.show.image,
     team: props.team,
     creative_commons: props.show.firstPlayEpisode.creative_commons,
-    category: props.show.category,
+    category: props.show?.category,
     subCategory: props.show?.subCategory,
     release_year: '',
     copyrightYear: props.show.firstPlayEpisode.copyrightYear,
@@ -182,11 +184,3 @@ let playEpisode = () => {
 }
 
 </script>
-<style scoped>
-.description {
-  overflow: hidden;
-  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
-  text-overflow: ellipsis;
-  @apply tracking-wide
-}
-</style>

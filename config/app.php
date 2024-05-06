@@ -202,6 +202,8 @@ return [
         Jenssegers\Agent\AgentServiceProvider::class,
 //        Maatwebsite\Excel\ExcelServiceProvider::class,
 
+        Mews\Purifier\PurifierServiceProvider::class,
+
     ],
 
     /*
@@ -218,6 +220,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'Purifier' => Mews\Purifier\Facades\Purifier::class,
+
 //        'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
 

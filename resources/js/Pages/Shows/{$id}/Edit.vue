@@ -84,13 +84,8 @@
                       >
                         Description
                       </label>
-                      <TabbableTextarea v-model="form.description"
-                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                                        name="description"
-                                        id="description"
-                                        rows="10" cols="30"
-                                        required
-                      />
+                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="show.description"/>
+
                       <div v-if="form.errors.description" v-text="form.errors.description"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
@@ -276,6 +271,7 @@ import Message from '@/Components/Global/Modals/Messages'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
+import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
 
 usePageSetup('shows/slug/edit')
 
@@ -339,6 +335,13 @@ const chooseSubCategory = () => {
   showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
 }
 
+const description = ref('')
+
+const handleContentUpdate = (html) => {
+  description.value = html
+}
+
+
 let form = useForm({
   name: props.show.name,
   description: props.show.description,
@@ -363,6 +366,7 @@ let reloadImage = () => {
 }
 
 let submit = () => {
+  form.description = description.value
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
   form.patch(route('shows.update', props.show.slug))
@@ -382,3 +386,4 @@ teamStore.setActiveShow(props.show)
 
 
 </script>
+

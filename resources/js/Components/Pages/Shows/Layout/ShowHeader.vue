@@ -18,9 +18,9 @@
             <div><span class="text-xs font-semibold mr-2 uppercase">Show Runner: </span><span
                 class="font-medium font-bold"> {{ show.showRunner.name }} </span></div>
             <div class="pt-4"><span class="text-xs font-semibold mr-2 uppercase">Category: </span><span
-                class="font-medium text-orange-800"> {{ show.category.name }} </span></div>
+                class="font-medium text-orange-800"> {{ show?.category?.name }} </span></div>
             <div><span class="text-xs font-semibold mr-2 uppercase">Sub-category: </span><span
-                class="font-medium text-orange-800"> {{ show.subCategory.name }} </span></div>
+                class="font-medium text-orange-800"> {{ show?.subCategory?.name }} </span></div>
 
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
