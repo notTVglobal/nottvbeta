@@ -335,7 +335,7 @@ const chooseSubCategory = () => {
   showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
 }
 
-const description = ref('')
+const description = ref(props.show.description)
 
 const handleContentUpdate = (html) => {
   description.value = html

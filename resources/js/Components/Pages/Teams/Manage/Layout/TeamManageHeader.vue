@@ -9,12 +9,14 @@
 
         <Link :href="`/teams/${team.slug}`" class="uppercase text-black">{{ team.name }}</Link>
         <div
-            class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-0.5">
-          {{ team.members.length }}
+            class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -left-3 -top-0.5">
+          {{ membersCount }}
         </div>
       </div>
       <div>
-        <button @click="openEditPublicMessageModal" class="btn bg-yellow-500 hover:bg-yellow-600 hover:cursor-pointer">Change Public Message</button>
+        <button @click="openEditPublicMessageModal" class="btn bg-yellow-500 hover:bg-yellow-600 hover:cursor-pointer">
+          Change Public Message
+        </button>
       </div>
     </div>
     <div class="flex justify-between text-black">
@@ -25,7 +27,7 @@
       </div>
       <div class="w-1/2 lg:w-1/3">
         <div class="uppercase text-sm">Public Message:</div>
-        <div>{{ publicMessage }}</div>
+        <span v-html="publicMessage"/>
       </div>
     </div>
 
@@ -44,6 +46,10 @@
           <div :class="{'text-red-500': publicMessage?.length > 440, 'text-gray-800': publicMessage?.length <= 440}"
                class="mt-2 text-left text-xs font-light">
             {{ publicMessage?.length }}/440 max characters
+          </div>
+          <div>
+            <p>insert zoom link</p>
+            <input v-model="nextBroadcastDetails.zoomLink" type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
           </div>
         </div>
         <div v-else class="py-4 text-xl mt-4 font-medium tracking-wide">
@@ -70,9 +76,9 @@
 </template>
 
 <script setup>
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
-import { ref, watchEffect } from 'vue'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import { computed, reactive, ref, watchEffect } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -85,12 +91,23 @@ const props = defineProps({
 })
 
 const publicMessage = ref(props.team.public_message)
+const nextBroadcastDetails = reactive({
+  zoomLink: ''  // Initialize zoomLink as an empty string
+});
+
 const successMessage = ref('')
 const errorMessage = ref('')
 
 watchEffect(() => {
-  publicMessage.value = props.team.public_message || '';
+  publicMessage.value = props.team.public_message || ''
+})
+
+const membersCount = computed(() => {
+  const count = props.team.members.length;
+  return count > 99 ? '99+' : count;
 });
+
+
 
 const openEditPublicMessageModal = () => {
   document.getElementById('editPublicMessageModal').showModal()
@@ -103,12 +120,30 @@ const closePublicMessageModal = () => {
 }
 
 const savePublicMessage = () => {
-  axios.post(`/teams/${props.team.slug}/save-public-message`, { public_message: publicMessage.value })
+  const payload = {
+    public_message: publicMessage.value,
+    next_broadcast_details: JSON.stringify(nextBroadcastDetails)
+  };
+  // console.log(nextBroadcastDetails); // Check the structure
+  // console.log(payload); // Verify the payload before sending
+  axios.post(`/teams/${props.team.slug}/save-public-message`, payload)
       .then(response => {
-        successMessage.value = response.data.message;  // assuming your API returns a message
+        successMessage.value = response.data.message  // assuming your API returns a message
       })
       .catch(error => {
-        errorMessage.value = error.response.data.message;  // handle error messages
+        // Check if the error response contains validation errors under 'errors'
+        if (error.response && error.response.data && error.response.data.errors) {
+          // Extract the first error message from each field
+          const errors = error.response.data.errors;
+          const firstError = Object.keys(errors)[0]; // Get the first error key
+          errorMessage.value = errors[firstError][0]; // Get the first error message of the first key
+        } else if (error.response && error.response.data && error.response.data.message) {
+          // Fallback to a general error message if it's not a validation error
+          errorMessage.value = error.response.data.message;
+        } else {
+          // Handle unexpected errors without a clear message
+          errorMessage.value = 'An unknown error occurred';
+        }
       });
 }
 

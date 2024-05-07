@@ -7222,6 +7222,9 @@ hr {
 
 .ProseMirror {
     padding:10px;
+    min-height: 150px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 /* Links within TipTap editor */
@@ -7484,6 +7487,18 @@ hr {
 
 .top-56 {
   top: 14rem;
+}
+
+.-left-4 {
+  left: -1rem;
+}
+
+.-left-2 {
+  left: -0.5rem;
+}
+
+.-left-3 {
+  left: -0.75rem;
 }
 
 .z-0 {
@@ -8149,6 +8164,10 @@ hr {
   height: 100vh;
 }
 
+.max-h-1\/2screen {
+  max-height: 50vh;
+}
+
 .max-h-12 {
   max-height: 3rem;
 }
@@ -8199,14 +8218,6 @@ hr {
 
 .max-h-full {
   max-height: 100%;
-}
-
-.max-h-screen {
-  max-height: 100vh;
-}
-
-.max-h-1\/2screen {
-  max-height: 50vh;
 }
 
 .min-h-12 {

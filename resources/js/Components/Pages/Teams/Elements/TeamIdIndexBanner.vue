@@ -1,33 +1,36 @@
 <template>
-  <div v-if="nextBroadcast || team.public_message" class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
-    <div class="flex flex-col md:flex-row bg-yellow-300 dark:bg-gray-700 w-full py-6 text-center align-middle rounded-lg shadow-lg">
-      <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600">
-        <div v-if="nextBroadcast" class="px-4">
-          <p class="uppercase font-bold tracking-wider text-gray-800 dark:text-gray-200">
-            Next Broadcast
-          </p>
-          <p class="text-lg text-gray-800 dark:text-gray-200">
-            {{ formattedDate }}
-          </p>
-          <p class="text-lg text-gray-800 dark:text-gray-200">
-            {{ formattedTime }} {{ userStore.timezoneAbbreviation }}
-          </p>
-          <!-- Enhanced broadcast name display -->
-          <a @click="goToBroadcast" class="block mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
-            {{ nextBroadcast.name }}
-          </a>
+    <div v-if="nextBroadcast || team.public_message" class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
+      <div class="flex flex-col md:flex-row bg-yellow-300 dark:bg-gray-700 w-full py-6 text-center align-middle rounded-lg shadow-lg">
+        <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
+          <div v-if="nextBroadcast" class="px-4">
+            <p class="uppercase font-bold tracking-wider text-gray-800 dark:text-gray-200">
+              Next Broadcast
+            </p>
+            <p class="text-lg text-gray-800 dark:text-gray-200">
+              {{ formattedDate }}
+            </p>
+            <p class="text-lg text-gray-800 dark:text-gray-200">
+              {{ formattedTime }} {{ userStore.timezoneAbbreviation }}
+            </p>
+            <!-- Enhanced broadcast name display -->
+            <a @click="goToBroadcast(nextBroadcast)" class="block mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
+              {{ nextBroadcast.name }}
+            </a>
+          </div>
+          <div v-else class="px-4 text-gray-800 dark:text-gray-200">
+            No broadcasts are currently scheduled.
+          </div>
         </div>
-        <div v-else class="px-4 text-gray-800 dark:text-gray-200">
-          No broadcasts are currently scheduled.
+        <div class="flex flex-col md:w-2/3 justify-center font-semibold px-4">
+          <div v-if="team.public_message" class="text-lg md:text-xl leading-relaxed font-medium text-gray-800 dark:text-gray-200 p-3 mb-4 rounded">
+            <span v-html="team.public_message" />
+          </div>
+          <div>
+            <ZoomLinkButton />
+          </div>
         </div>
-      </div>
-      <div class="flex flex-col md:w-2/3 justify-center font-semibold px-4">
-        <p class="text-lg md:text-xl leading-relaxed font-medium text-gray-800 dark:text-gray-200 p-3 rounded">
-          {{ team.public_message }}
-        </p>
       </div>
     </div>
-  </div>
   <div v-if="sortedBroadcasts.length" class="accordion bg-gray-800 text-gray-50 p-5 rounded-lg shadow">
     <!-- Header for the Accordion -->
     <h2 class="text-xl font-semibold mb-4">More Upcoming Broadcasts</h2>
@@ -74,6 +77,7 @@ import utc from 'dayjs/plugin/utc'
 import { computed, ref } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

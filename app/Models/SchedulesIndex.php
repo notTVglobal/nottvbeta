@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SchedulesIndex extends Model
-{
+class SchedulesIndex extends Model {
   protected $table = 'schedules_indexes'; // Ensure the table name is correctly specified
 
   protected $fillable = [
@@ -15,10 +14,12 @@ class SchedulesIndex extends Model
       'content_id',
       'schedule_id',
       'next_broadcast',
+      'next_broadcast_details',
   ];
 
   protected $casts = [
-      'next_broadcast' => 'datetime',
+      'next_broadcast'         => 'datetime',
+      'next_broadcast_details' => 'json',
   ];
 
   public function team(): \Illuminate\Database\Eloquent\Relations\BelongsTo {

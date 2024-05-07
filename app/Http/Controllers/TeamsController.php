@@ -16,6 +16,7 @@ use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Show;
 use App\Http\Resources\ImageResource;
+use App\Rules\ZoomUrl;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -868,18 +869,42 @@ class TeamsController extends Controller {
 
   public function savePublicMessage(HttpRequest $request, Team $team) {
     // Validate the input
-    $validated = $request->validate([
-        'public_message' => 'nullable|string|max:440'  // Validate against the requirements
+    $validatedData = $request->validate([
+        'public_message'         => 'nullable|string|max:440',  // Validate against the requirements
+        'next_broadcast_details' => 'nullable|json',    // Validate that it is a valid JSON object
+
     ]);
 
-    // Save the public message to the team
-    $team->public_message = $validated['public_message'];
+    // Decode JSON from the request
+    $nextBroadcastDetails = json_decode($request->input('next_broadcast_details'), true);
+
+    // Validate the 'zoomLink' inside the JSON
+    $validationResults = Validator::make($nextBroadcastDetails, [
+        'zoomLink' => ['required', 'url', new ZoomUrl()] // Custom validation for Zoom URL
+    ]);
+
+    // Check if the nested validation passes
+    if ($validationResults->fails()) {
+      return response()->json(['errors' => $validationResults->errors()], 422);
+    }
+
+    // Retrieve current details and merge with new details
+    $currentDetails = $team->scheduleIndexes->next_broadcast_details ? json_decode($team->scheduleIndexes->next_broadcast_details, true) : [];
+    $updatedDetails = array_merge($currentDetails, $nextBroadcastDetails);
+
+    // Sanitize the public message
+    $sanitizedMessage = Purifier::clean($validatedData['public_message']);
+    $team->public_message = $sanitizedMessage;
+
+    // Save the updated JSON details
+    $team->scheduleIndexes->next_broadcast_details = json_encode($updatedDetails);
+    $team->scheduleIndexes->save();
     $team->save();
 
-    // Return a response back to the Vue component
+    // Return a successful response back to the client
     return response()->json([
-        'message'        => 'Public message updated successfully.',
-        'public_message' => $team->public_message  // Send back the saved message
+        'message' => 'Public message and broadcast details updated successfully.',
+        'public_message' => $team->public_message
     ]);
   }
 

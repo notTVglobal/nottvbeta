@@ -812,6 +812,12 @@ Route::middleware([
       'can:viewAny, App\Models\Creator'
   ])->group(function () {
 
+    Route::get('/user/creator/get-settings/{user}', [CreatorsController::class, 'fetchCreatorSettings'])
+      ->name('user.creator.settings');
+
+    Route::patch('/user/creator/update-settings/{user}', [CreatorsController::class, 'updateCreatorSettings'])
+        ->name('user.creator.settings.update');
+
 
     // Teams - Part 2 (part 1 is outside the Creator Resources above)
     ///////////
