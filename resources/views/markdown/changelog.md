@@ -3,6 +3,12 @@
 Last Update: May 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.8
+May 9, 2024
+* Added a border to image modal X
+* Fix broadcast Category on Team nextBroadcast
+* Fix Upcoming Broadcast categories not working.
+
 ## v0.9.0.7
 May 9, 2024
 * Now it's fixed! The loading problem for Schedules on logged out mode.
