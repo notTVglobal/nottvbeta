@@ -108,14 +108,16 @@ onMounted(() => {
 })
 
 // Define a reactive watcher on the timezone
-// This watcher will call preloadWeeklyContent whenever the timezone changes and is not null
+// This watcher will call fetchSchedules whenever the timezone changes and is not null
 watch(
     () => userStore.timezone,
     async (newTimezone, oldTimezone) => {
       // Ensure the timezone is set before calling preloadWeeklyContent
       if (newTimezone) {
-        await scheduleStore.preloadWeeklyContent()
-        console.log('preloaded weekly content from Schedule Index (logged out) time watcher ...')
+        const startDate = dayjs();
+        const endDate = startDate.add(4, 'hour');
+        await scheduleStore.fetchSchedules(startDate.format(), endDate.format());
+        console.log('Preload schedules...')
       }
     },
     {immediate: true}, // This option ensures the watcher is triggered immediately on mount

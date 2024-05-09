@@ -150,7 +150,7 @@ onMounted(() => {
 });
 
 // Define a reactive watcher on the timezone
-// This watcher will call preloadWeeklyContent whenever the timezone changes and is not null
+// This watcher will call fetchSchedules whenever the timezone changes and is not null
 watch(
     () => userStore.timezone,
     async (newTimezone, oldTimezone) => {
