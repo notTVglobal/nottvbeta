@@ -26,9 +26,9 @@
             <p class="text-white dark:text-white">Timezone: {{ userStore.canadianTimezoneDescription }}</p>
             <p class="text-white dark:text-white">{{ dayjs(broadcast.broadcastDate).format('dddd, MMMM D') }}</p>
             <p class="font-semibold uppercase tracking-wider text-yellow-600">Category: {{
-                broadcast.category.name
+                broadcast?.category?.name
               }}</p>
-            <p class="font-semibold tracking-wide text-yellow-500">Subcategory: {{ broadcast.subCategory.name }}</p>
+            <p class="font-semibold tracking-wide text-yellow-500">Subcategory: {{ broadcast?.subCategory?.name }}</p>
             <button @click="goToBroadcast(broadcast)"
                     class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mx-auto">
               Go to Page

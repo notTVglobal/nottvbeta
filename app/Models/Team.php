@@ -181,16 +181,16 @@ class Team extends Model {
           'broadcastDetails' => $broadcastDetails,
           'image'            => $scheduleIndex->content->image ? (new ImageResource($scheduleIndex->content->image))->resolve() : null,
           'description'      => $scheduleIndex->content->description,
-//          'category'         => $scheduleIndex->content->show->getCachedCategory() ? [
-//              'id'          => $scheduleIndex->content->show->getCachedCategory()->id,
-//              'name'        => $scheduleIndex->content->show->getCachedCategory()->name,
-//              'description' => $scheduleIndex->content->show->getCachedCategory()->description,
-//          ] : null,
-//          'subCategory'      => $scheduleIndex->content->show->getCachedSubCategory() ? [
-//              'id'          => $scheduleIndex->content->show->getCachedSubCategory()->id,
-//              'name'        => $scheduleIndex->content->show->getCachedSubCategory()->name,
-//              'description' => $scheduleIndex->content->show->getCachedSubCategory()->description,
-//          ] : null,
+          'category'         => $scheduleIndex->content->getCachedCategory() ? [
+              'id'          => $scheduleIndex->content->getCachedCategory()->id,
+              'name'        => $scheduleIndex->content->getCachedCategory()->name,
+              'description' => $scheduleIndex->content->getCachedCategory()->description,
+          ] : null,
+          'subCategory'      => $scheduleIndex->content->getCachedSubCategory() ? [
+              'id'          => $scheduleIndex->content->getCachedSubCategory()->id,
+              'name'        => $scheduleIndex->content->getCachedSubCategory()->name,
+              'description' => $scheduleIndex->content->getCachedSubCategory()->description,
+          ] : null,
       ];
 
       if (!empty($additionalData)) {
