@@ -3,6 +3,11 @@
 Last Update: May 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.6
+May 9, 2024
+* Fix the way upcoming schedules are displayed
+* Fix the loading problem for Schedules on logged out mode.
+
 ## v0.9.0.5
 May 9, 2024
 *   Fix SchedulesService to return the date in the correct timezone (UTC).

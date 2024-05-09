@@ -244,11 +244,30 @@ const allPlaceholders = computed(() => {
 
 
 const upcomingShows = computed(() => {
-  const now = dayjs()
-  return scheduleStore.schedules.filter(show =>
-      dayjs(show.startTime).isAfter(now) && !show.placeholder,
-  ).sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)))
-})
+  const now = dayjs(scheduleStore.baseTime);
+
+  // Log baseTime and schedules for debugging
+  console.log('Base Time:', now);
+  console.log('Schedules:', scheduleStore.schedules);
+
+  // Create a set of show start times from nextFourHoursOfContent
+  const nextFourHoursShowTimes = new Set(scheduleStore.nextFourHoursOfContent.map(show => show.startTime));
+  console.log('Next Four Hours Show Times:', Array.from(nextFourHoursShowTimes));
+
+  // Filter out shows that are part of nextFourHoursOfContent by matching startTime
+  const filteredShows = scheduleStore.schedules.filter(show => {
+    const isAfterNow = dayjs(show.startTime).isAfter(now);
+    const isNotPlaceholder = !show.placeholder;
+    const isNotInNextFourHours = !nextFourHoursShowTimes.has(show.startTime);
+    const shouldInclude = isAfterNow && isNotPlaceholder && isNotInNextFourHours;
+
+    console.log(`Show ID: ${show.id}, Start Time: ${show.startTime}, Include: ${shouldInclude}`);
+    return shouldInclude;
+  });
+
+  // Sort filtered shows by start time
+  return filteredShows.sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)));
+});
 
 const displayedShows = computed(() => upcomingShows.value.slice(0, displayedShowsCount.value))
 

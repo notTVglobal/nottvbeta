@@ -7,8 +7,8 @@
     <p class="tracking-wide text-xl text-gray-300">Current Time:  <span class="text-white font-medium">{{ scheduleStore.currentTime }} {{ userStore.timezoneAbbreviation }}</span></p>
 
     <!-- Input for testing current time -->
-    <p>CURRENT TIME (for testing): <input type="time" v-model="formattedTime" @input="stopAutoUpdateTime"
-                                          class="text-black"></p>
+<!--    <p>CURRENT TIME (for testing): <input type="time" v-model="formattedTime" @input="stopAutoUpdateTime"-->
+<!--                                          class="text-black"></p>-->
 
   </div>
 </template>
