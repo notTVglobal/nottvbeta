@@ -1,6 +1,6 @@
 <template>
   <dialog id="changeScheduleModal" class="modal">
-    <div class="modal-box w-11/12 max-w-5xl">
+    <div class="modal-box w-11/12 max-w-5xl text-black bg-white dark:bg-gray-800 dark:text-white">
 
       <div class="flex flex-row justify-center text-center">
         <div>

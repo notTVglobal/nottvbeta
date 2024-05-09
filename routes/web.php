@@ -1208,7 +1208,7 @@ Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
 Route::delete('/api/schedule/removeFromSchedule', [SchedulesController::class, 'removeFromSchedule']);
 Route::get('/api/schedule/today', [SchedulesController::class, 'fetchTodaysContent']);
 
-Route::post('/invalidate-caches/', [SchedulesController::class, 'invalidateCaches'])
+Route::post('/admin/schedule/admin-reset-cache', [SchedulesController::class, 'adminResetCache'])
     ->can('viewAdmin', 'App\Models\User');
 
 
