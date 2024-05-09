@@ -1,6 +1,12 @@
 <template>
-  <div v-if="isOpen" @click="close"  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-999">
-    <img :src="currentImageUrl" :alt="currentImageAlt" @click.stop class="max-w-full max-h-full md:max-w-[60%] object-cover" />
+  <div v-if="isOpen" @click="close" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-999">
+    <div class="relative max-w-full max-h-full md:max-w-[60%] object-cover">
+      <img :src="currentImageUrl" :alt="currentImageAlt" @click.stop class="" />
+      <!-- Close Button -->
+      <div class="absolute top-0 right-0 -mt-3 -mr-3 w-8 h-8 bg-black rounded-full flex items-center justify-center cursor-pointer z-10" @click="close">
+        <span class="text-white text-xl pb-1">&times;</span>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -41,7 +41,8 @@
         </div>
 
         <div class="flex flex-row flex-wrap gap-2 justify-center mb-4">
-          <SingleImage :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-h-40 mr-4'"/>
+<!--          <SingleImage :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-h-40 mr-4'"/>-->
+          <SingleImageWithModal :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-h-40 mr-4'"/>
           <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
             {{ team.name }}
           </h3>
@@ -57,6 +58,7 @@ import { Inertia } from '@inertiajs/inertia'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
+import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 
 const appSettingStore = useAppSettingStore()
 

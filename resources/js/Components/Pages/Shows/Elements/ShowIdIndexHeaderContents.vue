@@ -7,8 +7,10 @@
           <div v-if="show.status.id === 9" class="absolute flex justify-end w-full -mt-3 z-50">
             <CreatorsOnlyBadge/>
           </div>
-          <SingleImage :image="props.show.image" :alt="'show cover'"
-                       class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>
+<!--          <SingleImage :image="props.show.image" :alt="'show cover'"-->
+<!--                       class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>-->
+          <SingleImageWithModal :image="props.show.image" :alt="'show cover'"
+                                class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>
 
         </div>
         <div class="flex flex-col xl:ml-12 xl:mr-0 w-full justify-center items-center xl:items-start xl:justify-start">
@@ -99,6 +101,7 @@ import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/Comin
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 
 const nowPlayingStore = useNowPlayingStore()
 

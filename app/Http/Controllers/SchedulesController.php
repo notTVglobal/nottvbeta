@@ -34,7 +34,7 @@ class SchedulesController extends Controller {
   protected ScheduleService $scheduleService;
 
   public function __construct(ScheduleService $scheduleService) {
-    $this->middleware('auth')->except(['index', 'preloadWeeklyContent', 'loadWeekFromDate']);
+    $this->middleware('auth')->except(['index', 'preloadWeeklyContent', 'loadWeekFromDate', 'fetchContentForRange']);
     $this->scheduleService = $scheduleService;
   }
 
