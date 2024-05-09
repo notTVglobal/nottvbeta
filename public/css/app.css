@@ -7730,6 +7730,10 @@ hr {
   margin-top: -1.5rem;
 }
 
+.mb-0 {
+  margin-bottom: 0px;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -7944,10 +7948,6 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
 }
 
 .line-clamp-2 {
@@ -12217,6 +12217,11 @@ hr {
   color: rgb(154 52 18 / var(--tw-text-opacity));
 }
 
+:is(.dark .dark\:text-red-200) {
+  --tw-text-opacity: 1;
+  color: rgb(254 202 202 / var(--tw-text-opacity));
+}
+
 :is(.dark .dark\:text-red-800) {
   --tw-text-opacity: 1;
   color: rgb(153 27 27 / var(--tw-text-opacity));
@@ -12225,11 +12230,6 @@ hr {
 :is(.dark .dark\:text-white) {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-:is(.dark .dark\:text-red-200) {
-  --tw-text-opacity: 1;
-  color: rgb(254 202 202 / var(--tw-text-opacity));
 }
 
 :is(.dark .dark\:hover\:bg-blue-800:hover) {
@@ -12704,12 +12704,12 @@ hr {
     border-right-width: 1px;
   }
 
-  .md\:border-t-0 {
-    border-top-width: 0px;
-  }
-
   .md\:border-t {
     border-top-width: 1px;
+  }
+
+  .md\:border-t-0 {
+    border-top-width: 0px;
   }
 
   .md\:p-12 {
