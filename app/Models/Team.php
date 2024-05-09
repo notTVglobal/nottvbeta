@@ -121,7 +121,9 @@ class Team extends Model {
     }
 
     //    Log::info("Final data for team {$this->id}: " . json_encode($broadcasts->toArray()));
-    return $this->scheduleIndexes->load('content.image.appSetting')->map(function ($scheduleIndex) {
+    // Map the scheduleIndexes to the desired structure
+    return $scheduleIndexes->load('content.image.appSetting')->map(function ($scheduleIndex) {
+
 //      Log::info('Processing schedule index: ' . $scheduleIndex->id);
 
       $contentType = get_class($scheduleIndex->content);
@@ -167,23 +169,28 @@ class Team extends Model {
         }
       }
 
+      // Decode next_broadcast_details if it's not null
+      $broadcastDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : "No broadcast details";
+
       $data = [
-          'name'          => $scheduleIndex->content->name ?? "Unnamed",
-          'slug'          => $scheduleIndex->content->slug ?? "No slug",
-          'type'          => $content_type,
-          'broadcastDate' => $scheduleIndex->next_broadcast ?? "No broadcast date",
-          'image'         => $scheduleIndex->content->image ? (new ImageResource($scheduleIndex->content->image))->resolve() : null,
-          'description'   => $scheduleIndex->content->description,
-          'category'      => $scheduleIndex->content->getCachedCategory() ? [
-              'id'          => $scheduleIndex->content->getCachedCategory()->id,
-              'name'        => $scheduleIndex->content->getCachedCategory()->name,
-              'description' => $scheduleIndex->content->getCachedCategory()->description,
-          ] : null,
-          'subCategory'   => $scheduleIndex->content->getCachedSubCategory() ? [
-              'id'          => $scheduleIndex->content->getCachedSubCategory()->id,
-              'name'        => $scheduleIndex->content->getCachedSubCategory()->name,
-              'description' => $scheduleIndex->content->getCachedSubCategory()->description,
-          ] : null,
+          'scheduleIndexId'  => $scheduleIndex->id,
+          'name'             => $scheduleIndex->content->name ?? "Unnamed",
+          'slug'             => $scheduleIndex->content->slug ?? "No slug",
+          'type'             => $content_type,
+          'broadcastDate'    => $scheduleIndex->next_broadcast ?? "No broadcast date",
+          'broadcastDetails' => $broadcastDetails,
+          'image'            => $scheduleIndex->content->image ? (new ImageResource($scheduleIndex->content->image))->resolve() : null,
+          'description'      => $scheduleIndex->content->description,
+//          'category'         => $scheduleIndex->content->show->getCachedCategory() ? [
+//              'id'          => $scheduleIndex->content->show->getCachedCategory()->id,
+//              'name'        => $scheduleIndex->content->show->getCachedCategory()->name,
+//              'description' => $scheduleIndex->content->show->getCachedCategory()->description,
+//          ] : null,
+//          'subCategory'      => $scheduleIndex->content->show->getCachedSubCategory() ? [
+//              'id'          => $scheduleIndex->content->show->getCachedSubCategory()->id,
+//              'name'        => $scheduleIndex->content->show->getCachedSubCategory()->name,
+//              'description' => $scheduleIndex->content->show->getCachedSubCategory()->description,
+//          ] : null,
       ];
 
       if (!empty($additionalData)) {

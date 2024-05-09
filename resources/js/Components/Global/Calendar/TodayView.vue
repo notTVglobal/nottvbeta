@@ -250,6 +250,7 @@ watch(
       // Ensure the timezone is set before calling preloadWeeklyContent
       if (newTimezone) {
         await scheduleStore.preloadWeeklyContent()
+        console.log('preloaded weekly content from todayView ...')
       }
     },
     {immediate: true}, // This option ensures the watcher is triggered immediately on mount

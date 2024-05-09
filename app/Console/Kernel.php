@@ -6,10 +6,9 @@ use App\Jobs\CheckSubscriptionStatuses;
 use App\Jobs\FetchRssFeedItemsJob;
 use App\Jobs\SchedulePurgeExpiredSchedules;
 use App\Jobs\ScheduleUpdateAllScheduleBroadcastDates;
-use App\Jobs\ScheduleUpdateIndex;
 use App\Jobs\ScheduleUpdateSchedulesIndexesDELETEME;
-use App\Jobs\UpdateNextScheduledForBroadcast;
 use App\Models\NewsRssFeed;
+use App\Services\ScheduleService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -28,14 +27,18 @@ class Kernel extends ConsoleKernel {
     $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('archive:rssFeeds')->hourly();
+    $schedule->command('schedule:update')->hourly();
 
-    $schedule->job(new ScheduleUpdateAllScheduleBroadcastDates)->everyFourHours();
+    // Purge cache files older than 1 hour every hour
+    $schedule->call(function () {
+      app(ScheduleService::class)->purgeOldCacheFiles(1);
+    })->hourly();
 
     $schedule->command('purge:rssFeed')->daily();
     $schedule->command('expire:inviteCodes')->daily();
 
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
-    $schedule->job(new SchedulePurgeExpiredSchedules())->daily();
+    $schedule->command('schedule:purge')->daily();
   }
 
   /**
@@ -48,8 +51,4 @@ class Kernel extends ConsoleKernel {
 
     require base_path('routes/console.php');
   }
-
-  protected $commands = [
-      Commands\RssFeedsArchiveCommand::class,
-  ];
 }

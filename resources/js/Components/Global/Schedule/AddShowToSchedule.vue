@@ -1,7 +1,7 @@
 <template>
 
-  <dialog id="addShowToScheduleModal" class="modal">
-    <div class="modal-box w-11/12 max-w-5xl">
+  <dialog id="addShowToScheduleModal" class="modal text-black">
+    <div class="modal-box w-11/12 max-w-5xl text-black bg-white dark:bg-gray-800 dark:text-white">
 
       <div class="flex flex-row justify-between">
         <div>
@@ -34,7 +34,7 @@
             <div v-if="!timezoneConfirmed">
               <div class="mb-2 pb-6 text-primary text-center">Confirm Timezone</div>
               <div class="flex flex-row justify-center">
-                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2 rounded-lg select select-bordered">
+                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2 rounded-lg select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                   <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{ timezone }}</option>
                 </select>
               </div>
@@ -99,13 +99,13 @@
               <div class="flex flex-col">
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour" class="select select-bordered">
+                  <select v-model="form.durationHour" class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute" class="select select-bordered ">
+                  <select v-model="form.durationMinute" class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
@@ -254,7 +254,7 @@
   </dialog>
 
   <dialog id="confirmAddShowModal" class="modal">
-    <div class="modal-box text-center">
+    <div class="modal-box text-center bg-white dark:bg-gray-800 dark:text-white">
       <h3 class="font-bold text-lg">Are you sure you want to add your show to the schedule?</h3>
       <div class="modal-action flex flex-row justify-center">
         <button class="btn btn-success text-white px-6" @click.prvent="submit">Yes!</button>

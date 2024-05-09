@@ -13,7 +13,7 @@
     <div v-if="show" :class="['modal-mask', 'overflow-auto', 'py-32', 'hide-scrollbar', 'bg-base-100', modalClass]">
       <div class="relative w-full h-full">
         <div v-if="videoPlayerStore.mistServerUri.includes('localhost')" class="w-full text-center text-white text-2xl font-semibold tracking-wide">LOCAL VERSION</div>
-        <div class="div1 modal-content bg-base-200 py-4 px-4 rounded-lg">
+        <div class="div1 modal-content bg-base-200 py-4 px-4 rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white">
           <header class="flex justify-center uppercase text-sm font-semibold pt-6 mb-2 text-center">
             <JetAuthenticationCardLogo class="max-w-[30%]"/>
 
@@ -28,7 +28,7 @@
           <div class="py-3 px-6">
             <form @submit.prevent="submit">
               <div class="w-full">
-                <label for="email" class="input input-bordered input-info flex items-center gap-2">
+                <label for="email" class="input input-bordered input-info flex items-center gap-2 text-black bg-white dark:bg-gray-800 dark:text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                        class="w-4 h-4 opacity-70">
                     <path
@@ -37,13 +37,13 @@
                         d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"/>
                   </svg>
                   <input id="email"
-                         v-model="form.email" type="email" class="grow border-none w-full" placeholder="Email" required
+                         v-model="form.email" type="email" class="grow border-none w-full text-black bg-white dark:bg-gray-800 dark:text-white" placeholder="Email" required
                          />
                 </label>
               </div>
 
               <div class="w-full mt-4">
-                <label for="password" class="input input-bordered input-info flex items-center gap-2">
+                <label for="password" class="input input-bordered input-info flex items-center gap-2 text-black bg-white dark:bg-gray-800 dark:text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                        class="w-4 h-4 opacity-70">
                     <path fill-rule="evenodd"
@@ -51,7 +51,7 @@
                           clip-rule="evenodd"/>
                   </svg>
                   <input id="password"
-                         v-model="form.password" type="password" class="grow border-none w-full" value="" required/>
+                         v-model="form.password" type="password" class="grow border-none w-full text-black bg-white dark:bg-gray-800 dark:text-white" value="" required/>
                 </label>
               </div>
 

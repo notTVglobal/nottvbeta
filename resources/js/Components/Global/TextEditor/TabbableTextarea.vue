@@ -9,7 +9,7 @@
       @input="onInput"
       :value="modelValue"
       :placeholder="placeholder"
-      class="textarea textarea-bordered"
+      class="textarea textarea-bordered text-black bg-white dark:bg-gray-800 dark:text-white"
   />
 </template>
 

@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: May 6, 2024\
+Last Update: May 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.3
+May 8, 2024
+* Fix Error Code 789, video playback of uploaded videos.
 
 ## v0.9.0.2
 May 6, 2024

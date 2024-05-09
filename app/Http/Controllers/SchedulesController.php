@@ -13,6 +13,7 @@ use App\Models\Show;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
 use App\Models\User;
+use App\Services\ScheduleService;
 use Carbon\CarbonInterface;
 use DateInterval;
 use DateTime;
@@ -30,8 +31,11 @@ use Inertia\Inertia;
 
 class SchedulesController extends Controller {
 
-  public function __construct() {
+  protected ScheduleService $scheduleService;
+
+  public function __construct(ScheduleService $scheduleService) {
     $this->middleware('auth')->except(['index', 'preloadWeeklyContent', 'loadWeekFromDate']);
+    $this->scheduleService = $scheduleService;
   }
 
   public function index(): \Inertia\Response {
@@ -57,9 +61,43 @@ class SchedulesController extends Controller {
     ]);
   }
 
+  public function fetchTodaysContent(): JsonResponse {
+    $data = $this->scheduleService->fetchTodaysContent();
+
+    return response()->json([
+        'data'         => $data,
+        'userTimezone' => Auth::user()->timezone ?? 'UTC',
+    ]);
+  }
+
+  public function fetchFiveDaySixHourSchedule(): JsonResponse {
+    $schedulesFiveDay = $this->scheduleService->fetchFiveDaySixHourSchedule();
+    return response()->json([
+        'data'         => $schedulesFiveDay,
+        'userTimezone' => Auth::user()->timezone ?? 'UTC',
+    ]);
+  }
+
+  public function fetchContentForRange(Request $request): JsonResponse {
+    $startDate = $request->input('start');
+    $endDate = $request->input('end');
+
+    $schedules = $this->scheduleService->fetchContentForRange($startDate, $endDate);
+
+    if (isset($schedules['error'])) {
+      return response()->json($schedules, 400);
+    }
+
+    return response()->json([
+        'data'         => $schedules,
+        'userTimezone' => Auth::user()->timezone ?? 'UTC',
+    ]);
+  }
+
+
+
+
   public function addToSchedule(Request $request): JsonResponse {
-    // Manually extract the data from the request body
-//    $data = $request->json()->all();
 
     $data = $request->all();  // Capture all input data
 
@@ -69,8 +107,6 @@ class SchedulesController extends Controller {
     // Return a response immediately, indicating that the process has started
     return response()->json(['message' => 'The schedule is being updated.']);
 
-
-//
 //    return response()->json([
 //        'message' => 'Schedule added successfully',
 //        'data'    => $schedule,
@@ -78,18 +114,44 @@ class SchedulesController extends Controller {
   }
 
 
-  /**
-   * Display Show Schedule.
-   *
-   * @return JsonResponse
-   */
+//  /**
+//   * Display Show Schedule.
+//   *
+//   * @return JsonResponse
+//   */
 
-  public function fetchFiveDaySixHourSchedule(): JsonResponse {
-//    $cachePath = 'scheduleFiveDaySixHour'; // A unique identifier for this cache
+//  public function fetchFiveDaySixHourSchedule(): JsonResponse {
+////    $cachePath = 'scheduleFiveDaySixHour'; // A unique identifier for this cache
+////
+////    // Check if the cache is valid
+////    if ($this->isCacheValid($cachePath)) {
+////      // Cache is valid, use the cached data
+////      $content = Storage::disk('local')->get("json/{$cachePath}.json");
+////      $cache = json_decode($content, true);
+////
+////      // Include the user's timezone in the response
+////      return response()->json([
+////          'data'         => $cache['data'],
+////          'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
+////      ]);
+////    }
 //
-//    // Check if the cache is valid
+//    // Cache is not valid, fetch new data
+//    $schedulesByDay = $this->fetchSchedulesByDay();
+////    $this->cacheData($cachePath, $schedulesByDay); // Use the generalized caching method
+//
+//    // Include the user's timezone in the response
+//    return response()->json([
+//        'data'         => $schedulesByDay,
+//        'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
+//    ]);
+//  }
+
+
+//  public function fetchTodaysContent(): JsonResponse {
+//    $cachePath = 'scheduleToday';
+//
 //    if ($this->isCacheValid($cachePath)) {
-//      // Cache is valid, use the cached data
 //      $content = Storage::disk('local')->get("json/{$cachePath}.json");
 //      $cache = json_decode($content, true);
 //
@@ -99,42 +161,16 @@ class SchedulesController extends Controller {
 //          'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
 //      ]);
 //    }
-
-    // Cache is not valid, fetch new data
-    $schedulesByDay = $this->fetchSchedulesByDay();
-//    $this->cacheData($cachePath, $schedulesByDay); // Use the generalized caching method
-
-    // Include the user's timezone in the response
-    return response()->json([
-        'data'         => $schedulesByDay,
-        'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
-    ]);
-  }
-
-
-  public function fetchTodaysContent(): JsonResponse {
-    $cachePath = 'scheduleToday';
-
-    if ($this->isCacheValid($cachePath)) {
-      $content = Storage::disk('local')->get("json/{$cachePath}.json");
-      $cache = json_decode($content, true);
-
-      // Include the user's timezone in the response
-      return response()->json([
-          'data'         => $cache['data'],
-          'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
-      ]);
-    }
-
-    $data = $this->fetchSchedules(Carbon::now()->startOfDay(), Carbon::now()->endOfDay());
-    $this->cacheData($cachePath, $data);
-
-    // Include the user's timezone in the response
-    return response()->json([
-        'data'         => $data,
-        'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
-    ]);
-  }
+//
+//    $data = $this->fetchSchedules(Carbon::now()->startOfDay(), Carbon::now()->endOfDay());
+//    $this->cacheData($cachePath, $data);
+//
+//    // Include the user's timezone in the response
+//    return response()->json([
+//        'data'         => $data,
+//        'userTimezone' => auth()->user()->timezone ?? 'UTC', // Default to 'UTC' if null
+//    ]);
+//  }
 
   public function preloadWeeklyContent(): JsonResponse {
 //    $cachePath = 'scheduleWeek';
@@ -168,16 +204,17 @@ class SchedulesController extends Controller {
     ]);
   }
 
-  public function validateDate($formattedDateTimeUtc): ?JsonResponse {
-    $validator = Validator::make(['formattedDateTimeUtc' => $formattedDateTimeUtc], [
-        'formattedDateTimeUtc' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
-    ]);
-
-    if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()], 422);
-    }
-    return null; // return null if no errors
-  }
+//  public function validateDate($formattedDateTimeUtc): ?JsonResponse {
+//    $validator = Validator::make(['formattedDateTimeUtc' => $formattedDateTimeUtc], [
+//        'formattedDateTimeUtc' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
+//    ]);
+//
+//    if ($validator->fails()) {
+//      return response()->json(['errors' => $validator->errors()], 422);
+//    }
+//
+//    return null; // return null if no errors
+//  }
 
   public function loadWeekFromDate($formattedDateTimeUtc): JsonResponse {
 
@@ -191,6 +228,7 @@ class SchedulesController extends Controller {
     try {
       // If validation is successful, parse the date using Carbon
       $userRequestedDate = Carbon::parse($formattedDateTimeUtc);
+      Log::info("Parsed user requested date: $userRequestedDate");
       // Proceed with your business logic, such as loading data for the week based on this date
     } catch (\Exception $e) {
       // Handle any exceptions related to date parsing
@@ -222,9 +260,26 @@ class SchedulesController extends Controller {
 //    $userRequestedStartOfWeekUTC = $userRequestedStartOfWeek->copy()->tz('UTC');
 //    $userRequestedEndOfWeekUTC = $userRequestedEndOfWeek->copy()->tz('UTC');
 
-    $schedules = $this->fetchSchedulesFromBroadcastDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
-    $transformedSchedules = $this->transformAndSortSchedules($schedules);
-    $finalSchedules = $this->resolveScheduleConflicts($transformedSchedules);
+    // 1. Fetch schedules
+    $schedules = $this->fetchSchedulesFromUserRequestedDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
+//    $schedules = $this->fetchSchedulesFromBroadcastDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
+    Log::info("Fetched schedules:", $schedules);
+
+    // 2. Transform schedules
+    $transformedSchedules = $this->transformFetchedSchedules($schedules);
+    Log::info("Transformed schedules:", $transformedSchedules);
+
+   // 3. Sort schedules
+    $sortedSchedules = $this->sortSchedules($transformedSchedules);
+    Log::info("Sorted schedules:", $sortedSchedules);
+
+    // Transform and sort schedules
+//    $transformedSchedules = $this->transformAndSortSchedules($schedules);
+//    Log::info("Transformed and sorted schedules:", $transformedSchedules);
+
+    // 4. Resolve schedule conflicts
+    $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
+    Log::info("Final schedules after resolving conflicts:", $finalSchedules);
 
 
     // TODO: If we want to work on this later we can... but it will take some work to be efficient
@@ -233,11 +288,14 @@ class SchedulesController extends Controller {
 
 //    $this->cacheData($cachePath, $data);
 
-    // Include the user's timezone in the response
-    return response()->json([
+    // 5. Return with the user's timezone in the response
+    $response = [
         'data'         => $finalSchedules,
         'userTimezone' => auth()->user()->timezone ?? null
-    ]);
+    ];
+    Log::info("Returning response:", $response);
+
+    return response()->json($response);
   }
 
 //  public function index(): JsonResponse {
@@ -259,78 +317,97 @@ class SchedulesController extends Controller {
 //  }
 
 
-  private function transformAndSortSchedules($schedules) {
-    // Transform schedules and sort them
-    usort($schedules, function ($a, $b) {
-      $startComparison = $a['startTime'] <=> $b['startTime'];
-      if ($startComparison !== 0) return $startComparison;
+//  private function sortSchedules($schedules) {
+//    // Transform schedules and sort them
+//    usort($schedules, function ($a, $b) {
+//      $startComparison = $a['startTime'] <=> $b['startTime'];
+//      if ($startComparison !== 0) return $startComparison;
+//
+//      $endComparison = $a['endTime'] <=> $b['endTime'];
+//      if ($endComparison !== 0) return $endComparison;
+//
+//      $priorityComparison = $a['priority'] <=> $b['priority'];
+//      if ($priorityComparison !== 0) return $priorityComparison;
+//
+//      return $a['createdAt'] <=> $b['createdAt']; // Older shows have higher priority
+//    });
+//
+//    return $schedules;
+//  }
 
-      $endComparison = $a['endTime'] <=> $b['endTime'];
-      if ($endComparison !== 0) return $endComparison;
-
-      $priorityComparison = $a['priority'] <=> $b['priority'];
-      if ($priorityComparison !== 0) return $priorityComparison;
-
-      return $a['createdAt'] <=> $b['createdAt']; // Older shows have higher priority
-    });
-    return $schedules;
-  }
-
-  private function resolveScheduleConflicts($schedules): array {
-    // Initialize an array to track occupied rows and times for each row
-    $rowOccupancy = [];
-
-    // Sort schedules before handling overlaps to ensure they are processed in the correct order
-    usort($schedules, function ($a, $b) {
-      return $a['startTime'] <=> $b['startTime'] ?: $a['endTime'] <=> $b['endTime'] ?: $a['priority'] <=> $b['priority'] ?: $a['createdAt'] <=> $b['createdAt'];
-    });
-
-    return array_map(function ($item) use (&$rowOccupancy) {
-      $item['gridRow'] = 1; // Start placing each item in the first row
-
-      // Check each row to see if placing the item there would cause a conflict
-      foreach ($rowOccupancy as $row => $times) {
-        $conflict = false;
-        foreach ($times as $time) {
-          if ($item['startTime'] < $time['endTime'] && $item['endTime'] > $time['startTime']) {
-            $conflict = true;
-            break;
-          }
-        }
-        if (!$conflict) {
-          $item['gridRow'] = $row;
-          break;
-        }
-        $item['gridRow']++; // Move to the next row if there is a conflict
-      }
-
-      // Record the item's time in the appropriate row's occupancy data
-      $rowOccupancy[$item['gridRow']][] = ['startTime' => $item['startTime'], 'endTime' => $item['endTime']];
-
-      return $item;
-    }, $schedules);
-  }
+//  private function resolveScheduleConflicts($schedules): array {
+//    // Initialize an array to track occupied rows and times for each row
+//    $rowOccupancy = [];
+//
+//    // Sort schedules before handling overlaps to ensure they are processed in the correct order
+//    usort($schedules, function ($a, $b) {
+//      return $a['startTime'] <=> $b['startTime'] ?: $a['endTime'] <=> $b['endTime'] ?: $a['priority'] <=> $b['priority'] ?: $a['createdAt'] <=> $b['createdAt'];
+//    });
+//
+//    return array_map(function ($item) use (&$rowOccupancy) {
+//      $item['gridRow'] = 1; // Start placing each item in the first row
+//
+//      // Check each row to see if placing the item there would cause a conflict
+//      foreach ($rowOccupancy as $row => $times) {
+//        $conflict = false;
+//        foreach ($times as $time) {
+//          if ($item['startTime'] < $time['endTime'] && $item['endTime'] > $time['startTime']) {
+//            $conflict = true;
+//            break;
+//          }
+//        }
+//        if (!$conflict) {
+//          $item['gridRow'] = $row;
+//          break;
+//        }
+//        $item['gridRow']++; // Move to the next row if there is a conflict
+//      }
+//
+//      // Record the item's time in the appropriate row's occupancy data
+//      $rowOccupancy[$item['gridRow']][] = ['startTime' => $item['startTime'], 'endTime' => $item['endTime']];
+//
+//      return $item;
+//    }, $schedules);
+//  }
 
 
-  private function fetchSchedulesFromBroadcastDates(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
+  private function fetchSchedulesFromUserRequestedDates(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
     // Convert UTC time to schedule's local timezone !!! IMPORTANT > Schedules are stored in the user's preferred timezone.
     // NOTE: BroadcastDates are converted to UTC when they are created and marked with the UTC timezone in the array.
     // NOTE: Start dates and times in the schedule tables other than BroadcastDates are stored in UTC as part of our standardization.
     // NOTE: The reason Schedules are saved in a specific timezone is to prevent daylight savings changes causing issues.
 
-    // Eager load schedules but limit the initially fetched set
-    $schedules = Schedule::with([
-        'content.image.appSetting'
-    ])->whereBetween('start_time', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])->get(); // Adjust the range as necessary
+    Log::info('Fetching schedules for date range', [
+        'start' => $userRequestedStartOfWeekUTC,
+        'end'   => $userRequestedEndOfWeekUTC
+    ]);
 
+    // Eager load schedules but limit the initially fetched set
+    $schedules = Schedule::with(['content.image.appSetting'])
+        ->whereBetween('start_time', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])
+        ->get(); // Adjust the range as necessary
+
+    Log::info('Fetched schedules:', $schedules->toArray());
 
     $filteredSchedules = $schedules->filter(function ($schedule) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
       // Convert the UTC times to the schedule's timezone
       $localStart = $userRequestedStartOfWeekUTC->copy()->setTimezone($schedule->timezone);
       $localEnd = $userRequestedEndOfWeekUTC->copy()->setTimezone($schedule->timezone);
 
-      return $schedule->start_time <= $localEnd && $schedule->end_time >= $localStart;
+      $result = $schedule->start_time <= $localEnd && $schedule->end_time >= $localStart;
+      Log::info('Filtering schedule', [
+          'schedule_id' => $schedule->id,
+          'start_time'  => $schedule->start_time,
+          'end_time'    => $schedule->end_time,
+          'local_start' => $localStart,
+          'local_end'   => $localEnd,
+          'result'      => $result
+      ]);
+
+      return $result;
     })->sortBy('start_time');
+
+    Log::info('Filtered schedules:', $filteredSchedules->toArray());
 
     // After fetching, dynamically load additional relationships based on content type
     foreach ($filteredSchedules as $schedule) {
@@ -340,31 +417,63 @@ class SchedulesController extends Controller {
       }
     }
 
-    // Transform schedules to include necessary date calculations and timezone adjustments
-    return $filteredSchedules->flatMap(function ($schedule) {
-      $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
-      $timezone = $broadcastData['timezone'] ?? 'UTC'; // Default to 'UTC' if not specified
-
-      return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
-        // Adjust the timezone for start time creation
-        $startTime = new DateTime($date, new DateTimeZone($timezone));
-
-        // Calculate endTime by adding duration in minutes to startTime
-        $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
-
-        return [
-            'id'              => $schedule->content_id,
-            'createdAt'       => $schedule->created_at,
-            'type'            => $schedule->type,
-            'startTime'       => $startTime->setTimezone(new DateTimeZone('UTC'))->format('c'),  // Convert back to UTC for standardization
-            'endTime'         => $endTime->setTimezone(new DateTimeZone('UTC'))->format('c'),
-            'priority'        => $schedule->priority,
-            'durationMinutes' => $schedule->duration_minutes,
-            'timezone'        => $timezone, // Include timezone information
-            'content'         => $this->transformSchedule($schedule->content),
-        ];
-      });
-    })->all(); // Get all results into an array first before any processing.
+    return $filteredSchedules;
+  }
+//
+//    // Transform schedules to include necessary date calculations and timezone adjustments
+//    return $filteredSchedules->flatMap(function ($schedule) {
+//      $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
+//      $timezone = $broadcastData['timezone'] ?? 'UTC'; // Default to 'UTC' if not specified
+//
+//      Log::info('Transforming schedule', [
+//          'schedule_id'     => $schedule->id,
+//          'broadcast_dates' => $broadcastDates,
+//          'timezone'        => $timezone
+//      ]);
+//
+//      return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
+//        try {
+//          // Adjust the timezone for start time creation
+//          $startTime = new DateTime($date, new DateTimeZone($timezone));
+//
+//          // Calculate endTime by adding duration in minutes to startTime
+//          $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
+//
+//          Log::info('Mapped broadcast date', [
+//              'schedule_id' => $schedule->id,
+//              'start_time'  => $startTime->format('c'),
+//              'end_time'    => $endTime->format('c'),
+//              'duration'    => $schedule->duration_minutes
+//          ]);
+//
+//          return [
+//              'id'              => $schedule->content_id,
+//              'createdAt'       => $schedule->created_at,
+//              'type'            => $schedule->type,
+//              'startTime'       => $startTime->setTimezone(new DateTimeZone('UTC'))->format('c'),  // Convert back to UTC for standardization
+//              'endTime'         => $endTime->setTimezone(new DateTimeZone('UTC'))->format('c'),
+//              'priority'        => $schedule->priority,
+//              'durationMinutes' => $schedule->duration_minutes,
+//              'timezone'        => $timezone, // Include timezone information
+//              'content'         => $this->transformSchedule($schedule->content),
+//          ];
+//        } catch (\Exception $e) {
+//          Log::error('Error transforming broadcast date', [
+//              'schedule_id' => $schedule->id,
+//              'date'        => $date,
+//              'error'       => $e->getMessage()
+//          ]);
+//
+//          return null;
+//        }
+//      })->filter()->all(); // Get all results into an array first before any processing.
+//
+//    })->all();
+//
+//    Log::info('Transformed schedules:', $transformedSchedules->toArray());
+//
+//    return $transformedSchedules; // Get all results into an array first before any processing.
+//  }
 //
 //    // Sort schedules by start time, end time, priority, and creation time
 //    usort($transformedSchedules, function ($a, $b) {
@@ -397,78 +506,78 @@ class SchedulesController extends Controller {
 //      $previousItem = $item;
 //      return $item;
 //    })->toArray();
-  }
+//  }
 
 
-  private function fetchSchedulesByDay(): array {
-    $schedulesByDay = [];
-    // Assuming $now is the current time
-    $now = Carbon::now()->second(0)->microsecond(0)->startOfHour();
-    $endPeriod = $now->copy()->addDays(6)->addHours(6); // 6 days ahead + 6 hours
-
-    // Fetch all schedules in one go within the specified range
-    $allSchedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-        ->whereBetween('start_time', [$now, $endPeriod])
-        ->orderBy('start_time')
-        ->get();
-
-    // Iterate over the next 6 days
-    for ($i = 0; $i <= 6; $i++) {
-      // Filter schedules for each day based on the start hour of 'now' and for the next 6 hours
-      $dayStart = $now->copy()->addDays($i)->startOfDay()->addHours($now->hour);
-      $dayEnd = $dayStart->copy()->addHours(6);
-
-      $daySchedules = $allSchedules->filter(function ($schedule) use ($dayStart, $dayEnd) {
-        // Convert schedule's start_time to UTC for accurate comparison
-        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone)
-            ->setTimezone('UTC');
-
-        return $scheduleStartUtc->between($dayStart, $dayEnd);
-      })->map(function ($schedule) {
-        // Handle preloading of additional relationships based on content type
-        if ($schedule->content_type === 'App\Models\ShowEpisode') {
-          $schedule->content->loadMissing(['appSetting', 'show.category', 'show.subCategory', 'show.image.appSetting', 'creativeCommons', 'mistStreamWildcard', 'image.appSetting', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard']);
-        } elseif ($schedule->content_type === 'App\Models\Movie') {
-          $schedule->content->loadMissing(['appSetting', 'category', 'subCategory', 'creativeCommons', 'trailers', 'image.appSetting', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard']);
-        }
-        // Transform the schedule's content based on its type
-        $content = null;
-        if ($schedule->content) {
-          switch ($schedule->content_type) {
-            case 'App\Models\ShowEpisode':
-              $content = new ShowEpisodeResource($schedule->content);
-              break;
-            case 'App\Models\Movie':
-              $content = new MovieResource($schedule->content);
-              break;
-            // Add more cases as needed
-          }
-        }
-
-        return [
-//            'content' => $content?->toArray(),
-//          // Include additional schedule attributes as needed
-//            'start_time' => $schedule->start_time->toDateTimeString(),
-//            'end_time' => $schedule->end_time->toDateTimeString(),
-            'content'            => $content,
-            'type'               => $schedule->type ?? null, // varchar(255) Discriminator: show, movie, trailer, live stream
-            'start_time'         => $schedule->start_time ?? null, // datetime
-            'end_time'           => $schedule->end_time ?? null, // datetime
-            'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
-            'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
-            'recurrence_flag'    => $schedule->recurence_flag ?? null,
-            'recurrence_details' => $schedule->scheduleRecurrenceDetails ?? null,
-        ];
-      });
-
-      if ($daySchedules->isNotEmpty()) {
-        $schedulesByDay[$dayStart->toDateString()] = $daySchedules->toArray();
-      }
-    }
-    Log::debug('Schedules by day:', $schedulesByDay);
-
-    return $schedulesByDay;
-
+//  private function fetchSchedulesByDay(): array {
+//    $schedulesByDay = [];
+//    // Assuming $now is the current time
+//    $now = Carbon::now()->second(0)->microsecond(0)->startOfHour();
+//    $endPeriod = $now->copy()->addDays(6)->addHours(6); // 6 days ahead + 6 hours
+//
+//    // Fetch all schedules in one go within the specified range
+//    $allSchedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
+//        ->whereBetween('start_time', [$now, $endPeriod])
+//        ->orderBy('start_time')
+//        ->get();
+//
+//    // Iterate over the next 6 days
+//    for ($i = 0; $i <= 6; $i++) {
+//      // Filter schedules for each day based on the start hour of 'now' and for the next 6 hours
+//      $dayStart = $now->copy()->addDays($i)->startOfDay()->addHours($now->hour);
+//      $dayEnd = $dayStart->copy()->addHours(6);
+//
+//      $daySchedules = $allSchedules->filter(function ($schedule) use ($dayStart, $dayEnd) {
+//        // Convert schedule's start_time to UTC for accurate comparison
+//        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone)
+//            ->setTimezone('UTC');
+//
+//        return $scheduleStartUtc->between($dayStart, $dayEnd);
+//      })->map(function ($schedule) {
+//        // Handle preloading of additional relationships based on content type
+//        if ($schedule->content_type === 'App\Models\ShowEpisode') {
+//          $schedule->content->loadMissing(['appSetting', 'show.category', 'show.subCategory', 'show.image.appSetting', 'creativeCommons', 'mistStreamWildcard', 'image.appSetting', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard']);
+//        } elseif ($schedule->content_type === 'App\Models\Movie') {
+//          $schedule->content->loadMissing(['appSetting', 'category', 'subCategory', 'creativeCommons', 'trailers', 'image.appSetting', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard']);
+//        }
+//        // Transform the schedule's content based on its type
+//        $content = null;
+//        if ($schedule->content) {
+//          switch ($schedule->content_type) {
+//            case 'App\Models\ShowEpisode':
+//              $content = new ShowEpisodeResource($schedule->content);
+//              break;
+//            case 'App\Models\Movie':
+//              $content = new MovieResource($schedule->content);
+//              break;
+//            // Add more cases as needed
+//          }
+//        }
+//
+//        return [
+////            'content' => $content?->toArray(),
+////          // Include additional schedule attributes as needed
+////            'start_time' => $schedule->start_time->toDateTimeString(),
+////            'end_time' => $schedule->end_time->toDateTimeString(),
+//            'content'            => $content,
+//            'type'               => $schedule->type ?? null, // varchar(255) Discriminator: show, movie, trailer, live stream
+//            'start_time'         => $schedule->start_time ?? null, // datetime
+//            'end_time'           => $schedule->end_time ?? null, // datetime
+//            'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
+//            'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
+//            'recurrence_flag'    => $schedule->recurence_flag ?? null,
+//            'recurrence_details' => $schedule->scheduleRecurrenceDetails ?? null,
+//        ];
+//      });
+//
+//      if ($daySchedules->isNotEmpty()) {
+//        $schedulesByDay[$dayStart->toDateString()] = $daySchedules->toArray();
+//      }
+//    }
+//    Log::debug('Schedules by day:', $schedulesByDay);
+//
+//    return $schedulesByDay;
+//
 
 //
 //
@@ -534,7 +643,7 @@ class SchedulesController extends Controller {
 //    }
 //    Log::debug('Schedules by day:', $schedulesByDay);
 //    return $schedulesByDay;
-  }
+//  }
 
   private function cacheData($path, $data): void {
     $fullPath = "json/{$path}.json"; // Dynamic path based on the method
@@ -560,23 +669,11 @@ class SchedulesController extends Controller {
     return now()->lessThan($expiresAt);
   }
 
-  public function invalidateCaches() {
-    $directory = 'json'; // The directory where your caches are stored
-    $files = Storage::disk('local')->files($directory);
+  public function invalidateCaches(): JsonResponse {
+    $this->scheduleService->invalidateCaches();
 
-    foreach ($files as $file) {
-      // Check if file matches any of the cache patterns
-      if (Str::startsWith($file, "{$directory}/scheduleWeekFromDate_") ||
-          Str::startsWith($file, "{$directory}/scheduleWeek") ||
-          Str::startsWith($file, "{$directory}/scheduleFiveDaySixHour") ||
-          Str::startsWith($file, "{$directory}/scheduleToday")) {
-        // Delete the file
-        Storage::disk('local')->delete($file);
-      }
-    }
-
-    return back()->with(['message' => 'All caches invalidated successfully.']);
-
+    // Return a response indicating success
+    return response()->json(['message' => 'All caches invalidated successfully.']);
   }
 
 //  private function cacheSchedule($scheduleData): void {
@@ -649,6 +746,12 @@ class SchedulesController extends Controller {
 //  }
 
   private function fetchSchedules(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
+
+    Log::info('Fetching schedules for date range', [
+        'start' => $userRequestedStartOfWeekUTC,
+        'end'   => $userRequestedEndOfWeekUTC
+    ]);
+
     // Eagerly load scheduleRecurrenceDetails for all Schedule instances
     $schedules = Schedule::with('scheduleRecurrenceDetails')
         ->where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
@@ -894,6 +997,59 @@ class SchedulesController extends Controller {
 //
 //    return $instances;
 //  }
+
+//  private function transformFetchedSchedules($schedules)
+//  {
+//    // Transform schedules to include necessary date calculations and timezone adjustments
+//    $transformedSchedules = $schedules->flatMap(function ($schedule) {
+//      $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
+//      $timezone = $schedule->timezone ?? 'UTC'; // Default to 'UTC' if not specified
+//
+//      Log::info('Transforming schedule', [
+//          'schedule_id' => $schedule->id,
+//          'broadcast_dates' => $broadcastDates,
+//          'timezone' => $timezone
+//      ]);
+//
+//      return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
+//        try {
+//          $startTime = new DateTime($date, new DateTimeZone($timezone));
+//          $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
+//
+//          Log::info('Mapped broadcast date', [
+//              'schedule_id' => $schedule->id,
+//              'start_time' => $startTime->format('c'),
+//              'end_time' => $endTime->format('c'),
+//              'duration' => $schedule->duration_minutes
+//          ]);
+//
+//          return [
+//              'id' => $schedule->content_id,
+//              'createdAt' => $schedule->created_at,
+//              'type' => $schedule->type,
+//              'startTime' => $startTime->setTimezone(new DateTimeZone('UTC'))->format('c'), // Convert back to UTC for standardization
+//              'endTime' => $endTime->setTimezone(new DateTimeZone('UTC'))->format('c'),
+//              'priority' => $schedule->priority,
+//              'durationMinutes' => $schedule->duration_minutes,
+//              'timezone' => $timezone, // Include timezone information
+//              'content' => $this->transformSchedule($schedule->content),
+//          ];
+//        } catch (\Exception $e) {
+//          Log::error('Error transforming broadcast date', [
+//              'schedule_id' => $schedule->id,
+//              'date' => $date,
+//              'error' => $e->getMessage()
+//          ]);
+//          return null;
+//        }
+//      })->filter()->all();
+//    });
+//
+//    Log::info('Transformed schedules:', $transformedSchedules);
+//
+//    return $transformedSchedules;
+//  }
+
 
 
   private function transformSchedule($content): array {

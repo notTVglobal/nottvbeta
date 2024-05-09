@@ -7222,8 +7222,8 @@ hr {
 
 .ProseMirror {
     padding:10px;
-    min-height: 150px;
-    max-height: 200px;
+    /*min-height: 150px;*/
+    /*max-height: 200px;*/
     overflow-y: auto;
 }
 
@@ -7327,6 +7327,10 @@ hr {
 .inset-y-0 {
   top: 0px;
   bottom: 0px;
+}
+
+.-left-3 {
+  left: -0.75rem;
 }
 
 .-right-10 {
@@ -7487,18 +7491,6 @@ hr {
 
 .top-56 {
   top: 14rem;
-}
-
-.-left-4 {
-  left: -1rem;
-}
-
-.-left-2 {
-  left: -0.5rem;
-}
-
-.-left-3 {
-  left: -0.75rem;
 }
 
 .z-0 {
@@ -7952,6 +7944,10 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
 }
 
 .line-clamp-2 {
@@ -10135,6 +10131,10 @@ hr {
   fill: currentColor;
 }
 
+.fill-primary {
+  fill: var(--fallback-p,oklch(var(--p)/1));
+}
+
 .stroke-current {
   stroke: currentColor;
 }
@@ -12227,6 +12227,11 @@ hr {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+:is(.dark .dark\:text-red-200) {
+  --tw-text-opacity: 1;
+  color: rgb(254 202 202 / var(--tw-text-opacity));
+}
+
 :is(.dark .dark\:hover\:bg-blue-800:hover) {
   --tw-bg-opacity: 1;
   background-color: rgb(30 64 175 / var(--tw-bg-opacity));
@@ -12701,6 +12706,10 @@ hr {
 
   .md\:border-t-0 {
     border-top-width: 0px;
+  }
+
+  .md\:border-t {
+    border-top-width: 1px;
   }
 
   .md\:p-12 {

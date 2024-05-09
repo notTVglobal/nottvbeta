@@ -37,7 +37,7 @@
         <div class="bg-gray-600 rounded-lg shadow m-10 p-4">
 
 
-          <TodayView/>
+<!--          <TodayView/>-->
 
 
         </div>
@@ -56,7 +56,7 @@ import { useScheduleStore } from '@/Stores/ScheduleStore'
 import Message from '@/Components/Global/Modals/Messages'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal'
 import TodayView from '@/Components/Global/Calendar/TodayView.vue'
-import { computed, onBeforeMount, onMounted } from 'vue'
+import { computed, onBeforeMount, onMounted, watch } from 'vue'
 
 import dayjs from 'dayjs'
 import { Inertia } from '@inertiajs/inertia'
@@ -104,7 +104,22 @@ onMounted(() => {
       videoPlayerStore.disposePlayer()
     }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
   }
+  scheduleStore.initializeTimeSlots();
 })
+
+// Define a reactive watcher on the timezone
+// This watcher will call preloadWeeklyContent whenever the timezone changes and is not null
+watch(
+    () => userStore.timezone,
+    async (newTimezone, oldTimezone) => {
+      // Ensure the timezone is set before calling preloadWeeklyContent
+      if (newTimezone) {
+        await scheduleStore.preloadWeeklyContent()
+        console.log('preloaded weekly content from Schedule Index (logged out) time watcher ...')
+      }
+    },
+    {immediate: true}, // This option ensures the watcher is triggered immediately on mount
+)
 
 
 const timeIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)

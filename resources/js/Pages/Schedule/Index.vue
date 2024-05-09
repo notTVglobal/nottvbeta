@@ -52,7 +52,7 @@
 <!--        </div>-->
 <!--      </div>-->
 
-<!--      <div v-if="scheduleStore.scheduleIsLoading && scheduleStore.nextFourHoursOfContent.length === 0"-->
+<!--      <div v-if="scheduleStore.isLoading && scheduleStore.nextFourHoursOfContent.length === 0"-->
 <!--            class="w-full flex justify-center text-center items-center">-->
 <!--        <span class="loading loading-ball loading-xl text-info"></span>-->
 <!--      </div>-->
@@ -115,7 +115,7 @@
 <!--    <div class="bg-gray-600 rounded-lg shadow m-10 p-4">-->
 
 
-      <TodayView/>
+<!--      <TodayView/>-->
 <!--    </div>-->
 
 
@@ -125,22 +125,45 @@
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import Message from '@/Components/Global/Modals/Messages'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal'
 import TodayView from '@/Components/Global/Calendar/TodayView.vue'
 // import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import ScheduleGridContainer from '@/Components/Global/Schedule/ScheduleGridContainer.vue'
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import dayjs from 'dayjs';
 
 usePageSetup('schedule')
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const scheduleStore = useScheduleStore()
 
 let props = defineProps({
   can: Object,
 })
+
+onMounted(() => {
+  scheduleStore.initializeTimeSlots();
+});
+
+// Define a reactive watcher on the timezone
+// This watcher will call preloadWeeklyContent whenever the timezone changes and is not null
+watch(
+    () => userStore.timezone,
+    async (newTimezone, oldTimezone) => {
+      // Ensure the timezone is set before calling preloadWeeklyContent
+      if (newTimezone) {
+        const startDate = dayjs();
+        const endDate = startDate.add(4, 'hour');
+        await scheduleStore.fetchSchedules(startDate.format(), endDate.format());
+        console.log('Preload schedules...')
+      }
+    },
+    {immediate: true}, // This option ensures the watcher is triggered immediately on mount
+)
 
 function openModal(modalName) {
   document.getElementById(modalName).showModal()

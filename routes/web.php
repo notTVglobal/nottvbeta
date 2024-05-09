@@ -1201,6 +1201,7 @@ Route::get('/admin/external-source/search', [ChannelExternalSourceController::cl
 ///////////
 ///
 
+
 Route::get('/api/schedule', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
 Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSchedule']);
 Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
@@ -1261,6 +1262,10 @@ Route::get('/live-streaming-guide', function () {
 
 Route::post('/api/schedule/week', [SchedulesController::class, 'preloadWeeklyContent']);
 Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::class, 'loadWeekFromDate']);
+// New Routes to replace the others...
+Route::get('/api/schedules/today', [SchedulesController::class, 'fetchTodaysContent']);
+Route::get('/api/schedules/five-day', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
+Route::get('/api/schedules/range', [SchedulesController::class, 'fetchContentForRange']);
 
 
 

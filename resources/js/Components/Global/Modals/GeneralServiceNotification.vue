@@ -3,7 +3,7 @@
 <div v-show="notificationStore.showGeneralServiceNotification">
 
   <dialog id="generalServiceNotificationModal" class="modal">
-    <div v-if="notificationStore.generalServiceNotification" class="modal-box text-black">
+    <div v-if="notificationStore.generalServiceNotification" class="modal-box text-black bg-white dark:bg-gray-800 dark:text-white">
       <h3 class="font-bold text-lg">{{ notificationStore.generalServiceNotification.title }}</h3>
       <p class="py-4">{{ notificationStore.generalServiceNotification.body }}</p>
       <div class="modal-action">

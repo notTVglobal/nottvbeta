@@ -93,13 +93,13 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700 bg-white dark:bg-gray-800 dark:text-red-200"
                              for="description"
                       >
                         Description
                       </label>
                       <TabbableTextarea v-model="form.description"
-                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white text-black bg-white dark:bg-gray-800 dark:text-white"
                                         name="description"
                                         id="description"
                                         rows="10" cols="30"

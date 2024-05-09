@@ -105,7 +105,7 @@
 
                       <!--                      >-->
                       <TabbableTextarea v-model="form.notes"
-                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white"
                       />
                       <div v-if="form.errors.notes" v-text="form.errors.notes"
                            class="text-xs text-red-600 mt-1"></div>

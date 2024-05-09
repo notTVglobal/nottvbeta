@@ -75,8 +75,9 @@ function getUpcomingContentDates(viewingWindowStart) {
         // Add i hours to the start time, each time creating a new Day.js object
         dates.push(start.add(i, 'hour').toDate()) // Convert to Date if necessary; otherwise keep as Day.js object
     }
-
+    console.log(1)
     return dates
+
 }
 
 const getTimeZone = () => {
@@ -84,6 +85,7 @@ const getTimeZone = () => {
     // This function should return the timezone of the user.
     // This could be dynamic based on the user's settings or browser settings.
     // return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log(2)
     return userStore.timezone
 }
 
@@ -101,16 +103,19 @@ const initialState = () => ({
     // nextFourHoursWithHalfHourIntervals: [],
     // viewingMode: 'automatic', // or 'userSelected'
     fiveDaySixHourSchedule: [], // Holds the schedule shows 5 day / 6 hour structured data
+    schedules: [], // this is our new schedules array, storing fetched schedule data
+    isLoading: true, // This flag indicates if data is currently being fetched
+    nextPage: 1, // This keeps track of the next page to fetch for pagination
+    hasMore: true, // This flag indicates if there are more schedules to fetch
     todaysContent: [],
     weeklyContent: [],
     dataFetchLog: [],
-    scheduleIsLoading: false,
     savingToSchedule: false,
     slotIntervalMinutes: 30,
     mediumScreenSlotHours: 4, // 4 hours = 8 slots
     smallScreenSlotHours: 2, // 2 hours = 4 slots
     verySmallScreenSlotHours: 1, // 1 hour = 2 slots
-    timeSlots: null,
+    timeSlots: [],
     timeBanners: [
         {id: 1, name: 'Early Morning', startTime: '04:00', duration: 2},
         {id: 2, name: 'Morning', startTime: '06:00', duration: 6},
@@ -128,11 +133,13 @@ export const useScheduleStore = defineStore('scheduleStore', {
         resetAll() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
+            console.log(3)
         },
         reset() {
             this.viewingWindowStart = dayjs().tz(getTimeZone()).startOf('hour').toDate()
             this.currentMonth = dayjs().tz(getTimeZone()).startOf('month').toDate()
             this.selectedDay = dayjs().tz(getTimeZone()).toDate()
+            console.log(4)
         },
         async setSelectedDay(day) {
             // Ensure that 'day' is a Day.js object, convert if coming as a native Date or string
@@ -150,6 +157,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Use the updated fetch logic
             await this.fetchWeekDataIfNeeded()
+            console.log(5)
         },
         setSelectedDayToToday(day) {
             const now = dayjs()  // Create a Day.js object for the current date and time
@@ -159,6 +167,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Set viewingWindowStart to the start of the current hour using Day.js
             this.viewingWindowStart = now.startOf('hour').toDate()
+            console.log(6)
         },
         async changeDay(days) {
             const currentTimeZone = getTimeZone() // or however you obtain the timezone
@@ -201,6 +210,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             //
             // // Proceed with data fetching if needed
             // await this.checkAndFetchForUpcomingContent();
+            console.log(7)
         },
         async shiftHours(hours) {
             // Shift the viewing window by the specified number of hours
@@ -217,12 +227,15 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Use the updated fetch logic
             await this.fetchWeekDataIfNeeded()
+            console.log(8)
         },
         isElevenPM(date) {
             // Convert the date to a Day.js object if it's not already one
             const time = dayjs(date)
             // Check if the hour is 23 (11 PM)
+            console.log(9)
             return time.hour() === 23
+
         },
         // Actions to change the month
         async subtractMonth() {
@@ -236,6 +249,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } catch (error) {
                 console.error(`Failed to set selected day based on current month ${this.currentMonth}:`, error)
             }
+            console.log(10)
         },
         async addMonth() {
             // Convert currentMonth to a Day.js object if it's not already and add one month
@@ -248,6 +262,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } catch (error) {
                 console.error(`Failed to set selected day based on current month ${this.currentMonth}:`, error)
             }
+            console.log(11)
         },
         async fetchFiveDaySixHourSchedule() {
             console.error('fetchFiveDaySixHourSchedule')
@@ -265,6 +280,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 console.error('Failed to load schedule shows:', error)
                 // Handle the error state as needed, e.g., setting an error state property
             }
+            console.log(12)
         },
         async fetchTodaysContent() {
             try {
@@ -278,8 +294,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } catch (error) {
                 console.error('Failed to fetch today\'s content:', error)
             }
+            console.log(13)
         },
         async preloadWeeklyContent() {
+            console.log('preloading weekly content...')
             // Use the current date to preload content for the current week
             const currentDate = dayjs(this.baseTime) // Creates a Day.js object representing the current date and time
 
@@ -289,10 +307,87 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } catch (error) {
                 console.error('Failed to preload weekly content:', error)
             }
+            console.log(14)
         },
+        // this is our new fetch schedules method.
+        async fetchSchedules(startDate, endDate) {
+            this.isLoading = true
+            this.loading = true
+            console.log('Loading schedule...')
+            console.log(`Loading schedule between: ${startDate} and ${endDate}`) // Log the date being requested
+            try {
+                const userStore = useUserStore()
+                const dayStartDate = dayjs(startDate)
+                const dayEndDate = dayjs(endDate)
+                const fullISOStartDate = dayStartDate.toISOString()
+                const fullISOEndDate = dayEndDate.toISOString()
+
+                const response = await axios.get(`/api/schedules/range?start=${fullISOStartDate}&end=${fullISOEndDate}`)
+
+                const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
+                const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
+                console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
+                console.log('Received response:', response.data) // Log the raw response data
+
+                // Fallback to response timezone if userStore.timezone is not set
+                const timezone = userStore.timezone || response.data.userTimezone
+
+                const newData = convertScheduleToTimezone(response.data, timezone) // Ensure you are accessing the correct data property from the response
+
+                // Merge newData into schedules, avoiding duplicates
+                this.schedules = [...this.schedules, ...newData].filter((value, index, self) =>
+                        index === self.findIndex((t) => (
+                            t.id === value.id && t.startTime === value.startTime
+                        )),
+                )
+                console.log('Updated schedules:', this.schedules) // Log the updated weekly content
+
+                // Optionally update fetch logs or perform additional state updates
+                // this.updateFetchLogs(startDate) // this was designed to just log a week fetching at a time.
+
+            } catch (error) {
+                console.error('Failed to fetch schedules:', error)
+                this.isLoading = false
+                console.log('012')
+            } finally {
+                this.isLoading = false
+                console.log('Week from date loaded!')
+            }
+        },
+
+        async fetchMoreSchedules() {
+            // Prevent fetching if already loading or if there are no more schedules to fetch
+            if (this.isLoading || !this.hasMore) return;
+
+            this.isLoading = true;
+            console.log('Fetching more schedules...');
+            try {
+                const lastSchedule = this.schedules[this.schedules.length - 1];
+                const startDate = lastSchedule ? dayjs(lastSchedule.startTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+                const endDate = dayjs(startDate).add(7, 'day').format('YYYY-MM-DD'); // Fetch the next 7 days
+
+                await this.fetchSchedules(startDate, endDate);
+
+                // Check if new schedules were added
+                const newSchedules = this.schedules.slice(this.schedules.length - 1);
+                // If no new schedules are fetched, set hasMore to false
+                if (newSchedules.length === 0) {
+                    this.hasMore = false;
+                } else {
+                    // Increment the next page number for future fetches
+                    this.nextPage += 1;
+                }
+            } catch (error) {
+                console.error('Failed to fetch more schedules:', error);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
         async loadWeekFromDate(date) {
             let formattedDate = null // Declare formattedDate outside of the try block
-            this.scheduleIsLoading = true
+            this.isLoading = true
+            console.log('Loading week from date...')
             try {
                 const userStore = useUserStore()
                 // Ensure the date is in UTC format for the request
@@ -309,10 +404,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedDate = date.toISOString().split('T')[0];
                 // Log and error handling
                 const formattedDate = dayDate.format('YYYY-MM-DD') // For potential error messages and logging
-                // console.log(`Loading week data for date: ${formattedDate}`) // Log the date being requested
+                console.log(`Loading week data for date: ${formattedDate}`) // Log the date being requested
                 //
                 // const response = await axios.get(`/api/schedule/week/${formattedDate}`);
-                // console.log('Received response:', response.data) // Log the raw response data
+                console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone
@@ -327,14 +422,20 @@ export const useScheduleStore = defineStore('scheduleStore', {
                         )),
                 )
 
+                console.log('Updated weeklyContent:', this.weeklyContent) // Log the updated weekly content
+
                 // Optionally update fetch logs or perform additional state updates
                 this.updateFetchLogs(date)
 
-                this.scheduleIsLoading = false
+                this.isLoading = false
+                console.log('Week from date loaded!')
             } catch (error) {
                 console.error(`Failed to load content for week starting ${formattedDate}:`, error)
-                this.scheduleIsLoading = false
+                this.isLoading = false
+                console.log('002')
             }
+            console.log(15)
+            console.log('End of loadWeekFromDate function')
         },
         updateFetchLogs(date) {
             // Convert date to a Day.js object if it's not already one
@@ -356,6 +457,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // Add a new log entry if it does not exist
                 this.dataFetchLog.push({weekStart, weekEnd, lastFetch: fetchTime})
             }
+            console.log(16)
         },
         needsDataForWeek() {
             // Helper function to format dates to 'YYYY-MM-DD' for easier comparison
@@ -383,7 +485,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Log the final determination
             // console.log(`Week from ${weekStartStr} to ${weekEndStr} has ${weekHasBeenFetched ? '' : 'not '}been fetched.`)
-
+            console.log(17)
             return !weekHasBeenFetched
         },
         calculateExtendedEndForUpcomingContent() {
@@ -394,6 +496,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // Day.js handles date and time addition cleanly, returning a new Day.js object
             const extendedEndTime = baseStartTime.add(6, 'hour')
 
+            console.log(18)
             // Return the extended end time as a Date object, if needed elsewhere as a Date
             return extendedEndTime.toDate()
         },
@@ -418,6 +521,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     break // Assuming you fetch data for the week, so no need to check further dates within the same week
                 }
             }
+            console.log(19)
         },
         async fetchDataAndUpdateLog(dateString, date) {
             try {
@@ -431,6 +535,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } catch (error) {
                 console.error(`Failed to fetch data for date ${dateString}:`, error)
             }
+            console.log(20)
         },
 
         // Updated to use this.currentWeekStart and this.currentWeekEnd directly
@@ -444,18 +549,21 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } else {
                 console.log('Week data already loaded; no need to fetch.')
             }
+            console.log(21)
         },
 
         // Function to simply update baseTime with the given time (expected to be a Day.js object or compatible input)
         updateBaseTime(time) {
             // Ensure the time is a Day.js object when setting baseTime
             this.baseTime = dayjs(time).toDate()  // Convert to Date if necessary; consider keeping it as Day.js object if possible
+            console.log(22)
         },
 
         // Function to set baseTime based on a new time input (expected to be a string, Date, etc.)
         setBaseTime(newTime) {
             // Convert newTime to a Day.js object and then to Date if necessary
             this.baseTime = dayjs(newTime).toDate()  // This handles various input formats and ensures consistency
+            console.log(23)
         },
 
 
@@ -467,7 +575,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         async updateNextFourHours() {
             // Set the loading state to true to indicate that data processing is underway.
             // This can be used to display a loading spinner or disable user interaction temporarily.
-            this.scheduleIsLoading = true
+            this.isLoading = true
 
             // Update the time range for the scheduling grid. This adjusts `currentHalfHour` and `fourHoursLater`
             // based on the current `baseTime`. These values define the range of time for which shows will be displayed.
@@ -484,7 +592,8 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Reset the loading state to false indicates that the data processing is complete.
             // This allows the user interface to be interactive again and shows the updated data in the grid.
-            this.scheduleIsLoading = false
+            this.isLoading = false
+            console.log(24)
         },
 
 
@@ -504,8 +613,13 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // Update the store's currentHalfHour and fourHoursLater ensuring they are Date objects if required
             this.currentHalfHour = currentHalfHour.toDate()
             this.fourHoursLater = fourHoursLater.toDate()
+            console.log(25)
 
             // console.log('Fetching shows between:', currentHalfHour.format('YYYY-MM-DD HH:mm:ss'), 'and', fourHoursLater.format('YYYY-MM-DD HH:mm:ss'))
+        },
+
+        initializeTimeSlots() {
+            this.timeSlots = createTimeSlots()
         },
 
         setTimeSlots() {
@@ -534,21 +648,25 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 slots.push(slotTime.toDate())  // Convert back to JavaScript Date if necessary
             }
             this.timeSlots = slots
+            console.log(26)
             return slots.length
         },
 
         prepareShowsForGrid() {
+
+            if (!this.timeSlots || !Array.isArray(this.timeSlots) || this.timeSlots.length === 0) {
+                console.error('timeSlots is not properly initialized.')
+                console.log(27)
+                // Handle this scenario, e.g., by initializing timeSlots, or skipping the update
+                return
+            }
+
+
             // Step 1: Filter shows within the desired time range
             const shows = this.filterShowsForTimeRange()
 
             // Step 2: Calculate initial grid slots for these shows
             const processedShows = this.calculateGridSlots(shows, this.timeSlots)
-
-            if (!this.timeSlots || !Array.isArray(this.timeSlots) || this.timeSlots.length === 0) {
-                console.error('timeSlots is not properly initialized.')
-                // Handle this scenario, e.g., by initializing timeSlots, or skipping the update
-                return
-            }
 
             // Step 3: Process shows to set nowPlaying and comingUpNext flags
             const showsWithStatusFlags = this.processShows(processedShows)
@@ -564,13 +682,15 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Step 7: Sort and group shows by rows
             this.nextFourHoursOfContent = this.sortShowsByPosition(combinedShows)
+            console.log(28)
         },
 
         filterShowsForTimeRange() {
-            return this.weeklyContent.filter(show => {
+            return this.schedules.filter(show => {
                 // Validate show data integrity
                 if (typeof show.startTime !== 'string' || typeof show.durationMinutes !== 'number') {
                     console.warn('Invalid show data:', show.startTime, show.durationMinutes)
+                    console.log(29)
                     return false // Skip this show if it doesn't meet data expectations
                 }
 
@@ -583,7 +703,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     const hasStarted = showStart.isBefore(this.currentHalfHour) ? 'already started' : 'starts within range'
                     console.log(`Show: ${show.content.name}, ${hasStarted}, Start: ${showStart.format('HH:mm:ss')}, End: ${showEnd.format('HH:mm:ss')}, Duration: ${show.durationMinutes}`)
                 }
-
+                console.log(30)
                 return isInTimeRange
             })
         },
@@ -592,6 +712,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // Validate the timeSlots array to prevent errors
             if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
                 console.error('Invalid or empty timeSlots array')
+                console.log(31)
                 return [] // Exit if no valid time slots to work with
             }
 
@@ -640,7 +761,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 let span = endSlotIndex - slotIndex + 1
 
                 console.log(`Calculated gridStart: ${slotIndex + 1}, gridSpan: ${span}`)
-
+                console.log(32)
                 return {
                     ...show,
                     gridStart: slotIndex + 1, // Convert to 1-based index for grid positioning
@@ -666,7 +787,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     comingUpNextSet = true  // Ensure only one show gets this flag
                 }
             })
-
+            console.log(33)
             return shows
         },
 
@@ -681,6 +802,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     }
                 }
             })
+            console.log(34)
             return {colOccupancy, maxRowUsed}
         },
 
@@ -691,6 +813,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             for (let row = 1; row <= maxRowUsed; row++) {
                 gridItems.push(...this.findAndFillGapsForSingleRow(colOccupancy, row, cols))
             }
+            console.log(35)
             return gridItems
         },
 
@@ -718,6 +841,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     gridItems.push(this.createBlankSpotPlaceholder(gapStart + 1, cols - gapStart, row))
                 }
             }
+            console.log(36)
             return gridItems
         },
 
@@ -727,11 +851,13 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 return [] // Return an empty array if not an array to prevent errors
             }
 
+            console.log(37)
             // Sort shows directly by row and then by start position within each row
             return combinedShows.sort((a, b) => a.gridRow - b.gridRow || a.gridStart - b.gridStart)
         },
 
         createPlaceholder(start, span, row) {
+            console.log(38)
             return {
                 placeholder: true,
                 startTime: 'placeholder',
@@ -744,6 +870,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
 
         createBlankSpotPlaceholder(start, span, row) {
+            console.log(39)
             return {
                 placeholder: true,
                 startTime: 'placeholder',
@@ -759,10 +886,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
     getters: {
         currentTime: (state) => {
+            console.log('getter', 40)
             return dayjs(state.baseTime).format('h:mm A')
         },
         // Prepare banners with grid positions based on current time slots
         preparedTimeBanners: (state) => {
+            console.log('getter', 41)
             const timeZone = getTimeZone() // Ensure this is defined
             let now = dayjs().tz(timeZone)
             let todayStart = now.startOf('day')
@@ -771,6 +900,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // console.log('Current Time Slots:', state.timeSlots.map(slot => dayjs(slot).format('HH:mm')))
 
             return state.timeBanners.flatMap(banner => {
+                console.log('getter', 42)
                 // Create banner times for today and tomorrow to handle overnight spans
                 let bannerTodayStart = todayStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]))
                 let bannerTodayEnd = bannerTodayStart.clone().add(banner.duration, 'hours')
@@ -784,6 +914,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 ]
 
                 return potentialBanners.map(banner => {
+                    console.log('getter', 43)
                     const startSlotIndex = state.timeSlots.findIndex(slot => banner.start.isSameOrBefore(dayjs(slot)) && banner.end.isAfter(dayjs(slot)))
                     let endSlotIndex = state.timeSlots.findIndex(slot => banner.end.isSameOrBefore(dayjs(slot)))
 
@@ -804,12 +935,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
                     // Ensure the banner should be displayed within the current time slots
                     if (gridStart && gridSpan > 0) {
+                        console.log('getter', 44)
                         return {...banner, gridStart, gridSpan}
                     }
+                    console.log('getter', 45)
                     return null
                 })
             }).filter(banner => banner != null) // Filter out banners that don't fit within the current time slots
-              . sort((a, b) => a.gridStart - b.gridStart) // Sort by gridStart, with the lowest number first
+                .sort((a, b) => a.gridStart - b.gridStart) // Sort by gridStart, with the lowest number first
         },
 
 
@@ -843,11 +976,18 @@ export const useScheduleStore = defineStore('scheduleStore', {
         // },
 
         nextFourHoursWithHalfHourIntervals: (state) => {
+            // Check if timeSlots is not null, undefined, or empty before accessing length
+            if (!state.timeSlots || state.timeSlots.length === 0) {
+                console.log('timeSlots is null or has no elements')
+                console.log('getter', 46)
+                // Handle this scenario appropriately, such as returning an empty array or a default value
+                return []
+            }
+
             const userStore = useUserStore() // Access the user store
             const appSettingStore = useAppSettingStore() // Access the settings store
             const userTimezone = userStore.timezone // Get the user's timezone
             const cols = state.timeSlots.length
-
 
             const intervals = []
             const now = dayjs(state.baseTime).tz(userTimezone) // Get the current time in the user's timezone
@@ -865,7 +1005,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 })
                 current = current.add(30, 'minute') // Move to the next 30-minute interval
             }
-
+            console.log('getter', 47)
             return intervals
         },
 
@@ -890,7 +1030,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     return !selected || item.priority < selected.priority ? item : selected
                 }, null)
             })
-
+            console.log('getter', 48)
             // Filter shows that fall within the next 6-hour window and sort them
             return selectedShows
                 .filter(item => {
@@ -917,13 +1057,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 hours.push(hour.toDate()) // Convert back to Date if necessary; otherwise, just use `hour` if you can use Day.js objects directly
                 hour = hour.add(1, 'hour')
             }
-
+            console.log('getter', 49)
             return hours
         },
 
         dateMessage: (state) => {
             const startDay = startOfDay(state.viewingWindowStart)
             const formattedDate = format(startDay, 'EEEE MMMM do, yyyy')
+            console.log('getter', 50)
             if (isToday(startDay)) {
                 return `Today - ${formattedDate}`
             } else if (isYesterday(startDay)) {
@@ -938,6 +1079,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         currentMonthIndex: (state) => {
             // Ensure state.currentMonth is converted to a Day.js object
             const month = dayjs(state.currentMonth)
+            console.log('getter', 51)
             // Day.js months are 0-indexed just like JavaScript Date, returns the month (0-11)
             return month.month()
         },
@@ -945,6 +1087,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         currentMonthName: (state) => {
             // Ensure state.currentMonth is converted to a Day.js object
             const month = dayjs(state.currentMonth)
+            console.log('getter', 52)
             // Returns the full name of the month, e.g., 'January', 'February', etc.
             return month.format('MMMM')
         },
@@ -952,13 +1095,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
         currentYear: (state) => {
             // Ensure state.currentMonth is converted to a Day.js object
             const month = dayjs(state.currentMonth)
+            console.log('getter', 53)
             // Returns the year
             return month.year()
         },
         isToday: (state) => {
             const today = dayjs()  // Gets today's date as a Day.js object
             const viewingStart = dayjs(state.viewingWindowStart)  // Convert to Day.js object if not already
-
+            console.log('getter', 54)
             // Compare if both dates are the same calendar day
             return today.isSame(viewingStart, 'day')
         },
@@ -982,7 +1126,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 days.push(day.toDate()) // Collect days as Date objects; remove toDate() if you can use Day.js objects directly
                 day = day.add(1, 'day')
             }
-
+            console.log('getter', 55)
             return days
         },
 

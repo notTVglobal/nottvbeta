@@ -20,7 +20,7 @@
         <div class="py-3 text-gray-600">
           Please register for an account to join notTV.
         </div>
-        <div class="py-3">
+        <div class="py-3 text-black bg-white dark:bg-gray-800 dark:text-white">
           <form @submit.prevent="submit" ref="registrationForm">
             <div>
               <JetLabel for="name" value="Name"/>
@@ -28,7 +28,7 @@
                   id="name"
                   v-model="form.name"
                   type="text"
-                  class="mt-1 block w-full"
+                  class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                   required
                   autofocus
                   autocomplete="name"
@@ -41,7 +41,7 @@
                   id="email"
                   v-model="form.email"
                   type="email"
-                  class="mt-1 block w-full"
+                  class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                   required
               />
             </div>
@@ -52,7 +52,7 @@
                   id="password"
                   v-model="form.password"
                   type="password"
-                  class="mt-1 block w-full"
+                  class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                   required
                   autocomplete="new-password"
               />
@@ -64,19 +64,19 @@
                   id="password_confirmation"
                   v-model="form.password_confirmation"
                   type="password"
-                  class="mt-1 block w-full"
+                  class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                   required
                   autocomplete="new-password"
               />
             </div>
 
             <div class="mt-4">
-              <JetLabel for="invite_code" value="Invite Code" class="text-green-800 font-semibold"/>
+              <JetLabel for="invite_code" value="Invite Code" class="text-green-800 font-semibold text-black bg-white dark:bg-gray-800 dark:text-white"/>
               <JetInput
                   id="invite_code"
                   v-model="form.invite_code"
                   type="invite_code"
-                  class="mt-1 block w-full text-black text-xl h-14 px-4 border-2 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                  class="mt-1 block w-full text-black text-xl h-14 px-4 border-2 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-black bg-white dark:bg-gray-800 dark:text-white"
                   required
               />
             </div>
