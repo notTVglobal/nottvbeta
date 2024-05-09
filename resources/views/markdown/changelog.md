@@ -3,6 +3,10 @@
 Last Update: May 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.5
+May 9, 2024
+*   Fix SchedulesService to return the date in the correct timezone (UTC).
+
 ## v0.9.0.4
 May 9, 2024
 * Fixes to the Schedule, it may need some more work. Especially for overlaps.

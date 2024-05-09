@@ -204,31 +204,20 @@ class SchedulesController extends Controller {
     ]);
   }
 
-//  public function validateDate($formattedDateTimeUtc): ?JsonResponse {
-//    $validator = Validator::make(['formattedDateTimeUtc' => $formattedDateTimeUtc], [
-//        'formattedDateTimeUtc' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
-//    ]);
-//
-//    if ($validator->fails()) {
-//      return response()->json(['errors' => $validator->errors()], 422);
-//    }
-//
-//    return null; // return null if no errors
-//  }
 
   public function loadWeekFromDate($formattedDateTimeUtc): JsonResponse {
 
-    // Validate the date format directly
-    $validationError = $this->validateDate($formattedDateTimeUtc);
-    if ($validationError) {
-      // If validation fails, return an error response
-      return $validationError;
-    }
+//    // Validate the date format directly
+//    $validationError = $this->validateDate($formattedDateTimeUtc);
+//    if ($validationError) {
+//      // If validation fails, return an error response
+//      return $validationError;
+//    }
 
     try {
       // If validation is successful, parse the date using Carbon
       $userRequestedDate = Carbon::parse($formattedDateTimeUtc);
-      Log::info("Parsed user requested date: $userRequestedDate");
+//      Log::debug("Parsed user requested date: $userRequestedDate");
       // Proceed with your business logic, such as loading data for the week based on this date
     } catch (\Exception $e) {
       // Handle any exceptions related to date parsing
@@ -263,15 +252,15 @@ class SchedulesController extends Controller {
     // 1. Fetch schedules
     $schedules = $this->fetchSchedulesFromUserRequestedDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
 //    $schedules = $this->fetchSchedulesFromBroadcastDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
-    Log::info("Fetched schedules:", $schedules);
+    Log::debug("Fetched schedules:", $schedules);
 
     // 2. Transform schedules
     $transformedSchedules = $this->transformFetchedSchedules($schedules);
-    Log::info("Transformed schedules:", $transformedSchedules);
+    Log::debug("Transformed schedules:", $transformedSchedules);
 
    // 3. Sort schedules
     $sortedSchedules = $this->sortSchedules($transformedSchedules);
-    Log::info("Sorted schedules:", $sortedSchedules);
+    Log::debug("Sorted schedules:", $sortedSchedules);
 
     // Transform and sort schedules
 //    $transformedSchedules = $this->transformAndSortSchedules($schedules);
@@ -279,7 +268,7 @@ class SchedulesController extends Controller {
 
     // 4. Resolve schedule conflicts
     $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
-    Log::info("Final schedules after resolving conflicts:", $finalSchedules);
+    Log::debug("Final schedules after resolving conflicts:", $finalSchedules);
 
 
     // TODO: If we want to work on this later we can... but it will take some work to be efficient
@@ -293,7 +282,7 @@ class SchedulesController extends Controller {
         'data'         => $finalSchedules,
         'userTimezone' => auth()->user()->timezone ?? null
     ];
-    Log::info("Returning response:", $response);
+    Log::debug("Returning response:", $response);
 
     return response()->json($response);
   }
@@ -669,8 +658,10 @@ class SchedulesController extends Controller {
     return now()->lessThan($expiresAt);
   }
 
-  public function invalidateCaches(): JsonResponse {
+  public function adminResetCache(): JsonResponse {
+    Log::debug('invalidating caches...');
     $this->scheduleService->invalidateCaches();
+    Log::debug('Caches invalidated!');
 
     // Return a response indicating success
     return response()->json(['message' => 'All caches invalidated successfully.']);
@@ -747,10 +738,10 @@ class SchedulesController extends Controller {
 
   private function fetchSchedules(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
 
-    Log::info('Fetching schedules for date range', [
-        'start' => $userRequestedStartOfWeekUTC,
-        'end'   => $userRequestedEndOfWeekUTC
-    ]);
+//    Log::debug('Fetching schedules for date range', [
+//        'start' => $userRequestedStartOfWeekUTC,
+//        'end'   => $userRequestedEndOfWeekUTC
+//    ]);
 
     // Eagerly load scheduleRecurrenceDetails for all Schedule instances
     $schedules = Schedule::with('scheduleRecurrenceDetails')
@@ -1006,6 +997,7 @@ class SchedulesController extends Controller {
 //      $timezone = $schedule->timezone ?? 'UTC'; // Default to 'UTC' if not specified
 //
 //      Log::info('Transforming schedule', [
+//          'schedule_id' => $schedule->id,
 //          'schedule_id' => $schedule->id,
 //          'broadcast_dates' => $broadcastDates,
 //          'timezone' => $timezone

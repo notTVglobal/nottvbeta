@@ -10,7 +10,9 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -101,13 +103,13 @@ class ScheduleService {
   }
 
   // Cache paths
-  private function getCachePath($type): string
+  private function getCacheKey($type, $start = null, $end = null): string
   {
     return match ($type) {
-      'scheduleToday' => 'json/scheduleToday.json',
-      'scheduleRange' => 'json/scheduleRange_',
-      'scheduleWeek' => 'json/scheduleWeek.json',
-      'scheduleFiveDaySixHour' => 'json/scheduleFiveDaySixHour.json',
+      'scheduleToday' => 'scheduleToday',
+      'scheduleRange' => 'scheduleRange_' . $start . '_' . $end,
+      'scheduleWeek' => 'scheduleWeek',
+      'scheduleFiveDaySixHour' => 'scheduleFiveDaySixHour',
       default => '',
     };
   }
@@ -116,26 +118,24 @@ class ScheduleService {
   /**
    * Check if cache is valid.
    *
-   * @param string $cachePath
+   * @param string $cacheKey
    * @return bool
    */
-  private function isCacheValid(string $cachePath): bool {
-    if (Storage::disk('local')->exists($cachePath)) {
-      $content = json_decode(Storage::disk('local')->get($cachePath), true);
-      $cacheTime = Carbon::parse($content['timestamp']);
-      return Carbon::now()->diffInMinutes($cacheTime) < $this->cacheExpiryMinutes;
-    }
-
-    return false;
+  private function isCacheValid(string $cacheKey): bool
+  {
+    return Cache::has($cacheKey);
   }
 
   /**
    * Cache the data.
    *
-   * @param string $cachePath
+   * @param string $cacheKey
    * @param array $data
+   * @param Carbon $start
+   * @param Carbon $end
    */
-  private function cacheData(string $cachePath, array $data, Carbon $start, Carbon $end): void {
+  private function cacheData(string $cacheKey, array $data, Carbon $start, Carbon $end): void
+  {
     $dataToCache = [
         'timestamp' => Carbon::now()->toDateTimeString(),
         'start_time' => $start->toDateTimeString(),
@@ -143,7 +143,7 @@ class ScheduleService {
         'data' => $data,
     ];
 
-    Storage::disk('local')->put($cachePath, json_encode($dataToCache));
+    Cache::put($cacheKey, $dataToCache, $this->cacheExpiryMinutes * 60); // Cache for expiry time in seconds
   }
 
   private function isRequestedRangeWithinCache(Carbon $start, Carbon $end, array $cachedData): bool {
@@ -158,31 +158,27 @@ class ScheduleService {
    */
   public function invalidateCaches(): void
   {
-    $directory = 'json'; // The directory where your caches are stored
-    $files = Storage::disk('local')->files($directory);
+    $keys = ['scheduleToday', 'scheduleWeek', 'scheduleFiveDaySixHour'];
 
-    foreach ($files as $file) {
-      // Check if file matches any of the cache patterns
-      if (Str::startsWith($file, "{$directory}/scheduleRange_") ||
-          Str::startsWith($file, "{$directory}/scheduleWeek") ||
-          Str::startsWith($file, "{$directory}/scheduleFiveDaySixHour") ||
-          Str::startsWith($file, "{$directory}/scheduleToday")) {
-        // Delete the file
-        Storage::disk('local')->delete($file);
-      }
+    // Invalidate keys with patterns
+    $patternKeys = Redis::connection()->keys('scheduleRange_*');
+    $keys = array_merge($keys, $patternKeys);
+
+    foreach ($keys as $key) {
+      Cache::forget($key);
     }
   }
 
-  private function purgeOldCacheFiles(): void {
-    $files = Storage::disk('local')->files('json');
 
-    foreach ($files as $file) {
-      if (Str::startsWith($file, 'json/schedule')) {
-        $content = json_decode(Storage::disk('local')->get($file), true);
+  public function purgeOldCacheFiles(int $hours = 1): void
+  {
+    $patternKeys = Redis::connection()->keys('scheduleRange_*');
+    foreach ($patternKeys as $key) {
+      $content = Cache::get($key);
+      if ($content) {
         $cacheTime = Carbon::parse($content['timestamp']);
-
-        if (Carbon::now()->diffInHours($cacheTime) > 1) {
-          Storage::disk('local')->delete($file);
+        if (Carbon::now()->diffInHours($cacheTime) > $hours) {
+          Cache::forget($key);
         }
       }
     }
@@ -229,7 +225,7 @@ class ScheduleService {
     // NOTE: Start dates and times in the schedule tables other than BroadcastDates are stored in UTC as part of our standardization.
     // NOTE: The reason Schedules are saved in a specific timezone is to prevent daylight savings changes causing issues.
 
-//    Log::info('Fetching schedules for date range', [
+//    Log::debug('Fetching schedules for date range', [
 //        'start' => $startDate,
 //        'end'   => $endDate
 //    ]);
@@ -242,14 +238,13 @@ class ScheduleService {
     }
 
     // Cache path based on the requested date range
-    $cachePath = $this->getCachePath('scheduleRange') . $start->format('Ymd_His') . "_" . $end->format('Ymd_His') . ".json";
+    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
 
-    if ($this->isCacheValid($cachePath)) {
-      $content = Storage::disk('local')->get($cachePath);
-      $cache = json_decode($content, true);
-
-      if ($this->isRequestedRangeWithinCache($start, $end, $cache)) {
-        return $cache['data'];
+    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
+    if ($this->isCacheValid($cacheKey)) {
+      $content = Cache::get($cacheKey);
+      if ($content && $this->isRequestedRangeWithinCache($start, $end, $content)) {
+        return $content['data'];
       }
     }
 
@@ -272,17 +267,17 @@ class ScheduleService {
 
     // 2. Transform schedules
     $transformedSchedules = $this->transformFetchedSchedules($schedules);
-//    Log::info("Transformed schedules:", $transformedSchedules);
+//    Log::debug("Transformed schedules:", $transformedSchedules);
 
     // 3. Sort schedules
     $sortedSchedules = $this->sortSchedules($transformedSchedules);
-//    Log::info("Sorted schedules:", $sortedSchedules);
+//    Log::debug("Sorted schedules:", $sortedSchedules);
 
     // 4. Resolve schedule conflicts
     $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
 
     // Cache the final schedules with expanded start and end times
-    $this->cacheData($cachePath, $finalSchedules, $expandedStart, $expandedEnd);
+    $this->cacheData($cacheKey, $finalSchedules, $expandedStart, $expandedEnd);
 
     return $finalSchedules;
   }
@@ -300,7 +295,7 @@ class ScheduleService {
       $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
       $timezone = $schedule->timezone ?? 'UTC';
 
-//      Log::info('Transforming schedule', [
+//      Log::debug('Transforming schedule', [
 //          'schedule_id'     => $schedule->id,
 //          'broadcast_dates' => $broadcastDates,
 //          'timezone'        => $timezone
@@ -308,10 +303,23 @@ class ScheduleService {
 
       return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
         try {
-          $startTime = new DateTime($date, new DateTimeZone($timezone));
-          $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
+//          $startTime = new DateTime($date, new DateTimeZone($timezone));
+//          $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
 
-//          Log::info('Mapped broadcast date', [
+//          Log::debug('Mapped broadcast date before timecode conversion', [
+//              'schedule_id' => $schedule->id,
+//              'date'        => $date,
+//              'duration'    => $schedule->duration_minutes
+//          ]);
+
+          // Initialize start time and end time using the provided date
+          $startTime = new DateTime($date);
+          $endTime = (clone $startTime)->modify("+{$schedule->duration_minutes} minutes");
+
+          $startTime->setTimezone(new DateTimeZone('UTC'));
+          $endTime->setTimezone(new DateTimeZone('UTC'));
+
+//          Log::debug('Mapped broadcast date after timecode conversion', [
 //              'schedule_id' => $schedule->id,
 //              'start_time'  => $startTime->format('c'),
 //              'end_time'    => $endTime->format('c'),
@@ -322,8 +330,8 @@ class ScheduleService {
               'id'              => $schedule->content_id,
               'createdAt'       => $schedule->created_at,
               'type'            => $schedule->type,
-              'startTime'       => $startTime->setTimezone(new DateTimeZone('UTC'))->format('c'),
-              'endTime'         => $endTime->setTimezone(new DateTimeZone('UTC'))->format('c'),
+              'startTime'      => $startTime->format('c'),
+              'endTime'        => $endTime->format('c'),
               'priority'        => $schedule->priority,
               'durationMinutes' => $schedule->duration_minutes,
               'timezone'        => $timezone,

@@ -55,7 +55,7 @@ function convertScheduleToTimezone(scheduleData) {
         const startTimeInUserTz = item.startTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.startTime, 'YYYY-MM-DD HH:mm:ss') : null
         const endTimeInUserTz = item.endTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.endTime, 'YYYY-MM-DD HH:mm:ss') : null
         // Add debug logging to help trace conversion issues or confirm correct conversions
-        // console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`)
+        console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`)
 
         return {
             ...item,

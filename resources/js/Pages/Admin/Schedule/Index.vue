@@ -156,7 +156,7 @@ const setView = (view) => {
 
 const purgeAllCaches = () => {
   scheduleStore.resetAll()
-  Inertia.post('/invalidate-caches/')
+  Inertia.post('/admin/schedule/admin-reset-cache')
   Inertia.reload()
 }
 
