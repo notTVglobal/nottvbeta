@@ -18,7 +18,7 @@ class UpdateCreatorSettings extends Command {
    *
    * @var string
    */
-  protected $description = 'Updates settings for all creators to include profile_is_public = false';
+  protected $description = 'Updates settings for all creators to include profile_is_public = false ';
 
   /**
    * Execute the console command.
