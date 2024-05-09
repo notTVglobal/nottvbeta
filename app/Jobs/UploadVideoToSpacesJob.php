@@ -85,7 +85,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
           $this->video->file_name
       );
 
-        Log::info('Video uploaded to Spaces. ID: '.$this->video->id.'. ULID: '. $this->video->ulid .'. Filename: '.$this->video->file_name . 'Cloud folder: ' . $fullPath);
+        Log::info('Video uploaded to Spaces. ID: '.$this->video->id.'. ULID: '. $this->video->ulid .'. Filename: '.$this->video->file_name . ' Cloud folder: ' . $fullPath);
         // delete the temporary file
         // not working yet.
 //        Storage::delete(storage_path('app/temp-videos/').$this->video->file_name);

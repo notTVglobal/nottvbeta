@@ -10,7 +10,7 @@
       <div class="form-control mt-4">
         <label class="label cursor-pointer flex justify-start items-center space-x-3 mb-2">
           <span class="label-text">Use Custom First Play Video</span>
-          <input type="checkbox" ref="useCustomVideoCheckbox" class="toggle toggle-primary"
+          <input type="checkbox" ref="useCustomVideoCheckbox" class="toggle toggle-primary bg-white dark:bg-gray-800 dark:text-white"
                  v-model="adminStore.firstPlaySettings.useCustomVideo" @click="blurCheckbox"/>
         </label>
         <!-- Display error for useCustomVideo if exists -->
@@ -29,10 +29,10 @@
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               First Play Video Source
             </label>
-            <input v-model="adminStore.firstPlaySettings.customVideoSource" class="input input-bordered w-full"
+            <input v-model="adminStore.firstPlaySettings.customVideoSource" class="input input-bordered w-full bg-white dark:bg-gray-800 dark:text-white"
                    id="first_play_video_source">
             <!-- Display error for videoSource if exists -->
-            <div v-if="adminStore.validationErrors['customVideoSource']" class="text-xs text-red-600 mt-1">
+            <div v-if="adminStore.validationErrors['customVideoSource']" class="text-xs text-red-600 mt-1 bg-white dark:bg-gray-800 dark:text-white">
               {{ adminStore.validationErrors['customVideoSource'][0] }}
             </div>
             <span class="text-xs">e.g., https://mist.nottv.io/hls/test/index.m3u8</span>
@@ -44,7 +44,7 @@
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               First Play Video Source Type
             </label>
-            <input v-model="adminStore.firstPlaySettings.customVideoSourceType" class="input input-bordered w-full"
+            <input v-model="adminStore.firstPlaySettings.customVideoSourceType" class="input input-bordered w-full bg-white dark:bg-gray-800 dark:text-white"
                    id="first_play_video_source_type">
             <!-- Display error for videoSourceType if exists -->
             <div v-if="adminStore.validationErrors['customVideoSourceType']" class="text-xs text-red-600 mt-1">
@@ -59,7 +59,7 @@
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               First Play Video Name
             </label>
-            <input v-model="adminStore.firstPlaySettings.customVideoName" class="input input-bordered w-full"
+            <input v-model="adminStore.firstPlaySettings.customVideoName" class="input input-bordered w-full bg-white dark:bg-gray-800 dark:text-white"
                    id="first_play_video_name">
             <!-- Display error for videoName if exists -->
             <div v-if="adminStore.validationErrors['customVideoName']" class="text-xs text-red-600 mt-1">
@@ -123,10 +123,10 @@
         <div class="channel-selector">
           <label for="channelId" class="label block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">Select
             Channel</label>
-          <select v-model="adminStore.firstPlaySettings.channelId" class="select select-bordered w-full"
+          <select v-model="adminStore.firstPlaySettings.channelId" class="select select-bordered w-full bg-white dark:bg-gray-800 dark:text-white"
                   id="channel_id">
             <option disabled value="">Select a channel</option>
-            <option v-for="channel in channelStore.activeChannels" :key="channel.id" :value="channel.id">{{
+            <option v-for="channel in channelStore.activeChannels" :key="channel.id" :value="channel.id" class=" bg-white dark:bg-gray-800 dark:text-white">{{
                 channel.name
               }}
             </option>

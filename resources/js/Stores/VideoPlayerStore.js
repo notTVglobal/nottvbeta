@@ -612,6 +612,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 const audioStore = useAudioStore()
                 const userStore = useUserStore()
 
+                // Ensure videoSettings is initialized
+                if (!userStore.videoSettings) {
+                    userStore.videoSettings = {}
+                }
+
                 // First check if the source details are valid
                 const sourceDetails = this.getSourceDetails(source)
                 if (!sourceDetails) {
@@ -642,6 +647,12 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                             videoJs.play().catch(error => {
                                 useNotificationStore().setGeneralServiceNotification('Error', 'Code: 123. Playback initiation error: ' + error)
                                 console.error('Code 123. Playback initiation error: ', error)
+
+                                // Ensure videoSettings is initialized
+                                if (!userStore.videoSettings) {
+                                    userStore.videoSettings = {}
+                                }
+
                                 // if an
                                 if (!userStore.isSubscriber || !userStore.isVip) {
                                     userStore.videoSettings.firstPlay = true

@@ -19,11 +19,11 @@ class ScheduleSeeder extends Seeder
 //    Schedule::factory()->count(144)->create();
 
     // Create a model instance with a start time of March 10, 2023, at 10:00 AM
-//    Schedule::factory()->count(144)->withCustomStartDay(2023, 3, 2, 10)->create();
+//    Schedule::factory()->count(144)->withCustomStartDay(2023, 5, 7, 10)->create();
 
     Schedule::factory()
         ->count(144)
-        ->withStartDate(2024, 4, 8)
+        ->withStartDate(2024, 5, 7)
         ->create();
 
   }

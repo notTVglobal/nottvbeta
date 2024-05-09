@@ -32,14 +32,14 @@
         <!--                </div>-->
       </div>
       <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 px-6 w-full">
-        <label class="block mb-2 uppercase font-bold text-xs text-light text-neutral"
+        <label class="block mb-2 uppercase font-bold text-xs text-light text-neutral dark:text-white"
                for="show"
         >
           Select Show To Go Live On
         </label>
 
         <select
-            class="select select-info select-lg w-full p-2 block my-2 uppercase font-bold text-lg"
+            class="select select-info select-lg w-full p-2 block my-2 uppercase font-bold text-lg bg-white dark:bg-gray-800 dark:text-white"
             v-model="goLiveStore.selectedShowId"
             @change="reloadPlayer"
         >

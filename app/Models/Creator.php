@@ -15,11 +15,11 @@ class Creator extends Model {
    */
   protected $fillable = [
       'user_id',
-      'profile_is_public'
+      'settings'
   ];
 
   protected $casts = [
-      'profile_is_public' => 'boolean',
+      'settings' => 'json',
   ];
 
   public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
@@ -38,5 +38,18 @@ class Creator extends Model {
 
   public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(CreatorStatus::class, 'status_id');
+  }
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    // Automatically set default settings when a new creator is created
+    static::creating(function ($creator) {
+      $defaultSettings = [
+          'profile_is_public' => false
+      ];
+      $creator->settings = array_merge($defaultSettings, $creator->settings ?? []);
+    });
   }
 }

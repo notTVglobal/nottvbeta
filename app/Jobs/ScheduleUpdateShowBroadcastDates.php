@@ -265,13 +265,13 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
               'team_id'        => $teamId
           ]
       );
-//      Log::info('Schedule index updated with next broadcast date', [
-//          'date'         => $closestBroadcastDate->toDateTimeString(),
-//          'scheduleId'   => $schedule->id,
-//          'team_id'      => $teamId,
-//          'content_type' => $contentType,
-//          'content_id'   => $contentId
-//      ]);
+      Log::info('Schedule index updated with next broadcast date', [
+          'date'         => $closestBroadcastDate->toDateTimeString(),
+          'scheduleId'   => $schedule->id,
+          'team_id'      => $teamId,
+          'content_type' => $contentType,
+          'content_id'   => $contentId
+      ]);
     } catch (Exception $e) {
       Log::error('Failed to update schedule index', [
           'scheduleId' => $schedule->id,

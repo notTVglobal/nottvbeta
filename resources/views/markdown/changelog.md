@@ -1,7 +1,18 @@
 # not.tv Changelog
 
-Last Update: May 6, 2024\
+Last Update: May 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.4
+May 9, 2024
+* Fixes to the Schedule, it may need some more work. Especially for overlaps.
+* Fixed most of the Dark CSS styling.
+* Added Zoom Link to Team's Next Broadcast, this will display 30 minutes before a show goes live and stay visible for 60 minutes after the show goes live.
+  * Need to build the email notifications to give people a reminder.
+
+## v0.9.0.3
+May 8, 2024
+* Fix Error Code 789, video playback of uploaded videos.
 
 ## v0.9.0.2
 May 6, 2024

@@ -74,34 +74,34 @@
                 inviteCodes.creatorInviteCodes.length === 1 ? `Invite code: ${inviteCodes.creatorInviteCodes[0].code}` : 'No invites available'
               }}</p>
           </div>
-          <label class="input input-bordered flex items-center gap-2">
+          <label class="input input-bordered flex items-center gap-2 bg-white dark:bg-gray-800 dark:text-white">
             Name
             <input type="text"
                    name="name"
                    id="name"
                    v-model="form.name"
-                   class="grow border-none"
+                   class="grow border-none bg-white dark:bg-gray-800 dark:text-white"
                    placeholder="Daisy"
                    required/>
           </label>
           <div v-if="form.errors.name" v-text="form.errors.name"
                class="text-xs text-red-600 mt-1"></div>
-          <label class="input input-bordered flex items-center gap-2">
+          <label class="input input-bordered flex items-center gap-2 bg-white dark:bg-gray-800 dark:text-white">
             Email
             <input type="email"
                    name="email"
                    id="email"
                    v-model="form.email"
-                   class="grow border-none"
+                   class="grow border-none bg-white dark:bg-gray-800 dark:text-white"
                    placeholder="daisy@site.com"
                    required/>
           </label>
           <div v-if="form.errors.email" v-text="form.errors.email"
                class="text-xs text-red-600 mt-1"></div>
-          <label class="flex items-center gap-2">
+          <label class="flex items-center gap-2 bg-white dark:bg-gray-800 dark:text-white">
             <textarea id="message"
                       v-model="form.message"
-                      class="textarea textarea-bordered grow"
+                      class="textarea textarea-bordered grow bg-white dark:bg-gray-800 dark:text-white"
                       placeholder="Message..."
                       required></textarea>
           </label>

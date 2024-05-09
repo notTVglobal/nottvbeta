@@ -19,7 +19,7 @@ class ScheduleUpdate extends Command
      *
      * @var string
      */
-    protected $description = 'Manually run the ScheduleUpdateAllBroadcastDates job';
+    protected $description = 'Run the ScheduleUpdateAllBroadcastDates job';
 
     /**
      * Execute the console command.

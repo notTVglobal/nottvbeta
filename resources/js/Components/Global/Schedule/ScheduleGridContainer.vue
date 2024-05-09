@@ -17,7 +17,7 @@
           {{ interval.formatted }}
         </div>
       </div>
-      <div v-if="scheduleIsLoading && nextFourHoursOfContent.length === 0"
+      <div v-if="isLoading && nextFourHoursOfContent.length === 0"
            class="w-full flex justify-center text-center items-center">
         <span class="loading loading-ball loading-xl text-info"></span>
       </div>
@@ -136,7 +136,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
@@ -188,7 +188,23 @@ let initialLoadHandled = false
 
 const isVisible = ref(false)
 const displayedShowsCount = ref(6)
-const isLoading = ref(false)
+// Computed property to ensure reactivity
+const isLoading = computed(() => scheduleStore.isLoading)
+const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
+const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
+
+// console.log('isLoading on mount:', isLoading.value);
+// scheduleStore.preloadWeeklyContent();
+
+// Use async/await inside onMounted
+onBeforeMount(async () => {
+
+});
+
+// Watch the computed property to see changes in real-time
+watch(isLoading, (newValue) => {
+  console.log('isLoading changed:', newValue);
+});
 
 // Function to handle element visibility
 function onElementVisibility(state) {
@@ -196,16 +212,19 @@ function onElementVisibility(state) {
 }
 
 // Function to load more shows
-function loadMoreShows() {
+// Function to load more shows
+const loadMoreShows = async () => {
   if (isVisible.value && !isLoading.value) {
     isLoading.value = true;
     console.log("Loading more shows");
-    setTimeout(() => {  // Simulating asynchronous data fetching
-      displayedShowsCount.value += 6;
-      isLoading.value = false;
-    }, 500);
+
+    // Fetch more schedules
+    await scheduleStore.fetchMoreSchedules();
+
+    displayedShowsCount.value += 6;
+    isLoading.value = false;
   }
-}
+};
 
 // Throttle the loadMoreShows function
 const throttledLoadMoreShows = throttle(loadMoreShows, 200);
@@ -226,7 +245,7 @@ const allPlaceholders = computed(() => {
 
 const upcomingShows = computed(() => {
   const now = dayjs()
-  return scheduleStore.weeklyContent.filter(show =>
+  return scheduleStore.schedules.filter(show =>
       dayjs(show.startTime).isAfter(now) && !show.placeholder,
   ).sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)))
 })
@@ -261,16 +280,16 @@ const nowPlayingShow = computed(() => {
 })
 
 const comingUpNextShow = computed(() => {
-  return scheduleStore.nextFourHoursOfContent.find(show => show.comingUpNext)
+  return scheduleStore.nextFourHoursOfContent.find(  show => show.comingUpNext)
 })
 
-watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
-  if (newTimeSlots && newTimeSlots.length > 0 && !initialLoadHandled) {
-    // console.log('Time slots are ready, updating next four hours.')
-    scheduleStore.updateNextFourHours()
-    initialLoadHandled = true
-  }
-}, {immediate: true})
+// watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
+//   if (newTimeSlots && newTimeSlots.length > 0 && !initialLoadHandled) {
+//     // console.log('Time slots are ready, updating next four hours.')
+//     scheduleStore.updateNextFourHours()
+//     initialLoadHandled = true
+//   }
+// }, {immediate: true})
 
 watch(
     () => scheduleStore.baseTime,
@@ -282,6 +301,18 @@ watch(
     },
     {immediate: true},
 )
+
+// Watcher for schedules to ensure initial data load
+watch(
+    () => scheduleStore.schedules,
+    (newSchedules) => {
+      if (newSchedules && newSchedules.length > 0 && !initialLoadHandled) {
+        scheduleStore.updateNextFourHours();
+        initialLoadHandled = true;
+      }
+    },
+    { immediate: true },
+);
 //
 
 // Watch for changes in screen size indicators
@@ -290,10 +321,10 @@ watch(
     ([newVerySmall, newSmall], [oldVerySmall, oldSmall]) => {
       if (newVerySmall !== oldVerySmall || newSmall !== oldSmall) {
         // console.log(`Screen size change detected: VerySmallScreen: ${newVerySmall}, SmallScreen: ${newSmall}`)
-        scheduleStore.updateNextFourHours()
+        scheduleStore.fetchSchedules()
       }
     },
-    {immediate: true},  // Optionally run on initial setup
+    {immediate: false},  // Optionally run on initial setup
 )
 
 // Method to format time with conditional AM/PM display
@@ -336,7 +367,6 @@ function statusGridItemStyle(item) {
   }
 }
 
-
 // Computed property to determine the number of columns
 const gridColumns = computed(() => {
   let numColumns
@@ -352,11 +382,6 @@ const gridColumns = computed(() => {
 
   return `repeat(${numColumns}, minmax(0, 1fr))` // Returns the CSS grid-template-columns value
 })
-
-// Computed property to ensure reactivity
-const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
-const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
-const scheduleIsLoading = computed(() => scheduleStore.scheduleIsLoading)
 
 const gridPlacement = (gridStart, gridSpan) => {
   return {

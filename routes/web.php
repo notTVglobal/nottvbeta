@@ -812,6 +812,12 @@ Route::middleware([
       'can:viewAny, App\Models\Creator'
   ])->group(function () {
 
+    Route::get('/user/creator/get-settings/{user}', [CreatorsController::class, 'fetchCreatorSettings'])
+      ->name('user.creator.settings');
+
+    Route::patch('/user/creator/update-settings/{user}', [CreatorsController::class, 'updateCreatorSettings'])
+        ->name('user.creator.settings.update');
+
 
     // Teams - Part 2 (part 1 is outside the Creator Resources above)
     ///////////
@@ -1195,6 +1201,7 @@ Route::get('/admin/external-source/search', [ChannelExternalSourceController::cl
 ///////////
 ///
 
+
 Route::get('/api/schedule', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
 Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSchedule']);
 Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
@@ -1255,6 +1262,10 @@ Route::get('/live-streaming-guide', function () {
 
 Route::post('/api/schedule/week', [SchedulesController::class, 'preloadWeeklyContent']);
 Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::class, 'loadWeekFromDate']);
+// New Routes to replace the others...
+Route::get('/api/schedules/today', [SchedulesController::class, 'fetchTodaysContent']);
+Route::get('/api/schedules/five-day', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
+Route::get('/api/schedules/range', [SchedulesController::class, 'fetchContentForRange']);
 
 
 

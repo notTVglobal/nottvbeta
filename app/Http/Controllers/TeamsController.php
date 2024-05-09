@@ -6,6 +6,7 @@ use App\Events\NewNotificationEvent;
 use App\Http\Resources\ShowResource;
 use App\Http\Resources\TeamResource;
 use App\Models\Notification;
+use App\Models\SchedulesIndex;
 use App\Models\ShowCategory;
 use App\Models\ShowCategorySub;
 use App\Models\Team;
@@ -16,6 +17,7 @@ use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Show;
 use App\Http\Resources\ImageResource;
+use App\Rules\ZoomUrl;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -868,18 +870,56 @@ class TeamsController extends Controller {
 
   public function savePublicMessage(HttpRequest $request, Team $team) {
     // Validate the input
-    $validated = $request->validate([
-        'public_message' => 'nullable|string|max:440'  // Validate against the requirements
+    $validatedData = $request->validate([
+        'public_message'         => 'nullable|string|max:440',  // Validate against the requirements
+        'next_broadcast_details' => 'nullable|json',    // Validate that it is a valid JSON object
+        'schedule_index_id'      => 'required_with:next_broadcast_details|exists:schedules_indexes,id', // Validate that the schedule_index_id exists    ]);
     ]);
 
-    // Save the public message to the team
-    $team->public_message = $validated['public_message'];
-    $team->save();
+    // Decode JSON from the request
+    $nextBroadcastDetails = json_decode($request->input('next_broadcast_details'), true) ?: [];
 
-    // Return a response back to the Vue component
+    // Validate the 'zoomLink' inside the JSON if it's provided
+    if (array_key_exists('zoomLink', $nextBroadcastDetails)) {
+      $validationResults = Validator::make($nextBroadcastDetails, [
+          'zoomLink' => ['nullable', 'url', new ZoomUrl()] // Custom validation for Zoom URL
+      ]);
+
+      // Check if the nested validation passes
+      if ($validationResults->fails()) {
+        return response()->json(['errors' => $validationResults->errors()], 422);
+      }
+
+      if (isset($validatedData['schedule_index_id'])) {
+        // Retrieve the specific scheduleIndex using the provided schedule_index_id
+        $scheduleIndex = SchedulesIndex::find($validatedData['schedule_index_id']);
+
+        if ($scheduleIndex) {
+          // Retrieve current details and merge with new details
+          $currentDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : [];
+
+          // Update the 'zoomLink' explicitly
+          $currentDetails['zoomLink'] = $nextBroadcastDetails['zoomLink'];
+
+          // Save the updated JSON details
+          $scheduleIndex->next_broadcast_details = json_encode($currentDetails);
+          $scheduleIndex->save();
+        }
+      }
+    }
+
+
+    if (!empty($validatedData['public_message'])) {
+      // Sanitize the public message
+      $sanitizedMessage = Purifier::clean($validatedData['public_message']);
+      $team->public_message = $sanitizedMessage;
+      $team->save();
+    }
+
+    // Return a successful response back to the client
     return response()->json([
-        'message'        => 'Public message updated successfully.',
-        'public_message' => $team->public_message  // Send back the saved message
+        'message'        => 'Public message and broadcast details updated successfully.',
+        'public_message' => $team->public_message
     ]);
   }
 
