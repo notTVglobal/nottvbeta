@@ -252,7 +252,6 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
 import BackButton from '@/Components/Global/Buttons/BackButton'
 
-
 usePageSetup('training.streamToNotTV')
 
 const appSettingStore = useAppSettingStore()

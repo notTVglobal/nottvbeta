@@ -3,6 +3,12 @@
 Last Update: May 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.7
+May 9, 2024
+* Now it's fixed! The loading problem for Schedules on logged out mode.
+* Added image modal to Team Logo and Show Poster
+* Added X close on image modal
+
 ## v0.9.0.6
 May 9, 2024
 * Fix the way upcoming schedules are displayed
