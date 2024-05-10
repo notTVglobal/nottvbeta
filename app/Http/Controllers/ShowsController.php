@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ImageResource;
 use App\Http\Resources\ShowResource;
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddMistStreamWildcardToServer;
@@ -468,7 +469,7 @@ class ShowsController extends Controller {
               'image.appSetting'
           ])->orderBy('release_dateTime', 'desc');
         },
-        'team' => function ($query) {
+        'team'         => function ($query) {
           // Eager load team members and their user details
           $query->with(['members' => function ($query) {
             $query->select(['id', 'name', 'profile_photo_path']);
@@ -1023,7 +1024,7 @@ class ShowsController extends Controller {
     ]);
 
     // Assuming 'creator' or 'showRunner' is the correct relationship name
-    $show->load('image.appSetting', 'team.members', 'showRunner.user');
+    $show->load('image.appSetting', 'showRunner.user');
 
     // Fetch categories and statuses separately as they are not part of the ShowResource
     $categories = ShowCategory::with('subCategories')->get(); // Efficiently fetch categories with sub-categories
@@ -1040,6 +1041,12 @@ class ShowsController extends Controller {
 
 
     // Load the team with members who have creators with status_id of 1
+    $team = Team::with(['members.creator' => function ($query) {
+      $query->where('status_id', 1);
+    }])->findOrFail($show->team_id);
+
+
+//     Load the team with members who have creators with status_id of 1
     $team = Team::with(['members' => function ($query) {
       // Filter members to those who have a creator with status_id of 1
       $query->whereHas('creator', function ($query) {
@@ -1048,7 +1055,7 @@ class ShowsController extends Controller {
     }, 'members.creator']) // Ensure to still load the creator relationship
     ->findOrFail($show->team_id);
 
-    // Now, mapping team members to include creator_id, this will only include members filtered by the above condition
+//     Now, mapping team members to include creator_id, this will only include members filtered by the above condition
     $teamMembers = $team->members->map(function ($user) {
       // At this point, every user has a creator with status_id of 1 due to the query filter
       $creatorId = $user->creator ? $user->creator->id : null;
@@ -1060,19 +1067,22 @@ class ShowsController extends Controller {
       ];
     });
 
-    // Return the Inertia response with the ShowResource and additional data
+//     Map team members to include creator_id
+    $teamMembers = $team->members->map(function ($user) {
+      return [
+          'creator_id' => $user->creator ? $user->creator->id : null,
+          'name'       => $user->name,
+      ];
+    });
+
+
+
+    // Return the Inertia response
     return Inertia::render('Shows/{$id}/Edit', [
         'show'        => $showResourceArray,
-        'team'        => $team, // Directly use the loaded $team
+        'team'        => $team,
         'teamMembers' => $teamMembers,
-      // we are loading the image twice... once in the showResource
-        'image'       => [
-            'id'           => $show->image->id,
-            'name'         => $show->image->name,
-            'folder'       => $show->image->folder,
-            'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-            'cloud_folder' => $show->image->cloud_folder,
-        ],
+        'image'       => $show->image ? (new ImageResource($show->image))->resolve() : null,
         'categories'  => $categories,
         'statuses'    => $statuses,
         'can'         => [

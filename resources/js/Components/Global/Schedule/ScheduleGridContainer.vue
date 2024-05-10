@@ -348,8 +348,8 @@ function handleShowClick(item) {
 
   switch (item.type) {
     case 'show':
-      // url = `/shows/${item.content.slug}/`
-      url = `/teams/${item.content.teamSlug}/`
+      url = `/shows/${item.content.slug}/`
+      // url = `/teams/${item.content.teamSlug}/`
       break
     case 'movie':
       url = `/movies/${item.content.slug}/`

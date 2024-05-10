@@ -5,7 +5,7 @@
       <div>
         <div class="font-bold mb-4 text-red-700">EDIT SHOW</div>
         <h1 class="text-3xl">
-          <Link :href="`/shows/${show.slug}`" class="text-red-700 font-bold uppercase">{{ show.name }}</Link>
+          <Link :href="`/shows/${show?.slug}`" class="text-red-700 font-bold uppercase">{{ show?.name }}</Link>
         </h1>
       </div>
       <div class="flex flex-wrap-reverse justify-end">
@@ -28,8 +28,8 @@
   <div>
     <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>
       <button
-          @click="appSettingStore.btnRedirect(`/teams/${team.slug}`)"
-          class="font-bold uppercase text-blue-700 dark:text-blue-300 hover:text-blue-500">{{ team.name }}
+          @click="appSettingStore.btnRedirect(`/teams/${team?.slug}`)"
+          class="font-bold uppercase text-blue-700 dark:text-blue-300 hover:text-blue-500">{{ team?.name }}
       </button>
     </div>
   </div>

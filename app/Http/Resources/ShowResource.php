@@ -42,12 +42,12 @@ class ShowResource extends JsonResource {
               'name'       => $this->showRunner->user->name ?? null,
           ];
         }),
-        'socialMediaLinks' => [
-            'www_url'        => $this->www_url,
-            'instagram_name' => $this->instagram_name,
-            'telegram_url'   => $this->telegram_url,
-            'twitter_handle' => $this->twitter_handle
-        ],
+//        'socialMediaLinks' => [
+//            'www_url'        => $this->www_url,
+//            'instagram_name' => $this->instagram_name,
+//            'telegram_url'   => $this->telegram_url,
+//            'twitter_handle' => $this->twitter_handle
+//        ],
     ];
   }
 }

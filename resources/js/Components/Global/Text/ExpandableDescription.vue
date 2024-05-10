@@ -33,14 +33,14 @@ const props = defineProps({
 const showFullDescription = ref(false)
 
 const truncatedDescription = computed(() => {
-  if (props.description.length > 200) {
-    return props.description.substring(0, 200) + '...'  // Add ellipsis directly here
+  if (props.description.length > 210) {
+    return props.description.substring(0, 210) + '...'  // Add ellipsis directly here
   }
   return props.description
 })
 
 const needsTruncation = computed(() => {
-  return props.description.length > 200
+  return props.description.length > 210
 })
 
 const toggleDescription = () => {
