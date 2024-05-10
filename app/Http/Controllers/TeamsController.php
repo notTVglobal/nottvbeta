@@ -249,9 +249,11 @@ class TeamsController extends Controller {
             ]),
         'creators'      => TeamMember::where('team_id', $team->id)
             ->join('users', 'team_members.user_id', '=', 'users.id')
+            ->join('creators', 'creators.user_id', '=', 'users.id') // Assuming there's a creators table linked to users
+            ->whereJsonContains('creators.settings->profile_is_public', true)
             ->select('users.*', 'team_members.user_id')
             ->latest()
-            ->paginate(5, ['*'], 'creator')
+            ->paginate(15, ['*'], 'creator')
 //                ->withQueryString()
             ->through(fn($user) => [
                 'id'                 => $user->id,

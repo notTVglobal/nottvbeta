@@ -17,7 +17,7 @@ May 9, 2024
 ## v0.9.0.7
 May 9, 2024
 * Now it's fixed! The loading problem for Schedules on logged out mode.
-* Added image modal to Team Logo and Show Poster
+  * Added image modal to Team Logo and Show Poster
 * Added X close on image modal
 
 ## v0.9.0.6

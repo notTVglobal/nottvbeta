@@ -69,7 +69,7 @@ class ScheduleService {
   private function preloadContentRelationships(Schedule $schedule): void {
     if ($schedule->content_type === 'App\Models\Show') {
       $schedule->content->loadMissing([
-          'image.appSetting'
+          'image.appSetting', 'team'
       ]);
     } elseif ($schedule->content_type === 'App\Models\ShowEpisode') {
       $schedule->content->loadMissing([
