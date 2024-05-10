@@ -1,17 +1,17 @@
 <template>
-  <div v-if="isOpen" @click="close" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50 overflow-hidden">
-    <div class="relative w-full h-full max-w-[80vw] max-h-[80vh] flex items-center justify-center overflow-hidden p-4">
+  <div v-if="isOpen" @click="close" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
+    <div class="relative w-full h-full max-w-[80vw] max-h-[80vh] flex items-center justify-center p-4">
       <!-- Image Container -->
-      <div class="relative">
+      <div class="relative flex items-center justify-center p-4">
         <img
             :src="currentImageUrl"
             :alt="currentImageAlt"
             @click.stop
-            class="object-contain max-w-full max-h-full"
+            class="object-contain w-full h-full max-w-[80vw] max-h-[80vh]"
         />
         <!-- Close Button -->
         <div
-            class="absolute top-0 right-0 -mt-2 -mr-2 w-8 h-8 bg-black rounded-full flex items-center justify-center cursor-pointer z-10 border-white border-2"
+            class="absolute top-0 right-0 mt-2 mr-2 w-8 h-8 bg-black rounded-full flex items-center justify-center cursor-pointer z-10 border-white border-2"
             @click="close"
         >
           <span class="text-white text-xl pb-1 font-semibold">&times;</span>
