@@ -29,6 +29,10 @@ module.exports = {
             },
             maxHeight: {
                 '1/2screen': '50vh',
+                '80vh': '80vh',
+            },
+            maxWidth: {
+                '80vw': '80vw',
             },
         },
         listStyleType: {

@@ -51,14 +51,14 @@
                          v-model="donationAmount"
                          min="5"
                          max="3000"
-                         class="range range-success hover:shadow-lg transition-shadow duration-200"
+                         class="range range-success bg-white text-black hover:shadow-lg transition-shadow duration-200"
                          @input="handleDonationAmountChange">
-                  <span class="text-white">$ {{ donationAmount }}</span>
+                  <span class="text-black">$ {{ donationAmount }}</span>
                 </div>
 
                 <!-- Input for manual donation amount entry -->
                 <div class="input-container">
-                  <input type="number" v-model="donationAmount" @input="handleDonationAmountChange" placeholder="Enter amount" class="text-black input input-bordered input-success input-md w-24 mr-10 mt-2">
+                  <input type="number" v-model="donationAmount" @input="handleDonationAmountChange" placeholder="Enter amount" class="bg-white text-black input input-bordered input-success input-md w-24 mr-10 mt-2">
                   <button @click="oneTimeDonation('onetime') " class="donate-now-btn hover:bg-green-700 bg-green-500 rounded-lg px-2 py-2">Donate Now</button>
                 </div>
               </template>
