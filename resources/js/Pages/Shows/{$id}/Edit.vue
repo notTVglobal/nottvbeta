@@ -84,7 +84,7 @@
                       >
                         Description
                       </label>
-                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="show.description"/>
+                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="show?.description"/>
 
                       <div v-if="form.errors.description" v-text="form.errors.description"
                            class="text-xs text-red-600 mt-1"></div>
@@ -189,7 +189,7 @@
                           v-model="selectedCategoryId" @change="chooseCategory"
                       >
                         <option v-for="category in categories"
-                                :key="category.id" :value="category.id">{{ category.name }}
+                                :key="category.id" :value="category.id">{{ category?.name }}
                         </option>
 
                       </select>
@@ -346,12 +346,12 @@ let form = useForm({
   name: props.show.name,
   description: props.show.description,
   show_status_id: props.show.show_status_id,
-  category: props.show.category,
-  sub_category: props.show.subCategory,
-  www_url: props.show.socialMediaLinks.www_url,
-  instagram_name: props.show.socialMediaLinks.instagram_name,
-  telegram_url: props.show.socialMediaLinks.telegram_url,
-  twitter_handle: props.show.socialMediaLinks.twitter_handle,
+  category: props?.show?.category,
+  sub_category: props?.show?.subCategory,
+  www_url: props?.show.socialMediaLinks?.www_url,
+  instagram_name: props?.show.socialMediaLinks?.instagram_name,
+  telegram_url: props?.show?.socialMediaLinks?.telegram_url,
+  twitter_handle: props?.show?.socialMediaLinks?.twitter_handle,
   notes: props.show.notes,
   episode_play_order: props.show.episode_play_order,
   show_runner_creator_id: props?.show?.showRunner?.creator_id,
