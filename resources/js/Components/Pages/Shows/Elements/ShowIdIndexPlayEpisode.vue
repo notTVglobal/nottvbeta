@@ -18,26 +18,43 @@
         <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
       </svg>
 
-      <span
-          v-if="nowPlayingStore?.activeMedia?.details?.primaryName === show?.firstPlayEpisode?.name"
-          class="ml-2">Now Playing</span>
-      <span v-else class="ml-2">Watch Next Episode</span>
+      <span v-if="watchText" class="ml-2">{{ watchText }}</span>
     </button>
   </div>
 </template>
 <script setup>
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useShowStore } from '@/Stores/ShowStore'
+import { computed, onMounted } from 'vue'
 
+const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
+const showStore = useShowStore()
 
 const props = defineProps({
   show: Object,
   team: Object,
 })
 
-let playEpisode = () => {
+const isNowPlaying = computed(() => {
+  return nowPlayingStore?.activeMedia?.details?.primaryName === props.show?.firstPlayEpisode?.name;
+});
 
-  nowPlayingStore.reset()
+const watchText = computed(() => {
+  if (isNowPlaying.value) {
+    return 'Now Playing';
+  } else if (props.show.episodePlayOrder === 'oldest') {
+    return 'Watch First Episode';
+  } else if (props.show.episodePlayOrder === 'newest') {
+    return 'Watch Latest Episode';
+  }
+  return '';
+});
+
+const playEpisode = () => {
+
+  // nowPlayingStore.reset()
 
   // Determine media type and specific details based on the video type
   const episode = props.show.firstPlayEpisode
@@ -102,17 +119,6 @@ let playEpisode = () => {
       video_url: videoPlayerStore.mistServerUri + episode.video.mist_stream.name + '.mp4',
       type: episode.video.mist_stream.mime_type, // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
     })
-  }
-
-
-  appSettingStore.ott = 1
-
-  if (videoPlayerStore.player) {
-    console.log('player is initialized...')
-    console.log('disposing player...')
-    setTimeout(() => {
-      videoPlayerStore.disposePlayer()
-    }, 1000) // Delay the disposal by 1000 milliseconds (1 second)
   }
 
 }

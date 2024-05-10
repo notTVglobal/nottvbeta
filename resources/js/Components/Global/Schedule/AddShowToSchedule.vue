@@ -2,6 +2,11 @@
 
   <dialog id="addShowToScheduleModal" class="modal text-black">
     <div class="modal-box w-11/12 max-w-5xl text-black bg-white dark:bg-gray-800 dark:text-white">
+      <button v-if="currentStep === 6"
+              @click.prevent="closeModal"
+              :disabled="currentStep !== totalSteps"
+              class="btn justify-end">Close
+      </button>
 
       <div class="flex flex-row justify-between">
         <div>

@@ -297,7 +297,7 @@ class ShowEpisodeController extends Controller {
     $show->load('user', 'team.user', 'image.appSetting');
 
     // Eager load related entities for the ShowEpisode model
-    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'image.appSetting' ]);
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'image.appSetting']);
 
 //      TODO: Add TeamMember to this eager load
 
@@ -313,8 +313,6 @@ class ShowEpisodeController extends Controller {
 //    if ($showEpisode->release_dateTime) {
 //      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
 //    }
-
-
 
 
     $videoIsAvailable = $showEpisode->video?->video_url ||
@@ -503,7 +501,7 @@ class ShowEpisodeController extends Controller {
             ],
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
-            'category'           => $show->getCachedCategory()->name?? null,
+            'category'           => $show->getCachedCategory()->name ?? null,
             'subCategory'        => $show->getCachedSubCategory()->name ?? null,
         ],
         'team'             => [
@@ -529,6 +527,7 @@ class ShowEpisodeController extends Controller {
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,
             'video'                      => [
+                'id'               => $showEpisode->video->id,
                 'file_name'        => $showEpisode->video->file_name ?? '',
                 'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
                 'folder'           => $showEpisode->video->folder ?? '',

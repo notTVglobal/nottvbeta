@@ -99,29 +99,56 @@ const nextBroadcast = computed(() => {
   if (!props.team.nextBroadcast || props.team.nextBroadcast.length === 0) {
     return null;
   }
-  // Sort broadcasts by closeness to today
-  const broadcasts = [...props?.team?.nextBroadcast].sort((a, b) =>
-      Math.abs(dayjs().diff(dayjs(a.broadcastDate))) - Math.abs(dayjs().diff(dayjs(b.broadcastDate)))
+  // Get current date and time
+  const now = dayjs();
+
+  // Filter broadcasts to only include future ones
+  const futureBroadcasts = props.team.nextBroadcast.filter(broadcast =>
+      dayjs(broadcast.broadcastDate).isAfter(now)
   );
-  return broadcasts[0]; // Return the closest broadcast
+
+  if (futureBroadcasts.length === 0) {
+    return null;
+  }
+
+  // Sort broadcasts by closeness to now
+  const sortedBroadcasts = futureBroadcasts.sort((a, b) =>
+      dayjs(a.broadcastDate).diff(now) - dayjs(b.broadcastDate).diff(now)
+  );
+
+  return sortedBroadcasts[0]; // Return the closest future broadcast
 });
+
+
 
 // Computes the sorted list of remaining broadcasts excluding the closest
 const sortedBroadcasts = computed(() => {
   if (!props.team.nextBroadcast || props.team.nextBroadcast.length === 0) {
     return [];
   }
-  // Clone and sort the array based on the actual broadcast date
-  const broadcasts = [...props.team.nextBroadcast].sort((a, b) =>
+  // Get current date and time
+  const now = dayjs();
+
+  // Filter broadcasts to only include future ones
+  const futureBroadcasts = props.team.nextBroadcast.filter(broadcast =>
+      dayjs(broadcast.broadcastDate).isAfter(now)
+  );
+
+  if (futureBroadcasts.length === 0) {
+    return [];
+  }
+
+  // Sort broadcasts by actual broadcast date
+  const sortedBroadcasts = futureBroadcasts.sort((a, b) =>
       dayjs(a.broadcastDate).diff(dayjs(b.broadcastDate))
   );
 
-  // Skip the first sorted item, which should be the closest broadcast
-  // Check if the first sorted item is the same as 'nextBroadcast' and skip it
-  if (nextBroadcast.value && broadcasts[0].id === nextBroadcast.value.id) {
-    return broadcasts.slice(1); // Skip the first one
+  // Skip the first sorted item, which should be the closest future broadcast
+  if (nextBroadcast.value && sortedBroadcasts[0].id === nextBroadcast.value.id) {
+    return sortedBroadcasts.slice(1); // Skip the first one
   }
-  return broadcasts;
+
+  return sortedBroadcasts;
 });
 
 const activeIndex = ref(null);

@@ -2,13 +2,13 @@
   <div>
     <!-- Conditional rendering for the video section -->
       <!-- Episode Video Label -->
-      <div v-if="!episode.video?.video_id && !episode.video?.video_url" class="mt-6 px-5 flex justify-center w-full">
+      <div v-if="!episode.video?.id && !episode.video?.video_url" class="mt-6 px-5 flex justify-center w-full">
         <div class="bg-black text-white text-center uppercase font-bold text-xs p-5 mb-2 w-full">
           No Video
         </div>
       </div>
 
-    <div v-if="episode?.video_id && episode.video?.storage_location === 'spaces' && episode.video?.upload_status !== 'processing'" class="">
+    <div v-if="episode?.video?.id && episode.video?.storage_location === 'spaces' && episode.video?.upload_status !== 'processing'" class="">
 
       <!-- Video Player -->
       <video id="episodeEditPlayer"

@@ -24,6 +24,9 @@ const initialState = () => ({
     errorMessage: '',
     episodeIsBeingDeleted: 0, // put episode id here if being deleted (used on the Show Manage page, Show Episode component)
     openComponent: 'showEpisodes',
+    isLive: false,
+    liveScheduledStartTime: '',
+    liveMistStreamName: '',
 })
 
 export const useShowStore = defineStore('showStore', {
@@ -32,6 +35,16 @@ export const useShowStore = defineStore('showStore', {
         reset() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState());
+        },
+        async checkIsLive(showSlug) {
+            try {
+                const response = await axios.get(`/api/shows/${showSlug}/check-live`);
+                this.isLive = response.data.isLive;
+                this.liveScheduledStartTime = response.data.liveScheduledStartTime;
+                this.liveMistStreamName = response.data.mistStreamName;
+            } catch (error) {
+                console.error('Error checking if show is live:', error);
+            }
         },
         async fill() {
             let r = await import('@/Json/show.json');

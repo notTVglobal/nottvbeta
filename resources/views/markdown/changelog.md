@@ -3,6 +3,10 @@
 Last Update: May 10, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.10
+May 10, 2024
+* Added a Watch Live button to the show page. It appears if the show is scheduled to be live and there is an active show stream.
+
 ## v0.9.0.9
 May 10, 2024
 * Fixed the schedules not loading one-time shows, fixed duplicating loading too.

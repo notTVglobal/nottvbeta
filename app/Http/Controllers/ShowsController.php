@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Factories\MistServerServiceFactory;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\ShowResource;
 use App\Jobs\AddOrUpdateMistStreamJob;
@@ -21,6 +22,7 @@ use App\Models\TeamMember;
 use App\Models\User;
 use App\Models\AppSetting;
 use App\Models\Video;
+use App\Services\MistServer\MistServerService;
 use http\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -39,8 +41,11 @@ class ShowsController extends Controller {
 
   private string $formattedReleaseDateTime;
   private string $formattedScheduledDateTime;
+  protected MistServerService $playbackService;
 
   public function __construct() {
+
+    $this->playbackService = MistServerServiceFactory::make('playback');
 
     // Apply auth middleware only to certain methods
     $this->middleware('auth')->except(['index', 'show']);
@@ -248,7 +253,7 @@ class ShowsController extends Controller {
   }
 
   // release dateTime
-  private function formatReleaseDate($date): string {
+//  private function formatReleaseDate($date): string {
 
     // NOTE: We are deprecating this in favour of doing the timezone conversions
     // on the frontend.
@@ -268,7 +273,7 @@ class ShowsController extends Controller {
 //    $releaseDateTime->setTimezone($userTimezone);
 
 //    return $releaseDateTime->toIso8601String();
-  }
+//  }
 
 ////////////  CREATE AND STORE
 //////////////////////////////
@@ -460,13 +465,14 @@ class ShowsController extends Controller {
     $show->load([
         'image.appSetting',
         'status',
+        'scheduleIndexes',
+        'mistStreamWildcard',
         'showEpisodes' => function ($query) {
           // Apply conditions or sorting to episodes here
           $query->with([
               'video' => function ($query) {
                 $query->with(['appSetting', 'mistStream', 'mistStreamWildcard']);
               },
-              'image.appSetting'
           ])->orderBy('release_dateTime', 'desc');
         },
         'team'         => function ($query) {
@@ -532,7 +538,82 @@ class ShowsController extends Controller {
         ->first();
   }
 
-  private function transformShowData(Show $show, $firstPlayEpisode) {
+  private function getNextBroadcastDate(Show $show)
+  {
+    $currentDateTime = Carbon::now();
+    $closestBroadcast = null;
+
+    foreach ($show->scheduleIndexes as $index) {
+      $nextBroadcastDateTime = Carbon::parse($index['next_broadcast']);
+
+      // Check if the next_broadcast datetime is now or in the future
+      if ($nextBroadcastDateTime->gte($currentDateTime)) {
+        // If closestBroadcast is null or this broadcast is closer, update closestBroadcast
+        if ($closestBroadcast === null || $nextBroadcastDateTime->lt(Carbon::parse($closestBroadcast['next_broadcast']))) {
+          $closestBroadcast = $index;
+        }
+      }
+    }
+
+    return $closestBroadcast;
+  }
+
+
+  public function checkIsLive(Show $show): \Illuminate\Http\JsonResponse {
+    try {
+      // Retrieve active streams
+      $activeStreamsResponse = $this->playbackService->activeStreams();
+
+      // Extract the array of stream names
+      $activeStreams = $activeStreamsResponse['active_streams'] ?? [];
+
+      // Log the active streams for debugging purposes
+//      Log::debug('Active streams: ', $activeStreams);
+
+      // Check if any active stream matches the show's mistStreamWildcard name
+      $mistStreamName = $show->mistStreamWildcard->name;
+
+      foreach ($activeStreams as $streamName) {
+        if (str_contains($streamName, $mistStreamName)) {
+          // Found a matching stream, now check the broadcast dates for the first schedule
+          $schedule = $show->schedules->first();
+          if ($schedule) {
+            $broadcastData = json_decode($schedule->broadcast_dates, true);
+
+            // Ensure broadcast_data contains both broadcastDates array and durationMinutes
+            if (!isset($broadcastData['broadcastDates'], $broadcastData['durationMinutes']) || !is_array($broadcastData['broadcastDates'])) {
+              Log::error('Broadcast dates entry is missing required fields or is not an array:', ['broadcast_data' => $broadcastData]);
+              return response()->json(['isLive' => false, 'liveScheduledStartTime' => null]);
+            }
+
+            $durationMinutes = $broadcastData['durationMinutes'];
+
+            foreach ($broadcastData['broadcastDates'] as $datetime) {
+              if (!is_string($datetime)) {
+                Log::error('Invalid broadcast date entry:', ['datetime' => $datetime]);
+                continue;
+              }
+
+              $startTime = Carbon::parse($datetime);
+              $endTime = $startTime->copy()->addMinutes($durationMinutes);
+              $now = Carbon::now();
+
+              if ($now->between($startTime, $endTime)) {
+                return response()->json(['isLive' => true, 'liveScheduledStartTime' => $startTime->toIso8601String(), 'mistStreamName' => $mistStreamName]);
+              }
+            }
+          }
+        }
+      }
+    } catch (\Exception $e) {
+      Log::error('Error in checkIsLive:', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+      return response()->json(['isLive' => false, 'liveScheduledStartTime' => null, 'mistStreamName' => null]);
+    }
+
+    return response()->json(['isLive' => false, 'liveScheduledStartTime' => null, 'mistStreamName' => null]);
+  }
+
+  private function transformShowData(Show $show, $firstPlayEpisode): array {
 
     $socialMediaLinks = [
         'www_url'        => $show->www_url,
@@ -547,14 +628,16 @@ class ShowsController extends Controller {
         'name'               => $show->name,
         'slug'               => $show->slug,
         'description'        => $show->description,
+        'nextBroadcast'      => $this->getNextBroadcastDate($show),
         'showRunner'         => [
             'id'   => $show->showRunner->id ?? null,
             'name' => $show->showRunner->user->name ?? null,
         ],
-        'image'              => $this->transformImage($show->image, $show->appSetting),
+        'image'              => $this->transformImage($show->image),
         'category'           => $show->getCachedCategory() ? $show->getCachedCategory()->toArray() : null,
         'subCategory'        => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
         'firstPlayEpisode'   => $firstPlayEpisode ? $this->transformEpisodeData($firstPlayEpisode) : null,
+        'episodePlayOrder'   => $show->episode_play_order,
         'copyrightYear'      => $show->created_at->format('Y'),
         'first_release_year' => $show->first_release_year ?? null,
         'last_release_year'  => $show->last_release_year ?? null,
@@ -1047,13 +1130,13 @@ class ShowsController extends Controller {
 
 
 //     Load the team with members who have creators with status_id of 1
-    $team = Team::with(['members' => function ($query) {
-      // Filter members to those who have a creator with status_id of 1
-      $query->whereHas('creator', function ($query) {
-        $query->where('status_id', 1);
-      });
-    }, 'members.creator']) // Ensure to still load the creator relationship
-    ->findOrFail($show->team_id);
+//    $team = Team::with(['members' => function ($query) {
+//      // Filter members to those who have a creator with status_id of 1
+//      $query->whereHas('creator', function ($query) {
+//        $query->where('status_id', 1);
+//      });
+//    }, 'members.creator']) // Ensure to still load the creator relationship
+//    ->findOrFail($show->team_id);
 
 //     Now, mapping team members to include creator_id, this will only include members filtered by the above condition
     $teamMembers = $team->members->map(function ($user) {
@@ -1074,7 +1157,6 @@ class ShowsController extends Controller {
           'name'       => $user->name,
       ];
     });
-
 
 
     // Return the Inertia response
