@@ -158,7 +158,7 @@ export const useChannelStore = defineStore('channelStore', {
                         // console.log('Attempting to load Mist Stream:', channel.mist_stream); // Log the Mist Stream attempt
                         if (channel.mist_stream) {
                             this.mistStream = channel.mist_stream;
-                            await videoPlayerStore.loadMistStreamVideo(channel.mist_stream);
+                            await videoPlayerStore.loadMistStreamVideo(channel.mist_stream.name);
                             this.loadChannelInfo(channel);
                         } else {
                             let errorTitle = 'Unable to load channel: ' + channel.name

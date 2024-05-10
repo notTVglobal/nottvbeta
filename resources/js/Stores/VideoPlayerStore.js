@@ -819,34 +819,74 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         },
         async loadMistStreamVideo(mistStream) {
-            // console.log('Loading Mist Stream Video for:', mistStream.name); // Log which Mist Stream is being loaded
-            // This mistServerUri comes from appSettings
-            if (!this.mistServerUri) {
-                console.log('Mist Server URI not set, fetching...') // Log fetching attempt
-                await this.getMistServerUri()
-            }
-            if (this.mistServerUri) {
-                // console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
-                let basePath = this.mistServerUri
-                this.videoSource = basePath + 'hls/' + mistStream.name + '/index.m3u8'
-                // console.log('Video Source Set To:', this.videoSource); // Log the final video source
+            try {
+                const videoJs = videojs('main-player');
+                const audioStore = useAudioStore();
+                const userStore = useUserStore();
+                const notificationStore = useNotificationStore();
 
-                this.videoSourceType = 'application/vnd.apple.mpegURL'
-                // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
-                let videoJs = videojs('main-player')
-                videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-                this.unMute()
-                this.paused = false
-            } else {
-                console.error('Mist Server URI is still not set after fetching.')
+                // Ensure mistServerUri is set
+                if (!this.mistServerUri) {
+                    console.log('Mist Server URI not set, fetching...');
+                    await this.getMistServerUri();
+                }
+
+                if (this.mistServerUri) {
+                    console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
+
+                    // Construct the video source URL
+                    const basePath = this.mistServerUri;
+                    this.videoSource = `${basePath}hls/${mistStream}/index.m3u8`;
+                    console.log('Video Source Set To:', this.videoSource); // Log the final video source
+
+                    this.videoSourceType = 'application/vnd.apple.mpegURL';
+
+                    // Set the video source in video.js
+                    videoJs.src({src: this.videoSource, type: this.videoSourceType});
+                    this.unMute();
+                    this.paused = false;
+
+                    videoJs.ready(() => {
+                        console.log('Video.js is ready');
+
+                        // Ensure the audio context and nodes are ready
+                        audioStore.deferAudioSetup = false;
+                        audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
+                            // Attempt to play the video after ensuring the AudioContext is ready
+                            videoJs.play().catch(error => {
+                                notificationStore.setGeneralServiceNotification('Error', 'Code: 123. Playback initiation error: ' + error);
+                                console.error('Code 123. Playback initiation error: ', error);
+
+                                // Ensure videoSettings is initialized
+                                if (!userStore.videoSettings) {
+                                    userStore.videoSettings = {};
+                                }
+
+                                // If the user is not a subscriber or VIP, set firstPlay to true
+                                if (!userStore.isSubscriber || !userStore.isVip) {
+                                    userStore.videoSettings.firstPlay = true;
+                                }
+                            });
+
+                            // Consider toggling mute based on the user's preference or previous state
+                            // videoJs.muted(false);
+                            // this.muted = false;
+                        }).catch(error => {
+                            notificationStore.setGeneralServiceNotification('Error', 'Code: 456. Audio setup error: ' + error);
+                            console.error('Code 456. Audio setup error: ', error);
+                        });
+                    });
+                } else {
+                    console.error('Mist Server URI is still not set after fetching.');
+                }
+            } catch (error) {
+                // Log the error or perform any other error handling
+                const notificationStore = useNotificationStore();
+                notificationStore.setGeneralServiceNotification('Error', 'Code: 789. Error loading new video: ' + error);
+                console.error('Code: 789. Error loading new video: ', error);
             }
-            // let basePath = this.mistServerUri
-            // this.videoSource = basePath + 'hls/' + mistStream.name + '/index.m3u8'
-            // this.videoSourceType = "application/vnd.apple.mpegURL"
-            // this.player.src({'src': this.videoSource, 'type': this.videoSourceType})
-            // this.unMute()
-            // this.paused = false
         },
+
         async loadVideoFromFile(video) {
             // console.log('Loading Mist Stream Video for:', mistStream.name); // Log which Mist Stream is being loaded
             // This mistServerUri comes from appSettings

@@ -7,8 +7,8 @@
           <div v-if="show.status.id === 9" class="absolute flex justify-end w-full -mt-3 z-50">
             <CreatorsOnlyBadge/>
           </div>
-<!--          <SingleImage :image="props.show.image" :alt="'show cover'"-->
-<!--                       class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>-->
+          <!--          <SingleImage :image="props.show.image" :alt="'show cover'"-->
+          <!--                       class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>-->
           <SingleImageWithModal :image="props.show.image" :alt="'show cover'"
                                 class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
 
@@ -47,18 +47,17 @@
           </div>
 
           <div class="">
-          <SocialMediaBadgeLinks :socialMediaLinks="show.socialMediaLinks"/>
+            <SocialMediaBadgeLinks :socialMediaLinks="show.socialMediaLinks"/>
           </div>
 
+          <ShowsIdIndexWatchLive :show="show" :team="team"/>
 
-          <div class="w-full flex flex-wrap mt-5 m-auto xl:mx-0 justify-center xl:justify-start">
-            <div class="flex flex-wrap gap-x-4 gap-y-2 ">
+          <div
+              class="w-full flex flex-wrap mt-5 m-auto xl:mx-0 items-center justify-center xl:justify-start gap-x-4 gap-y-2 ">
 
-              <ShowIdIndexPlayEpisode :show="show" :team="team"/>
+            <ShowIdIndexPlayEpisode :show="show" :team="team"/>
+            <ComingSoonShareAndSaveButtons/>
 
-              <ComingSoonShareAndSaveButtons/>
-
-            </div>
           </div>
 
 
@@ -74,12 +73,17 @@
 </template>
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
+import { useUserStore } from '@/Stores/UserStore'
 import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 import ShowIdIndexPlayEpisode from '@/Components/Pages/Shows/Elements/ShowIdIndexPlayEpisode.vue'
+import ShowsIdIndexWatchLive from '@/Components/Pages/Shows/Elements/ShowsIdIndexWatchLive.vue'
+import { onMounted } from 'vue'
+
+const userStore = useUserStore()
 
 const props = defineProps({
   show: Object,

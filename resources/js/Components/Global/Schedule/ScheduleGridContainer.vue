@@ -54,7 +54,7 @@
             <SingleImage v-if="item.content.image"
                          :image="item.content.image"
                          :alt="item.content.name"
-                         :class="`w-full h-auto max-h-1/2 object-cover transition-opacity duration-300 hover:opacity-80`"/>
+                         :class="`w-full h-auto max-h-1/2screen object-cover transition-opacity duration-300 hover:opacity-80`"/>
             <div v-if="!item.placeholder"
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">

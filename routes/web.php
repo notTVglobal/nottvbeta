@@ -946,6 +946,9 @@ Route::middleware([
       ->name('shows.showEpisodes.manageEpisode')
       ->scopeBindings();
 
+  Route::get('/api/shows/{show}/check-live', [ShowsController::class, 'checkIsLive'])
+    ->name('shows.checkLive');
+
 
 // Show Episodes
 ///////////
