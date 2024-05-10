@@ -41,9 +41,11 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     $reloadedSchedule = Schedule::with('content')->find($this->schedule->id);
 
     if (!$reloadedSchedule || is_null($reloadedSchedule->content)) {
-      Log::info('Failed to load schedule with content or content is null', ['scheduleId' => $this->schedule->id]);
+//      Log::debug('Failed to load schedule with content or content is null', ['scheduleId' => $this->schedule->id]);
       return;
     }
+
+    Log::debug($reloadedSchedule);
 
     // Check if content is actually loaded and contains elements
     // This is useful if content is expected to be a collection, not typical in morphTo relationships
@@ -80,7 +82,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
       $this->updateSchedulesIndex($closestBroadcastDate);
     } else {
       // Log or handle the scenario where no future broadcast dates are found
-      Log::info('No upcoming broadcast dates found for schedule.', ['scheduleId' => $reloadedSchedule->id]);
+//      Log::debug('No upcoming broadcast dates found for schedule.', ['scheduleId' => $reloadedSchedule->id]);
     }
 
 
@@ -98,7 +100,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     $reloadedSchedule->broadcast_dates = json_encode($broadcastDates);
     $reloadedSchedule->save();
 
-//    Log::info('Updated broadcast dates', ['scheduleId' => $reloadedSchedule->id, 'dates' => $broadcastDates]);
+//    Log::debug('Updated broadcast dates', ['scheduleId' => $reloadedSchedule->id, 'dates' => $broadcastDates]);
   }
 
   /**
@@ -117,19 +119,19 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
 //    $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $testTime, $testTimezone)
 //        ->setTimezone('UTC');
 
-//    Log::info('Test Conversion to UTC', [
+//    Log::debug('Test Conversion to UTC', [
 //        'localTime' => $testTime,
 //        'UTCTime' => $startTimeUTC->toDateTimeString(),  // This should log '2024-05-09 02:30:00'
 //        'timezone' => 'America/Vancouver'
 //    ]);
 //
-//    Log::info('this is the $schedule->start_time: ' . $schedule->start_time);
+//    Log::debug('this is the $schedule->start_time: ' . $schedule->start_time);
     // Convert schedule times from local to UTC
     // Assuming $schedule->start_time is '2024-05-08 19:30:00' and $schedule->timezone is 'America/Vancouver'
     $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, new DateTimeZone($schedule->timezone))
         ->setTimezone('UTC');
 
-//    Log::info('Converted time to UTC', [
+//    Log::debug('Converted time to UTC', [
 //        'localTime' => $schedule->start_time,
 //        'UTCTime'   => $startTimeUTC->toDateTimeString(),  // Should log '2024-05-09 02:30:00'
 //        'timezone'  => $schedule->timezone
@@ -139,7 +141,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
 
 //    $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->end_time, $schedule->timezone)
 //        ->setTimezone('UTC');
-//    Log::info('Converted time to UTC', ['localTime' => $schedule->start_time, 'UTCTime' => $startTimeUTC->toDateTimeString(), 'timezone' => $schedule->timezone]);
+//    Log::debug('Converted time to UTC', ['localTime' => $schedule->start_time, 'UTCTime' => $startTimeUTC->toDateTimeString(), 'timezone' => $schedule->timezone]);
 
     try {
       if (!$schedule->recurrence_flag) {
@@ -198,7 +200,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     }
 
     // Optionally, log the sorted dates for debugging
-//    Log::info('All sorted broadcast dates', ['dates' => $allDates]);
+//    Log::debug('All sorted broadcast dates', ['dates' => $allDates]);
 
     // Return the array of all broadcast dates
     return $allDates;
@@ -265,13 +267,13 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
               'team_id'        => $teamId
           ]
       );
-      Log::info('Schedule index updated with next broadcast date', [
-          'date'         => $closestBroadcastDate->toDateTimeString(),
-          'scheduleId'   => $schedule->id,
-          'team_id'      => $teamId,
-          'content_type' => $contentType,
-          'content_id'   => $contentId
-      ]);
+//      Log::debug('Schedule index updated with next broadcast date', [
+//          'date'         => $closestBroadcastDate->toDateTimeString(),
+//          'scheduleId'   => $schedule->id,
+//          'team_id'      => $teamId,
+//          'content_type' => $contentType,
+//          'content_id'   => $contentId
+//      ]);
     } catch (Exception $e) {
       Log::error('Failed to update schedule index', [
           'scheduleId' => $schedule->id,
@@ -337,7 +339,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
         return $date->setTimezone(new DateTimeZone('UTC'))->toIso8601String();
       }, $recurrentDates);
 
-//      Log::info('Recurrent schedule processed successfully', [
+//      Log::debug('Recurrent schedule processed successfully', [
 //          'scheduleId' => $schedule->id,
 //          'datesProcessed' => count($recurrentDates),
 //          'UTC DatesAdded' => implode(', ', $recurrentDatesUTC)  // Log the converted dates

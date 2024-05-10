@@ -199,7 +199,7 @@ class ScheduleService {
     }
 
     $data = $this->fetchContentForRange(today(), today()->endOfDay());
-    $this->cacheData($cachePath, (array) $data);
+//    $this->cacheData($cachePath, (array) $data);
 
     return $data;
   }
@@ -238,7 +238,7 @@ class ScheduleService {
     }
 
     // Cache path based on the requested date range
-    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
+//    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
 
     $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
     if ($this->isCacheValid($cacheKey)) {
@@ -275,11 +275,13 @@ class ScheduleService {
 
     // 4. Resolve schedule conflicts
     $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
+//    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
 
     // Cache the final schedules with expanded start and end times
     $this->cacheData($cacheKey, $finalSchedules, $expandedStart, $expandedEnd);
 
     return $finalSchedules;
+
   }
 
   /**

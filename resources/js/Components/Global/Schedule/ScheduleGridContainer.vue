@@ -1,7 +1,6 @@
 <template>
 
-  <!--  We need the CurrenTime component to keep our ScheduleStore currentTime up to date
-        it has a SetInterval in it. -->
+  <!--  We need the CurrenTime component to keep our ScheduleStore currentTime up to date it has a SetInterval in it. -->
   <CurrentTime/>
 
   <div class="mb-2 tracking-wide">
@@ -60,34 +59,13 @@
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.startTime, true) }}</p>
-              <!--              <p>{{ formatTime(item.startTime) }} - {{ formatTime(item.endTime, true) }}</p>-->
               <p>{{ formatDuration(item.durationMinutes) }}</p>
             </div>
           </div>
         </div>
       </div>
 
-
     </div>
-
-    <!--    <div v-if="nextScheduledShow" class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center">-->
-    <!--      <div class="bg-green-500 text-white py-2">-->
-    <!--        <h2>Playing Soon</h2>-->
-    <!--      </div>-->
-    <!--      <div class="show-details mt-4 mx-auto max-w-4xl">-->
-    <!--        <h3 @click="handleShowClick(nextScheduledShow)" class="text-3xl mb-1 hover:text-blue-300 hover:cursor-pointer">{{ nextScheduledShow.content.name }}</h3>-->
-    <!--        <p class="text-lg">{{ formatLongDate(nextScheduledShow.startTime) }}</p> &lt;!&ndash; Formatted start date &ndash;&gt;-->
-    <!--        <p class="text-lg">{{ formatTime(nextScheduledShow.startTime, true) }} - {{ formatTime(nextScheduledShow.endTime, true) }}</p>-->
-    <!--        <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer"-->
-    <!--             @click="handleShowClick(nextScheduledShow)">-->
-    <!--          <SingleImage v-if="nextScheduledShow.content.image"-->
-    <!--               :image="nextScheduledShow.content.image"-->
-    <!--               :alt="nextScheduledShow.content.name"-->
-    <!--               :class="`w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80`"/>-->
-    <!--        </div>-->
-    <!--        <p class="text-lg">{{ formatDuration(nextScheduledShow.durationMinutes) }}</p>-->
-    <!--      </div>-->
-    <!--    </div>-->
 
     <div class="schedule-grid text-center" :style="{ 'grid-template-columns': gridColumns }">
 
@@ -99,14 +77,13 @@
       <div v-if="comingUpNextShow" :style="statusGridItemStyle(comingUpNextShow)"
            class="coming-up-next text-black font-semibold">
         <span>COMING UP NEXT</span>
-
       </div>
 
     </div>
 
     <div class="infinite-scroll-container">
       <div v-for="(show, index) in displayedShows" :key="show.id"
-           class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center"
+           class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center hover-gradient"
            :class="{ 'last-item': index === displayedShows.length - 1 }">
         <div class="bg-green-500 text-white py-2">
           <h2>Playing Soon</h2>
@@ -156,35 +133,7 @@ const userStore = useUserStore()
 dayjs.extend(advancedFormat)
 
 let initialLoadHandled = false
-
-// // Computed property for the currently playing show
-// const updateNowPlaying = computed(() => {
-//   for (const show of scheduleStore.nextFourHoursOfContent) {
-//     if (isNowPlaying(show.startTime, show.durationMinutes) && !show.placeholder && show.gridStart === 1) {
-//       return show;  // ensure this has gridStart, gridSpan, gridRow
-//     }
-//   }
-//   return null;
-// });
-//
-//
-//
-// // Computed property for the show that is coming up next
-// const updateComingUpNext = computed(() => {
-//   let foundPlaying = false;
-//   for (const show of scheduleStore.nextFourHoursOfContent) {
-//     if (!show.placeholder && show.gridStart > 1) {
-//       if (foundPlaying) {
-//         return show;  // ensure this has gridStart, gridSpan, gridRow
-//       }
-//     }
-//     if (isNowPlaying(show.startTime, show.durationMinutes)) {
-//       foundPlaying = true;  // Mark as found
-//     }
-//   }
-//   return null;
-// });
-
+let initialFetchCompleted = false
 
 const isVisible = ref(false)
 const displayedShowsCount = ref(6)
@@ -193,30 +142,16 @@ const isLoading = computed(() => scheduleStore.isLoading)
 const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
 
-// console.log('isLoading on mount:', isLoading.value);
-// scheduleStore.preloadWeeklyContent();
-
-// Use async/await inside onMounted
-onBeforeMount(async () => {
-
-});
-
-// Watch the computed property to see changes in real-time
-watch(isLoading, (newValue) => {
-  console.log('isLoading changed:', newValue);
-});
-
 // Function to handle element visibility
 function onElementVisibility(state) {
   isVisible.value = state;
 }
 
 // Function to load more shows
-// Function to load more shows
 const loadMoreShows = async () => {
   if (isVisible.value && !isLoading.value) {
     isLoading.value = true;
-    console.log("Loading more shows");
+    // console.log("Loading more shows");
 
     // Fetch more schedules
     await scheduleStore.fetchMoreSchedules();
@@ -232,7 +167,7 @@ const throttledLoadMoreShows = throttle(loadMoreShows, 200);
 
 // Watcher for isVisible.value
 watch(isVisible, (newValue) => {
-  if (newValue) {
+  if (newValue && initialFetchCompleted) {
     throttledLoadMoreShows();
   }
 });
@@ -241,18 +176,16 @@ const allPlaceholders = computed(() => {
   return scheduleStore.nextFourHoursOfContent.every(item => item.placeholder)
 })
 
-
-
 const upcomingShows = computed(() => {
   const now = dayjs(scheduleStore.baseTime);
 
   // Log baseTime and schedules for debugging
-  console.log('Base Time:', now);
-  console.log('Schedules:', scheduleStore.schedules);
+  // console.log('Base Time:', now);
+  // console.log('Schedules:', scheduleStore.schedules);
 
   // Create a set of show start times from nextFourHoursOfContent
   const nextFourHoursShowTimes = new Set(scheduleStore.nextFourHoursOfContent.map(show => show.startTime));
-  console.log('Next Four Hours Show Times:', Array.from(nextFourHoursShowTimes));
+  // console.log('Next Four Hours Show Times:', Array.from(nextFourHoursShowTimes));
 
   // Filter out shows that are part of nextFourHoursOfContent by matching startTime
   const filteredShows = scheduleStore.schedules.filter(show => {
@@ -261,7 +194,7 @@ const upcomingShows = computed(() => {
     const isNotInNextFourHours = !nextFourHoursShowTimes.has(show.startTime);
     const shouldInclude = isAfterNow && isNotPlaceholder && isNotInNextFourHours;
 
-    console.log(`Show ID: ${show.id}, Start Time: ${show.startTime}, Include: ${shouldInclude}`);
+    // console.log(`Show ID: ${show.id}, Start Time: ${show.startTime}, Include: ${shouldInclude}`);
     return shouldInclude;
   });
 
@@ -270,21 +203,6 @@ const upcomingShows = computed(() => {
 });
 
 const displayedShows = computed(() => upcomingShows.value.slice(0, displayedShowsCount.value))
-
-// function handleScroll() {
-//   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-//   if (scrollTop + clientHeight >= scrollHeight - 5) { // Check if near bottom
-//     displayedShowsCount.value += 6; // Load more shows
-//   }
-// }
-
-// Phasing out the "nextScheduledShow" in favour of the upcomingShows.
-// const nextScheduledShow = computed(() => {
-//   const now = dayjs()
-//   return scheduleStore.weeklyContent.find(show =>
-//       dayjs(show.startTime).isAfter(now) && !show.placeholder,
-//   )
-// })
 
 function isNowPlaying(startTime, duration) {
   const now = dayjs()
@@ -302,49 +220,50 @@ const comingUpNextShow = computed(() => {
   return scheduleStore.nextFourHoursOfContent.find(  show => show.comingUpNext)
 })
 
-// watch(() => scheduleStore.timeSlots, (newTimeSlots, oldTimeSlots) => {
-//   if (newTimeSlots && newTimeSlots.length > 0 && !initialLoadHandled) {
-//     // console.log('Time slots are ready, updating next four hours.')
-//     scheduleStore.updateNextFourHours()
-//     initialLoadHandled = true
-//   }
-// }, {immediate: true})
+onMounted(async () => {
+  scheduleStore.resetAll()
+  const now = dayjs();
+  const startDate = now.subtract(4, 'hour').toISOString();
+  const endDate = now.add(7, 'day').toISOString();
+  await scheduleStore.fetchSchedules(startDate, endDate);
+  initialFetchCompleted = true
 
-watch(
-    () => scheduleStore.baseTime,
-    (newTime, oldTime) => {
-      if (newTime !== oldTime) { // This check may be redundant but adds clarity
-        // console.log(`Base time updated from ${oldTime} to ${newTime}`)
-        scheduleStore.updateNextFourHours()
-      }
-    },
-    {immediate: true},
-)
+  // Watcher for schedules to ensure initial data load
+  watch(
+      () => scheduleStore.schedules,
+      (newSchedules) => {
+        if (newSchedules && newSchedules.length > 0 && !initialLoadHandled && initialFetchCompleted) {
+          scheduleStore.updateNextFourHours();
+          initialLoadHandled = true;
+        }
+      },
+      { immediate: true },
+  );
 
-// Watcher for schedules to ensure initial data load
-watch(
-    () => scheduleStore.schedules,
-    (newSchedules) => {
-      if (newSchedules && newSchedules.length > 0 && !initialLoadHandled) {
-        scheduleStore.updateNextFourHours();
-        initialLoadHandled = true;
-      }
-    },
-    { immediate: true },
-);
-//
+  // Watch for changes in screen size indicators
+  watch(
+      [() => appSettingStore.isVerySmallScreen, () => appSettingStore.isSmallScreen],
+      ([newVerySmall, newSmall], [oldVerySmall, oldSmall]) => {
+        if ((newVerySmall !== oldVerySmall || newSmall !== oldSmall) && initialFetchCompleted) {
+          // console.log(`Screen size change detected: VerySmallScreen: ${newVerySmall}, SmallScreen: ${newSmall}`)
+          scheduleStore.fetchSchedules()
+        }
+      },
+      {immediate: false},  // Optionally run on initial setup
+  )
 
-// Watch for changes in screen size indicators
-watch(
-    [() => appSettingStore.isVerySmallScreen, () => appSettingStore.isSmallScreen],
-    ([newVerySmall, newSmall], [oldVerySmall, oldSmall]) => {
-      if (newVerySmall !== oldVerySmall || newSmall !== oldSmall) {
-        // console.log(`Screen size change detected: VerySmallScreen: ${newVerySmall}, SmallScreen: ${newSmall}`)
-        scheduleStore.fetchSchedules()
-      }
-    },
-    {immediate: false},  // Optionally run on initial setup
-)
+  // Update the next four hours when baseTime changes
+  watch(
+      () => scheduleStore.baseTime,
+      (newTime, oldTime) => {
+        if (newTime !== oldTime && initialFetchCompleted) { // This check may be redundant but adds clarity
+          // console.log(`Base time updated from ${oldTime} to ${newTime}`)
+          scheduleStore.updateNextFourHours()
+        }
+      },
+      {immediate: true},
+  )
+});
 
 // Method to format time with conditional AM/PM display
 function formatTime(time, showMeridiem = false) {
@@ -411,15 +330,6 @@ const gridPlacement = (gridStart, gridSpan) => {
   }
 }
 
-// // Determines the classes for a status cell
-// const getStatusCellClasses = (index) => {
-//   const classes = ['status-cell']
-//   if (index === 0) classes.push('now-playing')
-//   else if (index === 1) classes.push('coming-up-next')
-//   else classes.push('status-cell-empty') // For cells without specific content
-//   return classes
-// }
-
 function getCellClasses(type) {
   const baseClass = 'column-width text-sm 2xl:text-md border border-0.5 border-green-300 hover:border-blue-500 cursor-pointer'
   switch (type) {
@@ -452,13 +362,6 @@ function handleShowClick(item) {
 
   Inertia.visit(url) // Visit the dynamically created URL
 
-  // if (isNowPlaying(item.startTime, item.durationMinutes)) {
-  //   // Redirect to the show's page if it's currently playing
-  //   Inertia.visit(`/shows/${item.content.slug}/`)
-  // } else {
-  //   // Open the reminder modal for shows that are not currently playing
-  //   openModal('getReminderModal')
-  // }
 }
 
 
@@ -482,41 +385,6 @@ const getStatusCellClasses = (gridStart, isFirst, isSecond) => {
   }
   return classes
 }
-// Ensure the data structure is what you expect
-// console.log('All items in store:', scheduleStore.nextFourHoursOfContent)
-
-//
-// const actualShows = computed(() => {
-//   // Flatten the nested arrays, filter out placeholders, and ignore specific content names
-//   return scheduleStore.nextFourHoursOfContent.flat().filter(item =>
-//       !item.placeholder && item.content.name !== "Nothing scheduled." && item.content.name !== "Blank Spot"
-//   );
-// });
-//
-
-
-// watch(nowPlayingShow, (newVal, oldVal) => {
-//   console.log('Now Playing Show changed from:', oldVal, 'to:', newVal);
-// });
-//
-// watch(comingUpNextShow, (newVal, oldVal) => {
-//   console.log('Coming Up Next Show changed from:', oldVal, 'to:', newVal);
-// });
-
-
-//
-// // Watch for changes in actualShows and log or react accordingly
-// watch(actualShows, (newShows, oldShows) => {
-//   console.log("Actual shows have updated:", newShows);
-//   // Additional reactions can be performed here
-// });
-//
-// // Optionally, watch for changes in previousItemGridEnd if needed
-// watch(previousItemGridEnd, (newEnd, oldEnd) => {
-//   console.log("Previous item grid end has updated:", newEnd);
-//   // React to changes in the end of the first show, if necessary
-// });
-
 
 function openModal(modalName) {
   document.getElementById(modalName).showModal()
@@ -524,6 +392,10 @@ function openModal(modalName) {
 </script>
 
 <style scoped>
+
+.hover-gradient:hover {
+  background: linear-gradient(to right, rgba(30, 58, 138, 0.2), rgba(30, 64, 175, 0.2));
+}
 
 .bg-gradient-show {
   background: linear-gradient(to right, #1f4037, #99f2c8); /* Example green gradient */
