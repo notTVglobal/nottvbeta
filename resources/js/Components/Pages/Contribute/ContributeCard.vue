@@ -17,6 +17,10 @@
         <button @click="payNow(itemSelected)" :class="buttonClass" class="btn text-white py-2 px-4 rounded">
           <slot name="button"/>
         </button>
+        <div>
+          <slot name="noButton" :class="buttonClass"/>
+        </div>
+
       </div>
     </div>
   </div>

@@ -10,7 +10,7 @@
 <!--          <SingleImage :image="props.show.image" :alt="'show cover'"-->
 <!--                       class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>-->
           <SingleImageWithModal :image="props.show.image" :alt="'show cover'"
-                                class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0"/>
+                                class="max-h-96 min-w-[16rem] max-w-64 object-cover mb-6 xl:mb-0 m-auto xl:m-0 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
 
         </div>
         <div class="flex flex-col xl:ml-12 xl:mr-0 w-full justify-center items-center xl:items-start xl:justify-start">

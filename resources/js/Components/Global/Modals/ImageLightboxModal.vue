@@ -1,14 +1,26 @@
 <template>
-  <div v-if="isOpen" @click="close" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-999">
-    <div class="relative max-w-full max-h-full md:max-w-[60%] object-cover">
-      <img :src="currentImageUrl" :alt="currentImageAlt" @click.stop class="" />
-      <!-- Close Button -->
-      <div class="absolute top-0 right-0 -mt-3 -mr-3 w-8 h-8 bg-black rounded-full flex items-center justify-center cursor-pointer z-10 border-white border-2" @click="close">
-        <span class="text-white text-xl pb-1 font-semibold">&times;</span>
+  <div v-if="isOpen" @click="close" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50 overflow-hidden">
+    <div class="relative w-full h-full max-w-[80vw] max-h-[80vh] flex items-center justify-center overflow-hidden p-4">
+      <!-- Image Container -->
+      <div class="relative">
+        <img
+            :src="currentImageUrl"
+            :alt="currentImageAlt"
+            @click.stop
+            class="object-contain max-w-full max-h-full"
+        />
+        <!-- Close Button -->
+        <div
+            class="absolute top-0 right-0 -mt-2 -mr-2 w-8 h-8 bg-black rounded-full flex items-center justify-center cursor-pointer z-10 border-white border-2"
+            @click="close"
+        >
+          <span class="text-white text-xl pb-1 font-semibold">&times;</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { computed, ref, watch } from 'vue'
