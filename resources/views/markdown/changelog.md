@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: May 9, 2024\
+Last Update: May 10, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.9
+May 10, 2024
+* Fixed the schedules not loading one-time shows, fixed duplicating loading too.
+* Added a background color to when you hover over an upcoming scheduled show.
 
 ## v0.9.0.8
 May 9, 2024
