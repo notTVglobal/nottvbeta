@@ -21,7 +21,7 @@
           <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
           <div class="text-gray-400 text-center lg:text-left">
             <div class="mt-1">
-              <span class="uppercase tracking-wider text-yellow-700">{{ show?.category.name }}</span>
+              <span class="uppercase tracking-wider text-yellow-700">{{ show?.category?.name }}</span>
               &nbsp;&middot;&nbsp;
               <span class="tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
               <span v-if="show.last_release_year"> &nbsp;&middot;&nbsp; {{

@@ -15,19 +15,20 @@ class SimpleShowResource extends JsonResource {
    */
   public function toArray($request) {
     return [
-        'id'               => $this->id,
-        'name'             => $this->name,
-        'slug'             => $this->slug,
-        'description'      => substr($this->description, 0, 300),
-        'image'            => $this->whenLoaded('image', function () {
+        'id'          => $this->id,
+        'name'        => $this->name,
+        'slug'        => $this->slug,
+        'teamSlug'    => $this->team->slug,
+        'description' => substr($this->description, 0, 300),
+        'image'       => $this->whenLoaded('image', function () {
           // Directly return the array representation of the ImageResource
           return (new ImageResource($this->image))->resolve();
         }),
-        'category'         => $this->resource->getCachedCategory() ? [
+        'category'    => $this->resource->getCachedCategory() ? [
             'name'        => $this->resource->getCachedCategory()->name,
             'description' => $this->resource->getCachedCategory()->description,
         ] : null,
-        'subCategory'      => $this->resource->getCachedSubCategory() ? [
+        'subCategory' => $this->resource->getCachedSubCategory() ? [
             'name'        => $this->resource->getCachedSubCategory()->name,
             'description' => $this->resource->getCachedSubCategory()->description,
         ] : null,

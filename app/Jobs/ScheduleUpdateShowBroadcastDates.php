@@ -45,7 +45,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
       return;
     }
 
-    Log::debug($reloadedSchedule);
+//    Log::debug($reloadedSchedule);
 
     // Check if content is actually loaded and contains elements
     // This is useful if content is expected to be a collection, not typical in morphTo relationships

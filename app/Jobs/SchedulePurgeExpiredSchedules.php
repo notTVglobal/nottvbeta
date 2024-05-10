@@ -43,7 +43,7 @@ class SchedulePurgeExpiredSchedules implements ShouldQueue
    */
     public function handle(): void {
 
-      Log::debug('Starting to purge expired schedules.');
+//      Log::debug('Starting to purge expired schedules.');
 
       try {
         // Use chunkById to efficiently process large sets of expired schedules
@@ -57,7 +57,7 @@ class SchedulePurgeExpiredSchedules implements ShouldQueue
                 $schedule->delete();
 
                 // Log the deletion of each schedule
-                Log::info('Processed and deleted schedule', ['schedule_id' => $schedule->id]);
+//                Log::debug('Processed and deleted schedule', ['schedule_id' => $schedule->id]);
               }
             });
 

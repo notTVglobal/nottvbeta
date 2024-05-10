@@ -122,7 +122,7 @@ class Team extends Model {
 
     //    Log::info("Final data for team {$this->id}: " . json_encode($broadcasts->toArray()));
     // Map the scheduleIndexes to the desired structure
-    return $scheduleIndexes->load('content.image.appSetting')->map(function ($scheduleIndex) {
+    return $scheduleIndexes->load('content.image.appSetting', 'team')->map(function ($scheduleIndex) {
 
 //      Log::info('Processing schedule index: ' . $scheduleIndex->id);
 
