@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
+use App\Http\Resources\ImageResource;
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Jobs\ProcessVideoInfo;
@@ -492,13 +493,7 @@ class ShowEpisodeController extends Controller {
             'name'               => $show->name,
             'slug'               => $show->slug,
             'showRunner'         => $show->user->name,
-            'image'              => [
-                'id'           => $show->image->id,
-                'name'         => $show->image->name,
-                'folder'       => $show->image->folder,
-                'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                'cloud_folder' => $show->image->cloud_folder,
-            ],
+            'image' => $show->image ? (new ImageResource($show->image))->resolve() : null,
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
             'category'           => $show->getCachedCategory()->name ?? null,
@@ -527,7 +522,7 @@ class ShowEpisodeController extends Controller {
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,
             'video'                      => [
-                'id'               => $showEpisode->video->id,
+                'id'               => $showEpisode->video->id ?? null,
                 'file_name'        => $showEpisode->video->file_name ?? '',
                 'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
                 'folder'           => $showEpisode->video->folder ?? '',
@@ -537,22 +532,10 @@ class ShowEpisodeController extends Controller {
                 'type'             => $showEpisode->video->type ?? '',
                 'storage_location' => $showEpisode->video->storage_location ?? '',
             ],
-            'image'                      => [
-                'id'           => $showEpisode->image->id,
-                'name'         => $showEpisode->image->name,
-                'folder'       => $showEpisode->image->folder,
-                'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                'cloud_folder' => $showEpisode->image->cloud_folder,
-            ],
+            'image' => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
             'show_id'                    => $showEpisode->show_id,
         ],
-        'image'            => [
-            'id'           => $showEpisode->image->id,
-            'name'         => $showEpisode->image->name,
-            'folder'       => $showEpisode->image->folder,
-            'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-            'cloud_folder' => $showEpisode->image->cloud_folder,
-        ],
+        'image' => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
         'creative_commons' => $creativeCommons,
         'can'              => [
             'manageShow'  => Auth::user()->can('manage', $show),

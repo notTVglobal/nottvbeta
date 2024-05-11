@@ -219,17 +219,17 @@ class TeamsController extends Controller {
                 // For creators, include shows with status 9 and also shows that are new or active with specific episode statuses
                 $query->where('show_status_id', 9)
                     ->orWhere(function ($q) {
-                      $q->whereIn('show_status_id', [1, 2])
-                          ->whereHas('showEpisodes', function ($q) {
-                            $q->where('show_episode_status_id', 7);
-                          });
+                      $q->whereIn('show_status_id', [1, 2]);
+//                          ->whereHas('showEpisodes', function ($q) {
+//                            $q->where('show_episode_status_id', 7);
+//                          });
                     });
               } else {
                 // For all other users, filter for shows that are new or active and have episodes with a specific status
-                $query->whereIn('show_status_id', [1, 2])
-                    ->whereHas('showEpisodes', function ($q) {
-                      $q->where('show_episode_status_id', 7);
-                    });
+                $query->whereIn('show_status_id', [1, 2]);
+//                    ->whereHas('showEpisodes', function ($q) {
+//                      $q->where('show_episode_status_id', 7);
+//                    });
               }
             })
             ->latest()

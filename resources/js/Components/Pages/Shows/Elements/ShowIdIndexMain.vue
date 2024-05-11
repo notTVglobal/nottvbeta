@@ -6,7 +6,14 @@
 
         <div class="mb-6 p-5">
 
-
+          <div v-if="!episodes.length" class="text-center">
+            <div class="text-6xl mb-4">📺✨</div>
+            <h2 class="text-2xl font-bold mb-2">Stay Tuned!</h2>
+            <p class="text-lg">Exciting episodes are coming soon. Stay tuned and be ready for some amazing content!</p>
+            <button @click="appSettingStore.btnRedirect(`/shows/`)" class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
+              Explore More Shows
+            </button>
+          </div>
           <ShowEpisodesList v-if="episodes.length" :episodes="episodes" :show="show"/>
 
           <div hidden class="container mx-auto px-4 mb-12">
@@ -52,8 +59,11 @@
   </div>
 </template>
 <script setup>
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import ShowEpisodesList from '@/Components/Pages/Shows/Elements/ShowEpisodesList'
 import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
+
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   show: Object,
