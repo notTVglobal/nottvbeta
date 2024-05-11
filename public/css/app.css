@@ -8212,10 +8212,6 @@ hr {
   max-height: 96rem;
 }
 
-.max-h-80vh {
-  max-height: 80vh;
-}
-
 .min-h-12 {
   min-height: 3rem;
 }
@@ -10608,6 +10604,11 @@ hr {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
 }
 
 .font-bold {
