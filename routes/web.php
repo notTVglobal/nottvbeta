@@ -1303,6 +1303,10 @@ Route::get('/live-stream-guide', function () {
   return redirect('/live-streaming-guide');
 });
 
+Route::get('/live', function () {
+  return redirect('/');
+});
+
 Route::get('/coffee', function () {
   return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });
