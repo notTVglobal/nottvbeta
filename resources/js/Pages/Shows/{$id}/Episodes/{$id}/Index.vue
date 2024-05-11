@@ -121,7 +121,8 @@
 
         <div class="my-6 py-5 px-8">
           <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
-          <div class="description">{{ episode.description }}</div>
+<!--          <div class="description">{{ episode.description }}</div>-->
+          <ExpandableDescription :description="episode.description" :hideTitle="true"/>
         </div>
 
 
@@ -209,6 +210,7 @@ import Message from '@/Components/Global/Modals/Messages'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import { onMounted } from 'vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
+import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 
 usePageSetup('showEpisodesShow')
 

@@ -4743,10 +4743,12 @@ var map = {
 	],
 	"./Shows/{$id}/Episodes/{$id}/Index": [
 		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Episodes_id_Index_vue"
 	],
 	"./Shows/{$id}/Episodes/{$id}/Index.vue": [
 		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Episodes_id_Index_vue"
 	],
 	"./Shows/{$id}/Episodes/{$id}/Manage": [

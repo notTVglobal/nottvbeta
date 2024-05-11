@@ -229,13 +229,14 @@
                       >
                         Description
                       </label>
-                      <TabbableTextarea v-model="form.description"
-                                        class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
-                                        name="description"
-                                        id="description"
-                                        rows="10" cols="30"
-                                        required
-                      />
+                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="episode?.description"/>
+<!--                      <TabbableTextarea v-model="form.description"-->
+<!--                                        class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"-->
+<!--                                        name="description"-->
+<!--                                        id="description"-->
+<!--                                        rows="10" cols="30"-->
+<!--                                        required-->
+<!--                      />-->
                       <div v-if="form.errors.description" v-text="form.errors.description"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
@@ -443,6 +444,7 @@ import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter.vue'
+import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
 
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
@@ -547,11 +549,25 @@ const selectedCreativeCommonsDescription = computed(() => {
   return selectedCC ? selectedCC.description : '';
 });
 
+const description = ref(props.team.description)
+
+
+const handleContentUpdate = (html) => {
+  description.value = html
+  form.description = html
+}
+
+watch(() => props.team.description, (newDescription) => {
+  description.value = newDescription
+  form.description = newDescription
+})
+
+
 let form = useForm({
   id: props.episode.id,
   name: props.episode.name,
   episode_number: props.episode.episode_number,
-  description: props.episode.description,
+  description: description.value,
   notes: props.episode.notes,
   copyrightYear: selectedCopyrightYear,
   creative_commons_id: selectedCreativeCommons.value,

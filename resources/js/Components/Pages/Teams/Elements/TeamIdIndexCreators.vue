@@ -1,5 +1,5 @@
 <template>
-  <div class="creators">
+  <div class="min-h-80">
     <div class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-8">CONTRIBUTORS</div>
     <!-- Note: Team Members ("Creators") will now be hidden by default.
     Teams and creators need to opt-in to have public creator profiles

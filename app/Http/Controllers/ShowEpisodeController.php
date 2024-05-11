@@ -34,6 +34,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Rules\UniqueEpisodeName;
 use Inertia\Inertia;
+use Mews\Purifier\Facades\Purifier;
 use Symfony\Component\Uid\Ulid;
 
 class ShowEpisodeController extends Controller {
@@ -597,7 +598,7 @@ class ShowEpisodeController extends Controller {
   public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode) {
 
     // validate the request
-    $request->validate([
+    $validatedData = $request->validate([
 //            'name' => ['required', 'string', 'max:255'],
         'name'                       => [
             Rule::excludeIf($request->name === $showEpisode->name),
@@ -611,7 +612,7 @@ class ShowEpisodeController extends Controller {
         'creative_commons_id'        => 'required|integer|exists:creative_commons,id',
         'copyrightYear'              => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'episode_number'             => 'nullable|string|min:1|max:10',
-        'description'                => 'required',
+        'description'                => 'required|string|max:5000',
         'notes'                      => 'nullable|string',
         'video_url'                  => 'nullable|active_url|ends_with:.mp4',
         'youtube_url'                => 'nullable|active_url',
@@ -622,6 +623,12 @@ class ShowEpisodeController extends Controller {
         'copyrightYear.integer'        => 'Please choose a copyright year',
         'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
     ]);
+
+    // Sanitize description
+    $sanitizedDescription = Purifier::clean($validatedData['description']);
+
+    // Sanitize notes
+    $sanitizedNotes = Purifier::clean($validatedData['notes']);
 
     // Check if the video_url is not empty and is different from the existing one.
     if (!empty($request->video_url)) {
@@ -734,10 +741,10 @@ class ShowEpisodeController extends Controller {
 
     // update the show
     $showEpisode->name = $request->name;
-    $showEpisode->description = $request->description;
+    $showEpisode->description = $sanitizedDescription;
     $showEpisode->episode_number = $request->episode_number;
     $showEpisode->slug = \Str::slug($request->name);
-    $showEpisode->notes = $request->notes;
+    $showEpisode->notes = $sanitizedNotes;
     $showEpisode->youtube_url = $request->youtube_url;
     $showEpisode->video_embed_code = $request->video_embed_code;
     $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;

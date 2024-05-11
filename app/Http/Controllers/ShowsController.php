@@ -132,6 +132,8 @@ class ShowsController extends Controller {
 
   private function transformShow($show): array {
 
+    $user = Auth::user();
+
     // Use a subquery to get the oldest episode's releaseDateTime for the show
     $oldestEpisodeReleaseDateTime = $show->showEpisodes()
         ->orderBy('release_dateTime', 'asc')
@@ -168,8 +170,8 @@ class ShowsController extends Controller {
         'subCategory'        => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
         'isNew'              => $isNew,
         'can'                => [
-            'editShow' => Auth::user()->can('editShow', $show),
-            'viewShow' => Auth::user()->can('viewShowManagePage', $show)
+            'editShow' => optional($user)->can('editShow', $show),
+            'viewShow' => optional($user)->can('viewShowManagePage', $show)
         ]
     ];
   }

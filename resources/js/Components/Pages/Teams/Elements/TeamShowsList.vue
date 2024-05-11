@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-h-80">
     <div v-if="shows.data.length !== 0"
          class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">SHOWS
     </div>
@@ -12,7 +12,6 @@
           :key="show.id"
           class="bg-gray-800 border-gray-700"
       >
-
           <div @click="Inertia.visit(`/shows/${show.slug}`)"
               class="relative min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-gray-50 hover:text-blue-500 hover:cursor-pointer">
             <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 -mr-4 right-5 z-50">

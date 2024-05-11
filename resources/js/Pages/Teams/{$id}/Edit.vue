@@ -98,13 +98,14 @@
                       >
                         Description
                       </label>
-                      <TabbableTextarea v-model="form.description"
-                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white text-black bg-white dark:bg-gray-800 dark:text-white"
-                                        name="description"
-                                        id="description"
-                                        rows="10" cols="30"
-                                        required
-                      />
+<!--                      <TabbableTextarea v-model="form.description"-->
+<!--                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white text-black bg-white dark:bg-gray-800 dark:text-white"-->
+<!--                                        name="description"-->
+<!--                                        id="description"-->
+<!--                                        rows="10" cols="30"-->
+<!--                                        required-->
+<!--                      />-->
+                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="team?.description"/>
                       <div v-if="form.errors.description" v-text="form.errors.description"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
@@ -222,6 +223,7 @@ import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
+import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
 
 usePageSetup('teams/slug/edit')
 
@@ -252,11 +254,25 @@ let props = defineProps({
 //         selectedTeamLeader.value = props.teamLeader.id;
 //     }
 // });
+const description = ref(props.team.description)
+
+
+const handleContentUpdate = (html) => {
+  description.value = html
+  form.description = html
+}
+
+watch(() => props.team.description, (newDescription) => {
+  description.value = newDescription
+  form.description = newDescription
+})
+
+
 
 let form = useForm({
   id: props.team.id,
   name: props.team.name,
-  description: props.team.description,
+  description: description.value,
   totalSpots: props.team.totalSpots,
   teamLeader: props.teamLeader ? props.teamLeader.id : null,
   www_url: props.team.socialMediaLinks.www_url,

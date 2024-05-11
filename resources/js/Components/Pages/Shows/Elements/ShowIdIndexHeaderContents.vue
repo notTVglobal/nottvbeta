@@ -61,7 +61,10 @@
           </div>
 
 
-          <div class="description mt-2 w-full text-gray-300 text-center xl:text-left">
+          <div class="description pt-10 w-full text-gray-300 text-center xl:text-left">
+            <div class="w-full bg-gray-900 text-white tracking-wider text-sm">
+              DESCRIPTION
+            </div>
             <expandable-description :description="show.description" :hideTitle="true"/>
           </div>
 
