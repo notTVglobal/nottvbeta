@@ -32,7 +32,7 @@
 
 
       <!-- Loop through combinedShows directly -->
-      <div v-for="item in scheduleStore.nextFourHoursOfContent"
+      <div v-for="(item, index) in scheduleStore.nextFourHoursOfContent"
            :key="item.id"
            :style="gridItemStyle(item)"
            class="show-cell"
@@ -59,7 +59,11 @@
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.startTime, true) }}</p>
-              <p>{{ formatDuration(item.durationMinutes) }}</p>
+              <p><ConvertDateTimeToTimeAgo
+                  :dateTime="item.startTime"
+                  :timezone="userStore.timezone"
+                  class="text-yellow-400"
+              /></p>
             </div>
           </div>
         </div>
@@ -82,7 +86,7 @@
     </div>
 
     <div class="infinite-scroll-container">
-      <div v-for="(show, index) in displayedShows" :key="show.id"
+      <div v-for="(show, index) in displayedShows" :key="index"
            class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center hover-gradient"
            :class="{ 'last-item': index === displayedShows.length - 1 }">
         <div class="bg-gray-900 text-white py-2">
@@ -93,7 +97,12 @@
             {{ show.content.name }}</h3>
           <p class="text-lg">{{ formatLongDate(show.startTime) }}</p>
           <p class="text-lg">{{ formatTime(show.startTime, true) }} - {{ formatTime(show.endTime, true) }}</p>
-          <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer" @click="handleShowClick(show)">
+          <ConvertDateTimeToTimeAgo
+              :dateTime="show.startTime"
+              :timezone="userStore.timezone"
+              class="text-yellow-400"
+          />
+          <div class="w-full flex flex-col justify-center items-center mt-4 hover:cursor-pointer" @click="handleShowClick(show)">
             <SingleImage v-if="show.content.image"
                          :image="show.content.image"
                          :alt="show.content.name"
@@ -129,6 +138,7 @@ import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import CurrentTime from '@/Components/Global/Schedule/CurrentTime.vue'
 import { throttle } from '@/Utilities/Throttle'
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 const scheduleStore = useScheduleStore()
 const appSettingStore = useAppSettingStore()
@@ -408,7 +418,7 @@ function handleShowClick(item) {
       url = `/movies/${item.content.slug}/`
       break
     case 'showEpisode':
-      url = `/shows/${item.show.slug}/episodes/${item.slug}`
+      url = `/shows/${item.content.show.slug}/episode/${item.content.slug}`
       break
     default:
       // Handle default case or do nothing

@@ -58,6 +58,7 @@ const initialState = () => ({
         'America/St_Johns',   // NT
     ],
     videoSettings: {},
+    hasConsentedToCookies: false,
 })
 
 export const useUserStore = defineStore('userStore', {
@@ -77,7 +78,9 @@ export const useUserStore = defineStore('userStore', {
                 this.isNewsPerson = response.data.isNewsPerson
                 this.isVip = response.data.isVip
                 this.isSubscriber = response.data.isSubscriber
+                this.hasActiveSubscription = response.data.hasActiveSubscription ?? null
                 this.hasAccount = response.data.hasAccount
+                this.hasConsentedToCookies = response.data.hasConsentedToCookies ?? null
                 this.getUserDataCompleted = true
                 // console.log('get user data in User Store')
                 await this.subscribeToUserNotifications(response.data.id)

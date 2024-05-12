@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\VerifyEmailQueued;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,6 +12,7 @@ use Laravel\Cashier\Billable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Cashier\Subscription;
 use Stripe\Order;
 
 class User extends Authenticatable implements MustVerifyEmail {
@@ -45,6 +47,10 @@ class User extends Authenticatable implements MustVerifyEmail {
       'last_login_at',
       'terms_agreed_at',
       'invite_code',
+      'stripe_id',
+      'cookie_consent',
+      'cookie_consent_at',
+      'cookie_consent_expires_at'
   ];
 
   /**
@@ -67,7 +73,9 @@ class User extends Authenticatable implements MustVerifyEmail {
   protected $casts = [
       'email_verified_at' => 'datetime',
       'last_login_at'     => 'datetime',
-      'terms_agreed_at' => 'datetime',
+      'terms_agreed_at'   => 'datetime',
+      'cookie_consent_expires_at' => 'datetime',
+      'cookie_consent_at' => 'datetime',
   ];
 
 //    public function setPasswordAttribute($value)
@@ -102,6 +110,62 @@ class User extends Authenticatable implements MustVerifyEmail {
   ];
 
 
+  /**
+   * Determine if the user has an active subscription.
+   *
+   * @param string $name
+   * @return bool
+   */
+  public function hasActiveSubscription($name = 'default'): bool {
+    return optional($this->subscription($name))->active();
+  }
+
+  /**
+   * Determine if the user has a Stripe account.
+   *
+   * @return bool
+   */
+  public function hasAccount(): bool {
+    return !is_null($this->stripe_id);
+  }
+
+  public function isAdmin(): bool {
+    return (bool) $this->isAdmin; // Assuming isAdmin is a column in your users table
+  }
+
+  public function isCreator(): bool {
+    return (bool) $this->creator; // Assuming creator is a column in your users table
+  }
+
+  public function isNewsPerson(): bool {
+    return (bool) $this->newsPerson; // Assuming newsPerson is a column in your users table
+  }
+
+  public function isVip(): bool {
+    return (bool) $this->isVip; // Assuming isVip is a column in your users table
+  }
+
+  /**
+   * Check if the user has consented to cookies.
+   *
+   * @return bool
+   */
+  public function hasConsentedToCookies(): bool {
+    return $this->cookie_consent && $this->cookie_consent_expires_at && $this->cookie_consent_expires_at->isFuture();
+  }
+
+  /**
+   * Set cookie consent for the user.
+   *
+   * @param int $days
+   * @return void
+   */
+  public function setCookieConsent($days = 365): void {
+    $this->cookie_consent = true;
+    $this->cookie_consent_at = Carbon::now();
+    $this->cookie_consent_expires_at = Carbon::now()->addDays($days);
+    $this->save();
+  }
   /**
    * Send email verification notification (add to queue).
    */

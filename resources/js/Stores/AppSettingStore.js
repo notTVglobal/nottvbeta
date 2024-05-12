@@ -48,6 +48,7 @@ const initialState = () => ({
         imageUrl: '',
         imageAlt: '',
     },
+    showCookieBanner: false,
 })
 
 export const useAppSettingStore = defineStore('appSettingStore', {
@@ -293,7 +294,16 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         removeResizeListener() {
             // Clean up the listener when it's no longer needed
             window.removeEventListener('resize', this.updateScreenSize);
-        }
+        },
+        displayCookieBanner() {
+            this.showCookieBanner = true
+        },
+        checkCookieBanner() {
+            const userStore = useUserStore()
+            if (userStore.hasConsentedToCookies) {
+                this.showCookieBanner = true;
+            }
+        },
     },
     getters: {
         // this isn't being used anywhere right now..... 2024-04-27 tec21

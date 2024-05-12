@@ -32,6 +32,7 @@
           :user="user"/>
 
       <!-- Notifications -->
+      <CookieBanner />
       <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
       <GeneralServiceNotification v-if="user"/>
@@ -71,6 +72,7 @@ import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNoti
 import NotificationModal from '@/Components/Global/Notifications/NotificationModal'
 import DialogNotification from '@/Components/Global/Modals/DialogNotification'
 import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
+import CookieBanner from '@/Components/Global/Banners/CookieBanner.vue'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()

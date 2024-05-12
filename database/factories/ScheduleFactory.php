@@ -16,6 +16,7 @@ class ScheduleFactory extends Factory {
   protected $year;
   protected $month;
   protected $day;
+
   /**
    * Define the model's default state.
    *
@@ -73,17 +74,18 @@ class ScheduleFactory extends Factory {
 
     // Ensure $startTime is appropriately set to the top of the hour
     // $startTime = $startTime->minute(0)->second(0);
+    $modelClass = $contentType;
 
     return [
-        'content_type'    => $contentType,
-        'content_id'      => $contentId,
-        'start_time'      => $startTime,
+        'content_type'     => $contentType,
+        'content_id'       => $contentId,
+        'start_time'       => $startTime,
         'duration_minutes' => 60,
-        'end_time'        => $startTime->copy()->addHour(), // End time is 1 hour later
-        'type'            => 'show', // Assuming you're keeping a 'type' column for other logic
-        'status'          => 'scheduled',
-        'priority'        => $this->faker->numberBetween(0, 10),
-        'recurrence_flag' => 0
+        'end_time'         => $startTime->copy()->addHour(), // End time is 1 hour later
+        'type'             => $modelClass ? lcfirst(class_basename($modelClass)) : null, // Dynamically set the type
+        'status'           => 'scheduled',
+        'priority'         => $this->faker->numberBetween(0, 10),
+        'recurrence_flag'  => 0
     ];
   }
 
@@ -99,6 +101,7 @@ class ScheduleFactory extends Factory {
     $this->year = $year;
     $this->month = $month;
     $this->day = $day;
+
     return $this;
   }
 

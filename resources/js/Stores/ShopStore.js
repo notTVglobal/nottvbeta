@@ -5,7 +5,7 @@ const initialState = () => ({
     products: [],
     cart: [],
     order: [],
-    paymentProcessing: ref(false),
+    paymentProcessing: false,
     customer: {},
     stripe: {},
     cardElement: {},
@@ -13,10 +13,15 @@ const initialState = () => ({
     upgradeStripeId: '',
     selectedSubscriptionPrice: null,
     donationAmount: 50, // Default or initial value
-    showPaymentForm: ref(false),
+    showPaymentForm: false,
     premiumMonthlyStripeId: 'price_1NoiAOKahp38LUVYPWtzQ8f1',
     premiumYearlyStripeId: 'price_1NhgZTKahp38LUVY8n9Skgwf',
     premiumForeverStripeId: 'price_1NoiBDKahp38LUVY5OGjIrCM',
+    selectedFavouriteType: '',
+    selectedFavourite: {},
+    selectedFavouriteOptions: [],
+    focusedIndex: null,
+    errorMessage: '',
 })
 
 export const useShopStore = defineStore('shopStore', {
@@ -103,6 +108,16 @@ export const useShopStore = defineStore('shopStore', {
                 this.donationAmount = maxAmount;
             } else {
                 this.donationAmount = amount;
+            }
+        },
+        async selectFavourite(type) {
+            this.selectedFavouriteType = type
+
+            try {
+                const response = await axios.get(`/shop/get-favourite-options`, { params: { type } });
+                this.selectedFavouriteOptions = response.data;
+            } catch (error) {
+                console.error(`Failed to fetch options for ${type}:`, error);
             }
         },
 

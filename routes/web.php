@@ -433,7 +433,15 @@ Route::middleware([
         'intent' => auth()->user()->createSetupIntent(),
     ]);
   })->name('contribute');
+
+  Route::get('/shop/get-favourite-options', [ShopController::class, 'getFavouriteOptions']);
   //////////////////////////////////////////////////
+
+  Route::get('/contribute/one-time', [StripeController::class, 'OneTimeContribution'])
+      ->name('contribute.one-time');
+
+  Route::post('/shop/payment-intent', [StripeController::class, 'createPaymentIntent'])
+      ->name('shop.payment-intent');
 
   Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
       ->name('createCheckoutSession');
@@ -446,6 +454,9 @@ Route::middleware([
 
   Route::get('/contribute/subscription_success', [StripeController::class, 'subscriptionSuccess'])
       ->name('subscriptionSuccess');
+
+  Route::get('/contribute/donation_success', [StripeController::class, 'donationSuccess'])
+      ->name('donationSuccess');
 
   Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
   Route::post('/payment/initiate', [StripeController::class, 'initiatePayment']);
@@ -1072,6 +1083,11 @@ Route::middleware([
 
   // Update user
   Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+
+  // Consent to cookies
+  Route::post('/users/consent-cookies', [UsersController::class, 'consentCookies'])->name('users.consentCookies');
+  // Check cookie consent
+  Route::get('/users/consent-cookies', [UsersController::class, 'checkCookieConsent'])->name('users.consentCookies');
 
 // Chat
 ///////////

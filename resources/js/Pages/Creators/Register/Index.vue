@@ -50,7 +50,7 @@
                     id="name"
                     v-model="form.name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     required
                     autofocus
                     autocomplete="name"
@@ -65,7 +65,7 @@
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     required
                 />
               </div>
@@ -78,7 +78,7 @@
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     required
                     autocomplete="new-password"
                 />
@@ -93,7 +93,7 @@
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     required
                     autocomplete="new-password"
                 />
@@ -109,7 +109,7 @@
                     id="address1"
                     v-model="form.address1"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="address1"
                 />
@@ -123,7 +123,7 @@
                     id="address2"
                     v-model="form.address2"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="address2"
                 />
@@ -137,7 +137,7 @@
                     id="city"
                     v-model="form.city"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="city"
                 />
@@ -151,7 +151,7 @@
                     id="name"
                     v-model="form.province"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="province"
                 />
@@ -162,7 +162,7 @@
               <div class="mt-4">
                 <JetLabel for="country" value="Country" />
                 <select id="country" v-model="form.country"
-                        class="select select-bordered w-full max-w-xs mt-1 block">
+                        class="select select-bordered w-full max-w-xs mt-1 block text-black bg-white dark:bg-gray-800 dark:text-white">
                   <option v-for="country in countries" :key="country.id" :value="country.name">{{ country.name }}</option>
                 </select>
               </div>
@@ -175,7 +175,7 @@
                     id="postalCode"
                     v-model="form.postalCode"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autocomplete="postalCode"
                 />
               </div>
@@ -188,7 +188,7 @@
                     id="phone"
                     v-model="form.phone"
                     type="tel"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="phone"
                 />
@@ -206,7 +206,7 @@
                            type="checkbox"
                            v-model="form.terms"
                            required
-                           class="checkbox checkbox-info" />
+                           class="checkbox checkbox-info bg-white dark:bg-gray-800" />
                     <div class="ml-2">
                       I agree to the <a :href="route('terms.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
                     </div>

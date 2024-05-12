@@ -28,7 +28,7 @@
       </section>
 
 
-      <div v-show="!shopStore.showPaymentForm" class="mx-auto mt-8 px-12">
+      <div v-if="!shopStore.showPaymentForm" class="mx-auto mt-8 px-12">
         <h2 class="mt-6 mx-auto text-xl font-semibold text-white dark:text-gray-100">Payment form is loading...</h2>
       </div>
 
@@ -95,9 +95,11 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { loadStripe } from '@stripe/stripe-js'
@@ -105,7 +107,9 @@ import { Inertia } from '@inertiajs/inertia'
 
 usePageSetup('shop/subscribe')
 
+const userStore = useUserStore()
 const appSettingStore = useAppSettingStore()
+const notificationStore = useNotificationStore()
 const shopStore = useShopStore()
 
 let props = defineProps({
@@ -127,6 +131,17 @@ let emailAddress
 let StripeAPIKey = ''
 StripeAPIKey = process.env.MIX_STRIPE_KEY
 
+// Watch for changes in userStore.hasConsentedToCookies
+watch(
+    () => userStore.hasConsentedToCookies,
+    (newVal) => {
+      appSettingStore.showCookieBanner = !newVal;
+      showPaymentForm()
+    },
+    { immediate: true } // Execute immediately on load
+);
+
+
 onMounted(async () => {
   shopStore.customer = props.user
 
@@ -134,7 +149,8 @@ onMounted(async () => {
 
   initialize()
 
-  showPaymentForm()
+
+
 
   document
       .querySelector('#payment-form')
@@ -214,6 +230,7 @@ async function submit() {
 
   if (error) {
     if (error.type === 'card_error' || error.type === 'validation_error') {
+      notificationStore.setGeneralServiceNotification(error.code, error.message)
       showMessage(error.message)
     } else {
       showMessage('An unexpected error occurred.')

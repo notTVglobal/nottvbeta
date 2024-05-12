@@ -46,13 +46,18 @@ const currentDay = computed(() => {
 
 // Function to update current time
 function updateCurrentTime() {
-  const timezone = userStore.timezone || 'UTC'  // Default to 'UTC' if no timezone is set
+  const timezone = userStore.timezone || 'UTC'; // Default to 'UTC' if no timezone is set
 
   // Use dayjs to handle the timezone conversion
-  const currentTime = dayjs().tz(timezone).format('YYYY-MM-DD HH:mm:ss')
+  const currentTime = dayjs().tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+  const minutes = dayjs().tz(timezone).format('mm');
 
-  scheduleStore.setBaseTime(currentTime)
-  console.log('Time updated:', currentTime)
+  scheduleStore.setBaseTime(currentTime);
+
+  // Log the time only at the top of the hour and the half-hour mark
+  if (minutes === '00' || minutes === '30') {
+    console.log('Time updated:', currentTime);
+  }
 }
 
 // Function to start auto-update interval

@@ -134,12 +134,15 @@ class HandleInertiaRequests extends Middleware {
                 'name',
                 'email',
                 'timezone',
+                'country',
                 'isVip',
                 'profile_photo_url',
                 'profile_photo_path'
             ), [
                 'isCreator' => !empty($user->creator), // Assuming $user->creator is a property or method that returns a truthy or falsy value
                 'videoSettings' => $user->videoSettings ? $user->videoSettings->toArray() : null,
+                'isSubscriber'       => $user->subscribed('default'),
+                'subscriptionStatus' => $user->subscription('default'),
             ]) : null;
           }
           return null;
