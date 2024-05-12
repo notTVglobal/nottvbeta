@@ -218,9 +218,15 @@ class CreatorsController extends Controller {
       return redirect()->route('home')->with('error', $validationResult['message']);
     }
 
+    $user = Auth::user();
+
     // Code is valid, proceed to show the registration form
     return Inertia::render('Creators/Register/Index', [
         'inviteCodeUlid' => $inviteCode->ulid,
+        'user'           => $user ? [
+            'name'  => $user->name,
+            'email' => $user->email,
+        ] : null,
     ]);
   }
 
@@ -230,11 +236,17 @@ class CreatorsController extends Controller {
       return back()->withErrors(['invite_code' => 'The provided invite code has already been used.'])->withInput();
     }
 
-    // Validate the request data including the invite code.
-    $validatedData = Validator::make($request->all(), [
+    // Check if the user is authenticated
+    $user = Auth::user();
+
+    if ($user && $user->email !== $request->email) {
+      return back()->withErrors(['mismatched_email' => 'You are already logged in and this email address does not match. Please log out and try again or enter the correct email address.'])->withInput();
+    }
+
+    // Adjust validation rules
+    $validationRules = [
         'name'                  => ['required', 'string', 'max:255'],
-        'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-      // Include other validation rules as per your requirement
+        'email'                 => ['required', 'string', 'email', 'max:255'],
         'address1'              => ['sometimes', 'string', 'max:255'],
         'address2'              => ['sometimes', 'string', 'max:255'],
         'city'                  => ['sometimes', 'string', 'max:255'],
@@ -244,10 +256,16 @@ class CreatorsController extends Controller {
         'password'              => array_merge(['required', 'confirmed'], $this->passwordRules()),
         'password_confirmation' => ['required', 'same:password'],
         'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-//          'invite_code'           => ['required', new UnclaimedInviteCode([4])],
-        'postalCode'            => ['nullable', 'string', 'max:255',]
-      // Add any other fields you're validating
-    ])->validate();
+        'postalCode'            => ['nullable', 'string', 'max:255'],
+    ];
+
+    if (!$user || ($user->email !== $request->email)) {
+      $validationRules['email'][] = 'unique:users';
+    }
+
+    // Validate the request data including the invite code
+    $validatedData = Validator::make($request->all(), $validationRules)->validate();
+
 
     $creatorAction = new CreateNewCreator();
     try {
@@ -403,17 +421,18 @@ class CreatorsController extends Controller {
 //          'message'           => 'First play settings updated successfully.',
 //          'firstPlaySettings' => $appSetting->first_play_settings,
 //      ]);
-      Log::info('Settings updated successfully 111.',  $currentSettings);
+      Log::info('Settings updated successfully 111.', $currentSettings);
+
       return redirect()->back()->with(['message' => 'Settings updated successfully!'], 200);
 
     } catch (\Exception $e) {
       // Serialize the error details into a string or simply pass a basic error message
       $detailedError = 'Failed to update settings: ' . $e->getMessage();
+
       // Redirect back with an error message
       return redirect()->back()->with('error', $detailedError);
     }
   }
-
 
 
   /**

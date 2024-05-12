@@ -94,6 +94,7 @@
                   <button @click.stop="oneTimeDonation('onetime') "
                           class="donate-now-btn hover:bg-green-700 bg-green-500 rounded-lg px-2 py-2">Donate Now
                   </button>
+                  <p class="text-xs text-gray-50 mt-1">Please enter an amount between $5 and $3000.</p>
                 </div>
               </template>
             </ContributeCard>

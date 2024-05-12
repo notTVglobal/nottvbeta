@@ -12,7 +12,7 @@ const initialState = () => ({
     upgradeSelection: '',
     upgradeStripeId: '',
     selectedSubscriptionPrice: null,
-    donationAmount: 50, // Default or initial value
+    donationAmount: 5, // Default or initial value
     showPaymentForm: false,
     premiumMonthlyStripeId: 'price_1NoiAOKahp38LUVYPWtzQ8f1',
     premiumYearlyStripeId: 'price_1NhgZTKahp38LUVY8n9Skgwf',
