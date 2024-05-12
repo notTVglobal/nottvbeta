@@ -97,7 +97,7 @@
             <SingleImage v-if="show.content.image"
                          :image="show.content.image"
                          :alt="show.content.name"
-                         class="w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80"/>
+                         class="w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
           </div>
           <p class="text-lg">{{ formatDuration(show.durationMinutes) }}</p>
         </div>

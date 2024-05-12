@@ -46,11 +46,14 @@
 
           </div>
 
-          <div class="">
+          <div class="mb-2">
             <SocialMediaBadgeLinks :socialMediaLinks="show.socialMediaLinks"/>
           </div>
 
-          <ShowsIdIndexWatchLive :show="show" :team="team"/>
+          <div>
+            <ShowsIdIndexWatchLive :show="show" :team="team"/>
+          </div>
+
 
           <div
               class="w-full flex flex-wrap mt-5 m-auto xl:mx-0 items-center justify-center xl:justify-start gap-x-4 gap-y-2 ">

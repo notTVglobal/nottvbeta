@@ -21,7 +21,7 @@
             🌟 A huge thank you for being a vibrant part of our journey! Dive into your unique content journey and explore your payment plan and history anytime - just navigate to the top menu and select 'Account'. Together, we're redefining the way the world communicates. 🌈
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl items-start">
             <!-- Monthly Contribution Card -->
             <ContributeCard v-if="!userStore.isSubscriber" @click="startSubscription('monthly')" :color="`blue`" :animation="true" :itemSelected="`monthlyContribution`" class="cursor-pointer">
               <template #title>Monthly</template>
@@ -39,7 +39,7 @@
             </ContributeCard>
 
             <!-- One-Time Contribution Card -->
-            <ContributeCard @click="oneTimeDonation('onetime')" :color="`green`" :animation="true" :disableButton="true" :itemSelected="`oneTimeDonation`" class="cursor-pointer">
+            <ContributeCard :color="`green`" :animation="true" :disableButton="true" :itemSelected="`oneTimeDonation`" class="cursor-pointer">
               <template #title>One-Time Donation</template>
               <template #icon><font-awesome-icon icon="fa-heart" class="text-2xl"/></template>
               <template #main>
@@ -47,25 +47,36 @@
               </template>
               <template #button>
                 <div class="flex items-center space-x-4 w-full">
-                  <input type="range"
-                         v-model="donationAmount"
-                         min="5"
-                         max="3000"
-                         class="range range-success bg-white text-black hover:shadow-lg transition-shadow duration-200"
-                         @input="handleDonationAmountChange">
+                  <div class="flex flex-col w-full">
+                    <input v-model="donationAmount"
+                           type="range"
+                           min="25"
+                           max="125"
+                           value="25"
+                           class="range range-success bg-white text-black hover:shadow-lg transition-shadow duration-200"
+                           step="25"
+                           @input="handleDonationAmountChange" />
+                    <div class="w-full flex justify-between text-xs px-2">
+                      <span>|</span>
+                      <span>|</span>
+                      <span>|</span>
+                      <span>|</span>
+                      <span>|</span>
+                    </div>
+                  </div>
                   <span class="text-black">$ {{ donationAmount }}</span>
                 </div>
 
                 <!-- Input for manual donation amount entry -->
                 <div class="input-container">
                   <input type="number" v-model="donationAmount" @input="handleDonationAmountChange" placeholder="Enter amount" class="bg-white text-black input input-bordered input-success input-md w-24 mr-10 mt-2">
-                  <button @click="oneTimeDonation('onetime') " class="donate-now-btn hover:bg-green-700 bg-green-500 rounded-lg px-2 py-2">Donate Now</button>
+                  <button @click.stop="oneTimeDonation('onetime') " class="donate-now-btn hover:bg-green-700 bg-green-500 rounded-lg px-2 py-2">Donate Now</button>
                 </div>
               </template>
             </ContributeCard>
 
             <!-- Favourite Show Contribution Card -->
-            <ContributeCard @click="oneTimeDonation('favouriteShow')" color="orange" :animation="true" :disableButton="true" :itemSelected="`favouriteShowContribution`" class="cursor-pointer">
+            <ContributeCard @click="oneTimeDonation('favouriteShow')" color="orange" :animation="true" :disableButton="false" :itemSelected="`favouriteShowContribution`" class="cursor-pointer">
               <template #title>Support Your Favorite <br />Show, Creator or Reporter</template>
               <template #icon><font-awesome-icon icon="fa-heart" class="text-2xl"/></template>
               <template #main>Contribute directly to the production of your favorite show. Your support helps us create more of the content you love.<br></template>
@@ -78,6 +89,23 @@
 
 
 
+
+        <dialog id="favouriteShowSelect" class="modal">
+          <div class="modal-box">
+            <h3 class="font-bold text-lg">Choose an Option</h3>
+            <p class="py-4">Please select one of the following:</p>
+            <div class="flex flex-col space-y-4">
+              <button class="btn btn-primary" @click="selectOption('creator')">Creator</button>
+              <button class="btn btn-primary" @click="selectOption('show')">Show</button>
+              <button class="btn btn-primary" @click="selectOption('reporter')">Reporter</button>
+            </div>
+            <div class="modal-action">
+              <form method="dialog">
+                <button class="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
 
 
 
@@ -263,6 +291,7 @@ function oneTimeDonation(type) {
       // shopStore.monthlyContribution();
       break;
     case 'favouriteShow':
+      document.getElementById('favouriteShowSelect').showModal()
       console.log(`Choose favourite show next...`);
       break;
   }

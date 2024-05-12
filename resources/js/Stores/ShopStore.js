@@ -94,7 +94,16 @@ export const useShopStore = defineStore('shopStore', {
             this.upgradeStripeId = ''
         },
         updateDonationAmount(amount) {
-            this.donationAmount = amount
+            const minAmount = 5;
+            const maxAmount = 3000;
+
+            if (amount < minAmount) {
+                this.donationAmount = minAmount;
+            } else if (amount > maxAmount) {
+                this.donationAmount = maxAmount;
+            } else {
+                this.donationAmount = amount;
+            }
         },
 
     },
