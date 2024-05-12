@@ -8160,10 +8160,6 @@ hr {
   max-height: 50vh;
 }
 
-.max-h-10 {
-  max-height: 2.5rem;
-}
-
 .max-h-12 {
   max-height: 3rem;
 }
@@ -8218,10 +8214,6 @@ hr {
 
 .max-h-\[96rem\] {
   max-height: 96rem;
-}
-
-.min-h-10 {
-  min-height: 2.5rem;
 }
 
 .min-h-12 {
@@ -8437,10 +8429,6 @@ hr {
 
 .min-w-0 {
   min-width: 0px;
-}
-
-.min-w-10 {
-  min-width: 2.5rem;
 }
 
 .min-w-12 {
@@ -12853,11 +12841,6 @@ hr {
     margin-bottom: 1.5rem;
   }
 
-  .lg\:mx-12 {
-    margin-left: 3rem;
-    margin-right: 3rem;
-  }
-
   .lg\:mb-0 {
     margin-bottom: 0px;
   }
@@ -13020,6 +13003,11 @@ hr {
     padding-right: 0.5rem;
   }
 
+  .lg\:px-48 {
+    padding-left: 12rem;
+    padding-right: 12rem;
+  }
+
   .lg\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -13033,21 +13021,6 @@ hr {
   .lg\:py-6 {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
-  }
-
-  .lg\:px-12 {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-
-  .lg\:px-32 {
-    padding-left: 8rem;
-    padding-right: 8rem;
-  }
-
-  .lg\:px-48 {
-    padding-left: 12rem;
-    padding-right: 12rem;
   }
 
   .lg\:pb-0 {
