@@ -1117,7 +1117,7 @@ Route::middleware([
   // Consent to cookies
   Route::post('/users/consent-cookies', [UsersController::class, 'consentCookies'])->name('users.consentCookies');
   // Check cookie consent
-  Route::get('/users/consent-cookies', [UsersController::class, 'checkCookieConsent'])->name('users.consentCookies');
+  Route::get('/users/consent-cookies', [UsersController::class, 'checkCookieConsent'])->name('users.checkConsentCookies');
 
 // Chat
 ///////////
