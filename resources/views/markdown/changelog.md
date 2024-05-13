@@ -3,6 +3,11 @@
 Last Update: May 13, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.14
+May 13, 2024
+* Fix the shows index page on logged out missing nav bar and footer.
+* Some other fixes and minor improvements
+
 ## v0.9.0.13
 May 13, 2024
 * Created a process for handling Creator registrations for existing users
