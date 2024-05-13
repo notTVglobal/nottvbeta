@@ -6,14 +6,12 @@
 <script setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import { FontFamily } from '@tiptap/extension-font-family'
-import Paragraph from '@tiptap/extension-paragraph'
 import Typography from '@tiptap/extension-typography'
 import { TextAlign } from '@tiptap/extension-text-align' // Import the desired extensions
-import { Strike } from '@tiptap/extension-strike'
 import { Underline } from '@tiptap/extension-underline'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Superscript } from '@tiptap/extension-superscript'
@@ -44,10 +42,17 @@ let editor = ref(
           openOnClick: true,
         }),
       ],
-      content: JSON.parse(props.content), // Use the passed Tiptap JSON content
+      content: props.content, // Use the passed Tiptap JSON content
       editable: false
     })
 );
+
+// Ensure editor is destroyed properly on component unmount
+onBeforeUnmount(() => {
+  if (editor.value) {
+    editor.value.destroy()
+  }
+})
 </script>
 
 

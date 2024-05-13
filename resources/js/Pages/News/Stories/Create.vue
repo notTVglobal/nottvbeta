@@ -49,7 +49,7 @@
                 for="content_json"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Content</label>
-            <TipTapEditor v-if="appSettingStore.currentPage === 'newsCreate'"/>
+            <tip-tap-news-story-editor v-if="appSettingStore.currentPage === 'newsCreate'"/>
             <div
                 v-if="errors.body"
                 class="text-sm text-red-600"
@@ -85,7 +85,7 @@ import { useNewsStore } from '@/Stores/NewsStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 // import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 // import Tiptap from '@/Components/Global/TextEditor/TiptapNewsStoryCreate'
-import TipTapEditor from '@/Components/Global/TextEditor/TipTapNewsStoryEditor'
+import TipTapNewsStoryEditor from '@/Components/Global/TextEditor/TipTapNewsStoryEditor'
 // import Tiptap from "@/Components/Global/TextEditor/TiptapNewsStoryEdit"
 import CategoryCitySelector from '@/Components/Pages/News/CategoryCitySelector.vue'
 import Message from '@/Components/Global/Modals/Messages'
@@ -162,15 +162,23 @@ watch(() => [newsStore.news_category_id, newsStore.news_category_sub_id], () => 
 const submit = () => {
   props.processing = true
   // if no category selected alert
+  // Check if a category is selected
+  if (!newsStore.selectedCategory || !newsStore.selectedCategory.id) {
+    alert('Please select a category.')
+    props.processing = false
+    return
+  }
 
   // Check if selectedSubcategory.id is null, and if so, set it to a default value or handle it as needed
   const subcategoryId = newsStore.selectedSubcategory ? newsStore.selectedSubcategory.id : null;
 
+  // Prepare the data object
   const data = {
     title: newsStore.newsArticleTitleTiptop,
     // body: newsStore.newsArticleContentTiptop,
     // body: JSON.stringify(newsStore.content_json),
-    content_json: JSON.stringify(newsStore.newsArticleContentTiptop),
+    content: newsStore.newsArticleContentTiptop, // Ensure this contains HTML content
+    content_json: JSON.stringify(newsStore.content_json),
     news_category_id: newsStore.selectedCategory.id,
     news_category_sub_id: subcategoryId, // Use the value after handling null
     city_id: newsStore.selectedLocation.city_id,
@@ -188,7 +196,7 @@ const submit = () => {
 onBeforeMount(() => {
   newsStore.newsArticleTitleTiptop = ''
   newsStore.newsArticleContentTiptop = ''
-  newsStore.content_json = null
+  newsStore.content_json = {}
 })
 
 onBeforeUnmount(() => {

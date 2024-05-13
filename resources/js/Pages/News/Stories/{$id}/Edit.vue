@@ -89,7 +89,7 @@
                 for="slug"
                 class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
             >Content</label>
-            <TipTapEditor v-if="appSettingStore.currentPage === 'newsEdit'" />
+            <tip-tap-news-story-editor v-if="appSettingStore.currentPage === 'newsEdit'" />
             <!--                        <tabbable-textarea-->
             <!--                            type="text"-->
             <!--                            v-model="form.content"-->
@@ -125,17 +125,16 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNewsStore } from '@/Stores/NewsStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import TipTapEditor from '@/Components/Global/TextEditor/TipTapNewsStoryEditor'
+import TipTapNewsStoryEditor from '@/Components/Global/TextEditor/TipTapNewsStoryEditor'
 import CategoryCitySelector from '@/Components/Pages/News/CategoryCitySelector.vue'
 import Message from '@/Components/Global/Modals/Messages'
 import CancelButton from '@/Components/Global/Buttons/CancelButton.vue'
 import 'vue-select/dist/vue-select.css'; // Import the CSS
-import vSelect from 'vue-select';
 
 usePageSetup('newsEdit')
 
@@ -239,7 +238,8 @@ const submit = () => {
     title: newsStore.newsArticleTitleTiptop,
     status: props.newsStory.status.id,
     // body: JSON.stringify(newsStore.content_json),
-    content_json: JSON.stringify(newsStore.newsArticleContentTiptop),
+    content: newsStore.newsArticleContentTiptop,
+    content_json: JSON.stringify(newsStore.content_json),
     news_category_id: newsStore.news_category_id,
     news_category_sub_id: newsStore.news_category_sub_id, // Use the value after handling null
     city_id: newsStore.city_id,

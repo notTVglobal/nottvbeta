@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { onBeforeUnmount, watch } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { History } from '@tiptap/extension-history'
@@ -24,10 +24,8 @@ import { Color } from '@tiptap/extension-color'
 import Typography from '@tiptap/extension-typography'
 import CharacterCount from '@tiptap/extension-character-count'
 import Placeholder from '@tiptap/extension-placeholder'
-import Paragraph from '@tiptap/extension-paragraph'
 import { FontFamily } from '@tiptap/extension-font-family'
 import { TextAlign } from '@tiptap/extension-text-align'
-import { Strike } from '@tiptap/extension-strike'
 import { Underline } from '@tiptap/extension-underline'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Superscript } from '@tiptap/extension-superscript'
@@ -38,7 +36,7 @@ const newsStore = useNewsStore()
 const limit = 5000
 
 // Watch for changes in the content and update the editor
-watch(() => newsStore.content_json, (newContent) => {
+watch(() => newsStore.newsArticleContentTipTap, (newContent) => {
   if (editor && newContent) {
     editor.commands.setContent(newContent)
   }
@@ -67,20 +65,12 @@ const editor = new Editor({
       limit: limit,
     }),
     Placeholder.configure({
-      // Use a placeholder:
       placeholder: 'Write something …',
-      // Use different placeholders depending on the node type:
-      // placeholder: ({ node }) => {
-      //   if (node.type.name === 'heading') {
-      //     return 'What’s the title?'
-      //   }
-
-      //   return 'Can you add some further context?'
-      // },
     }),
   ],
   onUpdate: ({editor}) => {
-    newsStore.newsArticleContentTiptop = editor.getJSON()
+    // newsStore.newsArticleContentTiptop = editor.getJSON()
+    newsStore.newsArticleContentTiptop = editor.getHTML()
 
     // Auto-save -> triggered on every change,
     // currently disabled. Needs to be throttled.
@@ -94,15 +84,16 @@ const editor = new Editor({
     },
   },
 })
-
-// onBeforeUnmount(() => {
-//     // this isn't working, I think it's
-//     // needed for the history extension.
-//     editor.destroy()
-// })
-
 History.configure({
   depth: 10,
+})
+
+
+// Ensure editor is destroyed properly on component unmount
+onBeforeUnmount(() => {
+  if (editor) {
+    editor.destroy()
+  }
 })
 
 </script>

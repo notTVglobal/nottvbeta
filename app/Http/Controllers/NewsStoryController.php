@@ -293,6 +293,7 @@ class NewsStoryController extends Controller {
    * @return RedirectResponse
    */
   public function store(HttpRequest $request) {
+dd($request);
     $validatedData = $request->validate([
         'title'                             => 'required|string|max:255|unique:news_stories',
         'content_json'                      => 'nullable|json',
@@ -374,9 +375,8 @@ class NewsStoryController extends Controller {
             'newsStory' => [
                 'id'                           => $newsStory->id,
                 'slug'                         => $newsStory->slug,
-                'title'                        => html_entity_decode($newsStory->title),
-//                'content'                      => html_entity_decode($newsStory->content),
-                'content'                      => html_entity_decode($newsStory->content),
+                'title'                        => $newsStory->title,
+                'content'                      => $newsStory->content,
                 'content_json'                 => $newsStory->content_json,
                 'author'                       => $newsStory->newsPerson->user->name ?? $newsStory->user->name,
                 'newsCategory'                 => $newsStory->newsCategory->name,
@@ -431,8 +431,8 @@ class NewsStoryController extends Controller {
             'newsStory'      => [
                 'id'                                => $newsStory->id,
                 'slug'                              => $newsStory->slug,
-                'title'                             => html_entity_decode($newsStory->title),
-//                'content'                           => html_entity_decode($newsStory->content),
+                'title'                             => $newsStory->title,
+                'content'                           => $newsStory->content,
                 'content_json'                      => $newsStory->content_json,
                 'user'                              => [
                     'name' => $newsStory->user->name,
@@ -473,10 +473,13 @@ class NewsStoryController extends Controller {
    */
   public function update(HttpRequest $request, NewsStory $newsStory) {
 
+    // Original status
     $originalStatus = $newsStory->status;
 
+    // Validate the input data
     $validatedData = $request->validate([
         'title'                             => 'required|string|max:255|' . Rule::unique('news_stories')->ignore($newsStory->id),
+        'content'                           => 'nullable|string|max:5000',
         'content_json'                      => 'nullable|json',
         'status'                            => 'required|exists:news_statuses,id',
         'news_category_id'                  => 'required|integer',
@@ -488,6 +491,48 @@ class NewsStoryController extends Controller {
         'news_person_id'                    => 'required|integer'
     ]);
 
+    // Sanitize the content using Mews\Purifier
+    $sanitizedContent = Purifier::clean($validatedData['content']);
+
+    // Sanitize the title using htmlentities
+    $sanitizedTitle = htmlentities($validatedData['title']);
+
+    // Update the news story
+    $newsStory->title = $sanitizedTitle;
+    $newsStory->slug = \Str::slug($sanitizedTitle);
+    $newsStory->content = $sanitizedContent;
+    $newsStory->content_json = $validatedData['content_json'];
+    $newsStory->news_person_id = $validatedData['news_person_id'];
+    $newsStory->status = $validatedData['status'];
+    $newsStory->news_category_id = $validatedData['news_category_id'];
+    $newsStory->news_category_sub_id = $validatedData['news_category_sub_id'];
+    $newsStory->city_id = $validatedData['city_id'];
+    $newsStory->province_id = $validatedData['province_id'];
+    $newsStory->news_federal_electoral_district_id = $validatedData['federal_electoral_district_id'];
+    $newsStory->news_subnational_electoral_district_id = $validatedData['subnational_electoral_district_id'];
+
+    // Check if only the status has changed
+    $onlyStatusChanged = $newsStory->isDirty('status') && $newsStory->getDirty() == ['status' => $validatedData['status']];
+
+    // Save the news story
+    $newsStory->save();
+
+    // Customizing the success message
+    $message = 'News Story Updated Successfully';
+    if ($newsStory->status == 6) { // Replace '6' with your actual 'published' status ID
+      $message = 'News Story Published Successfully';
+    }
+
+    // Return appropriate response
+    if ($request->wantsJson()) {
+      return response()->json(['message' => $message]);
+    }
+
+    if ($onlyStatusChanged) {
+      return redirect()->route('newsroom')->with('message', $message);
+    } else {
+      return redirect()->route('news/story.show', [$newsStory->slug])->with('message', $message);
+    }
 
 //    // Updating the NewsStory
 //    if (array_key_exists('title', $validatedData)) {
