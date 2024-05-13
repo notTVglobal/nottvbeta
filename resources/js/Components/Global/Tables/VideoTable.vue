@@ -190,8 +190,7 @@ function reload() {
 }
 
 function deleteVideo($video) {
-  if (confirm('Are you sure you want to delete this video? This action is not reversible and may have' +
-      ' devastating effects on the database.')) {
+  if (confirm('Are you sure you want to delete this video? This action is not reversible.')) {
     Inertia.post('/video/delete', {'videoId': $video.id});
   }
 }

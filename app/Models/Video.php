@@ -73,7 +73,7 @@ class Video extends Model {
   }
 
   public function showEpisode() {
-    return $this->hasOne(ShowEpisode::class);
+    return $this->hasOne(ShowEpisode::class, 'video_id');
   }
 
   public function movie() {
@@ -98,5 +98,25 @@ class Video extends Model {
 
   public function channels() {
     return $this->hasMany(Channel::class);
+  }
+
+  public function otherContent() {
+    return $this->hasOne(OtherContent::class);
+  }
+
+  // Method to get all attachments
+  public function attachments()
+  {
+    // Get all related models and merge into a single collection
+    // Add other related models here...
+
+    return collect()
+        ->merge($this->mistStream)
+        ->merge($this->mistStreamWildcard)
+        ->merge($this->newsStory)
+        ->merge($this->showEpisode)
+        ->merge($this->movie)
+        ->merge($this->movieTrailer)
+        ->merge($this->otherContent);
   }
 }

@@ -23,23 +23,29 @@ class ShopController extends Controller {
     $options = [];
     switch ($type) {
       case 'creator':
-        $options = Creator::with('user')->get()->map(function ($creator) {
-          return [
-              'id'                 => $creator->id,
-              'name'               => $creator->user->name,
-              'profile_photo_path' => $creator->user->profile_photo_path,
-              'profile_photo_url'  => $creator->user->profile_photo_url,
-          ];
-        });
+        $options = Creator::with('user')
+            ->whereJsonContains('settings', ['profile_is_public' => true])
+            ->get()
+            ->map(function ($creator) {
+              return [
+                  'id'                 => $creator->id,
+                  'name'               => $creator->user->name,
+                  'profile_photo_path' => $creator->user->profile_photo_path,
+                  'profile_photo_url'  => $creator->user->profile_photo_url,
+              ];
+            });
         break;
       case 'show':
-        $options = Show::with('image.appSetting')->get()->map(function ($show) {
-          return [
-              'id'    => $show->id,
-              'name'  => $show->name,
-              'image' => $show->image ? (new ImageResource($show->image))->resolve() : null,
-          ];
-        });
+        $options = Show::with('image.appSetting')
+            ->whereIn('show_status_id', [1, 2])
+            ->get()
+            ->map(function ($show) {
+              return [
+                  'id'    => $show->id,
+                  'name'  => $show->name,
+                  'image' => $show->image ? (new ImageResource($show->image))->resolve() : null,
+              ];
+            });
         break;
       case 'reporter':
         $options = NewsPerson::with('user')

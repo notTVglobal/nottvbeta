@@ -1158,8 +1158,7 @@ Route::middleware([
       ->name('videoupload.upload');
 
   // delete video
-  Route::post('/video/delete', [VideoUploadController::class, 'destroy'])
-      ->can('delete', 'App\Models\Video')
+  Route::post('/video/delete', [VideoController::class, 'destroy'])
       ->name('video.destroy');
 
 

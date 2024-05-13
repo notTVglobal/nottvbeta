@@ -438,23 +438,5 @@ class VideoUploadController extends Controller {
     //
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param \App\Models\Video $video
-   * @return \Illuminate\Http\Response
-   */
-  public function destroy(HttpRequest $request) {
-    $video = Video::query()->where('id', $request->videoId)->first();
-//        Storage::disk('spaces')->delete('path/file.jpg');
-    Storage::disk('spaces')->delete($video->cloud_folder . $video->folder . '/' . $video->file_name);
 
-
-//        $user->deleteProfilePhoto();
-//        $user->tokens->each->delete();
-    $video->delete();
-
-    // redirect
-    return redirect('/videoupload')->with('message', $video->file_name . ' Deleted Successfully');
-  }
 }
