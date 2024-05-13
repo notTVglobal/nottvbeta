@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Events\CreatorRegistrationCompleted;
+use App\Mail\InviteExistingCreatorMail;
 use App\Models\Creator;
 use App\Models\InviteCode;
 use App\Models\NewsCountry;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -85,23 +87,29 @@ class CreatorsController extends Controller {
     $invite_url = $url;
     $invite_code = $inviteCode->code;
 
+    // Check if the email belongs to an already registered creator
+    $creator = Creator::with('user')->whereHas('user', function ($query) use ($email) {
+      $query->where('email', $email);
+    })->first();
+
     // Send the email
     try {
-      Mail::to($validatedRequest['email'])->send(new InviteCreatorMail($name, $email, $message, $from_name, $invite_url, $invite_code));
-//      Mail::to($validatedRequest['email'])->send(new InviteCreatorMail([
-//          'message' => $validatedRequest['message'] ?? '',
-//          'name'    => $validatedRequest['name'] ?? '',
-//          'email'   => $validatedRequest['email'] ?? '',
-//          'from_name' => auth()->user()->name,
-//          'invite_url' => $url,
-//          'invite_code' => $inviteCode->code,
-//      ]));
+      if ($creator) {
+        // Send modified email to existing creator
+        Mail::to($email)->send(new InviteExistingCreatorMail($name, $email, $message, $from_name));
+        $request->session()->flash('success', "$name already has a creator account! We'll send them a reminder with your message.");
+      } else {
+        // Send the regular invitation email
+        Mail::to($email)->send(new InviteCreatorMail($name, $email, $message, $from_name, $invite_url, $invite_code));
+        $request->session()->flash('success', 'Invitation email sent successfully.');
+      }
+
+      return redirect()->route('invite')->with('success', $request->session()->get('success'));
     } catch (\Exception $e) {
       Log::error('Mail sending error from Creator Invitation Email form: ' . $e->getMessage());
       $request->session()->flash('error', 'There was an error submitting the form.');
 
       return redirect()->route('invite')->with('error', 'There was an error submitting the form.');
-      // Optionally return an error response
     }
 
 
@@ -181,6 +189,11 @@ class CreatorsController extends Controller {
       // Compare the provided invite code with the model's code
       if ($validated['inviteCode'] === $inviteCode->code) {
         // Return a JSON response indicating success
+        $user = Auth::user();
+        // Store the necessary data in the session
+        Session::put('creatorRegistration', true);
+        Session::put('inviteCode', $inviteCode->code);
+
         return response()->json(['success' => true], 200);
       } else {
         // Log the mismatch for auditing purposes
@@ -218,78 +231,197 @@ class CreatorsController extends Controller {
       return redirect()->route('home')->with('error', $validationResult['message']);
     }
 
+    $user = Auth::user();
+
+    $isCreator = '';
+    $isUser = '';
+
+    if ($user && $user->isCreator()) {
+      $isCreator = 'You’re already a part of the notTV family. Please log out to register a new creator.';
+    } else if ($user && !$user->isCreator()) {
+      $isUser = 'You’re almost there! Upgrade now to unlock your full potential as a notTV Creator.';
+    }
+
+    // Store the necessary data in the session
+    Session::put('inviteCodeUlid', $inviteCode->ulid);
+
     // Code is valid, proceed to show the registration form
     return Inertia::render('Creators/Register/Index', [
         'inviteCodeUlid' => $inviteCode->ulid,
+        'isCreator'      => $isCreator ?? null,
+        'isUser'         => $isUser ?? null,
+        'user'           => $user ? [
+            'name'  => $user->name ?? null,
+            'email' => $user->email ?? null,
+            'country' => $user->country ?? null,
+            'postalCode' => $user->postalCode ?? null,
+        ] : null,
     ]);
   }
 
   public function register(HttpRequest $request, InviteCode $inviteCode) {
-
+    // Check if the invite code has already been claimed
     if ($inviteCode->claimed) {
       return back()->withErrors(['invite_code' => 'The provided invite code has already been used.'])->withInput();
     }
 
-    // Validate the request data including the invite code.
-    $validatedData = Validator::make($request->all(), [
+    // Check if the user is authenticated
+    $user = Auth::user();
+
+    // Adjust validation rules
+    $validationRules = [
         'name'                  => ['required', 'string', 'max:255'],
-        'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-      // Include other validation rules as per your requirement
+        'email'                 => ['required', 'string', 'email', 'max:255'],
         'address1'              => ['sometimes', 'string', 'max:255'],
         'address2'              => ['sometimes', 'string', 'max:255'],
         'city'                  => ['sometimes', 'string', 'max:255'],
         'province'              => ['sometimes', 'string', 'max:255'],
         'country'               => ['required', 'exists:news_countries,name'],
         'phone'                 => ['sometimes', 'string', 'max:255'],
-        'password'              => array_merge(['required', 'confirmed'], $this->passwordRules()),
-        'password_confirmation' => ['required', 'same:password'],
+        'postalCode'            => ['nullable', 'string', 'max:255'],
         'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-//          'invite_code'           => ['required', new UnclaimedInviteCode([4])],
-        'postalCode'            => ['nullable', 'string', 'max:255',]
-      // Add any other fields you're validating
-    ])->validate();
+    ];
 
-    $creatorAction = new CreateNewCreator();
+    // If the user is not authenticated, add password validation rules
+    if (!$user) {
+      $validationRules['password'] = array_merge(['required', 'confirmed'], $this->passwordRules());
+      $validationRules['password_confirmation'] = ['required', 'same:password'];
+    }
+
+    // If the email does not match the authenticated user's email, ensure the email is unique
+    if (!$user || ($user->email !== $request->email)) {
+      $validationRules['email'][] = 'unique:users';
+    }
+
+    // Validate the request data including the invite code
+    $validatedData = Validator::make($request->all(), $validationRules)->validate();
+
+//    if ($user && $user->email !== $request->email) {
+//      return back()->withErrors(['mismatched_email' => $user->name . ' is already logged in and this email address does not match. Please log out and try again.'])->withInput();
+//    }
+
+
+    // If the user is authenticated and the email matches but the user is not a creator
+    if ($user && $user->email === $request->email && !$user->isCreator()) {
+      // Proceed with updating user information or additional logic
+      // For example, you could update their role to creator here
+      return $this->updateUserToCreator($user, $validatedData, $inviteCode);
+    }
+
+    // Proceed with user creation if no errors
     try {
+      $creatorAction = new CreateNewCreator();
       $user = $creatorAction->create($validatedData + ['invite_code' => $inviteCode]);
 
       event(new Registered($user));
       event(new CreatorRegistrationCompleted($user));
-
-      return redirect()->route('dashboard')->with('feedback', 'Welcome to the platform!');
+      Log::debug('Registered User and Creator Registration Completed.');
+      // Redirect to dashboard with a full page reload
+      return redirect('/dashboard');
     } catch (\Exception $e) {
       Log::error('Registration failed: ' . $e->getMessage());
 
       return back()->withErrors(['registration' => 'An unexpected error occurred during registration. Please try again.'])->withInput();
     }
-
-
-    // Validate the request data and the code.
-    // Create the user and associated creator record.
-    // Mark the invite code as used.
-    // Send a welcome email.
-    $inputData = $request->all() + ['invite_code' => $inviteCode]; // Adding invite code ID to the data array
-    $creatorAction = new CreateNewCreator();
-    try {
-      // Attempt to create the new creator, this method should return the User model on success
-      // or throw an Exception on failure
-      $user = $creatorAction->create($inputData);
-
-      // Assuming the creation was successful, redirect to the dashboard with a success message
-      return redirect()->route('dashboard')->with('feedback', 'Welcome to the platform!');
-      // TODO: Build a Welcome/Introduction page with progress bar (showOnBoardingStep($step))
-
-    } catch (\Exception $e) {
-      // Log the error message for debugging
-      Log::error('Registration failed: ' . $e->getMessage());
-
-      // Redirect back to the registration form with an error message.
-      // Assuming you're using Inertia.js, you might want to adjust this to fit its response style.
-      // If you're using traditional blade templates, you can use `redirect()->back()`
-      return back()->with('error', 'An unexpected error occurred during registration. Please try again.')->withInput();
-
-    }
   }
+
+  protected function updateUserToCreator($user, $validatedData, $inviteCode): \Illuminate\Http\RedirectResponse {
+    // Update user information and set them as a creator
+    $user->update([
+        'name'       => $validatedData['name'],
+        'address1'   => $validatedData['address1'] ?? null,
+        'address2'   => $validatedData['address2'] ?? null,
+        'city'       => $validatedData['city'] ?? null,
+        'province'   => $validatedData['province'] ?? null,
+        'country'    => $validatedData['country'],
+        'postalCode' => $validatedData['postalCode'] ?? null,
+        'phone'      => $validatedData['phone'] ?? null,
+    ]);
+
+    $user->creator()->create([
+        'invite_code_id' => $inviteCode->id,
+    ]);
+
+    event(new CreatorRegistrationCompleted($user));
+    Log::debug('Creator Registration Completed with already registered user.');
+    // Redirect to dashboard with a full page reload
+    return redirect('/dashboard');
+  }
+
+  public function markAsSeen(): \Illuminate\Http\JsonResponse {
+    $user = Auth::user();
+    $creator = Creator::where('user_id', $user->id)->first();
+
+    if ($creator) {
+      $creator->first_time = false;
+      $creator->save();
+    }
+
+    return response()->json(['message' => 'Creator marked as seen.']);
+  }
+
+  public function registerCheckEmail(HttpRequest $request) {
+
+    $email = $request->input('email');
+
+    $exists = User::where('email', $email)->exists();
+
+    return response()->json(['exists' => $exists]);
+  }
+//
+//    // If the user is not authenticated and the email matches an existing user
+//    $existingUser = User::where('email', $request->email)->first();
+//    if ($existingUser) {
+//      return back()->withErrors(['existing_email' => 'This email is already registered. Please log in to continue.'])->withInput();
+//    }
+//
+//    if ($user && !$user->creator && $user->email === $request->email) {
+//
+//    }
+
+//
+//    // Proceed with user creation if no errors
+//    try {
+//      $creatorAction = new CreateNewCreator();
+//      $user = $creatorAction->create($validatedData + ['invite_code' => $inviteCode]);
+//
+//      event(new Registered($user));
+//      event(new CreatorRegistrationCompleted($user));
+//
+//      return redirect()->route('dashboard')->with('feedback', 'Welcome to the platform!');
+//    } catch (\Exception $e) {
+//      Log::error('Registration failed: ' . $e->getMessage());
+//
+//      return back()->withErrors(['registration' => 'An unexpected error occurred during registration. Please try again.'])->withInput();
+//    }
+//
+//
+//    // Validate the request data and the code.
+//    // Create the user and associated creator record.
+//    // Mark the invite code as used.
+//    // Send a welcome email.
+//    $inputData = $request->all() + ['invite_code' => $inviteCode]; // Adding invite code ID to the data array
+//    $creatorAction = new CreateNewCreator();
+//    try {
+//      // Attempt to create the new creator, this method should return the User model on success
+//      // or throw an Exception on failure
+//      $user = $creatorAction->create($inputData);
+//
+//      // Assuming the creation was successful, redirect to the dashboard with a success message
+//      return redirect()->route('dashboard')->with('feedback', 'Welcome to the platform!');
+//      // TODO: Build a Welcome/Introduction page with progress bar (showOnBoardingStep($step))
+//
+//    } catch (\Exception $e) {
+//      // Log the error message for debugging
+//      Log::error('Registration failed: ' . $e->getMessage());
+//
+//      // Redirect back to the registration form with an error message.
+//      // Assuming you're using Inertia.js, you might want to adjust this to fit its response style.
+//      // If you're using traditional blade templates, you can use `redirect()->back()`
+//      return back()->with('error', 'An unexpected error occurred during registration. Please try again.')->withInput();
+//
+//    }
+//  }
 
   public function showOnboardingStep($step): Response {
     // Determine the view based on $step, or verify $step's validity...
@@ -403,17 +535,18 @@ class CreatorsController extends Controller {
 //          'message'           => 'First play settings updated successfully.',
 //          'firstPlaySettings' => $appSetting->first_play_settings,
 //      ]);
-      Log::info('Settings updated successfully 111.',  $currentSettings);
+      Log::info('Settings updated successfully 111.', $currentSettings);
+
       return redirect()->back()->with(['message' => 'Settings updated successfully!'], 200);
 
     } catch (\Exception $e) {
       // Serialize the error details into a string or simply pass a basic error message
       $detailedError = 'Failed to update settings: ' . $e->getMessage();
+
       // Redirect back with an error message
       return redirect()->back()->with('error', $detailedError);
     }
   }
-
 
 
   /**

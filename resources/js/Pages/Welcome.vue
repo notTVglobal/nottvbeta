@@ -144,7 +144,7 @@
   </transition>
 
   <Teleport to="body">
-    <Login :show="welcomeStore.showLogin===true" :userType="userType" @close="welcomeStore.showLogin = false"/>
+    <Login :show="false" :creatorRegistration="false" :userType="userType" @close="welcomeStore.showLogin = false"/>
     <Register :show="welcomeStore.showRegister===true" :userType="userType" @close="welcomeStore.showRegister = false"/>
   </Teleport>
 

@@ -1,7 +1,16 @@
 # not.tv Changelog
 
-Last Update: May 10, 2024\
+Last Update: May 13, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.13
+May 13, 2024
+* Created a process for handling Creator registrations for existing users
+
+## v0.9.0.12
+May 12, 2024
+* Add a cookie consent banner
+* Make the one-time donations buttons and payment processes work
 
 ## v0.9.0.11
 May 10, 2024

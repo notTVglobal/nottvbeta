@@ -24,7 +24,7 @@
               <div v-if="!inviteStore.registrationAllowed">
                 <p class="text-md text-gray-300 mb-6">Oops! It looks like you've stumbled upon our creator registration without an invite. Don't worry, though! Please check your email for the exclusive invite link or get in touch with the creator who's bringing you into our community. </p>
               </div>
-              <div v-if="inviteStore.registrationAllowed">
+              <div v-if="inviteStore.registrationAllowed && !showAdditionalCreatorContent">
                 <h2 class="text-lg md:text-xl text-gray-50 mb-4">Ready to Unleash Your Creativity?</h2>
                 <p class="text-md text-gray-300 mb-6">Before you join us as a creator, we highly recommend watching our brief video. It shares the essence of becoming a part of notTV, highlighting how you can make an impact with your unique voice and stories.</p>
                 <button @click="toggleVideoModal" class="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 border border-blue-700 rounded">
@@ -42,22 +42,16 @@
 
             <JetValidationErrors class="mb-4" />
 
-            <form @submit.prevent="submit" class="pb-10">
+            <div v-if="showAdditionalCreatorContent" class="flex flex-col justify-center items-center text-center gap-4">
+              <div>{{ isCreatorMessage }}</div>
+              <button @click="logout" class="btn">Log Out</button>
+            </div>
 
-              <div>
-                <JetLabel for="name" value="Name" />
-                <JetInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+            <form v-if="!showAdditionalCreatorContent" @submit.prevent="handleSubmit" class="pb-10">
+
+              <div v-if="showAdditionalUserContent" class="flex text-center text-xs tracking-wider">
+                <p>You are logged in!</p>
               </div>
-              <div v-if="form.errors.name" v-text="form.errors.name"
-                   class="text-xs text-red-600 mt-1"></div>
 
               <div class="mt-4">
                 <JetLabel for="email" value="Email" />
@@ -65,20 +59,53 @@
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    @blur="checkEmail"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
+                    autofocus
                     required
+                    autocomplete="email"
+                />
+              </div>
+              <div v-if="emailExists" class="mt-2 text-sm text-gray-600">
+                This email is already registered. If this is you, please <button @click="redirectToLogin" class="text-indigo-600 underline">log in</button> to upgrade your account.
+                <button @click="redirectToLogin" class="my-2 text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 border border-blue-700 rounded">
+                  Log in
+                </button>
+              </div>
+              <div v-if="form.errors.email" v-text="form.errors.email"
+                   class="text-xs text-red-600 mt-1"></div>
+
+              <div v-if="existingEmailError" class="flex flex-col justify-center items-center text-center my-4">
+                <div class="text-lg text-blue-600 font-semibold mb-1">
+                  <p>This email is already taken. Is it yours?</p>
+                  <p>Log in then click the invite link again!</p>
+                </div>
+                <button @click="redirectToLogin" class="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 border border-blue-700 rounded">
+                  Log in
+                </button>
+              </div>
+
+              <div class="mt-4">
+                <JetLabel for="name" value="Name" />
+                <JetInput
+                    id="name"
+                    v-model="form.name"
+                    type="text"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
+                    required
+                    autocomplete="name"
                 />
               </div>
               <div v-if="form.errors.name" v-text="form.errors.name"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div v-if="!showAdditionalUserContent" class="mt-4">
                 <JetLabel for="password" value="Password" />
                 <JetInput
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     required
                     autocomplete="new-password"
                 />
@@ -87,13 +114,13 @@
               <div v-if="form.errors.password" v-text="form.errors.password"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div v-if="!showAdditionalUserContent" class="mt-4">
                 <JetLabel for="password_confirmation" value="Confirm Password" />
                 <JetInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     required
                     autocomplete="new-password"
                 />
@@ -109,7 +136,7 @@
                     id="address1"
                     v-model="form.address1"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="address1"
                 />
@@ -123,7 +150,7 @@
                     id="address2"
                     v-model="form.address2"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="address2"
                 />
@@ -137,7 +164,7 @@
                     id="city"
                     v-model="form.city"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="city"
                 />
@@ -151,7 +178,7 @@
                     id="name"
                     v-model="form.province"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="province"
                 />
@@ -162,7 +189,7 @@
               <div class="mt-4">
                 <JetLabel for="country" value="Country" />
                 <select id="country" v-model="form.country"
-                        class="select select-bordered w-full max-w-xs mt-1 block">
+                        class="select select-bordered w-full max-w-xs mt-1 block text-black bg-white dark:bg-gray-800 dark:text-white">
                   <option v-for="country in countries" :key="country.id" :value="country.name">{{ country.name }}</option>
                 </select>
               </div>
@@ -175,7 +202,7 @@
                     id="postalCode"
                     v-model="form.postalCode"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autocomplete="postalCode"
                 />
               </div>
@@ -188,7 +215,7 @@
                     id="phone"
                     v-model="form.phone"
                     type="tel"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black bg-white dark:bg-gray-800 dark:text-white"
                     autofocus
                     autocomplete="phone"
                 />
@@ -206,7 +233,7 @@
                            type="checkbox"
                            v-model="form.terms"
                            required
-                           class="checkbox checkbox-info" />
+                           class="checkbox checkbox-info bg-white dark:bg-gray-800" />
                     <div class="ml-2">
                       I agree to the <a :href="route('terms.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
                     </div>
@@ -244,13 +271,17 @@
       </dialog>
 
     </div>
+<Login :show="true" :creatorRegistration="true" @login-success="handleLoginSuccess"/>
   </div>
 </template>
 
 <script setup>
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useInviteStore } from '@/Stores/InviteStore'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useNotificationStore } from '@/Stores/NotificationStore'
+import { useWelcomeStore } from '@/Stores/WelcomeStore'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
 import JetLabel from '@/Jetstream/Label.vue';
@@ -258,8 +289,16 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import { Inertia } from '@inertiajs/inertia'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useStoreReset } from "@/Utilities/StoreReset"
+import Login from '@/Components/Pages/Welcome/Login.vue'
+
+const pageProps = usePage().props;
+const storeReset = useStoreReset()
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
+const notificationStore = useNotificationStore()
+const welcomeStore = useWelcomeStore()
 const inviteStore = useInviteStore()
 
 appSettingStore.noLayout = true
@@ -267,11 +306,55 @@ appSettingStore.currentPage = 'creator.registration.show'
 
 const props = defineProps({
   inviteCodeUlid: String,
+  isCreator: String,
+  isUser: String,
+  user: Object,
 })
 
-const form = useForm({
-  name: '',
-  email: '',
+welcomeStore.showLogin = false
+
+const handleLoginSuccess = async () => {
+  console.log('handleLoginSuccess')
+  // Fetch user data and update the form
+  await axios.get('/api/user')
+      .then(response => {
+        const user = response.data;
+        form.name = user.name;
+        form.email = user.email;
+        // Conditionally set country and postalCode if they are not null
+        if (user.country !== null) {
+          form.country = user.country;
+        }
+        if (user.postalCode !== null) {
+          form.postalCode = user.postalCode;
+        }
+        emailExists.value = false; // Reset emailExists flag
+        appSettingStore.pageReload = true
+      })
+      .catch(error => {
+        console.error('Failed to fetch user data:', error);
+      });
+};
+
+// Computed property to react to changes in props
+const isCreatorMessage = computed(() => props.isCreator);
+const isUserMessage = computed(() => props.isUser);
+const showLogin = ref(false)
+
+// Watch for changes in feedback to set a general notification
+watch(isCreatorMessage, (newValue) => {
+  if (newValue) {
+    notificationStore.setGeneralServiceNotification('message', newValue);
+  }
+});
+
+// Computed property to control the visibility of additional content
+const showAdditionalCreatorContent = computed(() => !!isCreatorMessage.value);
+const showAdditionalUserContent = computed(() => !!isUserMessage.value);
+
+  const form = useForm({
+    name: props?.user?.name ?? '',
+    email: props?.user?.email ?? '',
   password: '',
   password_confirmation: '',
   // address1: '', // disabled for MVP
@@ -279,11 +362,14 @@ const form = useForm({
   // city: '', // disabled for MVP
   // province: '', // disabled for MVP
   // phone: '', // disabled for MVP
-  country: '',
-  postalCode: '',
+  country: props?.user?.country ?? '',
+  postalCode: props?.user?.postalCode ?? '',
   terms: false,
 });
 
+
+const existingEmailError = ref(null);
+const emailExists = ref(false);
 const checkingInviteCode = ref(true)
 const registrationAccessCheckErrorMessage = ref('')
 const countries = ref([]);
@@ -297,6 +383,22 @@ const toggleVideoModal = () => {
   console.log('toggle Video Modal')
   document.getElementById('creatorWelcomeVideoModal').showModal()
 }
+
+
+const checkEmail = async () => {
+  if (pageProps.value.user && pageProps.value.user.email === form.email) {
+    emailExists.value = false;
+    return;
+  }
+
+  try {
+    const response = await axios.post('/api/creators/register-check-email', { email: form.email });
+    emailExists.value = response.data.exists;
+  } catch (error) {
+    console.error('Error checking email:', error);
+    emailExists.value = false; // Ensure the flag is reset on error
+  }
+};
 
 onMounted(async () => {
   try {
@@ -331,10 +433,58 @@ onMounted(async () => {
 
 });
 
-const submit = () => {
-  form.post(`/register/creator/${props.inviteCodeUlid}`, {
-    onFinish: () => form.reset('password', 'password_confirmation'),
-  });
+
+const handleSubmit = async () => {
+  if (emailExists.value) {
+    // Prevent form submission if the email is taken
+    return;
+  }
+
+  if (showAdditionalUserContent) {
+    appSettingStore.pageReload = true
+  }
+
+  try {
+    form.post(`/register/creator/${props.inviteCodeUlid}`, {
+      onFinish: () => {
+        // Reset the form fields
+        form.reset('password', 'password_confirmation');
+
+        // Handle existing email error
+        if (form.errors.email && form.errors.email.includes('The email has already been taken.')) {
+          emailExists.value = true;
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error registering:', error);
+  }
+};
+
+// Watch for changes in the form's email field and reset emailExists when it changes
+watch(() => form.email, () => {
+  emailExists.value = false;
+});
+// const logout = () => {
+//   // Implement logout logic here
+//   Inertia.post('/logout');
+// };
+
+const logout = () => {
+  Inertia.post(route('logout'), {}, {
+    onSuccess: () => {
+      // Reset state inside onSuccess callback
+      storeReset.resetAllStores()
+      // Redirect to the invite page with a full reload
+      window.location.href = '/invite/' + props.inviteCodeUlid;
+    }
+  })
+}
+
+const redirectToLogin = () => {
+  welcomeStore.showLogin = true
+  // Redirect to the login page
+  // window.location.href = '/login';
 };
 
 Inertia.on('navigate', (event) => {

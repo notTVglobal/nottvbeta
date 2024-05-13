@@ -46,11 +46,14 @@
 
           </div>
 
-          <div class="">
+          <div class="mb-2">
             <SocialMediaBadgeLinks :socialMediaLinks="show.socialMediaLinks"/>
           </div>
 
-          <ShowsIdIndexWatchLive :show="show" :team="team"/>
+          <div>
+            <ShowsIdIndexWatchLive :show="show" :team="team"/>
+          </div>
+
 
           <div
               class="w-full flex flex-wrap mt-5 m-auto xl:mx-0 items-center justify-center xl:justify-start gap-x-4 gap-y-2 ">
@@ -61,7 +64,10 @@
           </div>
 
 
-          <div class="description mt-2 w-full text-gray-300 text-center xl:text-left">
+          <div class="description pt-10 w-full text-gray-300 text-center xl:text-left">
+            <div class="w-full bg-gray-900 text-white tracking-wider text-sm">
+              DESCRIPTION
+            </div>
             <expandable-description :description="show.description" :hideTitle="true"/>
           </div>
 

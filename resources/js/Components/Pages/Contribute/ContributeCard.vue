@@ -14,11 +14,13 @@
       </div>
       <p class="bg-gray-800 bg-opacity-40 rounded-lg p-2 text-gray-300 mb-6"><slot name="main"/></p>
       <div class="text-center">
-        <button @click="payNow(itemSelected)" :class="buttonClass" class="btn text-white py-2 px-4 rounded">
+        <div v-if="!disableButton">
+          <button @click="handleClick" :class="buttonClass" class="btn text-white py-2 px-4 rounded">
+            <slot name="button"/>
+          </button>
+        </div>
+        <div v-else>
           <slot name="button"/>
-        </button>
-        <div>
-          <slot name="noButton" :class="buttonClass"/>
         </div>
 
       </div>
@@ -43,28 +45,11 @@ const props = defineProps({
   disableButton: false,
 });
 
-function payNow(subscription) {
-  if (props.disableButton) {
-    return
-  }
-  switch (subscription) {
-    case 'monthlyContribution':
-      shopStore.monthlyContribution();
-      break;
-    case 'yearlyContribution':
-      shopStore.yearlyContribution();
-      break;
-    case 'oneTimeDonation':
-      shopStore.oneTimeDonation();
-      break;
-    case 'favouriteShowContribution':
-      shopStore.favouriteShowContribution();
-      break;
-    default:
-      console.error("Unsupported subscription type:", subscription);
-  }
-  Inertia.get('/contribute/subscription');
-}
+const emit = defineEmits(['payNow']);
+
+const handleClick = () => {
+  emit('payNow', props.itemSelected);
+};
 
 const gradients = {
   blue: {

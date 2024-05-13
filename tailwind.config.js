@@ -30,6 +30,7 @@ module.exports = {
             maxHeight: {
                 '1/2screen': '50vh',
                 '80vh': '80vh',
+                '50': '12.5rem', // Assuming 1 unit in Tailwind is 0.25rem, adjust accordingly.
             },
             maxWidth: {
                 '80vw': '80vw',

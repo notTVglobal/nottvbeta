@@ -62,6 +62,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -107,12 +108,35 @@ Route::get('/send-mail', function () {
 });
 
 Route::get('/home', function () {
-  if (Auth::user()) {
-    if (auth()->user()->creator) {
-      return redirect('/dashboard');
+  if (Auth::check()) {
+    $user = Auth::user();
+
+    if (Session::get('creatorRegistration', false)) {
+      // Retrieve the invite code from the session
+      $inviteCodeUlid = Session::get('inviteCodeUlid');
+      $inviteCode = Session::get('inviteCode');
+
+      // Clear the session variables after using them
+      Session::forget(['creatorRegistration', 'inviteCodeUlid', 'inviteCode']);
+
+      // Check if the request is already on the registration page
+      if (url()->previous() == route('creator.register.show', ['inviteCode' => $inviteCodeUlid])) {
+        // If already on the registration page, just return back with the session data
+        return back()->with([
+            'inviteCodeUlid' => $inviteCodeUlid,
+//            'inviteCode' => $inviteCode
+        ]);
+      }
+
+      // Otherwise, redirect to the creator registration page with the invite code
+      return redirect()->route('creator.register.show', ['inviteCode' => $inviteCodeUlid]);
     }
 
-    return redirect('/stream');
+    if ($user->isCreator()) {
+      return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('stream');
   }
 
   return redirect('/');
@@ -260,7 +284,7 @@ Route::resource('shows', ShowsController::class);
 Route::get('/schedule', [SchedulesController::class, 'index'])
     ->name('schedule');
 
-
+Route::middleware(['auth:sanctum', 'verified'])->get('/api/user', [UsersController::class, 'getUserData']);
 
 // BEGIN ROUTES FOR
 // Logged In Users
@@ -272,6 +296,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
+
 
   Route::get('/externalLink', function () {
     return Inertia::render('ExternalLink');
@@ -433,7 +459,15 @@ Route::middleware([
         'intent' => auth()->user()->createSetupIntent(),
     ]);
   })->name('contribute');
+
+  Route::get('/shop/get-favourite-options', [ShopController::class, 'getFavouriteOptions']);
   //////////////////////////////////////////////////
+
+  Route::get('/contribute/one-time', [StripeController::class, 'OneTimeContribution'])
+      ->name('contribute.one-time');
+
+  Route::post('/shop/payment-intent', [StripeController::class, 'createPaymentIntent'])
+      ->name('shop.payment-intent');
 
   Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
       ->name('createCheckoutSession');
@@ -446,6 +480,9 @@ Route::middleware([
 
   Route::get('/contribute/subscription_success', [StripeController::class, 'subscriptionSuccess'])
       ->name('subscriptionSuccess');
+
+  Route::get('/contribute/donation_success', [StripeController::class, 'donationSuccess'])
+      ->name('donationSuccess');
 
   Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
   Route::post('/payment/initiate', [StripeController::class, 'initiatePayment']);
@@ -888,6 +925,10 @@ Route::middleware([
   // Get list of creators
   Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
       ->name('creators.getCreators');
+  // Mark First Time As Seen ( The Welcome Creator Message on the Dashboard )
+    Route::post('/api/creator/mark-as-seen', [CreatorsController::class, 'markAsSeen'])
+        ->name('creators.markAsSeen');
+
 
 
 // Training
@@ -1072,6 +1113,11 @@ Route::middleware([
 
   // Update user
   Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+
+  // Consent to cookies
+  Route::post('/users/consent-cookies', [UsersController::class, 'consentCookies'])->name('users.consentCookies');
+  // Check cookie consent
+  Route::get('/users/consent-cookies', [UsersController::class, 'checkCookieConsent'])->name('users.consentCookies');
 
 // Chat
 ///////////
@@ -1269,6 +1315,10 @@ Route::post('/api/schedule/week/{formattedDateTimeUtc}', [SchedulesController::c
 Route::get('/api/schedules/today', [SchedulesController::class, 'fetchTodaysContent']);
 Route::get('/api/schedules/five-day', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
 Route::get('/api/schedules/range', [SchedulesController::class, 'fetchContentForRange']);
+
+// Check for existing email/user account on creator registration
+Route::post('/api/creators/register-check-email', [CreatorsController::class, 'registerCheckEmail'])
+    ->name('creators.registerCheckEmail');
 
 
 

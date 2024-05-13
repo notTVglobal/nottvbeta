@@ -32,7 +32,7 @@
 
 
       <!-- Loop through combinedShows directly -->
-      <div v-for="item in scheduleStore.nextFourHoursOfContent"
+      <div v-for="(item, index) in scheduleStore.nextFourHoursOfContent"
            :key="item.id"
            :style="gridItemStyle(item)"
            class="show-cell"
@@ -59,7 +59,11 @@
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.startTime, true) }}</p>
-              <p>{{ formatDuration(item.durationMinutes) }}</p>
+              <p><ConvertDateTimeToTimeAgo
+                  :dateTime="item.startTime"
+                  :timezone="userStore.timezone"
+                  class="text-yellow-400"
+              /></p>
             </div>
           </div>
         </div>
@@ -82,22 +86,27 @@
     </div>
 
     <div class="infinite-scroll-container">
-      <div v-for="(show, index) in displayedShows" :key="show.id"
+      <div v-for="(show, index) in displayedShows" :key="index"
            class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center hover-gradient"
            :class="{ 'last-item': index === displayedShows.length - 1 }">
-        <div class="bg-green-500 text-white py-2">
-          <h2>Playing Soon</h2>
+        <div class="bg-gray-900 text-white py-2">
+          <h2>{{ getPlayingTimeLabel(show.startTime) }}</h2>
         </div>
         <div class="show-details mt-4 mx-auto max-w-4xl">
           <h3 @click="handleShowClick(show)" class="text-3xl mb-1 hover:text-blue-300 hover:cursor-pointer">
             {{ show.content.name }}</h3>
           <p class="text-lg">{{ formatLongDate(show.startTime) }}</p>
           <p class="text-lg">{{ formatTime(show.startTime, true) }} - {{ formatTime(show.endTime, true) }}</p>
-          <div class="w-full flex justify-center items-center mt-4 hover:cursor-pointer" @click="handleShowClick(show)">
+          <ConvertDateTimeToTimeAgo
+              :dateTime="show.startTime"
+              :timezone="userStore.timezone"
+              class="text-yellow-400"
+          />
+          <div class="w-full flex flex-col justify-center items-center mt-4 hover:cursor-pointer" @click="handleShowClick(show)">
             <SingleImage v-if="show.content.image"
                          :image="show.content.image"
                          :alt="show.content.name"
-                         class="w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80"/>
+                         class="w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
           </div>
           <p class="text-lg">{{ formatDuration(show.durationMinutes) }}</p>
         </div>
@@ -117,6 +126,10 @@ import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch, watchEffec
 import { Inertia } from '@inertiajs/inertia'
 import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import advancedFormat from 'dayjs/plugin/advancedFormat' // for using 'a' for AM/PM format
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -125,11 +138,16 @@ import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import CurrentTime from '@/Components/Global/Schedule/CurrentTime.vue'
 import { throttle } from '@/Utilities/Throttle'
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 const scheduleStore = useScheduleStore()
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isoWeek);
 dayjs.extend(advancedFormat)
 
 let initialLoadHandled = false
@@ -141,6 +159,51 @@ const displayedShowsCount = ref(6)
 const isLoading = computed(() => scheduleStore.isLoading)
 const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
+
+const getPlayingTimeLabel = (startTime) => {
+  const baseTime = dayjs(scheduleStore.baseTime).startOf('isoWeek');
+  const start = dayjs(startTime);
+
+  console.log('baseTime:', baseTime.format('YYYY-MM-DD HH:mm:ss'));
+  console.log('startTime:', start.format('YYYY-MM-DD HH:mm:ss'));
+
+  const diffDays = start.diff(baseTime, 'day');
+  const diffWeeks = start.diff(baseTime, 'week');
+  const diffMonths = start.diff(baseTime.startOf('month'), 'month');
+  const diffYears = start.diff(baseTime, 'year');
+
+  if (diffDays === 0) {
+    return 'Playing Today';
+  } else if (diffDays === 1) {
+    return 'Playing Tomorrow';
+  } else if (diffDays > 1 && diffDays <= 7) {
+    return 'Later This Week';
+  } else if (diffWeeks === 1) {
+    return 'Next Week';
+  } else if (diffWeeks > 1 && diffWeeks <= 2) {
+    return 'In 2 Weeks';
+  } else if (diffMonths === 0) {
+    return 'Later This Month';
+  } else if (diffMonths === 1) {
+    return 'Next Month';
+  } else if (diffMonths === 2) {
+    return 'In 2 Months';
+  } else if (diffMonths === 3) {
+    return 'In 3 Months';
+  } else if (diffMonths === 4) {
+    return 'In 4 Months';
+  } else if (diffMonths === 5) {
+    return 'In 5 Months';
+  } else if (diffMonths === 6) {
+    return 'In 6 Months';
+  } else if (diffMonths > 6 && diffMonths <= 11) {
+    return 'Later This Year';
+  } else if (diffYears === 1) {
+    return 'Next Year';
+  } else {
+    return 'In The Distant Future';
+  }
+};
 
 // Function to handle element visibility
 function onElementVisibility(state) {
@@ -355,7 +418,7 @@ function handleShowClick(item) {
       url = `/movies/${item.content.slug}/`
       break
     case 'showEpisode':
-      url = `/shows/${item.show.slug}/episodes/${item.slug}`
+      url = `/shows/${item.content.show.slug}/episode/${item.content.slug}`
       break
     default:
       // Handle default case or do nothing

@@ -21,6 +21,7 @@ use App\Models\User;
 use App\Models\Creator;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
+use Mews\Purifier\Facades\Purifier;
 use Stripe\Stripe;
 
 class UsersController extends Controller {
@@ -300,11 +301,8 @@ class UsersController extends Controller {
   // for the user's settings page.
   //
   public function updateContact(HttpRequest $request, User $user) {
-
-    $id = $request->id;
-    $user = User::find($id);
-    // validate the request
-    $request->validate([
+    // Validate the request
+    $validatedData = $request->validate([
         'address1'   => ['nullable', 'string', 'max:255'],
         'address2'   => ['nullable', 'string', 'max:255'],
         'city'       => ['nullable', 'string', 'max:255'],
@@ -314,19 +312,25 @@ class UsersController extends Controller {
         'phone'      => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
     ]);
 
-    // update the user
-    $user->address1 = $request->address1;
-    $user->address2 = $request->address2;
-    $user->city = $request->city;
-    $user->province = $request->province;
-    $user->country = $request->country;
-    $user->postalCode = $request->postalCode;
-    $user->phone = $request->phone;
-    $user->save();
-    sleep(1);
+    // Find the user
+    $user = User::find($request->id);
+    if (!$user) {
+      return redirect()->back()->with('error', 'User not found.');
+    }
 
-    // redirect
+    // Sanitize data
+    $sanitizedData = [];
+    foreach ($validatedData as $key => $value) {
+      $sanitizedData[$key] = Purifier::clean($value);
+    }
+
+    // Update the user with sanitized data
+    $user->fill($sanitizedData);
+    $user->save();
+
+    // Redirect with success message
     return redirect(route('profile.show'))->with('message', 'Contact Info Updated Successfully');
+
 //        return Inertia::render('Settings')->with('message', 'Contact Info Updated Successfully');
 
 
@@ -346,39 +350,38 @@ class UsersController extends Controller {
 //        sleep(1);
   }
 
-  public function getUserStoreData() {
-    if (auth()->user()->creator) {
-      $creator = true;
-    } else $creator = false;
-
-    if (auth()->user()->stripe_id) {
-      $hasAccount = true;
-    } else $hasAccount = false;
-
-    if (auth()->user()->isAdmin) {
-      $isAdmin = true;
-    } else $isAdmin = false;
-
-    if (auth()->user()->newsPerson) {
-      $isNewsPerson = true;
-    } else $isNewsPerson = false;
-
-    if (auth()->user()->isVip) {
-      $isVip = true;
-    } else $isVip = false;
+  public function getUserStoreData(): bool|string {
+    $user = auth()->user();
 
     return json_encode([
-        'id'           => auth()->user()->id,
-        'isAdmin'      => $isAdmin,
-        'isCreator'    => $creator,
-        'isNewsPerson' => $isNewsPerson,
-        'isVip'        => $isVip,
-        'isSubscriber' => auth()->user()->subscribed('default'),
-        'hasAccount'   => $hasAccount,
+        'id'                    => $user->id,
+        'isAdmin'               => $user->isAdmin(),
+        'isCreator'             => $user->isCreator(),
+        'isNewsPerson'          => $user->isNewsPerson(),
+        'isVip'                 => $user->isVip(),
+        'isSubscriber'          => $user->subscribed('default'),
+        'subscriptionActive'    => optional($user->subscription('default'))->active(),
+        'hasAccount'            => $user->hasAccount(),
+        'hasConsentedToCookies' => $user->hasConsentedToCookies(),
     ]);
   }
 
-  public function updateTimezone(HttpRequest $request) {
+  public function getUserData(Request $request): \Illuminate\Http\JsonResponse {
+    $user = Auth::user();
+
+    if ($user) {
+      return response()->json([
+          'name' => $user->name,
+          'email' => $user->email,
+          'country' => $user->country,
+          'postalCode' => $user->postalCode,
+      ]);
+    }
+
+    return response()->json(null, 401); // Unauthorized response if user is not authenticated
+  }
+
+  public function updateTimezone(HttpRequest $request): \Illuminate\Http\JsonResponse {
     // Validate the request data (timezone)
     $request->validate([
         'timezone' => 'required|string', // You can add more validation rules if needed
@@ -450,10 +453,9 @@ class UsersController extends Controller {
 //      ]);
 
 
-    $request->validate([
+    $validatedData = $request->validate([
         'message'    => 'required|string',
         'screenshot' => 'nullable|image|max:5000', // Allow only images up to 5MB
-
     ]);
 
 //    if ($request->hasFile('screenshot')) {
@@ -487,13 +489,15 @@ class UsersController extends Controller {
 //      $screenshotPath = $request->file('screenshot')->store('screenshots', 'public');
 //    }
 
+    $sanitizedMessage = Purifier::clean($validatedData['message']);
+
     // add Message to log:
-    Log::notice("Orange Feedback Form Submission" . "\n*Message*: `" . ($request->message ?? 'N/A') . "`\n*Name*: `" . ($user->name ?? 'N/A') . "`");
+    Log::notice("Orange Feedback Form Submission" . "\n*Message*: `" . $sanitizedMessage . "`\n*Name*: `" . ($user->name ?? 'N/A') . "`");
 
     // Send the email
     try {
       Mail::to('hello@not.tv')->send(new FeedbackMail([
-          'message'  => $request->message ?? '',
+          'message'  => $sanitizedMessage,
           'name'     => $user->name ?? '',
           'email'    => $user->email ?? '',
           'phone'    => $user->phone ?? '',
@@ -515,7 +519,13 @@ class UsersController extends Controller {
   }
 
   public function search(HttpRequest $request) {
-    $query = $request->input('query');
+    // Validate the input
+    $validatedData = Validator::make($request->all(), [
+        'query' => 'required|string|max:255',
+    ])->validate();
+
+    // Sanitize the input
+    $query = e($validatedData['query']);
 
     $users = User::where('name', 'LIKE', "%{$query}%")
         ->orWhere('email', 'LIKE', "%{$query}%")
@@ -523,6 +533,37 @@ class UsersController extends Controller {
 
     return response()->json($users);
   }
+
+  public function consentCookies(HttpRequest $request): \Illuminate\Http\JsonResponse {
+    // Ensure the user is authenticated
+    $user = Auth::user();
+    if (!$user) {
+      return response()->json(['message' => 'User not authenticated.'], 401);
+    }
+
+    // Check if the user has already consented
+    if ($user->hasConsentedToCookies()) {
+      return response()->json(['message' => 'User has already consented to cookies.'], 200);
+    }
+
+    // Set the cookie consent
+    $user->setCookieConsent();
+
+    return response()->json(['message' => 'Cookie consent recorded.'], 200);
+  }
+
+  public function checkCookieConsent(HttpRequest $request): \Illuminate\Http\JsonResponse
+  {
+    $user = Auth::user();
+    if (!$user) {
+      return response()->json(['message' => 'User not authenticated.'], 401);
+    }
+
+    $hasConsented = $user->hasConsentedToCookies();
+
+    return response()->json(['hasConsented' => $hasConsented], 200);
+  }
+
 
 
 }

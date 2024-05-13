@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-  <MoreUpcomingBroadcasts :broadcasts="sortedBroadcasts" />
+  <TeamIdIndexUpcomingBroadcasts :broadcasts="sortedBroadcasts" />
 <!--  <div v-if="sortedBroadcasts.length" class="accordion bg-gray-800 text-gray-50 p-5 rounded-lg shadow">-->
 <!--    &lt;!&ndash; Header for the Accordion &ndash;&gt;-->
 <!--    <h2 class="text-xl font-semibold mb-4">More Upcoming Broadcasts</h2>-->
@@ -79,7 +79,7 @@ import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import { computed, ref } from 'vue'
 import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
-import MoreUpcomingBroadcasts from '@/Components/Pages/Teams/Elements/MoreUpcomingBroadcasts.vue'
+import TeamIdIndexUpcomingBroadcasts from '@/Components/Pages/Teams/Elements/TeamIdIndexUpcomingBroadcasts.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 

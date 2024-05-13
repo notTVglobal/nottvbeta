@@ -19,13 +19,19 @@ dayjs.extend(utc);
 
 let props = defineProps({
   dateTime: String,
+  timezone: String,
   class: String,
 })
 
 // Computed property to convert dateTime to the user's timezone
 const dateInUserTimezone = computed(() => {
   if (userStore.timezone) {
-    return dayjs.utc(props.dateTime).tz(userStore.timezone).format();
+    if (userStore.timezone === props.timezone) {
+      return dayjs(props.dateTime).format();
+    } else {
+      return dayjs.utc(props.dateTime).tz(userStore.timezone).format();
+    }
+
   }
   return '';
 });

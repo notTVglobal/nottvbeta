@@ -5,8 +5,7 @@ You, {{ $name }}, have been personally selected to become a part of something re
 
 Your invitation comes from **{{ $from_name }}**, who sees the incredible potential in your voice and storytelling abilities to enrich our ever-growing tapestry of narratives.
 
-> "{{ $message }}"
-> ~ {{ $from_name }}
+<x-mail::highlighted-message :message="$message" :fromName="$from_name" />
 
 At notTV, we believe in empowering community voices through a decentralized media ecosystem, blending the innovative world of blockchain with the spirit of local storytelling. You're not just joining a platform; you're stepping into a role within a global network of autonomous community chapters, each a beacon of local empowerment, creativity, and democratic collaboration.
 

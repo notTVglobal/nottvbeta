@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav-bar">
+  <nav class="nav-bar text-black dark:text-gray-100 dark:bg-gray-800">
     <div @click="toggleDropdown" class="fixed dropdown-button top-16 w-full" v-if="appSettingStore.isSmallScreen">
       <font-awesome-icon icon="bars" /> <!-- FontAwesome icon for menu -->
       {{ currentSectionName }}

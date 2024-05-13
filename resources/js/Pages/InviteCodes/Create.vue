@@ -18,17 +18,17 @@
             <div class="flex flex-col w-full">
               <div class="mb-2 flex flex-row justify-between"><label for="code" class="text-xs font-semibold text-gray-800 uppercase">Code </label>
                 <button @click.prevent="generateRandomCode" class="text-blue-700 hover:text-blue-500 underline hover:cursor-pointer">generate new random code</button></div>
-              <input v-model="form.code" id="code" type="text" required class="input input-bordered w-full" >
+              <input v-model="form.code" id="code" type="text" required class="input input-bordered w-full bg-white text-black dark:bg-gray-800 dark:text-white" >
             </div>
             <div v-if="formErrors['code']" class="mb-4 mt-2 text-red-700">{{ formErrors['code'][0] }}</div>
 
             <div class="flex flex-col w-full dropdown">
               <label for="userSearch" class="mb-2 text-xs font-semibold text-gray-800 uppercase">Assign Distributor</label>
-              <input type="text" id="userSearch" v-model="searchQuery" @input="searchUsers" placeholder="Search users..." class="input input-bordered w-full">
+              <input type="text" id="userSearch" v-model="searchQuery" @input="searchUsers" placeholder="Search users..." class="input input-bordered w-full bg-white text-black dark:bg-gray-800 dark:text-white">
             </div>
             <div v-if="searchQuery.length > 1 && searchResults.length" class="flex flex-col">
-              <ul class="p-2 shadow menu dropdown-content z-10 bg-base-200 rounded-box w-full max-h-60 overflow-y-auto overflow-x-hidden">
-                <li v-for="user in searchResults" :key="user.id">
+              <ul class="p-2 shadow menu dropdown-content z-10 bg-base-200 rounded-box w-full max-h-60 overflow-y-auto overflow-x-hidden bg-white text-black dark:bg-gray-800 dark:text-white">
+                <li v-for="user in searchResults" :key="user.id" class="bg-white text-black dark:bg-gray-800 dark:text-white">
                   <a @click.prevent="assignUser(user)">
                     {{ user.name }} - {{ user.email }}
                   </a>
@@ -39,7 +39,7 @@
 
             <div class="flex flex-col w-full">
               <label for="role" class="mb-2 text-xs font-semibold text-gray-800 uppercase">Role</label>
-              <select v-model="form.user_role_id" id="role" class="select select-bordered w-full text-gray-900">
+              <select v-model="form.user_role_id" id="role" class="select bg-white text-black dark:bg-gray-800 dark:text-white select-bordered w-full text-gray-900">
                 <option v-for="role in roles" :value="role.id" :key="role.id" class="text-gray-900">{{ role.role }}</option>
               </select>
             </div>
@@ -47,13 +47,13 @@
 
             <div class="flex flex-col w-full">
               <label for="volume" class="mb-2 text-xs font-semibold text-gray-800 uppercase">Volume</label>
-              <input v-model="form.volume" id="volume" type="number" min="1" required class="input input-bordered w-full" >
+              <input v-model="form.volume" id="volume" type="number" min="1" required class="input input-bordered w-full bg-white text-black dark:bg-gray-800 dark:text-white" >
             </div>
             <div v-if="formErrors['volume']" class="mb-4 mt-2 text-red-700">{{ formErrors['volume'][0] }}</div>
 
             <div class="flex flex-col w-full">
               <label for="expiry_date" class="mb-2 text-xs font-semibold text-gray-800 uppercase">Expiry Date (optional)</label>
-              <input v-model="form.expiry_date" id="expiry_date" type="date">
+              <input v-model="form.expiry_date" id="expiry_date" type="date" class="bg-white text-black dark:bg-gray-800 dark:text-white">
             </div>
             <div v-if="formErrors['expiry_date']" class="mb-4 mt-2 text-red-700">{{ formErrors['expiry_date'][0] }}</div>
 

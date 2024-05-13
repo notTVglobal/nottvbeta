@@ -27,6 +27,7 @@ use http\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request as HttpRequest;
@@ -95,6 +96,16 @@ class ShowsController extends Controller {
   }
 
   private function fetchShows(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
+    // Check if a seed is already set in the session
+    $seed = Session::get('random_seed');
+
+    // If not, generate a new seed and store it in the session
+    if (!$seed) {
+      $seed = mt_rand();
+      Session::put('random_seed', $seed);
+    }
+
+
     return Show::with(['team.user', 'image.appSetting', 'status', 'showRunner.user'])
         ->where(function ($query) {
           // Apply filter for shows based on show_status_id and episodes' status
@@ -124,13 +135,16 @@ class ShowsController extends Controller {
                 });
           });
         })
-        ->orderByRaw('RAND()')
+        // Use the seed to randomize the order
+        ->orderByRaw('RAND(?)', [$seed])
         ->paginate(6, ['*'], 'shows')
         ->withQueryString()
         ->through(fn($show) => $this->transformShow($show));
   }
 
   private function transformShow($show): array {
+
+    $user = Auth::user();
 
     // Use a subquery to get the oldest episode's releaseDateTime for the show
     $oldestEpisodeReleaseDateTime = $show->showEpisodes()
@@ -168,8 +182,8 @@ class ShowsController extends Controller {
         'subCategory'        => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
         'isNew'              => $isNew,
         'can'                => [
-            'editShow' => Auth::user()->can('editShow', $show),
-            'viewShow' => Auth::user()->can('viewShowManagePage', $show)
+            'editShow' => optional($user)->can('editShow', $show),
+            'viewShow' => optional($user)->can('viewShowManagePage', $show)
         ]
     ];
   }
@@ -569,6 +583,13 @@ class ShowsController extends Controller {
 
       // Log the active streams for debugging purposes
 //      Log::debug('Active streams: ', $activeStreams);
+
+      // Check if mistStreamWildcard is set and has a name
+      $mistStreamWildcard = $show->mistStreamWildcard;
+      if (!$mistStreamWildcard || !isset($mistStreamWildcard->name)) {
+        Log::error('Mist stream wildcard is missing or does not have a name:', ['show_id' => $show->id]);
+        return response()->json(['isLive' => false, 'liveScheduledStartTime' => null, 'mistStreamName' => null]);
+      }
 
       // Check if any active stream matches the show's mistStreamWildcard name
       $mistStreamName = $show->mistStreamWildcard->name;

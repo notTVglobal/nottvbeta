@@ -1,8 +1,17 @@
 <template>
-  <div
-      class="editor-textarea editor-container bg-gray-50 border border-gray-400 text-gray-900 text-sm w-full rounded-lg focus-within:ring-blue-500 focus-within:border-blue-500"
-      @click="focusEditor">
-    <EditorContent :editor="editor"/>
+  <div>
+    <div class="toolbar mb-2">
+      <button @click.prevent="toggleBold" class="btn">Bold</button>
+      <button @click.prevent="toggleItalic" class="btn">Italic</button>
+      <button @click.prevent="toggleUnderline" class="btn">Underline</button>
+      <button @click.prevent="toggleSuperscript" class="btn">Superscript</button>
+      <button @click.prevent="toggleSubscript" class="btn">Subscript</button>
+    </div>
+    <div
+        class="editor-textarea editor-container bg-gray-50 border border-gray-400 text-gray-900 text-sm w-full rounded-lg focus-within:ring-blue-500 focus-within:border-blue-500"
+        @click="focusEditor">
+      <EditorContent :editor="editor"/>
+    </div>
   </div>
 </template>
 
@@ -42,16 +51,15 @@ const editor = useEditor({
     Underline,
     Subscript,
     Superscript,
-    Link.configure({ openOnClick: false }),
+    Link.configure({openOnClick: false}),
 
   ],
   content: initialContent,
-  onUpdate: ({ editor }) => {
-    const htmlOutput = editor.getHTML();
-    emits('updateContent', htmlOutput);
+  onUpdate: ({editor}) => {
+    const htmlOutput = editor.getHTML()
+    emits('updateContent', htmlOutput)
   },
-});
-
+})
 
 
 const hasFocused = ref(false) // State to track if the editor has been focused
@@ -65,6 +73,25 @@ const focusEditor = (event) => {
     hasFocused.value = true
   }
   editor.value.commands.focus()
+}
+const toggleBold = () => {
+  editor.value.chain().focus().toggleBold().run()
+}
+
+const toggleItalic = () => {
+  editor.value.chain().focus().toggleItalic().run()
+}
+
+const toggleUnderline = () => {
+  editor.value.chain().focus().toggleUnderline().run()
+}
+
+const toggleSuperscript = () => {
+  editor.value.chain().focus().toggleSuperscript().run()
+}
+
+const toggleSubscript = () => {
+  editor.value.chain().focus().toggleSubscript().run()
 }
 
 
@@ -80,11 +107,11 @@ const focusEditor = (event) => {
 
 onMounted(() => {
   // Ensure the editor is focused when needed and adjusts height accordingly
-  editor.value?.commands.focus();
-  adjustHeight();
-  const editorElement = document.querySelector('.ProseMirror');  // Adjust the selector as needed
+  editor.value?.commands.focus()
+  adjustHeight()
+  const editorElement = document.querySelector('.ProseMirror')  // Adjust the selector as needed
 
-});
+})
 
 const adjustHeight = () => {
   const content = editor.value.view.dom // Access the editor's content DOM node
@@ -98,3 +125,22 @@ const adjustHeight = () => {
 editor.value?.on('update', adjustHeight)
 
 </script>
+<style scoped>
+.toolbar {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  background-color: #4a5568;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #2d3748;
+}
+</style>

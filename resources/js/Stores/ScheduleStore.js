@@ -896,6 +896,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             let now = dayjs().tz(timeZone)
             let todayStart = now.startOf('day')
             let tomorrowStart = todayStart.add(1, 'day')
+            let yesterdayStart = todayStart.subtract(1, 'day');
 
             // console.log('Current Time Slots:', state.timeSlots.map(slot => dayjs(slot).format('HH:mm')))
 
@@ -906,9 +907,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 let bannerTodayEnd = bannerTodayStart.clone().add(banner.duration, 'hours')
                 let bannerTomorrowStart = tomorrowStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]))
                 let bannerTomorrowEnd = bannerTomorrowStart.clone().add(banner.duration, 'hours')
+                let bannerYesterdayStart = yesterdayStart.hour(parseInt(banner.startTime.split(':')[0])).minute(parseInt(banner.startTime.split(':')[1]));
+                let bannerYesterdayEnd = bannerYesterdayStart.clone().add(banner.duration, 'hours');
 
                 // Create an array of potential banners for today and tomorrow
                 let potentialBanners = [
+                    {...banner, start: bannerYesterdayStart, end: bannerYesterdayEnd},
                     {...banner, start: bannerTodayStart, end: bannerTodayEnd},
                     {...banner, start: bannerTomorrowStart, end: bannerTomorrowEnd},
                 ]
