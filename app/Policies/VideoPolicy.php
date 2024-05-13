@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
 class VideoPolicy
@@ -47,10 +48,12 @@ class VideoPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
-    {
-        //
-    }
+  public function create(User $user)
+  {
+    return $user->isCreator()
+        ? Response::allow()
+        : Response::deny('Only creators can create videos.');
+  }
 
     /**
      * Determine whether the user can update the model.
@@ -71,10 +74,33 @@ class VideoPolicy
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user)
-    {
-        return Auth::user()->isAdmin;
+  public function delete(User $user, Video $video)
+  {
+
+    // Check if the user is an admin
+    if ($user->isAdmin) {
+      return Response::allow();
     }
+
+    // Check if the video belongs to the user
+    if ($video->user_id !== $user->id) {
+      return Response::deny('You do not own this video.');
+    }
+
+    // Check if the video is attached to any other object
+    $attachments = $video->attachments(); // Assuming this method returns the related models
+
+    if ($attachments->isNotEmpty()) {
+      $attachment = $attachments->first();
+      $modelType = class_basename($attachment);
+      $modelName = $attachment->Name ?? 'Unnamed';
+
+      return Response::deny("This video is attached to a $modelType with the name '$modelName'. Please detach the video first before deleting.");
+    }
+
+    // If all checks pass, allow the deletion
+    return Response::allow();
+  }
 
     /**
      * Determine whether the user can restore the model.
