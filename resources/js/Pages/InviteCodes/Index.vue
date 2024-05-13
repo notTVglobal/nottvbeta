@@ -71,7 +71,7 @@
                   </div>
                   <div>
                     <input type="number" v-model.number="inviteCodeSettings.creatorCodes" placeholder="Number of creator codes"
-                           class="input input-bordered input-primary w-28 max-w-xs"/>
+                           class="input bg-white text-black dark:bg-gray-800 dark:text-white input-bordered input-primary w-28 max-w-xs"/>
                     <button @click="updateInviteCodeSettings('creatorCodes', inviteCodeSettings.creatorCodes)" class="btn btn-primary ml-2">Save</button>
                     <div v-if="saveStatus" class="text-sm mt-2">{{ saveStatus }}</div>
                   </div>
@@ -83,7 +83,7 @@
                   </div>
                   <div>
                     <input type="number" v-model.number="inviteCodeSettings.viewerCodes" placeholder="Number of viewer codes"
-                           class="input input-bordered input-primary w-28 max-w-xs"/>
+                           class="input bg-white text-black dark:bg-gray-800 dark:text-white input-bordered input-primary w-28 max-w-xs"/>
                     <button @click="updateInviteCodeSettings('viewerCodes', inviteCodeSettings.viewerCodes)" class="btn btn-primary ml-2">Save</button>
                     <div v-if="saveStatus" class="text-sm mt-2">{{ saveStatus }}</div>
                   </div>

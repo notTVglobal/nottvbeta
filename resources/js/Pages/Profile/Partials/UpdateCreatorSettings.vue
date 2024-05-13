@@ -13,7 +13,7 @@
       <div class="col-span-6 sm:col-span-4 bg-white dark:bg-gray-800 dark:text-white">
         <JetLabel for="profile_is_public" value="Profile Visibility:"/>
         <!-- Update the v-model to bind with the form object -->
-        Private <input type="checkbox" id="profile_is_public" class="toggle toggle-success bg-white dark:bg-gray-800 dark:text-white"
+        Private <input type="checkbox" id="profile_is_public" class="toggle toggle-success "
                v-model="profileIsPublic" ref="checkboxRef" @click="handleCheckboxClick"/> Public
         <!-- Display error message if there is an error related to profile_is_public -->
         <JetInputError :message="form.errors['settings.profile_is_public']" class="mt-2"/>

@@ -24,7 +24,8 @@ export function usePageSetup(pageName) {
 
     if (appSettingStore.pageReload) {
         appSettingStore.pageReload = false
-        window.location.reload(true);
+        appSettingStore.pageWasReloaded = true
+        window.location.reload();
     }
     // Check if the URL contains query strings
 

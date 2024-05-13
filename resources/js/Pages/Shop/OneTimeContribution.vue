@@ -106,7 +106,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import { useForm } from '@inertiajs/inertia-vue3'
-import { loadStripe } from '@stripe/stripe-js'
+// import { loadStripe } from '@stripe/stripe-js'
 import FavouriteSelectedImage from '@/Components/Pages/Shop/FavouriteSelectedImage.vue'
 
 usePageSetup('shop/subscribe')
@@ -128,12 +128,11 @@ const processing = ref(false)
 let stripe
 let elements
 
-const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY)
 
-const showPaymentForm = () => {
 
-  document.getElementById('payment-form').style.display = 'block'
-}
+// const showPaymentForm = () => {
+//
+// }
 
 const initialize = () => {
   const clientSecret = props.intent.client_secret
@@ -163,7 +162,9 @@ const initialize = () => {
 
   const paymentElement = elements.create('payment', paymentElementOptions)
   paymentElement.mount('#payment-element')
-  shopStore.showPaymentForm = true
+  document.getElementById('payment-form').style.display = 'block'
+  // shopStore.showPaymentForm = true
+
 }
 
 
@@ -188,11 +189,18 @@ const createPaymentIntent = async () => {
 // Watch for changes in userStore.hasConsentedToCookies
 watch(
     () => userStore.hasConsentedToCookies,
-    (newVal) => {
+    async (newVal) => {
       appSettingStore.showCookieBanner = !newVal;
-      showPaymentForm()
+      if (newVal) {
+        // Dynamically import Stripe library only after consent is given
+        const { loadStripe } = await import('@stripe/stripe-js');
+        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
+        stripe = await stripePromise;
+        initialize();
+        shopStore.showPaymentForm = true
+      }
     },
-    { immediate: true } // Execute immediately on load
+    { immediate: false } // Do not execute immediately on load
 );
 
 
@@ -200,10 +208,15 @@ watch(
 onMounted(async () => {
       if (!userStore.hasConsentedToCookies) {
         appSettingStore.showCookieBanner = true
+      } else {
+        // Dynamically import Stripe library if user has already consented
+        const { loadStripe } = await import('@stripe/stripe-js');
+        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
+        stripe = await stripePromise;
+        initialize();
+        shopStore.showPaymentForm = true;
       }
       shopStore.customer = props.user
-      stripe = await stripePromise
-      initialize()
     },
 )
 

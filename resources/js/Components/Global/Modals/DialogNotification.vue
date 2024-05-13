@@ -1,9 +1,12 @@
 <template>
   <dialog id="dialogNotificationModal" class="modal">
-    <div class="modal-box border-2 border-primary text-primary justify-center text-center">
-      <h3 class="font-bold text-lg">{{ notificationStore.title }}</h3>
-      <p class="py-4">{{ notificationStore.body }}</p>
-      <p class="py-4 text-xs text-black">Click or tap anywhere outside to close, or push ESC.</p>
+    <div class="modal-box flex items-center border-2 border-primary text-primary justify-center text-center">
+      <img src="/storage/images/Ping.png" alt="Ping" class="w-20"/>
+      <div class="flex-1 text-center">
+        <h3 class="font-bold text-lg">{{ notificationStore.title }}</h3>
+        <p class="py-2">{{ notificationStore.body }}</p>
+      </div>
+<!--      <p class="py-4 text-xs text-black bg-white dark:text-white">Click or tap anywhere outside to close, or push ESC.</p>-->
     </div>
     <form method="dialog" class="modal-backdrop">
       <button @click="closeModal">close</button>

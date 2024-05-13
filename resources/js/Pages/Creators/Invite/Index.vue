@@ -23,7 +23,7 @@
         <div v-if="currentState === 'form'" class="flex justify-center w-full">
           <form @submit.prevent="checkInviteCode" class="flex justify-center gap-2">
             <div><input v-model="inviteCodeInput" type="text" placeholder="Enter your invite code"
-                        class="input input-bordered w-full max-w-xs text-black"/></div>
+                        class="input input-bordered w-full max-w-xs text-black bg-white dark:text-gray-50 dark:bg-gray-800"/></div>
             <div class="w-fit mx-auto">
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>

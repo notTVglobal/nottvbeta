@@ -104,9 +104,11 @@ export const useNotificationStore = defineStore('notificationStore', {
         },
         // use this to open the @/Components/Global/Modals/DialogNotification
         // it only takes a title and body
-        openDialogNotification() {
+        openDialogNotification(title, message) {
             const modal = document.getElementById('dialogNotificationModal');
             if (modal) {
+                this.title = title
+                this.body = message
                 modal.showModal();
             }
         },

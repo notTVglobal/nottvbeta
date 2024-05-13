@@ -10,11 +10,11 @@
     <!--    <div class="modal-mask overflow-auto py-32 hide-scrollbar">-->
     <!--      <div class="bg-white py-4 px-4 rounded-lg">-->
 
-    <div v-if="show" :class="['modal-mask', 'overflow-auto', 'py-32', 'hide-scrollbar', 'bg-base-100', modalClass]">
+    <div v-if="welcomeStore.showLogin" :class="['modal-mask', 'overflow-auto', 'py-32', 'hide-scrollbar', 'bg-base-100', modalClass]">
       <div class="relative w-full h-full">
-        <div v-if="videoPlayerStore.mistServerUri.includes('localhost')" class="w-full text-center text-white text-2xl font-semibold tracking-wide">LOCAL VERSION</div>
+        <div v-if="videoPlayerStore.mistServerUri.includes('localhost') && !creatorRegistration" class="w-full text-center text-white text-2xl font-semibold tracking-wide">LOCAL VERSION</div>
         <div class="div1 modal-content bg-base-200 py-4 px-4 rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white">
-          <header class="flex justify-center uppercase text-sm font-semibold pt-6 mb-2 text-center">
+          <header v-if="!creatorRegistration" class="flex justify-center uppercase text-sm font-semibold pt-6 mb-2 text-center">
             <JetAuthenticationCardLogo class="max-w-[30%]"/>
 
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -23,7 +23,8 @@
           </header>
           <JetValidationErrors class="px-6 my-4"/>
           <div class="text-center mt-4 py-3 text-gray-600">
-            Please log in to watch notTV and chat.
+            <span v-if="!creatorRegistration">Please log in to watch notTV and chat.</span>
+            <span v-else>Please log in.</span>
           </div>
           <div class="py-3 px-6">
             <form @submit.prevent="submit">
@@ -82,7 +83,7 @@
                   class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
               >Cancel
               </button>
-              <div class="mt-2">
+              <div v-if="!creatorRegistration" class="mt-2">
                 Need to
                 <button @click="showRegister" class="text-blue-800 hover:text-blue-600">register</button>
                 for an account?
@@ -91,7 +92,7 @@
           </footer>
         </div>
 
-        <div class="div2">
+        <div v-if="!creatorRegistration" class="div2">
           <img src="/storage/images/Ping.png">
         </div>
       </div>
@@ -113,17 +114,22 @@ import JetInput from '@/Jetstream/Input'
 import JetCheckbox from '@/Jetstream/Checkbox'
 import JetLabel from '@/Jetstream/Label'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const welcomeStore = useWelcomeStore()
 const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()
 
-defineProps({
+const props = defineProps({
   canResetPassword: Boolean,
   status: String,
   show: Boolean,
+  creatorRegistration: Boolean,
 })
+
+const emit = defineEmits(['login-success']);
+
+const showLogin = ref(props.show)
 
 const form = useForm({
   email: '',
@@ -135,27 +141,38 @@ const submit = () => {
   form.transform(data => ({
     ...data,
     remember: form.remember ? 'on' : '',
+    creatorRegistration: true, // Add this line to submit creatorRegistration as true
   })).post(route('login'), {
     onFinish: () => {
-      form.reset('password') // Reset the password field after submission
-      console.log('get user data on Login')
-      userStore.fetchUserData() // Fetch user data after successful login
-          .then(() => {
-            // Handle any post-fetch logic here, e.g., redirecting the user or updating the UI
-            // Optionally, update timezone or perform other actions after login
-            // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            // userStore.updateUserTimezone(timezone);
-          })
-          .catch(error => {
-            console.error('Failed to fetch user data:', error)
-            // Handle any errors in fetching user data here
-          })
+      form.reset('password'); // Reset the password field after submission
+      console.log('get user data on Login');
+      if (!props.creatorRegistration) {
+        userStore.fetchUserData() // Fetch user data after successful login
+            .then(() => {
+              // Emit event to parent component to handle post-login actions
+              // Handle any post-fetch logic here, e.g., redirecting the user or updating the UI
+              // Optionally, update timezone or perform other actions after login
+              // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+              // userStore.updateUserTimezone(timezone);
+            })
+            .catch(error => {
+              console.error('Failed to fetch user data:', error);
+              // Handle any errors in fetching user data here
+            });
+      } else {
+        // Emit event to parent component to handle post-login actions if creatorRegistration is true
+        emit('login-success');
+        welcomeStore.showLogin = false
+      }
     },
-  })
-}
+  });
+};
 
 function clearForm() {
   form.reset()
+  if (props.creatorRegistration) {
+    showLogin.value = false
+  } else
   welcomeStore.showLogin = false
 }
 
@@ -166,8 +183,12 @@ function showRegister() {
 }
 
 const modalClass = computed(() => {
+  if (props.creatorRegistration) {
+    return 'modal-mask-black-to-gray';
+  }
   return videoPlayerStore.mistServerUri.includes('localhost') ? 'modal-mask-local' : 'modal-mask-default';
 });
+
 
 </script>
 
@@ -187,6 +208,10 @@ const modalClass = computed(() => {
 
 .modal-mask-local {
   background: linear-gradient(135deg, rgba(255, 0, 0, 1) 0%, rgba(139, 0, 0, 0.6) 70%, rgba(139, 0, 0, 0) 100%);
+}
+
+.modal-mask-black-to-gray {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(128, 128, 128, 0.6) 70%, rgba(128, 128, 128, 0) 100%);
 }
 
 .modal-content {

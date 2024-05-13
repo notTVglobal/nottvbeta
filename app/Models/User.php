@@ -134,11 +134,11 @@ class User extends Authenticatable implements MustVerifyEmail {
   }
 
   public function isCreator(): bool {
-    return (bool) $this->creator; // Assuming creator is a column in your users table
+    return $this->creator()->exists();
   }
 
   public function isNewsPerson(): bool {
-    return (bool) $this->newsPerson; // Assuming newsPerson is a column in your users table
+    return $this->newsPerson()->exists();
   }
 
   public function isVip(): bool {

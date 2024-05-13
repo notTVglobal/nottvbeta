@@ -6,7 +6,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <DashboardHeader :can="can" :canGoLive="canGoLive" />
+      <DashboardHeader :can="can" :canGoLive="canGoLive"/>
 
       <!--            <section class="grid grid-cols-1 my-8 mx-2 md:mx-10 m-auto bg-gray-200 rounded p-5 h-64 text-black">-->
       <!--                <div class="flex flex-wrap justify-center">-->
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-<!--      <CreatorsShowCalendar/>-->
+      <!--      <CreatorsShowCalendar/>-->
 
       <div class="w-full bg-indigo-300 dark:bg-gray-900 rounded-lg pb-8 p-3 mb-16 mx-2 border-b border-2">
 
@@ -250,9 +250,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useUserStore } from '@/Stores/UserStore'
 import Message from '@/Components/Global/Modals/Messages'
 import DashboardHeader from '@/Components/Pages/Dashboard/Layout/DashboardHeader'
@@ -265,6 +266,7 @@ import NotificationPanel from '@/Components/Pages/Dashboard/Elements/DashboardNo
 usePageSetup('dashboard')
 
 const appSettingStore = useAppSettingStore()
+const notificationStore = useNotificationStore()
 const userStore = useUserStore()
 
 // const getUserData = inject('getUserData', null)
@@ -315,6 +317,8 @@ let props = defineProps({
   yesterdaysTopShow: Object,
   can: Object,
   canGoLive: Boolean,
+  firstTimeCreator: Boolean,
+  welcomeMessage: String,
 })
 
 // Function to extract the numeric value from a string with "MB" suffix
@@ -336,6 +340,23 @@ const myTotalStoragePercentage = computed(() => {
 // Round the percentage to have no decimal places
 const myTotalStorageRoundedPercentage = computed(() => {
   return Math.round(myTotalStoragePercentage)
+})
+
+const firstTimeCreator = ref(props.firstTimeCreator)
+const welcomeMessage = ref(props.welcomeMessage)
+
+onMounted(() => {
+  if (firstTimeCreator.value) {
+    notificationStore.openDialogNotification('Welcome to notTV', 'Community television re-invented.')
+    // Optionally, you can mark first_time as false after showing the message
+    if (!appSettingStore.pageWasReloaded) {
+      axios.post('/api/creator/mark-as-seen').then(() => {
+        firstTimeCreator.value = false
+      })
+    } else if (appSettingStore.pageWasReloaded) {
+      appSettingStore.pageWasReloaded = false
+    }
+  }
 })
 
 //

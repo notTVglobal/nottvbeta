@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <NavigationBar :sections="sections" :activeSection="currentHash" @navigate="handleNavigation"/>
-    <div class="content" v-if="currentSection">
+    <div class="content text-black" v-if="currentSection">
       <SectionComponent :section="currentSection"
                         :navigateToPrev="navigateToPrevSection"
                         :navigateToNext="navigateToNextSection"

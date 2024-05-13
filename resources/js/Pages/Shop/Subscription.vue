@@ -102,7 +102,6 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import { useForm } from '@inertiajs/inertia-vue3'
-import { loadStripe } from '@stripe/stripe-js'
 import { Inertia } from '@inertiajs/inertia'
 
 usePageSetup('shop/subscribe')
@@ -141,23 +140,56 @@ watch(
     { immediate: true } // Execute immediately on load
 );
 
+watch(
+    () => userStore.hasConsentedToCookies,
+    async (newVal) => {
+      appSettingStore.showCookieBanner = !newVal;
+      if (newVal) {
+        // Dynamically import Stripe library only after consent is given
+        const { loadStripe } = await import('@stripe/stripe-js');
+        stripe = await loadStripe(StripeAPIKey)
+        initialize();
+        shopStore.showPaymentForm = true
+        document
+            .querySelector('#payment-form')
+      }
+    },
+    { immediate: false } // Do not execute immediately on load
+);
+
+
 
 onMounted(async () => {
-  shopStore.customer = props.user
+      if (!userStore.hasConsentedToCookies) {
+        appSettingStore.showCookieBanner = true
+      } else {
+        // Dynamically import Stripe library if user has already consented
+        const { loadStripe } = await import('@stripe/stripe-js');
+        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
+        stripe = await stripePromise;
+        initialize();
+        shopStore.showPaymentForm = true;
+      }
+      shopStore.customer = props.user
+    },
+)
 
-  stripe = await loadStripe(StripeAPIKey)
-
-  initialize()
-
-
-
-
-  document
-      .querySelector('#payment-form')
-  // .addEventListener("submit", handleSubmit);
-
-
-})
+// onMounted(async () => {
+//   // shopStore.customer = props.user
+//
+//   // stripe = await loadStripe(StripeAPIKey)
+//
+//   // initialize()
+//
+//
+//
+//
+//   document
+//       .querySelector('#payment-form')
+//   // .addEventListener("submit", handleSubmit);
+//
+//
+// })
 
 function showPaymentForm() {
   shopStore.showPaymentForm = true

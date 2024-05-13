@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ImageResource;
+use App\Models\AppSetting;
 use App\Models\Creator;
-use App\Models\Image;
 use App\Models\NewsPerson;
 use App\Models\Show;
 use App\Models\Team;
-use App\Models\TeamMember;
 use App\Models\Video;
-use App\Policies\AdminPolicy;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
-use Laravel\Cashier\Subscription;
 
 class DashboardController extends Controller {
   /**
@@ -27,6 +23,8 @@ class DashboardController extends Controller {
    */
   public function index() {
     $user = Auth::user();
+    $creator = Creator::where('user_id', $user->id)->first();
+    $welcomeMessage = AppSetting::first()->welcome_message;
     $showCount = Show::count();
     $userCount = User::count();
     $creatorCount = Creator::count();
@@ -117,6 +115,8 @@ class DashboardController extends Controller {
       // the others will use Axios to get the data
       // and save it in the UserStore.
         'id'                    => auth()->user()->id,
+        'firstTimeCreator'      => $creator ? $creator->first_time : false,
+        'welcomeMessage'        => $welcomeMessage,
         'isAdmin'               => $isAdmin,
         'isCreator'             => $isCreator,
         'isNewsPerson'          => $isNewsPerson,
@@ -145,19 +145,19 @@ class DashboardController extends Controller {
             ->paginate(5, ['*'], 'shows')
             ->withQueryString()
             ->through(fn($show) => [
-                'id'   => $show->id,
-                'name' => $show->name,
-                'slug' => $show->slug,
+                'id'    => $show->id,
+                'name'  => $show->name,
+                'slug'  => $show->slug,
                 'image' => $show->image ? (new ImageResource($show->image))->resolve() : null,
-                'can'  => [
+                'can'   => [
                     'manageShow' => Auth::user()->can('manage', $show)
                 ]
             ]),
         'teams'                 => $paginatedTeams->through(function ($team) {
           return [
-              'id'   => $team->id,
-              'name' => $team->name,
-              'slug' => $team->slug,
+              'id'    => $team->id,
+              'name'  => $team->name,
+              'slug'  => $team->slug,
               'image' => $team->image ? (new ImageResource($team->image))->resolve() : null,
           ];
         }),
@@ -181,7 +181,7 @@ class DashboardController extends Controller {
             'createShow'    => Auth::user()->can('create', Show::class),
             'viewNewsroom'  => Auth::user()->can('viewAny', NewsPerson::class)
         ],
-      'canGoLive' => $canGoLive,
+        'canGoLive'             => $canGoLive,
     ]);
   }
 }

@@ -366,6 +366,21 @@ class UsersController extends Controller {
     ]);
   }
 
+  public function getUserData(Request $request): \Illuminate\Http\JsonResponse {
+    $user = Auth::user();
+
+    if ($user) {
+      return response()->json([
+          'name' => $user->name,
+          'email' => $user->email,
+          'country' => $user->country,
+          'postalCode' => $user->postalCode,
+      ]);
+    }
+
+    return response()->json(null, 401); // Unauthorized response if user is not authenticated
+  }
+
   public function updateTimezone(HttpRequest $request): \Illuminate\Http\JsonResponse {
     // Validate the request data (timezone)
     $request->validate([
@@ -438,10 +453,9 @@ class UsersController extends Controller {
 //      ]);
 
 
-    $request->validate([
+    $validatedData = $request->validate([
         'message'    => 'required|string',
         'screenshot' => 'nullable|image|max:5000', // Allow only images up to 5MB
-
     ]);
 
 //    if ($request->hasFile('screenshot')) {
@@ -475,13 +489,15 @@ class UsersController extends Controller {
 //      $screenshotPath = $request->file('screenshot')->store('screenshots', 'public');
 //    }
 
+    $sanitizedMessage = Purifier::clean($validatedData['message']);
+
     // add Message to log:
-    Log::notice("Orange Feedback Form Submission" . "\n*Message*: `" . ($request->message ?? 'N/A') . "`\n*Name*: `" . ($user->name ?? 'N/A') . "`");
+    Log::notice("Orange Feedback Form Submission" . "\n*Message*: `" . $sanitizedMessage . "`\n*Name*: `" . ($user->name ?? 'N/A') . "`");
 
     // Send the email
     try {
       Mail::to('hello@not.tv')->send(new FeedbackMail([
-          'message'  => $request->message ?? '',
+          'message'  => $sanitizedMessage,
           'name'     => $user->name ?? '',
           'email'    => $user->email ?? '',
           'phone'    => $user->phone ?? '',
@@ -503,7 +519,13 @@ class UsersController extends Controller {
   }
 
   public function search(HttpRequest $request) {
-    $query = $request->input('query');
+    // Validate the input
+    $validatedData = Validator::make($request->all(), [
+        'query' => 'required|string|max:255',
+    ])->validate();
+
+    // Sanitize the input
+    $query = e($validatedData['query']);
 
     $users = User::where('name', 'LIKE', "%{$query}%")
         ->orWhere('email', 'LIKE', "%{$query}%")
@@ -541,5 +563,7 @@ class UsersController extends Controller {
 
     return response()->json(['hasConsented' => $hasConsented], 200);
   }
+
+
 
 }

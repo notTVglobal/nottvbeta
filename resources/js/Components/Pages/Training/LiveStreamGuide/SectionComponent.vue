@@ -1,7 +1,7 @@
 <template>
   <div class="pb-64">
     <div id="topDiv" :class="{ 'min-h-12': appSettingStore.isSmallScreen }"></div>
-    <div class="section-header flex flex-row flex-wrap items-center gap-6">
+    <div class="section-header flex flex-row flex-wrap items-center gap-6 text-black dark:text-white dark:bg-gray-800">
       <img src="/storage/images/Ping.png" alt="notTV Ping" class="max-h-20"/>
       <font-awesome-icon :icon="`fa-${section.number}`" class="text-3xl"/>
 
