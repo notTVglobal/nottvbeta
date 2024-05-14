@@ -2,21 +2,14 @@
 
 namespace App\Actions\Fortify;
 
-use App\Events\CreatorRegistrationCompleted;
+
 use App\Models\Creator;
-use App\Models\NewsCountry;
-use App\Models\NewsPostalCode;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use Laravel\Jetstream\Jetstream;
-use App\Rules\UnclaimedInviteCode;
 use App\Services\InviteCodeService;
 
 class CreateNewCreator implements CreatesNewUsers {

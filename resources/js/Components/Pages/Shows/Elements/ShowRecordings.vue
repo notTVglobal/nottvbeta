@@ -93,7 +93,7 @@
   </div>
 
   <dialog id="confirmRecordingPlaybackModal" class="modal">
-    <div class="modal-box w-full items-center text-center">
+    <div class="modal-box w-full items-center text-center text-black bg-white dark:bg-gray-800 dark:text-white">
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
@@ -121,7 +121,10 @@
   </transition>
 
   <dialog id="confirmAddToEpisodeModal" class="modal">
-    <div class="modal-box text-center">
+    <div class="modal-box text-center text-black bg-white dark:bg-gray-800 dark:text-white">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
       <h3 class="font-bold text-lg pt-8">Add Recording To Episode</h3>
       <p class="py-4">We are working on this feature!</p>
       <div class="modal-action">
@@ -134,7 +137,10 @@
   </dialog>
 
   <dialog id="confirmDownloadModal" class="modal">
-    <div class="modal-box text-center">
+    <div class="modal-box text-center text-black bg-white dark:bg-gray-800 dark:text-white">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
       <h3 class="font-bold text-lg pt-8">Confirm Download</h3>
       <p class="py-4">Are you sure you want to download the recording?</p>
       <div class="modal-action">
@@ -147,7 +153,10 @@
   </dialog>
 
   <dialog id="downloadStarted" class="modal">
-    <div class="modal-box text-center">
+    <div class="modal-box text-center text-black bg-white dark:bg-gray-800 dark:text-white">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
       <h3 class="font-bold text-lg pt-8">Download Started</h3>
       <p class="py-4">Your recording is now downloading!</p>
       <div class="modal-action">
@@ -160,7 +169,10 @@
   </dialog>
 
   <dialog id="confirmSaveToPremiumModal" class="modal">
-    <div class="modal-box text-center">
+    <div class="modal-box text-center text-black bg-white dark:bg-gray-800 dark:text-white">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
       <h3 class="font-bold text-lg pt-8">Save To Premium Storage</h3>
       <p class="py-4">We are working on this feature!</p>
       <div class="modal-action">

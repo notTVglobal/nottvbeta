@@ -59,10 +59,11 @@
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.startTime, true) }}</p>
-              <p><ConvertDateTimeToTimeAgo
+              <p class="text-yellow-400">
+                <span v-if="dayjs(item.startTime).isBefore(dayjs())">Started </span>
+                <ConvertDateTimeToTimeAgo
                   :dateTime="item.startTime"
                   :timezone="userStore.timezone"
-                  class="text-yellow-400"
               /></p>
             </div>
           </div>
@@ -164,8 +165,8 @@ const getPlayingTimeLabel = (startTime) => {
   const baseTime = dayjs(scheduleStore.baseTime).startOf('isoWeek');
   const start = dayjs(startTime);
 
-  console.log('baseTime:', baseTime.format('YYYY-MM-DD HH:mm:ss'));
-  console.log('startTime:', start.format('YYYY-MM-DD HH:mm:ss'));
+  // console.log('baseTime:', baseTime.format('YYYY-MM-DD HH:mm:ss'));
+  // console.log('startTime:', start.format('YYYY-MM-DD HH:mm:ss'));
 
   const diffDays = start.diff(baseTime, 'day');
   const diffWeeks = start.diff(baseTime, 'week');

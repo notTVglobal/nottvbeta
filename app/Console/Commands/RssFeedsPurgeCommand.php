@@ -17,7 +17,7 @@ class RssFeedsPurgeCommand extends Command
     public function handle()
     {
       // Set the threshold to 30 days before now
-      $threshold = Carbon::now()->subDays(30);
+      $threshold = Carbon::now()->subDays(180);
       NewsRssFeedItemTemp::where('created_at', '<', $threshold)->delete();
 
       $this->info('Old RSS feed items purged successfully.');

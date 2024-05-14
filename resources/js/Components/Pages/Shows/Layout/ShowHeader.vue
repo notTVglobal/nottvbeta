@@ -43,13 +43,13 @@
             </div>
 
             <div v-if="can.editShow">
-            <button v-if="!show.isScheduled" onclick="addShowToScheduleModal.showModal()"
-                    :disabled="scheduleStore.savingToSchedule"
+            <button v-if="!show.meta?.isScheduled" onclick="addShowToScheduleModal.showModal()"
+                    :disabled="isSaving"
                     class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white drop-shadow-lg py-2 flex flex-col">
-              <span v-if="!scheduleStore.savingToSchedule">Add Show To Schedule</span>
+              <span v-if="!isSaving">Add Show To Schedule</span>
               <span v-else>The schedule is being updated...</span>
             </button>
-            <button v-if="show.isScheduled" onclick="changeScheduleModal.showModal()"
+            <button v-if="show.meta?.isScheduled" @click="changeScheduleModal.showModal()"
                     class="btn btn-lg bg-indigo-500 hover:bg-indigo-700 border-indigo-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span>Change Schedule</span>
             </button>
@@ -59,7 +59,7 @@
 
       </div>
 
-    <AddShowToSchedule :show="show">
+    <AddShowToSchedule :show="show" :isSaving="isSaving" @add-show="handleAddShow">
       <template #form-title>
         Add your show to the schedule
       </template>
@@ -73,7 +73,6 @@
 
     <ChangeSchedule :show="show"/>
 
-
   </div>
 </template>
 
@@ -86,6 +85,7 @@ import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
 import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
 import ChangeSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
+import { computed } from 'vue'
 
 const showStore = useShowStore()
 const teamStore = useTeamStore()
@@ -98,4 +98,9 @@ defineProps({
   can: Object,
 })
 
+const isSaving = computed(() => showStore.savingShowIds.has(props.show.id));
+
+const handleAddShow = async () => {
+  await showStore.addShowToSchedule(props.show);
+};
 </script>

@@ -184,7 +184,7 @@
 </template>
 
 <script setup>
-import { onUnmounted } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShowStore } from '@/Stores/ShowStore'
@@ -210,15 +210,6 @@ const goLiveStore = useGoLiveStore()
 const toggleComponent = (componentName) => {
   showStore.openComponent = showStore.openComponent === componentName ? null : componentName
 }
-
-
-onUnmounted(() => {
-  showStore.errorMessage = ''
-  // const topDiv = document.getElementById("topDiv");
-  // if (topDiv) {
-  //   topDiv.scrollIntoView();
-  // }
-})
 
 let props = defineProps({
   show: Object,
@@ -247,6 +238,25 @@ const goLive = () => {
   goLiveStore.preSelectedShowId = props.show.id
   appSettingStore.btnRedirect(`/golive`)
 }
+
+// Subscribe to Laravel Echo channel
+onMounted(() => {
+  showStore.initializeEchoListener(props.show.id);
+});
+
+// Unsubscribe from Laravel Echo channel
+onBeforeUnmount(() => {
+  showStore.leaveEchoListener(props.show.id);
+});
+
+
+onUnmounted(() => {
+  showStore.errorMessage = ''
+  // const topDiv = document.getElementById("topDiv");
+  // if (topDiv) {
+  //   topDiv.scrollIntoView();
+  // }
+})
 
 </script>
 

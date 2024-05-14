@@ -83,7 +83,7 @@
             </h3>
 
           </div>
-          <div v-if="$page.props.user" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+          <div v-if="$page.props.user && !isVerificationNoticeRoute" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
             <h3 v-if="$page.props.user.isCreator" class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/dashboard`">
@@ -105,7 +105,7 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onMounted } from "vue"
+import { computed, onMounted } from 'vue'
 import { Link, usePage } from '@inertiajs/inertia-vue3'
 import JetNavLink from '@/Jetstream/NavLink'
 import JetApplicationMark from '@/Jetstream/ApplicationMark'
@@ -126,7 +126,7 @@ const streamStore = useStreamStore()
 const userStore = useUserStore()
 const welcomeStore = useWelcomeStore()
 
-const { props } = usePage();
+const page = usePage();
 
 // streamStore.isLive(true)
 
@@ -135,6 +135,11 @@ const { props } = usePage();
 // })
 
 appSettingStore.pageReload = false
+
+// Define the computed property
+const isVerificationNoticeRoute = computed(() => {
+  return page.props.value.currentPath === '/email/verify';
+});
 
 // const returnToWelcomePage = () => {
 //   appSettingStore.pageReload = true
