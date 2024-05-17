@@ -1,10 +1,10 @@
 /node_modules
 /public/hot
 /public/storage
-/public/css/*.css.map
-/public/js/*.js
-/public/js/*.map
 /public/ThirdEyeSpies.mp4
+/public/js/app.js
+/public/js/manifest.js
+/public/js/vendor.js
 /storage/app/public/images/logo_black_311.png
 /storage/app/public/images/logo_white_512.png
 /storage/*.key
@@ -29,6 +29,3 @@ test.http
 /.idea
 /.vscode
 /public/js/node_modules_babel-loader_lib_index_js_clonedRuleSet-5_use_0_node_modules_vue-loader_dist_ind-af5a08.js
-public/css/*.css.map
-public/js/*.js
-public/js/*.map
