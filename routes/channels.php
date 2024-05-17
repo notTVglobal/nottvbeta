@@ -62,7 +62,7 @@ Broadcast::channel('user.{id}', function ($user, $id) {
 // model, for Creators.... such as on the Show Manage page, to
 // broadcast when the Schedule is being updated.
 Broadcast::channel('creator.{type}.{id}', function (User $user, $type, $id) {
-  $modelClass = getModelClass($type);
+  $modelClass = getModelClass($type); // getModelClass is a Helper function.
   $model = $modelClass::find($id);
 
   // TODO: The other model policies will need a manage() if they don't already
@@ -74,18 +74,6 @@ Broadcast::channel('creator.{type}.{id}', function (User $user, $type, $id) {
 
   return false;
 });
-
-function getModelClass($type): string {
-  return match ($type) {
-    'show' => Show::class,
-    'movie' => Movie::class,
-    'movieTrailer' => MovieTrailer::class,
-    'showEpisode' => ShowEpisode::class,
-    'newsStory' => NewsStory::class,
-    'otherContent' => OtherContent::class,
-    default => throw new \InvalidArgumentException("Invalid content type: $type"),
-  };
-}
 
 // This channel is for viewers being added/removed from a channel for the viewer count.
 //Broadcast::channel('viewerCount', function ($user, $id) {
