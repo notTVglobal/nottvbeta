@@ -24,20 +24,20 @@
 
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
-            <div v-if="show.isScheduled && show.scheduleDetails">
+            <div v-if="showStore.isScheduled && showStore.scheduleDetails">
               <div>
-                Your show is currently scheduled as <strong>{{ show.scheduleDetails.type }}</strong>.
-                <div v-if="show.scheduleDetails.type === 'one-time'">
-                  It will start on <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(show.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong> and last for <strong>{{ show.scheduleDetails.durationMinutes }} minutes</strong>.
+                Your show is currently scheduled as <strong>{{ showStore.scheduleDetails.type }}</strong>.
+                <div v-if="showStore.scheduleDetails.type === 'one-time'">
+                  It will start on <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(showStore.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong> and last for <strong>{{ showStore.scheduleDetails.durationMinutes }} minutes</strong>.
                 </div>
                 <div v-else>
-                  <template v-if="Array.isArray(show.scheduleDetails.daysOfWeek)">
-                    It recurs on <strong>{{ show.scheduleDetails.daysOfWeek.join(', ') }}</strong>
+                  <template v-if="Array.isArray(showStore.scheduleDetails.daysOfWeek)">
+                    It recurs on <strong>{{ showStore.scheduleDetails.daysOfWeek.join(', ') }}</strong>
                   </template>
                   <template v-else>
-                    It recurs on <strong>{{ show.scheduleDetails.daysOfWeek }}</strong>
+                    It recurs on <strong>{{ showStore.scheduleDetails.daysOfWeek }}</strong>
                   </template>
-                  starting at <strong>{{ userStore.formatTimeFromDateInUserTimezone(show.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong> with each occurrence lasting <strong>{{ show.scheduleDetails.durationMinutes }} minutes</strong>.
+                  starting at <strong>{{ userStore.formatTimeFromDateInUserTimezone(showStore.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong> with each occurrence lasting <strong>{{ showStore.scheduleDetails.durationMinutes }} minutes</strong>.
                 </div>
               </div>
             </div>

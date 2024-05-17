@@ -57,9 +57,6 @@ class EventServiceProvider extends ServiceProvider
         VideoProcessed::class => [
             SendVideoProcessedNotification::class,
         ],
-        ViewerPresenceChannel::class => [
-            ViewerPresenceChannelListener::class,
-        ],
         CreatorRegistrationCompleted::class => [
             SendCreatorWelcomeEmailListener::class,
             NotifyInviterOfNewCreator::class,

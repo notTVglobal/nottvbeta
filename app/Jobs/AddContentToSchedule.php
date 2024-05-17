@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\CreatorContentStatusUpdated;
+use App\Events\ShowScheduleDetailsUpdated;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
 use App\Models\SchedulesIndex;
@@ -283,6 +284,14 @@ class AddContentToSchedule implements ShouldQueue {
           $meta
       ));
 
+      $scheduleDetails = $this->constructScheduleDetails($shortContentType, $contentId, (object) $scheduleData);
+
+      broadcast(new ShowScheduleDetailsUpdated(
+          $scheduleDetails['contentType'],
+          $scheduleDetails['contentId'],
+          $scheduleDetails
+      ));
+
 //      Log::debug('Broadcasted CreatorContentStatusUpdated event successfully');
 
     } catch (\Exception $e) {
@@ -296,6 +305,50 @@ class AddContentToSchedule implements ShouldQueue {
       // Optionally, rethrow the exception or handle it as needed
       throw $e;
     }
+  }
+
+  /**
+   * Helper function to construct schedule details array.
+   *
+   * @param object $scheduleData
+   * @return array
+   */
+  private function constructScheduleDetails($contentType, $contentId, object $scheduleData): array
+  {
+    $extraMetadata = $scheduleData->extra_metadata;
+
+    // Decode the JSON string into a PHP object
+    $decodedMetadata = json_decode($extraMetadata);
+
+    // Check if decoding was successful and the property exists
+    if ($decodedMetadata && property_exists($decodedMetadata, 'daysOfWeek')) {
+      $daysOfWeek = $decodedMetadata->daysOfWeek;
+    } else {
+      $daysOfWeek = []; // Default to an empty array if not found
+    }
+
+    $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $scheduleData->start_time, $scheduleData->timezone)
+        ->setTimezone('UTC')
+        ->toDateTimeString();
+
+    // Convert end_time to UTC
+    $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $scheduleData->end_time, $scheduleData->timezone)
+        ->setTimezone('UTC')
+        ->toDateTimeString();
+
+    // Construct the schedule details array
+    return [
+        'contentType'     => $contentType,
+        'contentId'       => $contentId,
+        'startTime'       => $startTimeUTC,
+        'endTime'         => $endTimeUTC,
+        'timezone'        => 'UTC', // Since we're converting to UTC
+//        'broadcastDates'  => $scheduleData->broadcast_dates, // we don't have this yet, the job just got dispatched.
+        'durationMinutes' => $scheduleData->duration_minutes,
+        'priority'        => $scheduleData->priority,
+        'daysOfWeek'      => $daysOfWeek, // Now this contains the array of days or is empty
+        'type'            => $scheduleData->recurrence_details_id ? 'recurring' : 'one-time',
+    ];
   }
 
   // Function to generate a user-friendly string of days

@@ -169,7 +169,8 @@
             </div>
             <div v-if="showStore.openComponent === 'showRecordings'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
-                <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showSlug="show.slug" :showImage="show.image"/>
+                <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showSlug="show.slug"
+                                :showImage="show.image"/>
 
                 <!--            </div>-->
               </div>
@@ -242,7 +243,7 @@ const goLive = () => {
 }
 
 onMounted(() => {
-  console.log(`Subscribing to channel creator.show.${props.show.id}`);
+  console.log(`Subscribing to channel creator.show.${props.show.id}`)
 
   // Echo.private(`creator.show.${props.show.id}`)
   //     .subscribed(() => {
@@ -263,48 +264,53 @@ onMounted(() => {
 
   Echo.join(`creator.show.${props.show.id}`)
       .here((users) => {
-        console.log('Users currently in the channel:', users);
+        console.log('Users currently in the channel:', users)
       })
       .joining((user) => {
-        console.log('User joined the channel:', user);
+        console.log('User joined the channel:', user)
       })
       .leaving((user) => {
-        console.log('User left the channel:', user);
+        console.log('User left the channel:', user)
         if (user.id === page.value.user.id) {
           console.log('user left!')
-          showStore.setUpdatingStatus(false, user.name);
+          showStore.setUpdatingStatus(false, user.name)
           // Emit the event to the server
           axios.post(`/api/${props.show.slug}/user-left-channel`, {
             user: user,
-            channel: `creator.show.${props.show.id}`
-          });
+            channel: `creator.show.${props.show.id}`,
+          })
         }
       })
       .listen('.CreatorContentStatusUpdated', (event) => {
-        console.log('CreatorContentStatusUpdated event received:', event);
-        showStore.isSaving = event.meta.isSaving;
-        showStore.isUpdatingSchedule = event.meta.isUpdatingSchedule;
-        showStore.updatedBy = event.meta.updatedBy;
+        console.log('CreatorContentStatusUpdated event received:', event)
+        showStore.isSaving = event.meta.isSaving
+        showStore.isUpdatingSchedule = event.meta.isUpdatingSchedule
+        showStore.updatedBy = event.meta.updatedBy
+      })
+      .listen('.ShowScheduleDetailsUpdated', (event) => {
+        console.log('ShowScheduleDetailsUpdated event received:', event)
+        showStore.scheduleDetails = event.scheduleDetails
       })
       .error((error) => {
-        console.error('Error subscribing to channel:', error);
-      });
+        console.error('Error subscribing to channel:', error)
+      })
 
-});
+})
 
 onBeforeUnmount(() => {
   // Echo.leave(`creator.show.${props.show.id}`);
-  console.log(`Unsubscribed from channel creator.show.${props.show.id}`);
-});
+  console.log(`Unsubscribed from channel creator.show.${props.show.id}`)
+  showStore.reset()
+})
 
 // Subscribe to Laravel Echo channel
 onMounted(() => {
   showStore.initializeShow(props.show)
-});
+})
 
 // Unsubscribe from Laravel Echo channel
 onBeforeUnmount(() => {
-});
+})
 
 
 onUnmounted(() => {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\CreatorContentStatusUpdated;
+use App\Events\ShowScheduleDetailsUpdated;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Http\Resources\ShowResource;
@@ -1084,6 +1085,7 @@ class SchedulesController extends Controller {
 //              'error' => $e->getMessage()
 //          ]);
 //          return null;
+//          return null;
 //        }
 //      })->filter()->all();
 //    });
@@ -1187,6 +1189,9 @@ class SchedulesController extends Controller {
 
       $shortContentType = strtolower(class_basename($contentType)); // converts to 'show'
       broadcast(new CreatorContentStatusUpdated($shortContentType, $data['contentId'], $meta));
+
+      $scheduleDetails = [];
+      broadcast(new ShowScheduleDetailsUpdated($shortContentType, $data['contentId'], $scheduleDetails));
 
       Log::info("Content type {$shortContentType} with ID {$contentId} successfully removed from schedule.");
 
