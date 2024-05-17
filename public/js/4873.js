@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[4873],{34873:(e,t,s)=>{s.r(t),s.d(t,{useWelcomeStore:()=>r});var c=s(69876),n=function(){return{}},r=(0,c.Q_)("welcomeStore",{state:n,actions:{reset:function(){Object.assign(this,{})}}})}}]);
+//# sourceMappingURL=4873.js.map

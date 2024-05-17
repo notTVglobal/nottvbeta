@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[961],{70961:(t,e,i)=>{i.r(e),i.d(e,{useDashboardStore:()=>a});var n=i(69876),r=function(){return{currentNotificationType:"default"}},a=(0,n.Q_)("dashboard",{state:r,actions:{reset:function(){Object.assign(this,{currentNotificationType:"default"})},setNotificationType:function(t){this.currentNotificationType=t}},getters:{isTeamTransferNotification:function(t){return"teamTransfer"===t.currentNotificationType}}})}}]);
+//# sourceMappingURL=961.js.map
