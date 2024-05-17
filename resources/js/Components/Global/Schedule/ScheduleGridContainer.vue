@@ -45,6 +45,7 @@
         'bg-gradient-to-r from-tan-800 to-tan-600': item.placeholder,  // Assume tan-800 and tan-600 are defined in your tailwind config
         'gradient-on-hover': !item.placeholder
     }">
+          <div>{{item.type}}</div>
           <div class="show-info flex-grow flex flex-col items-center justify-center">
             <h3 class="show-title my-4 w-full text-center text-lg font-semibold break-words"
                 :class="{'gradient-on-hover': !item.placeholder}">
@@ -115,7 +116,7 @@
         </div>
       </div>
       <!-- Loading Indicator -->
-      <div v-if="isLoading" class="w-full text-center mt-4">
+      <div v-if="scheduleStore.isLoading" class="w-full text-center mt-4">
       <span class="loading loading-dots loading-lg text-info">
       </span>
       </div>
@@ -125,7 +126,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
@@ -159,7 +160,7 @@ let initialFetchCompleted = false
 const isVisible = ref(false)
 const displayedShowsCount = ref(6)
 // Computed property to ensure reactivity
-const isLoading = computed(() => scheduleStore.isLoading)
+// const isLoading = computed(() => scheduleStore.isLoading)
 const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
 
@@ -231,12 +232,7 @@ const loadMoreShows = async () => {
 const throttledLoadMoreShows = throttle(loadMoreShows, 200);
 
 
-// Watcher for isVisible.value
-watch(isVisible, (newValue) => {
-  if (newValue && initialFetchCompleted) {
-    throttledLoadMoreShows();
-  }
-});
+
 
 const allPlaceholders = computed(() => {
   return scheduleStore.nextFourHoursOfContent.every(item => item.placeholder)
@@ -287,12 +283,19 @@ const comingUpNextShow = computed(() => {
 })
 
 onMounted(async () => {
-  scheduleStore.resetAll()
+  // scheduleStore.resetAll()
   const now = dayjs();
   const startDate = now.subtract(4, 'hour').toISOString();
   const endDate = now.add(7, 'day').toISOString();
   await scheduleStore.fetchSchedules(startDate, endDate);
   initialFetchCompleted = true
+
+  // Watcher for isVisible.value
+  watch(isVisible, (newValue) => {
+    if (newValue && initialFetchCompleted) {
+      throttledLoadMoreShows();
+    }
+  });
 
   // Watcher for schedules to ensure initial data load
   watch(
@@ -330,6 +333,13 @@ onMounted(async () => {
       {immediate: true},
   )
 });
+
+onBeforeUnmount(() => {
+  // Any specific cleanup logic can go here
+  // For example: cancel any ongoing API requests if applicable
+  scheduleStore.resetAll()
+});
+
 
 // Method to format time with conditional AM/PM display
 function formatTime(time, showMeridiem = false) {

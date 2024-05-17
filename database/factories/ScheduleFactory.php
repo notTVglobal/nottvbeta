@@ -33,58 +33,54 @@ class ScheduleFactory extends Factory {
     // Initialize start time at 00:00 and add hours based on the increment
     $startTime = Carbon::create($year, $month, $day, 0, 0)->addHours($hourIncrement++);
 
-    // Calculate the start time at the top of the current (or most recent) hour, then increment
-//    $startTime = Carbon::now()->startOfHour()->addHours($hourIncrement++);
-
-    // Determine whether this schedule is for a show or a movie
-    $isShow = $this->faker->boolean;
+    // Determine whether this schedule is for a show, show episode, or a movie
+    $contentType = $this->faker->randomElement(['App\Models\Show', 'App\Models\ShowEpisode', 'App\Models\Movie']);
     $contentId = null;
-    $contentType = null;
-    //  $startTime = now(); // Adjust based on your logic
+    $durationOptions = [];
 
-    if ($isShow) {
-      // Attempt to get a random published ShowEpisode where the Show is new or active
-      $showEpisode = ShowEpisode::where('show_episode_status_id', 7)
-          ->whereHas('show', function ($query) {
-            $query->whereIn('show_status_id', [1, 2]);
-          })
-          ->inRandomOrder()
-          ->first();
+    if ($contentType === 'App\Models\Show' || $contentType === 'App\Models\ShowEpisode') {
+      $durationOptions = [30, 60, 90, 120, 150, 180]; // Duration options for show or show episode
 
-      if ($showEpisode) {
-        $contentId = $showEpisode->id;
-        $contentType = 'App\Models\ShowEpisode'; // Use the fully qualified class name of your ShowEpisode model
+      if ($contentType === 'App\Models\Show') {
+        $show = Show::whereIn('show_status_id', [1, 2])->inRandomOrder()->first();
+        if ($show) {
+          $contentId = $show->id;
+        }
+      } else {
+        $showEpisode = ShowEpisode::where('show_episode_status_id', 7)
+            ->whereHas('show', function ($query) {
+              $query->whereIn('show_status_id', [1, 2]);
+            })
+            ->inRandomOrder()
+            ->first();
+        if ($showEpisode) {
+          $contentId = $showEpisode->id;
+        }
       }
     } else {
-      // Handle the movie case
+      $durationOptions = [60, 90, 120, 150, 180]; // Duration options for movies
+
       $movie = Movie::inRandomOrder()->first();
       if ($movie) {
         $contentId = $movie->id;
-        $contentType = 'App\Models\Movie'; // Use the fully qualified class name of your Movie model
       }
     }
 
-//    $showEpisode = ShowEpisode::where('show_episode_status_id', 7)
-//        ->whereHas('show', function ($query) {
-//          $query->whereIn('show_status_id', [1, 2]);
-//        })
-//        ->inRandomOrder()
-//        ->first();
-//    $contentId = $showEpisode->id;
+    // Randomly select a duration from the available options
+    $duration = $this->faker->randomElement($durationOptions);
 
-    // Ensure $startTime is appropriately set to the top of the hour
-    // $startTime = $startTime->minute(0)->second(0);
-    $modelClass = $contentType;
+    // Calculate the end time based on the duration
+    $endTime = $startTime->copy()->addMinutes($duration);
 
     return [
         'content_type'     => $contentType,
         'content_id'       => $contentId,
         'start_time'       => $startTime,
-        'duration_minutes' => 60,
-        'end_time'         => $startTime->copy()->addHour(), // End time is 1 hour later
-        'type'             => $modelClass ? lcfirst(class_basename($modelClass)) : null, // Dynamically set the type
+        'duration_minutes' => $duration,
+        'end_time'         => $endTime,
+        'type'             => $contentType ? lcfirst(class_basename($contentType)) : null,
         'status'           => 'scheduled',
-        'priority'         => $this->faker->numberBetween(0, 10),
+        'priority'         => 5, // Set priority to 5
         'recurrence_flag'  => 0
     ];
   }

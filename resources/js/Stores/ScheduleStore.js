@@ -3,42 +3,23 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { createTimeSlots } from '@/Utilities/TimeUtils'
 import {
-    addDays,
-    addHours,
-    addMonths,
-    eachDayOfInterval,
-    eachHourOfInterval,
-    endOfMonth,
-    endOfWeek,
     format,
-    getHours,
-    getMonth,
-    getYear,
-    isSameDay,
     isToday,
     isTomorrow,
     isYesterday,
     startOfDay,
-    startOfHour,
-    startOfMonth,
-    startOfWeek,
-    subMonths,
 } from 'date-fns'
 
 // Import dayjs and its plugins
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore' // To check if the day is the same
-import relativeTime from 'dayjs/plugin/relativeTime'
-import duration from 'dayjs/plugin/duration'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear' // For week start and end calculations
 import advancedFormat from 'dayjs/plugin/advancedFormat' // For more complex formatting options
 
 // Extend dayjs with the plugins
-dayjs.extend(relativeTime)
-dayjs.extend(duration)
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
 dayjs.extend(advancedFormat)

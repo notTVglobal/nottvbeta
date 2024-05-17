@@ -300,6 +300,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // Echo.leave(`creator.show.${props.show.id}`);
   console.log(`Unsubscribed from channel creator.show.${props.show.id}`)
+  showStore.reset()
 })
 
 // Subscribe to Laravel Echo channel
