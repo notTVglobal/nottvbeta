@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[5819],{95819:(t,e,s)=>{s.r(e),s.d(e,{useUploadStore:()=>o});var u=s(69876),d=function(){return{videoId:null,uploadStatus:"idle"}},o=(0,u.Q_)("uploadStore",{state:d,actions:{reset:function(){Object.assign(this,{videoId:null,uploadStatus:"idle"})},setVideoId:function(t){this.videoId=t},setUploadStatus:function(t){this.uploadStatus=t}}})}}]);
-//# sourceMappingURL=5819.js.map
