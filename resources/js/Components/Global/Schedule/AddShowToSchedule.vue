@@ -395,7 +395,7 @@ function goToNextStep() {
     } else if (currentStep.value === 4 && !form.startDate) {
       // If no start date is selected and the current step is 4, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(6, 'hour'))) {
+    } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs(form.startDate).add(6, 'hour'))) {
       // If the start date is within the next 6 hours when the current step is 4, set an error message
       stepError.value = 'Start date must be at least 6 hours in the future.';
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
