@@ -10,6 +10,7 @@ May 17, 2024
 ## v0.9.0.21
 May 17, 2024
 * Fix undefined variable in Schedule.
+* Change .gitignore
 
 ## v0.9.0.19
 May 17, 2024
