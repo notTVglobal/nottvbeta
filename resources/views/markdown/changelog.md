@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: May 13, 2024\
+Last Update: May 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.16
+May 17, 2024
+* Now displays the schedule details after schedule is changed.
+* Fixed a memory leak on the Schedule page.
 
 ## v0.9.0.15
 May 13, 2024
