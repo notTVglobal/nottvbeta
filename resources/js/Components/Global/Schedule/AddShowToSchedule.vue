@@ -395,9 +395,9 @@ function goToNextStep() {
     } else if (currentStep.value === 4 && !form.startDate) {
       // If no start date is selected and the current step is 4, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(24, 'hour'))) {
-      // If the start date is within the next 24 hours when the current step is 4, set an error message
-      stepError.value = 'Start date must be at least 24 hours in the future.'
+    } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(6, 'hour'))) {
+      // If the start date is within the next 6 hours when the current step is 4, set an error message
+      stepError.value = 'Start date must be at least 6 hours in the future.';
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
       // Allow the end date to be up to one week beyond exactly three months from the start date
       // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
@@ -567,8 +567,8 @@ const formattedStartTimeForOneTime = computed(() => {
   if (!form.startDate) return ''
   // Directly parse and format the date in local time without converting timezones
   const timeIn = dayjs(form.startDate).format('hh:mm A')
-  console.log('formattedStartTimeForOneTime time in: ' + form.startDate)
-  console.log('formattedStartTimeForOneTime time out: ' + timeIn)
+  // console.log('formattedStartTimeForOneTime time in: ' + form.startDate)
+  // console.log('formattedStartTimeForOneTime time out: ' + timeIn)
   return timeIn // This should match the local time equivalent of the input
 
 
@@ -605,8 +605,8 @@ const handleStartDateSelected = ({date}) => {
   const dayjsDate = dayjs(date)
   // form.startDate = dayjsDate.tz(userStore.canadianTimezone, true).format(); // Update the start date
   form.startDate = date // Update the start date
-  console.log('handleStartDate form.startDate: ' + form.startDate)
-  console.log('handleStartDate raw date: ' + date)
+  // console.log('handleStartDate form.startDate: ' + form.startDate)
+  // console.log('handleStartDate raw date: ' + date)
 
   // Calculate a rough endDate 3 months from the startDate
   endDate = dayjs(date).add(3, 'months')
@@ -624,9 +624,9 @@ const handleStartDateSelected = ({date}) => {
   }
 
   form.endDate = endDate
-  console.log('handleStartDate form.endDate: ' + form.endDate)
+  // console.log('handleStartDate form.endDate: ' + form.endDate)
   provisionalEndDate.value = form.endDate.format('ddd MMM D YYYY') // Update the endDate in the form
-  console.log('provisionalEndDate: ' + provisionalEndDate.value)
+  // console.log('provisionalEndDate: ' + provisionalEndDate.value)
 }
 
 // Handles end date selection
@@ -634,8 +634,8 @@ const handleEndDateSelected = ({date}) => {
   console.log('handleEndDate: ' + date)
   // form.endDate = dayjs(date).tz(userStore.timezone) // Directly set the end date from the selection
   form.endDate = date // Directly set the end date from the selection
-  console.log('handleEndDate form.endDate: ' + form.endDate)
-  console.log('NEW handleEndDate form.endDate: ' + selectedEndDate.value)
+  // console.log('handleEndDate form.endDate: ' + form.endDate)
+  // console.log('NEW handleEndDate form.endDate: ' + selectedEndDate.value)
   // You might want to add validation or adjustment logic here as well
 }
 
@@ -644,11 +644,11 @@ const submit = async () => {
 
   try {
     const payload = showStore.preparePayload(form)
-    console.log('==================================================')
-    console.log('PAYLOAD:', payload)
+    // console.log('==================================================')
+    // console.log('PAYLOAD:', payload)
 
     const response = await showStore.addShowToSchedule(payload)
-    console.log('Success:', response)
+    // console.log('Success:', response)
     goToStep(6)
     startConfetti()
   } catch (error) {

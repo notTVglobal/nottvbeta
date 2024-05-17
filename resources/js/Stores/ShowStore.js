@@ -52,7 +52,7 @@ export const useShowStore = defineStore('showStore', {
             Object.assign(this, initialState())
         },
         initializeShow(show) {
-            console.log('initializeShow')
+            // console.log('initializeShow')
 
             let meta = {};
             try {
@@ -145,7 +145,7 @@ export const useShowStore = defineStore('showStore', {
                 // Set the local saving state
                 this.isUpdatingSchedule = state;
                 this.updatedBy = state ? userName : null;
-                console.log(userName);
+                // console.log(userName);
                 // Update the meta field in the database
                 const response = await axios.put(`/api/shows/${slug}/meta`, {
                     // isSaving: null,
@@ -164,7 +164,7 @@ export const useShowStore = defineStore('showStore', {
         preparePayload(form) {
             const userStore = useUserStore()
             let startDate, endDate, formattedDuration
-            console.log(form)
+            // console.log(form)
             if (form.scheduleType === 'one-time') {
                 // One-time scheduling logic
                 startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true)
@@ -220,7 +220,7 @@ export const useShowStore = defineStore('showStore', {
                         contentId,
                     },
                 }
-                console.log(payload)
+                // console.log(payload)
                 await axios.delete('/api/schedule/removeFromSchedule', payload)
                 this.loadingUpdatingStatus = false
                 this.isScheduled = false

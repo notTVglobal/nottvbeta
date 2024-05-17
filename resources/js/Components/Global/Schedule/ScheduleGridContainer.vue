@@ -45,7 +45,7 @@
         'bg-gradient-to-r from-tan-800 to-tan-600': item.placeholder,  // Assume tan-800 and tan-600 are defined in your tailwind config
         'gradient-on-hover': !item.placeholder
     }">
-          <div>{{item.type}}</div>
+          <div v-if="item.type" class="badge capitalize px-2 py-1 mt-2">{{item.type}}</div>
           <div class="show-info flex-grow flex flex-col items-center justify-center">
             <h3 class="show-title my-4 w-full text-center text-lg font-semibold break-words"
                 :class="{'gradient-on-hover': !item.placeholder}">
@@ -95,6 +95,7 @@
         <div class="bg-gray-900 text-white py-2">
           <h2>{{ getPlayingTimeLabel(show.startTime) }}</h2>
         </div>
+        <div v-if="show.type" class="badge capitalize px-2 py-1 mt-2">{{show.type}}</div>
         <div class="show-details mt-4 mx-auto max-w-4xl">
           <h3 @click="handleShowClick(show)" class="text-3xl mb-1 hover:text-blue-300 hover:cursor-pointer">
             {{ show.content.name }}</h3>
@@ -159,8 +160,7 @@ let initialFetchCompleted = false
 
 const isVisible = ref(false)
 const displayedShowsCount = ref(6)
-// Computed property to ensure reactivity
-// const isLoading = computed(() => scheduleStore.isLoading)
+
 const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
 
@@ -216,15 +216,15 @@ function onElementVisibility(state) {
 
 // Function to load more shows
 const loadMoreShows = async () => {
-  if (isVisible.value && !isLoading.value) {
-    isLoading.value = true;
+  if (isVisible.value && !scheduleStore.isLoading) {
+    scheduleStore.isLoading = true;
     // console.log("Loading more shows");
 
     // Fetch more schedules
     await scheduleStore.fetchMoreSchedules();
 
     displayedShowsCount.value += 6;
-    isLoading.value = false;
+    scheduleStore.isLoading = false;
   }
 };
 
