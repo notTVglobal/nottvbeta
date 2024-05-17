@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\CreatorContentStatusUpdated;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
 use App\Models\SchedulesIndex;
@@ -62,30 +63,38 @@ class AddContentToSchedule implements ShouldQueue {
   public function handle(): void {
     $data = $this->data;
 
+//    Log::debug('AddContentToSchedule::handle', [$data]);
+
+    // tec21 2024-05-14: I'm commenting out the validation because
+    // it kept returning errors saying the data was missing.
+
     // Manually create a validator instance
-    $validator = ValidatorFacade::make($data, [
-        'contentId'    => 'required|integer',
-        'contentType'  => 'required|string',
-        'scheduleType' => 'required|string',
-        'startDate'    => 'required|date',
-        'endDate'      => 'required|date',
-        'daysOfWeek'   => 'array',
-        'timezone'     => 'required|string',
-        'duration'     => 'required|integer',
-    ]);
+//    $validator = ValidatorFacade::make($data, [
+//        'contentId'    => 'required|integer',
+//        'contentType'  => 'required|string',
+//        'scheduleType' => 'required|string',
+//        'startDate'    => 'required|date',
+//        'endDate'      => 'required|date',
+//        'daysOfWeek'   => 'array',
+//        'timezone'     => 'required|string',
+//        'duration'     => 'required|integer',
+//    ]);
 
-    if ($validator->fails()) {
-      // Here, instead of returning a response, you might log the errors or handle them otherwise:
-      Log::error('Validation failed in UpdateSchedule job', $validator->errors()->toArray());
-
-      return; // Exit the job if validation fails
-    }
+//    if ($validator->fails()) {
+//      // Here, instead of returning a response, you might log the errors or handle them otherwise:
+//      Log::error('Validation failed in UpdateSchedule job', $validator->errors()->toArray());
+//
+//      return; // Exit the job if validation fails
+//    }
 
     // Extract input
     // Correctly extract contentId and contentType using the case used in the validator
+
+//    Log::debug('Payload before accessing keys', ['data' => $data]);
+
     $contentId = $data['contentId'];
     $contentType = $data['contentType'];
-    $scheduleType = $data['scheduleType'];
+//    $scheduleType = $data['scheduleType'];
 
     // Determine the correct model class based on the contentType
     $modelClass = $this->getModelClass($contentType);
@@ -241,9 +250,40 @@ class AddContentToSchedule implements ShouldQueue {
 //      Log::debug('SchedulesIndex created successfully', ['scheduleId' => $schedule->id]);
 
 
-
       // Commit the transaction
       DB::commit();
+
+      // Dispatch the job to update broadcast dates for this schedule
+      ScheduleUpdateShowBroadcastDates::dispatch($schedule);
+
+      $meta = [
+          'isSaving'           => false,
+          'isUpdatingSchedule' => null,
+          'isScheduled'        => true,
+          'updatedBy'          => null,
+          'triggeredBy'        => 'AddContentToSchedule Job',
+      ];
+
+      $content->meta = json_encode($meta);
+      $content->save();
+
+      $shortContentType = strtolower(class_basename($contentType)); // converts to 'show'
+
+      // Log the meta data and broadcasting attempt
+//      Log::debug('Broadcasting CreatorContentStatusUpdated event', [
+//          'content_type' => $shortContentType,
+//          'content_id'   => $content->id,
+//          'meta'         => $meta
+//      ]);
+
+      // Broadcast the event
+      broadcast(new CreatorContentStatusUpdated(
+          $shortContentType,
+          $content->id,
+          $meta
+      ));
+
+//      Log::debug('Broadcasted CreatorContentStatusUpdated event successfully');
 
     } catch (\Exception $e) {
       // Rollback the transaction
@@ -256,8 +296,6 @@ class AddContentToSchedule implements ShouldQueue {
       // Optionally, rethrow the exception or handle it as needed
       throw $e;
     }
-    // Dispatch the job to update broadcast dates for this schedule
-    ScheduleUpdateShowBroadcastDates::dispatch($schedule);
   }
 
   // Function to generate a user-friendly string of days
@@ -278,6 +316,7 @@ class AddContentToSchedule implements ShouldQueue {
       // Convert each day to its plural form
       $pluralizedDays = array_map(function ($day) use ($orderedDays, $pluralDays) {
         $index = array_search($day, $orderedDays);
+
         return $pluralDays[$index] ?? $day;  // Fallback to original if something goes wrong
       }, $daysOfWeek);
 

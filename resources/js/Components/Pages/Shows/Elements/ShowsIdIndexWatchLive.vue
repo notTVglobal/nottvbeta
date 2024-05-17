@@ -1,16 +1,28 @@
 <template>
   <div class="flex flex-row flex-wrap gap-2 items-center">
-    <div v-if="show.nextBroadcast" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div v-if="show.nextBroadcast"
+         class="flex flex-col bg-gray-800 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
       <h2 class="text-2xl font-semibold mb-4">Next Broadcast</h2>
       <p class="text-lg">
-        {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show.nextBroadcast.next_broadcast) }} {{ userStore.timezoneAbbreviation }}
+        <ConvertDateTimeToTimeAgo :dateTime="show.nextBroadcast.next_broadcast" :timezone="userStore.timezone"
+                                  :class="`text-yellow-400`"/>
+      </p>
+      <p class="text-lg">
+        {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show.nextBroadcast.next_broadcast) }}
+        {{ userStore.timezoneAbbreviation }}
       </p>
     </div>
 
     <div v-if="showStore.isLive" class="flex flex-col justify-center ml-5">
 
-      <div class="flex text-yellow-400">Started&nbsp;<ConvertDateTimeToTimeAgo v-if="showStore.liveScheduledStartTime"
-                                :dateTime="showStore.liveScheduledStartTime" :class="`text-yellow-400`"/></div>
+      <div class="flex text-yellow-400">
+        Started&nbsp;
+        <ConvertDateTimeToTimeAgo
+            :key="scheduleStore.baseTime"
+            v-if="showStore.liveScheduledStartTime"
+            :dateTime="showStore.liveScheduledStartTime"
+            :class="`text-yellow-400`"/>
+      </div>
 
       <button @click="watchNow" class="btn bg-red-600 hover:bg-red-700 text-white">
         <span v-if="isWatchingLive">Now Playing</span>
@@ -24,6 +36,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useScheduleStore } from '@/Stores/ScheduleStore'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import { computed, onMounted } from 'vue'
 
@@ -31,6 +44,7 @@ const userStore = useUserStore()
 const showStore = useShowStore()
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
+const scheduleStore = useScheduleStore()
 
 const props = defineProps({
   show: Object,
@@ -38,15 +52,15 @@ const props = defineProps({
 })
 
 onMounted(async () => {
-  await showStore.checkIsLive(props.show.slug);
-});
+  await showStore.checkIsLive(props.show.slug)
+})
 
 // Computed property to determine if the current video source includes the live stream name
 const isWatchingLive = computed(() => {
-  return videoPlayerStore.videoSource.includes(showStore.liveMistStreamName);
-});
+  return videoPlayerStore.videoSource.includes(showStore.liveMistStreamName)
+})
 
-const watchNow = async() => {
+const watchNow = async () => {
   const mediaType = 'mistStream' // Use the new 'mediaType' from the backend
 
   const videoDetails = {

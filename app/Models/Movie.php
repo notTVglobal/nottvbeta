@@ -24,6 +24,7 @@ class Movie extends Model {
       'size',
       'file_path',
       'file_url',
+      'meta',
       'release_year',
       'www_url',
       'instagram_name',
@@ -39,6 +40,10 @@ class Movie extends Model {
       'status_id',
       'copyrightYear',
       'releaseDateTime'
+  ];
+
+  protected $casts = [
+      'meta' => 'json',
   ];
 
   public function getRouteKeyName() {

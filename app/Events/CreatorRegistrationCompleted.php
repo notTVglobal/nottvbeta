@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\InviteCode;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -15,14 +16,16 @@ class CreatorRegistrationCompleted {
   use Dispatchable, InteractsWithSockets, SerializesModels;
 
   public User $user;
+  public InviteCode $inviteCode;
 
   /**
    * Create a new event instance.
    *
    * @return void
    */
-  public function __construct(User $user) {
+  public function __construct(User $user, InviteCode $inviteCode) {
     $this->user = $user;
+    $this->inviteCode = $inviteCode;
   }
 
 //  /**

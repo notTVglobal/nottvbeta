@@ -314,7 +314,7 @@ class CreatorsController extends Controller {
       $user = $creatorAction->create($validatedData + ['invite_code' => $inviteCode]);
 
       event(new Registered($user));
-      event(new CreatorRegistrationCompleted($user));
+      event(new CreatorRegistrationCompleted($user, $inviteCode));
       Log::debug('Registered User and Creator Registration Completed.');
       // Redirect to dashboard with a full page reload
       return redirect('/dashboard');
@@ -342,7 +342,7 @@ class CreatorsController extends Controller {
         'invite_code_id' => $inviteCode->id,
     ]);
 
-    event(new CreatorRegistrationCompleted($user));
+    event(new CreatorRegistrationCompleted($user, $inviteCode));
     Log::debug('Creator Registration Completed with already registered user.');
     // Redirect to dashboard with a full page reload
     return redirect('/dashboard');

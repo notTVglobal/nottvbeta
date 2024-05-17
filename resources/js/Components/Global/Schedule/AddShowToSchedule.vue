@@ -1,5 +1,4 @@
 <template>
-
   <dialog id="addShowToScheduleModal" class="modal text-black">
     <div class="modal-box w-11/12 max-w-5xl text-black bg-white dark:bg-gray-800 dark:text-white">
       <button v-if="currentStep === 6"
@@ -39,8 +38,12 @@
             <div v-if="!timezoneConfirmed">
               <div class="mb-2 pb-6 text-primary text-center">Confirm Timezone</div>
               <div class="flex flex-row justify-center">
-                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2 rounded-lg select select-bordered bg-white dark:bg-gray-800 dark:text-white">
-                  <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{ timezone }}</option>
+                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone"
+                        class="ml-2 rounded-lg select select-bordered bg-white dark:bg-gray-800 dark:text-white">
+                  <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{
+                      timezone
+                    }}
+                  </option>
                 </select>
               </div>
               <div class="flex flex-row justify-center pt-6">
@@ -104,13 +107,15 @@
               <div class="flex flex-col">
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour" class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationHour"
+                          class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute" class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationMinute"
+                          class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
@@ -172,18 +177,21 @@
                 <div class="mb-2">2. Choose start time</div>
                 <div class="flex items-center gap-2 text-black bg-white dark:bg-gray-800 dark:text-white">
                   <!-- Hour selection -->
-                  <select v-model="form.startTime.hour" class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.startTime.hour"
+                          class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="hour in hours" :key="hour" :value="hour">{{ hour }}</option>
                   </select>
 
                   <!-- Minute selection -->
-                  <select v-model="form.startTime.minute" class="form-select select select-bordered  text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.startTime.minute"
+                          class="form-select select select-bordered  text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option value="00">00</option>
                     <option value="30">30</option>
                   </select>
 
                   <!-- AM/PM selection -->
-                  <select v-model="form.startTime.meridian" class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white ">
+                  <select v-model="form.startTime.meridian"
+                          class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white ">
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                   </select>
@@ -193,13 +201,15 @@
                 <!-- Step 3 content -->
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour" class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationHour"
+                          class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute" class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationMinute"
+                          class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
@@ -220,13 +230,19 @@
           </div>
 
           <StepSixCongratulations v-if="currentStep === 6 && Object.keys(form.errors).length === 0" class="p-4">
-          <template #header>Congratulations!</template>
+            <template #header>Congratulations!</template>
             <template #subHeader>You've successfully scheduled your show on notTV!</template>
           </StepSixCongratulations>
 
-          <div v-if="currentStep === 6 && Object.keys(form.errors).length > 0" class="p-4 text-red-700">
+          <div v-if="currentStep === 6 && Object.keys(form.errors).length > 0" class="p-4 text-red-700 w-full">
             <ul>
-              <li v-for="(error, key) in form.errors" :key="key">{{ error }}</li>
+              <li v-for="(errorMessages, key) in form.errors" :key="key">
+                <span v-if="Array.isArray(errorMessages)">{{ key }}:</span>
+                <ul v-if="Array.isArray(errorMessages)">
+                  <li v-for="(message, index) in errorMessages" :key="index">{{ message }}</li>
+                </ul>
+                <span v-else>{{ errorMessages }}</span>
+              </li>
             </ul>
           </div>
 
@@ -270,28 +286,50 @@
 
 </template>
 <script setup>
-import { computed, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { getCurrentInstance } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc' // Required for UTC support
 import timezone from 'dayjs/plugin/timezone' // Required for timezone support
 import { useUserStore } from '@/Stores/UserStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
+import { useShowStore } from '@/Stores/ShowStore'
+import { useNotificationStore } from "@/Stores/NotificationStore"
+import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
+import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
+import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
 
 import Label from '@/Jetstream/Label.vue'
 import Button from '@/Jetstream/Button.vue'
 
 const userStore = useUserStore()
 const scheduleStore = useScheduleStore()
+const showStore = useShowStore()
+const notificationStore = useNotificationStore()
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+
+let page = usePage().props
 
 let props = defineProps({
   id: String,
   show: Object,
   // errors: Object,
 })
+
+// Access the global properties
+const { proxy } = getCurrentInstance()
+
+const startConfetti = () => {
+  proxy.$confetti.start()
+}
+
+const stopConfetti = () => {
+  proxy.$confetti.stop()
+}
 
 // const errors = ref(props.errors);
 
@@ -306,7 +344,8 @@ const totalSteps = ref(6)
 const stepError = ref('') // To store the error message for the current step
 
 
-const form = reactive(useForm({
+// Define the initial form state
+const initialFormState = {
   scheduleType: '', // 'one-time' or 'recurring'
   daysOfWeek: [],
   startTime: {
@@ -321,9 +360,19 @@ const form = reactive(useForm({
   startDate: '',
   endDate: '',
   errors: {},
-}))
+};
 
-form.reset() // on modal load, reset form.
+const form = reactive({ ...initialFormState }); // on modal load, reset form.
+
+// Function to reset the form
+const resetForm = () => {
+  Object.assign(form, initialFormState);
+};
+
+// Function to clear errors
+const clearErrors = () => {
+  form.errors = {};
+};
 
 function confirmTimezone() {
   timezoneConfirmed.value = true
@@ -348,7 +397,7 @@ function goToNextStep() {
       stepError.value = 'Please select a start date.'
     } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(24, 'hour'))) {
       // If the start date is within the next 24 hours when the current step is 4, set an error message
-      stepError.value = 'Start date must be at least 24 hours in the future.';
+      stepError.value = 'Start date must be at least 24 hours in the future.'
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
       // Allow the end date to be up to one week beyond exactly three months from the start date
       // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
@@ -517,10 +566,10 @@ updateDurationDisplay()
 const formattedStartTimeForOneTime = computed(() => {
   if (!form.startDate) return ''
   // Directly parse and format the date in local time without converting timezones
-  const timeIn = dayjs(form.startDate).format('hh:mm A');
-  console.log('formattedStartTimeForOneTime time in: ' + form.startDate);
-  console.log('formattedStartTimeForOneTime time out: ' + timeIn);
-  return timeIn; // This should match the local time equivalent of the input
+  const timeIn = dayjs(form.startDate).format('hh:mm A')
+  console.log('formattedStartTimeForOneTime time in: ' + form.startDate)
+  console.log('formattedStartTimeForOneTime time out: ' + timeIn)
+  return timeIn // This should match the local time equivalent of the input
 
 
 })
@@ -553,9 +602,9 @@ const provisionalEndDate = ref('')
 // Handle date selection from DatePicker
 const handleStartDateSelected = ({date}) => {
   stepError.value = '' // Clear any existing error messages
-  const dayjsDate = dayjs(date);
+  const dayjsDate = dayjs(date)
   // form.startDate = dayjsDate.tz(userStore.canadianTimezone, true).format(); // Update the start date
-  form.startDate = date; // Update the start date
+  form.startDate = date // Update the start date
   console.log('handleStartDate form.startDate: ' + form.startDate)
   console.log('handleStartDate raw date: ' + date)
 
@@ -590,238 +639,259 @@ const handleEndDateSelected = ({date}) => {
   // You might want to add validation or adjustment logic here as well
 }
 
-async function submit() {
+const submit = async () => {
   closeConfirmAddShowModal()
-  let formattedDuration = ''
-
-  console.log('==================================================')
-
-  // If we reach here, user confirmed. Proceed with submission.
-  if (form.scheduleType === 'one-time') {
-
-    // 1. Start date/time
-      // Parse the startDate as a Day.js object
-      console.log('SUBMIT start date in: ' + form.startDate)
-      // form.startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true).format()
-      // console.log('SUBMIT start date out: ' + form.startDate)
-      let startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true);
-      form.startDate = startDate.format()
-      console.log('SUBMIT start date formatted: ' + form.startDate);
-
-    // 2. Duration
-      // Ensure duration hours and minutes are treated as numbers
-      let durationHours = Number(form.durationHour);
-      let durationMinutes = Number(form.durationMinute);
-
-      form.duration = (durationHours * 60) + durationMinutes;
-
-    // 3. End date/time
-
-      // Adjust the endDate by setting the correct hour and minute, then adding the duration
-      endDate = startDate
-          .add(durationHours, 'hour')
-          .add(durationMinutes, 'minute');
-
-      // If you need to adjust for a specific timezone without changing the local time
-        // Note: The true flag in tz() might not be necessary depending on your exact needs for timezone handling
-        form.endDate = dayjs(endDate).tz(userStore.canadianTimezone, true).format();
-        console.log('SUBMIT end date out: ' + form.endDate);
-
-
-    // 4. Other values are null
-      form.startTime = null // not used for one-time
-      form.daysOfWeek = null // not used for one-time
-
-
-  }
-
-
-  if (form.scheduleType === 'recurring') {
-
-
-    // 1. Start date in, add start time
-      console.log('SUBMIT startDate in: ' + form.startDate);
-
-      // Assuming form.startTime.hour, form.startTime.minute are in correct format and form.startTime.meridian is either 'AM' or 'PM'
-      let hour = parseInt(form.startTime.hour) % 12;// Convert to 12-hour format
-      if (form.startTime.meridian === 'PM') hour += 12; // Convert PM to 24-hour format
-
-      // Parse the startDate and set the time
-      let startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute);
-      form.startDate = dayjs(startDate).tz(userStore.canadianTimezone, true).format()
-    console.log('whats the start date? ' + form.startDate)
-      let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes')
-    form.endTime = newEndTime.format('HH:mm:ss')
-    console.log('NEW END TIME: ' + form.endTime);
-    // Extract the date part of form.endDate
-    let endDateOnly = dayjs(form.endDate).format('YYYY-MM-DD');
-// Combine endDateOnly with form.endTime to update the form.endDate
-    form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss');
-
-    let newFormattedEndDateTime = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format()
-    console.log('NEW END DATETIME: ' + newFormattedEndDateTime);
-      form.endDate = newFormattedEndDateTime
-    console.log('CONFIRM END DATETIME: ' + form.endDate);
-    // Calculating endDate based on startDate and the duration
-    // let endDate = startDate.add(totalDurationMinutes, 'minute');
-
-    // Setting form.endDate and logging
-    // let endDate = form.endDate.format()
-    // form.endDate = endDate.format();
-
-
-    // 2. Start time (HH:MM:SS)
-      // formattedStartTime = startDate.format('HH:mm:ss');
-      form.startTime = startDate.format('HH:mm:ss'); // Use the desired format
-      console.log('SUBMIT start time formatted in dayjs: ' + form.startTime);
-
-    // 3. Duration
-      console.log('SUBMIT duration minute in: ' + form.durationMinute);
-      console.log('SUBMIT duration hour in: ' + form.durationHour);
-
-    // Correctly calculating total duration in minutes
-    let totalDurationMinutes = (parseInt(form.durationHour) * 60) + parseInt(form.durationMinute);
-    console.log('SUBMIT formatted duration in minutes: ' + totalDurationMinutes);
-
-      // // Calculate total duration in minutes
-      formattedDuration = (Number(form.durationHour) * 60) + Number(form.durationMinute);
-      form.duration = formattedDuration
-
-
-      // console.log('SUBMIT formatted duration in minutes: ' + form.duration);
-
-    // 4. End date, add end time (end date with HH:MM:SS = start time + duration)
-    //   // Ensure the initial timestamp is correctly parsed as a Day.js date object
-    //       if (!selectedEndDate) {
-    //         form.endDate = startDate.add(totalDurationMinutes, 'minutes')
-    //         console.log('no selected end date')
-    //       } else {
-    //         form.endDate = dayjs(selectedEndDate.value).add(totalDurationMinutes, 'minutes')
-    //         console.log('Selected end date!')
-    //       }
-
-    // Log the original values to ensure they're what you expect
-    // console.log('Original duration hour:', form.durationHour);
-    // console.log('Original duration minute:', form.durationMinute);
-    //       const durationHours = parseInt(form.durationHour, 10);
-    //       const durationMinutes = parseInt(form.durationMinute, 10);
-    // // Log the parsed values to confirm they've been correctly interpreted
-    // console.log('Parsed duration hour (as integer):', durationHours);
-    // console.log('Parsed duration minute (as integer):', durationMinutes);
-    //
-    //       form.endDate = dayjs(form.endDate)
-    //           .add(durationHours, 'hours')
-    //           .add(durationMinutes, 'minutes')
-    //           .format()
-    //       // form.duration = totalDurationMinutes
-    //       console.log('SUBMIT end date in: ' + form.endDate);
-
-          //
-          // let endDate = dayjs(form.endDate).hour(hour).minute(form.startTime.minute);
-          // console.log('SUBMIT end date formatted in dayjs: ' + endDate);
-
-      // Convert hour and minute from form.startTime to numbers
-      //     let newHour = Number(form.startTime.hour) % 12;
-      //     if (form.startTime.meridian === 'PM') newHour += 12; // Adjust for 24-hour format if PM
-
-      // Ensure duration hours and minutes are treated as numbers
-      //     let durationHours = Number(form.durationHour);
-      //     let durationMinutes = Number(form.durationMinute);
-
-      // Adjust the endDate by setting the correct hour and minute, then adding the duration
-      //     let endDate = dayjs(endDate)
-      //         .add(totalDurationMinutes, 'minutes')
-    //
-    // endDate.value = dayjs(endDate.value)
-    //     .add(totalDurationMinutes, 'minutes')
-    //
-    // console.log('NEW end date WITH MINUTES ADDED: ' + endDate.value);
-
-              // .add(durationMinutes, 'minute');
-
-      // If you need to adjust for a specific timezone without changing the local time
-      // Note: The true flag in tz() might not be necessary depending on your exact needs for timezone handling
-    // Adding duration directly to startDate to avoid confusion and ensure accuracy
-
-    //
-    // form.endDate = dayjs(endDate.value).format();
-    //       console.log('NEW ADJUSTED == form.endDate: ' + form.endDate);
-
-
-    // 5. Days of week
-
-
-
-  }
-
-
-  // Prepare the payload for the API based on the schedule type
-  const payload = {
-    contentType: 'show',
-    contentId: props.show.id,
-    scheduleType: form.scheduleType,
-    startTime: form.startTime,
-    duration: form.duration,
-    // startDate: form.startDate,
-    startDate: form.startDate,
-    endDate: form.endDate,
-    daysOfWeek: form.scheduleType === 'recurring' ? form.daysOfWeek : [],
-    timezone: userStore.canadianTimezone,
-    // Include other relevant form data here
-  }
-
-  console.log('==================================================')
-  console.log('PAYLOAD: Content Type: ' + payload.contentType)
-  console.log('PAYLOAD: Content ID: ' + payload.contentId)
-  console.log('PAYLOAD: Formatted Start Date: ' + payload.startDate)
-  console.log('PAYLOAD: Formatted Start Time: ' + payload.startTime)
-  console.log('PAYLOAD: Formatted Duration in minutes: ' + payload.duration)
-  console.log('PAYLOAD: Formatted End Date: ' + payload.endDate)
-  console.log('PAYLOAD: Formatted Days of Week: ' + payload.daysOfWeek)
-  console.log('PAYLOAD: User Timezone: ' + userStore.canadianTimezone)
-
-  // Adjust the start and end time based on the selected time and meridian
-  // const adjustedStartTime = dayjs(`${form.startDate} ${payload.startTime}`, 'YYYY-MM-DD hh:mm A').toISOString()
-  // const durationInMinutes = parseInt(form.durationHour) * 60 + parseInt(form.durationMinute)
-  // const adjustedEndTime = dayjs(adjustedStartTime).add(durationInMinutes, 'minute').toISOString()
 
   try {
-    // Replace '/api/schedule' with your actual API endpoint
-    const response = await axios.post('/api/schedule/addToSchedule', payload);
+    const payload = showStore.preparePayload(form)
+    console.log('==================================================')
+    console.log('PAYLOAD:', payload)
 
-    // Handle success - process response.data as needed
-    console.log('Success:', response.data);
-    goToStep(6);
-    startConfetti();
-    scheduleStore.savingToSchedule = true
+    const response = await showStore.addShowToSchedule(payload)
+    console.log('Success:', response)
+    goToStep(6)
+    startConfetti()
   } catch (error) {
-    // Handle errors
-    console.error('Error submitting form:', error);
-    goToStep(6); // Navigate to the error display step
-    // Populate `form.errors` with the error details for display
-    // Axios wraps the response error in `error.response`
+    console.error('Error submitting form:', error)
+    goToStep(6)
     if (error.response && error.response.data) {
-      form.errors.value = error.response.data;
+      form.errors = error.response.data
+      notificationStore.setToastNotification(form.errors, 'error', 10000)
     } else {
-      form.errors.value = error.message || 'An unknown error occurred';
+      form.errors = error.message || 'An unknown error occurred'
+      notificationStore.setToastNotification(form.errors, 'error', 10000)
     }
   }
 }
 
-const postSubmissionActions = async () => {
-  form.reset() // Reset form fields
-  closeModal() // Close modal
-}
+// async function submit() {
+//   closeConfirmAddShowModal()
+//   let formattedDuration = ''
+//
+//   console.log('==================================================')
+//
+//   // If we reach here, user confirmed. Proceed with submission.
+//   if (form.scheduleType === 'one-time') {
+//
+//     // 1. Start date/time
+//       // Parse the startDate as a Day.js object
+//       console.log('SUBMIT start date in: ' + form.startDate)
+//       // form.startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true).format()
+//       // console.log('SUBMIT start date out: ' + form.startDate)
+//       let startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true);
+//       form.startDate = startDate.format()
+//       console.log('SUBMIT start date formatted: ' + form.startDate);
+//
+//     // 2. Duration
+//       // Ensure duration hours and minutes are treated as numbers
+//       let durationHours = Number(form.durationHour);
+//       let durationMinutes = Number(form.durationMinute);
+//
+//       form.duration = (durationHours * 60) + durationMinutes;
+//
+//     // 3. End date/time
+//
+//       // Adjust the endDate by setting the correct hour and minute, then adding the duration
+//       endDate = startDate
+//           .add(durationHours, 'hour')
+//           .add(durationMinutes, 'minute');
+//
+//       // If you need to adjust for a specific timezone without changing the local time
+//         // Note: The true flag in tz() might not be necessary depending on your exact needs for timezone handling
+//         form.endDate = dayjs(endDate).tz(userStore.canadianTimezone, true).format();
+//         console.log('SUBMIT end date out: ' + form.endDate);
+//
+//
+//     // 4. Other values are null
+//       form.startTime = null // not used for one-time
+//       form.daysOfWeek = null // not used for one-time
+//
+//
+//   }
+//
+//
+//   if (form.scheduleType === 'recurring') {
+//
+//
+//     // 1. Start date in, add start time
+//       console.log('SUBMIT startDate in: ' + form.startDate);
+//
+//       // Assuming form.startTime.hour, form.startTime.minute are in correct format and form.startTime.meridian is either 'AM' or 'PM'
+//       let hour = parseInt(form.startTime.hour) % 12;// Convert to 12-hour format
+//       if (form.startTime.meridian === 'PM') hour += 12; // Convert PM to 24-hour format
+//
+//       // Parse the startDate and set the time
+//       let startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute);
+//       form.startDate = dayjs(startDate).tz(userStore.canadianTimezone, true).format()
+//     console.log('whats the start date? ' + form.startDate)
+//       let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes')
+//     form.endTime = newEndTime.format('HH:mm:ss')
+//     console.log('NEW END TIME: ' + form.endTime);
+//     // Extract the date part of form.endDate
+//     let endDateOnly = dayjs(form.endDate).format('YYYY-MM-DD');
+// // Combine endDateOnly with form.endTime to update the form.endDate
+//     form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss');
+//
+//     let newFormattedEndDateTime = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format()
+//     console.log('NEW END DATETIME: ' + newFormattedEndDateTime);
+//       form.endDate = newFormattedEndDateTime
+//     console.log('CONFIRM END DATETIME: ' + form.endDate);
+//     // Calculating endDate based on startDate and the duration
+//     // let endDate = startDate.add(totalDurationMinutes, 'minute');
+//
+//     // Setting form.endDate and logging
+//     // let endDate = form.endDate.format()
+//     // form.endDate = endDate.format();
+//
+//
+//     // 2. Start time (HH:MM:SS)
+//       // formattedStartTime = startDate.format('HH:mm:ss');
+//       form.startTime = startDate.format('HH:mm:ss'); // Use the desired format
+//       console.log('SUBMIT start time formatted in dayjs: ' + form.startTime);
+//
+//     // 3. Duration
+//       console.log('SUBMIT duration minute in: ' + form.durationMinute);
+//       console.log('SUBMIT duration hour in: ' + form.durationHour);
+//
+//     // Correctly calculating total duration in minutes
+//     let totalDurationMinutes = (parseInt(form.durationHour) * 60) + parseInt(form.durationMinute);
+//     console.log('SUBMIT formatted duration in minutes: ' + totalDurationMinutes);
+//
+//       // // Calculate total duration in minutes
+//       formattedDuration = (Number(form.durationHour) * 60) + Number(form.durationMinute);
+//       form.duration = formattedDuration
+//
+//
+//       // console.log('SUBMIT formatted duration in minutes: ' + form.duration);
+//
+//     // 4. End date, add end time (end date with HH:MM:SS = start time + duration)
+//     //   // Ensure the initial timestamp is correctly parsed as a Day.js date object
+//     //       if (!selectedEndDate) {
+//     //         form.endDate = startDate.add(totalDurationMinutes, 'minutes')
+//     //         console.log('no selected end date')
+//     //       } else {
+//     //         form.endDate = dayjs(selectedEndDate.value).add(totalDurationMinutes, 'minutes')
+//     //         console.log('Selected end date!')
+//     //       }
+//
+//     // Log the original values to ensure they're what you expect
+//     // console.log('Original duration hour:', form.durationHour);
+//     // console.log('Original duration minute:', form.durationMinute);
+//     //       const durationHours = parseInt(form.durationHour, 10);
+//     //       const durationMinutes = parseInt(form.durationMinute, 10);
+//     // // Log the parsed values to confirm they've been correctly interpreted
+//     // console.log('Parsed duration hour (as integer):', durationHours);
+//     // console.log('Parsed duration minute (as integer):', durationMinutes);
+//     //
+//     //       form.endDate = dayjs(form.endDate)
+//     //           .add(durationHours, 'hours')
+//     //           .add(durationMinutes, 'minutes')
+//     //           .format()
+//     //       // form.duration = totalDurationMinutes
+//     //       console.log('SUBMIT end date in: ' + form.endDate);
+//
+//           //
+//           // let endDate = dayjs(form.endDate).hour(hour).minute(form.startTime.minute);
+//           // console.log('SUBMIT end date formatted in dayjs: ' + endDate);
+//
+//       // Convert hour and minute from form.startTime to numbers
+//       //     let newHour = Number(form.startTime.hour) % 12;
+//       //     if (form.startTime.meridian === 'PM') newHour += 12; // Adjust for 24-hour format if PM
+//
+//       // Ensure duration hours and minutes are treated as numbers
+//       //     let durationHours = Number(form.durationHour);
+//       //     let durationMinutes = Number(form.durationMinute);
+//
+//       // Adjust the endDate by setting the correct hour and minute, then adding the duration
+//       //     let endDate = dayjs(endDate)
+//       //         .add(totalDurationMinutes, 'minutes')
+//     //
+//     // endDate.value = dayjs(endDate.value)
+//     //     .add(totalDurationMinutes, 'minutes')
+//     //
+//     // console.log('NEW end date WITH MINUTES ADDED: ' + endDate.value);
+//
+//               // .add(durationMinutes, 'minute');
+//
+//       // If you need to adjust for a specific timezone without changing the local time
+//       // Note: The true flag in tz() might not be necessary depending on your exact needs for timezone handling
+//     // Adding duration directly to startDate to avoid confusion and ensure accuracy
+//
+//     //
+//     // form.endDate = dayjs(endDate.value).format();
+//     //       console.log('NEW ADJUSTED == form.endDate: ' + form.endDate);
+//
+//
+//     // 5. Days of week
+//
+//
+//
+//   }
+//
+//   // Prepare the payload for the API based on the schedule type
+//   const handleAddShow = async () => {
+//     const payload = {
+//       contentType: 'show',
+//       contentId: props.show.id,
+//       scheduleType: form.scheduleType,
+//       startTime: form.startTime,
+//       duration: form.duration,
+//       // startDate: form.startDate,
+//       startDate: form.startDate,
+//       endDate: form.endDate,
+//       daysOfWeek: form.scheduleType === 'recurring' ? form.daysOfWeek : [],
+//       timezone: userStore.canadianTimezone,
+//       // Include other relevant form data here
+//     }
+//
+//     console.log('==================================================')
+//     console.log('PAYLOAD: Content Type: ' + payload.contentType)
+//     console.log('PAYLOAD: Content ID: ' + payload.contentId)
+//     console.log('PAYLOAD: Formatted Start Date: ' + payload.startDate)
+//     console.log('PAYLOAD: Formatted Start Time: ' + payload.startTime)
+//     console.log('PAYLOAD: Formatted Duration in minutes: ' + payload.duration)
+//     console.log('PAYLOAD: Formatted End Date: ' + payload.endDate)
+//     console.log('PAYLOAD: Formatted Days of Week: ' + payload.daysOfWeek)
+//     console.log('PAYLOAD: User Timezone: ' + userStore.canadianTimezone)
+//
+//     // Adjust the start and end time based on the selected time and meridian
+//     // const adjustedStartTime = dayjs(`${form.startDate} ${payload.startTime}`, 'YYYY-MM-DD hh:mm A').toISOString()
+//     // const durationInMinutes = parseInt(form.durationHour) * 60 + parseInt(form.durationMinute)
+//     // const adjustedEndTime = dayjs(adjustedStartTime).add(durationInMinutes, 'minute').toISOString()
+//
+//     try {
+//       // Replace '/api/schedule' with your actual API endpoint
+//       const response = await axios.post('/api/schedule/addToSchedule', payload);
+//
+//       // Handle success - process response.data as needed
+//       console.log('Success:', response.data);
+//       goToStep(6);
+//       startConfetti();
+//       scheduleStore.savingToSchedule = true
+//     } catch (error) {
+//       // Handle errors
+//       console.error('Error submitting form:', error);
+//       goToStep(6); // Navigate to the error display step
+//       // Populate `form.errors` with the error details for display
+//       // Axios wraps the response error in `error.response`
+//       if (error.response && error.response.data) {
+//         form.errors.value = error.response.data;
+//       } else {
+//         form.errors.value = error.message || 'An unknown error occurred';
+//       }
+//     }
+//   }
+// }
 
 function closeModal() {
   document.getElementById('addShowToScheduleModal').close()
   // Reset the form fields to their initial values
-  form.reset()
+  resetForm()
   // Clear all validation errors
-  form.clearErrors()
+  clearErrors()
   stopConfetti()
   currentStep.value = 0
-  Inertia.visit(`/shows/${props.show.slug}/manage`);
+  // Inertia.visit(`/shows/${props.show.slug}/manage`)
 }
 
 function closeConfirmAddShowModal() {
@@ -831,7 +901,7 @@ function closeConfirmAddShowModal() {
 const closeModalAndReset = () => {
   currentStep.value = 0
   closeModal()
-  Inertia.visit(`/shows/${props.show.slug}/manage`);
+  // Inertia.visit(`/shows/${props.show.slug}/manage`)
 }
 
 // Watcher for currentStep to display Confetti
@@ -841,51 +911,34 @@ const closeModalAndReset = () => {
 //   }
 // })
 
-import { getCurrentInstance } from 'vue'
-import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
-import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
-import { Inertia } from '@inertiajs/inertia'
-import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
-
-// Access the global properties
-const {proxy} = getCurrentInstance()
-
-const startConfetti = () => {
-  proxy.$confetti.start()
-}
-
-const stopConfetti = () => {
-  proxy.$confetti.stop()
-}
-
 // Initialize selectedTimezone with the current value from userStore
-const selectedTimezone = ref(userStore.canadianTimezone);
+const selectedTimezone = ref(userStore.canadianTimezone)
 
 // Watch for changes in userStore's timezone and update selectedTimezone accordingly
 watch(() => userStore.canadianTimezone, (newTimezone) => {
-  selectedTimezone.value = newTimezone;
+  selectedTimezone.value = newTimezone
   // dayjs.tz.setDefault(userStore.timezone);
-});
+})
 
 
 // Function to handle the keydown event
 const handleKeydown = (event) => {
-  if (event.key === "Escape") {
-    console.log('ESC pressed, modal is open');
-    stopConfetti();
+  if (event.key === 'Escape') {
+    console.log('ESC pressed, modal is open')
+    stopConfetti()
     currentStep.value = 0
     Inertia.redirect(`/shows/${props.show.slug}/manage`)
 
   }
-};
+}
 
 onMounted(() => {
-  document.addEventListener('keydown', handleKeydown);
-});
+  document.addEventListener('keydown', handleKeydown)
+})
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
-});
+  document.removeEventListener('keydown', handleKeydown)
+})
 
 // onMounted(async () => {
 //   timezones.value = await getTimeZones(); // Fetch the list of timezones
@@ -893,7 +946,7 @@ onUnmounted(() => {
 
 function updateTimezone() {
   // Update the timezone in your store
-  userStore.setUserTimezone(selectedTimezone.value);
+  userStore.setUserTimezone(selectedTimezone.value)
   // Optionally, send the updated timezone to your backend here
 }
 

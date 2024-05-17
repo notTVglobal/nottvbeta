@@ -2,6 +2,8 @@
 
   <Head title="Creator Registration"/>
   <div class="h-[calc(100vh)]">
+    <PublicResponsiveNavigationMenu v-if="!inviteStore.registrationAllowed"/>
+    <PublicNavigationMenu v-if="!inviteStore.registrationAllowed"/>
 
     <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar min-h-screen">
 
@@ -269,9 +271,10 @@
           <button @click="videoActive = false">close</button>
         </form>
       </dialog>
-
+      <Footer v-if="!inviteStore.registrationAllowed"/>
     </div>
 <Login :show="true" :creatorRegistration="true" @login-success="handleLoginSuccess"/>
+
   </div>
 </template>
 
@@ -291,6 +294,9 @@ import { Inertia } from '@inertiajs/inertia'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useStoreReset } from "@/Utilities/StoreReset"
 import Login from '@/Components/Pages/Welcome/Login.vue'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
+import Footer from '@/Components/Global/Layout/Footer.vue'
 
 const pageProps = usePage().props;
 const storeReset = useStoreReset()

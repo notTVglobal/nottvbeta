@@ -116,6 +116,7 @@
                 <div class="mt-4 ml-4 border-t border-t-gray-200 text-center font-semibold">
                   <div>Need an invite code?</div>
                   <button
+                      type="button"
                       @click.prevent="appSettingStore.btnRedirect(`subscribe`)"
                       class="btn btn-md bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">Get an Invite
                     Code
@@ -170,7 +171,7 @@
                   Already registered?
                 </Link>
 
-                <JetButton class="btn ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <JetButton type="submit" class="btn ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                   Register
                 </JetButton>
               </div>

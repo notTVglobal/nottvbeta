@@ -889,6 +889,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // console.log('getter', 40)
             return dayjs(state.baseTime).format('h:mm A')
         },
+        currentDate: (state) => {
+            // console.log('getter', 40)
+            return dayjs(state.baseTime).format('MMMM DD, YYYY')
+        },
         // Prepare banners with grid positions based on current time slots
         preparedTimeBanners: (state) => {
             // console.log('getter', 41)

@@ -4,6 +4,7 @@
     <p class="tracking-wide text-4xl font-semibold mb-2">{{ currentDay }}</p>
 
     <!-- Current time display -->
+    <p class="tracking-wide text-gray-300"><span class="text-white font-medium">{{ scheduleStore.currentDate }}</span></p>
     <p class="tracking-wide text-xl text-gray-300">Current Time:  <span class="text-white font-medium">{{ scheduleStore.currentTime }} {{ userStore.timezoneAbbreviation }}</span></p>
 
     <!-- Input for testing current time -->

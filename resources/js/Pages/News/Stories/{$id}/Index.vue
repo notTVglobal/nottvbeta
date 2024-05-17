@@ -83,7 +83,7 @@
 <!--                </div>-->
               </div>
               <div class="news-story">
-                <TipTapRender :content="props.newsStory.content_json" />
+                <tip-tap-news-story-render :content="newsStore.newsArticleContentTiptop" />
 <!--                <TipTapViewOnly :content="props.newsStory.content_json" />-->
               </div>
 
@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
@@ -107,10 +107,9 @@ import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNav
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs.vue'
-import BackButton from '@/Components/Global/Buttons/BackButton.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import { useNewsStore } from '@/Stores/NewsStore'
-import TipTapRender from '@/Components/Global/TextEditor/TipTapNewsStoryRender.vue'
+import TipTapNewsStoryRender from '@/Components/Global/TextEditor/TipTapNewsStoryRender.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 // import TipTapViewOnly from '@/Components/Global/TextEditor/TipTapViewOnly.vue'
 
@@ -129,6 +128,7 @@ appSettingStore.setPrevUrl()
 onMounted(() => {
   newsStore.reset()
   newsStore.content_json = JSON.parse(props.newsStory.content_json)
+  newsStore.newsArticleContentTiptop = props.newsStory.content
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
 })

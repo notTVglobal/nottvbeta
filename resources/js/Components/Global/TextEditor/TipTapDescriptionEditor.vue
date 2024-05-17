@@ -28,7 +28,7 @@ import Underline from '@tiptap/extension-underline'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import Link from '@tiptap/extension-link'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 
 const emits = defineEmits(['updateContent'])
 
@@ -123,6 +123,13 @@ const adjustHeight = () => {
 
 // Add this as a handler for content updates
 editor.value?.on('update', adjustHeight)
+
+// Ensure editor is destroyed properly on component unmount
+onBeforeUnmount(() => {
+  if (editor.value) {
+    editor.value.destroy()
+  }
+})
 
 </script>
 <style scoped>

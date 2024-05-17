@@ -173,7 +173,11 @@ const playVideo = (video) => {
     videoPlayerStore.prepareForNewVideoSource(video)
     nowPlayingStore.activeMedia.details.description = 'Filename: ' + video.file_name
     // videoPlayerStore.makeVideoFullPage()
-    appSettingStore.ott = 1
+
+    if (!appSettingStore.isSmallScreen) {
+      appSettingStore.ott = 1
+    }
+
     userStore.showNavDropdown = false
     userStore.prevUrl = window.history.state.url
     // Inertia.visit('/stream')

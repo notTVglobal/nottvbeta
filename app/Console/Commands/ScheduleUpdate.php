@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\ScheduleUpdateAllScheduleBroadcastDates;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ScheduleUpdate extends Command
 {
@@ -31,6 +32,7 @@ class ScheduleUpdate extends Command
       $this->info('Dispatching the ScheduleUpdateAllScheduleBroadcastDates job...');
       ScheduleUpdateAllScheduleBroadcastDates::dispatch();
       $this->info('Job dispatched successfully!');
+      Log::info('Schedule updated.');
 
       return 0; // Return success
     }

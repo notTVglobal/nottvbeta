@@ -123,6 +123,7 @@ class HandleInertiaRequests extends Middleware {
         ],
         'firstPlay' => fn() => $firstPlayData,
         'appUrl'    => fn() => config('app.url'),
+        'currentPath' => fn() => '/' . $request->path(),
         'user' => function () use ($request) {
           $user = $request->user();
           if ($user) {

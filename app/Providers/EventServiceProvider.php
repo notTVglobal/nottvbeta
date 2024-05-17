@@ -2,15 +2,19 @@
 
 namespace App\Providers;
 
+use App\Events\CreatorContentStatusUpdated;
 use App\Events\CreatorRegistrationCompleted;
 use App\Events\NewChatMessage;
 use App\Events\NewNotificationEvent;
 use App\Events\NewVideoUploaded;
 use App\Events\PushDataFetched;
+use App\Events\UserLeftCreatorContentChannel;
 use App\Events\ViewerPresenceChannel;
 use App\Events\VideoProcessed;
+use App\Listeners\HandleUserLeftCreatorShowChannel;
 use App\Listeners\LogRegisteredUser;
 use App\Listeners\LogVerifiedUser;
+use App\Listeners\NotifyInviterOfNewCreator;
 use App\Listeners\ProcessNewVideoUpload;
 use App\Listeners\SendChatMessageNotification;
 use App\Listeners\SendCreatorWelcomeEmailListener;
@@ -58,6 +62,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         CreatorRegistrationCompleted::class => [
             SendCreatorWelcomeEmailListener::class,
+            NotifyInviterOfNewCreator::class,
         ],
         PushDataFetched::class => [
             UpdatePushDestinations::class,

@@ -5,7 +5,7 @@ const initialState = () => ({
     newsArticleIdTiptop: '',
     newsArticleTitleTiptop: '',
     newsArticleContentTiptop: '',
-    content_json: '',
+    content_json: {},
     news_category_id: null,
     news_category_sub_id: null,
     categories: [],

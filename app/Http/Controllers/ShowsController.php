@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreatorContentStatusUpdated;
+use App\Events\UserLeftCreatorContentChannel;
 use App\Factories\MistServerServiceFactory;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\ShowResource;
@@ -854,7 +856,7 @@ class ShowsController extends Controller {
 
   public function manage(Show $show): \Inertia\Response {
     // Eager load related entities for the Show model
-    $show->load(['image.appSetting', 'showRunner.user', 'team.user', 'schedules', 'recordings']);
+    $show->load(['image.appSetting', 'user', 'team.user', 'schedules', 'recordings']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
@@ -1054,6 +1056,7 @@ class ShowsController extends Controller {
             'ulid'            => $show->ulid,
             'name'            => $show->name,
             'description'     => $show->description,
+            'meta'            => $show->meta,
             'slug'            => $show->slug,
             'image'           => $this->transformImage($show->image),
             'copyrightYear'   => $show->created_at->format('Y'),
@@ -1607,6 +1610,69 @@ class ShowsController extends Controller {
     }
 
     return $creatorId;
+  }
+
+  public function updateMeta(HttpRequest $request, Show $show): \Illuminate\Http\JsonResponse {
+    try {
+      $validatedData = $request->validate([
+//          'isSaving' => 'nullable|boolean',
+          'isUpdatingSchedule' => 'nullable|boolean',
+          'updatedBy' => 'nullable|string',
+      ]);
+
+//      Log::debug('Validated data', ['validatedData' => $validatedData]);
+
+      // Decode the meta field to an array, or initialize as an empty array if null or not valid JSON
+      $meta = json_decode($show->meta, true);
+      if (!is_array($meta)) {
+//        Log::warning('Invalid meta format, initializing as empty array', ['meta' => $show->meta]);
+        $meta = [];
+      }
+
+      // Check if someone else is already updating the schedule
+      if (isset($meta['isUpdatingSchedule']) && $meta['isUpdatingSchedule'] && isset($meta['updatedBy']) && $meta['updatedBy'] !== $validatedData['updatedBy']) {
+        // Return a response indicating that the schedule is already being updated by someone else
+        return response()->json(['message' => 'The schedule is currently being updated by ' . $meta['updatedBy'] . '.'], 409);
+      }
+
+      // Ensure 'isSaving', 'isUpdatingSchedule' and 'updatedBy' keys exist
+//      $meta['isSaving'] = $validatedData['isSaving'];
+      $meta['isUpdatingSchedule'] = $validatedData['isUpdatingSchedule'] ?? null;
+      $meta['updatedBy'] = $validatedData['updatedBy'] ?? null;
+      $meta['triggeredBy'] = 'ShowsController updateMeta()';
+
+//      Log::debug('Updated meta data', ['meta' => $meta]);
+
+      // Encode the meta array back to JSON and save it
+      $show->meta = json_encode($meta);
+      $show->save();
+
+//      Log::debug('Meta saved successfully for show', ['show_id' => $show->id, 'meta' => $meta]);
+
+      broadcast(new CreatorContentStatusUpdated('show', $show->id, $meta));
+
+      return response()->json(['message' => 'Show meta updated successfully']);
+    } catch (\Exception $e) {
+      Log::error('Error updating meta for show', [
+          'show_id' => $show->id,
+          'error' => $e->getMessage(),
+          'stack' => $e->getTraceAsString()
+      ]);
+
+      return response()->json(['message' => 'Failed to update show meta'], 500);
+    }
+  }
+
+  public function userLeftChannel(Request $request)
+  {
+    $user = $request->input('user');
+    $channel = $request->input('channel');
+
+    Log::info('User left the channel', ['user' => $user, 'channel' => $channel]);
+
+    event(new UserLeftCreatorContentChannel($user, $channel));
+
+    return response()->json(['message' => 'Event broadcasted.']);
   }
 
 }

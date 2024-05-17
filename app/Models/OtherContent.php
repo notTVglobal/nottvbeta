@@ -20,7 +20,11 @@ class OtherContent extends Model {
       'image_id',
       'video_id',
       'user_id',
-      'metadata'
+      'meta'
+  ];
+
+  protected $casts = [
+      'meta' => 'json',
   ];
 
   public function playlistItems() {
