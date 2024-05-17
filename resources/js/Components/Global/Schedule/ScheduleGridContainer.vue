@@ -16,7 +16,7 @@
           {{ interval.formatted }}
         </div>
       </div>
-      <div v-if="isLoading && nextFourHoursOfContent.length === 0"
+      <div v-if="scheduleStore.isLoading && nextFourHoursOfContent.length === 0"
            class="w-full flex justify-center text-center items-center">
         <span class="loading loading-ball loading-xl text-info"></span>
       </div>
