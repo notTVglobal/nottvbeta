@@ -3,14 +3,19 @@
 Last Update: May 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.9.0.20
+## v0.9.0.22
 May 17, 2024
-* Fix route name conflict.
+* Changed the 24 hour requirement for adding shows to the schedule to 6 hours.
+* Added a badge to content type in the schedule.
 
 ## v0.9.0.21
 May 17, 2024
 * Fix undefined variable in Schedule.
 * Change .gitignore
+
+## v0.9.0.20
+May 17, 2024
+* Fix route name conflict.
 
 ## v0.9.0.19
 May 17, 2024
