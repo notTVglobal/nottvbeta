@@ -1,5 +1,4 @@
 <template>
-
   <dialog id="addShowToScheduleModal" class="modal text-black">
     <div class="modal-box w-11/12 max-w-5xl text-black bg-white dark:bg-gray-800 dark:text-white">
       <button v-if="currentStep === 6"
@@ -39,8 +38,12 @@
             <div v-if="!timezoneConfirmed">
               <div class="mb-2 pb-6 text-primary text-center">Confirm Timezone</div>
               <div class="flex flex-row justify-center">
-                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2 rounded-lg select select-bordered bg-white dark:bg-gray-800 dark:text-white">
-                  <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{ timezone }}</option>
+                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone"
+                        class="ml-2 rounded-lg select select-bordered bg-white dark:bg-gray-800 dark:text-white">
+                  <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{
+                      timezone
+                    }}
+                  </option>
                 </select>
               </div>
               <div class="flex flex-row justify-center pt-6">
@@ -104,13 +107,15 @@
               <div class="flex flex-col">
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour" class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationHour"
+                          class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute" class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationMinute"
+                          class="select select-bordered bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
@@ -172,18 +177,21 @@
                 <div class="mb-2">2. Choose start time</div>
                 <div class="flex items-center gap-2 text-black bg-white dark:bg-gray-800 dark:text-white">
                   <!-- Hour selection -->
-                  <select v-model="form.startTime.hour" class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.startTime.hour"
+                          class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="hour in hours" :key="hour" :value="hour">{{ hour }}</option>
                   </select>
 
                   <!-- Minute selection -->
-                  <select v-model="form.startTime.minute" class="form-select select select-bordered  text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.startTime.minute"
+                          class="form-select select select-bordered  text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option value="00">00</option>
                     <option value="30">30</option>
                   </select>
 
                   <!-- AM/PM selection -->
-                  <select v-model="form.startTime.meridian" class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white ">
+                  <select v-model="form.startTime.meridian"
+                          class="form-select select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white ">
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                   </select>
@@ -193,13 +201,15 @@
                 <!-- Step 3 content -->
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour" class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationHour"
+                          class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute" class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
+                  <select v-model="form.durationMinute"
+                          class="select select-bordered text-black bg-white dark:bg-gray-800 dark:text-white">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
@@ -220,13 +230,19 @@
           </div>
 
           <StepSixCongratulations v-if="currentStep === 6 && Object.keys(form.errors).length === 0" class="p-4">
-          <template #header>Congratulations!</template>
+            <template #header>Congratulations!</template>
             <template #subHeader>You've successfully scheduled your show on notTV!</template>
           </StepSixCongratulations>
 
-          <div v-if="currentStep === 6 && Object.keys(form.errors).length > 0" class="p-4 text-red-700">
+          <div v-if="currentStep === 6 && Object.keys(form.errors).length > 0" class="p-4 text-red-700 w-full">
             <ul>
-              <li v-for="(error, key) in form.errors" :key="key">{{ error }}</li>
+              <li v-for="(errorMessages, key) in form.errors" :key="key">
+                <span v-if="Array.isArray(errorMessages)">{{ key }}:</span>
+                <ul v-if="Array.isArray(errorMessages)">
+                  <li v-for="(message, index) in errorMessages" :key="index">{{ message }}</li>
+                </ul>
+                <span v-else>{{ errorMessages }}</span>
+              </li>
             </ul>
           </div>
 
@@ -270,14 +286,20 @@
 
 </template>
 <script setup>
-import { computed, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { getCurrentInstance } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc' // Required for UTC support
 import timezone from 'dayjs/plugin/timezone' // Required for timezone support
 import { useUserStore } from '@/Stores/UserStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import { useShowStore } from '@/Stores/ShowStore'
+import { useNotificationStore } from "@/Stores/NotificationStore"
+import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
+import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
+import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
 
 import Label from '@/Jetstream/Label.vue'
 import Button from '@/Jetstream/Button.vue'
@@ -285,15 +307,29 @@ import Button from '@/Jetstream/Button.vue'
 const userStore = useUserStore()
 const scheduleStore = useScheduleStore()
 const showStore = useShowStore()
+const notificationStore = useNotificationStore()
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+
+let page = usePage().props
 
 let props = defineProps({
   id: String,
   show: Object,
   // errors: Object,
 })
+
+// Access the global properties
+const { proxy } = getCurrentInstance()
+
+const startConfetti = () => {
+  proxy.$confetti.start()
+}
+
+const stopConfetti = () => {
+  proxy.$confetti.stop()
+}
 
 // const errors = ref(props.errors);
 
@@ -308,7 +344,8 @@ const totalSteps = ref(6)
 const stepError = ref('') // To store the error message for the current step
 
 
-const form = reactive(useForm({
+// Define the initial form state
+const initialFormState = {
   scheduleType: '', // 'one-time' or 'recurring'
   daysOfWeek: [],
   startTime: {
@@ -323,9 +360,19 @@ const form = reactive(useForm({
   startDate: '',
   endDate: '',
   errors: {},
-}))
+};
 
-form.reset() // on modal load, reset form.
+const form = reactive({ ...initialFormState }); // on modal load, reset form.
+
+// Function to reset the form
+const resetForm = () => {
+  Object.assign(form, initialFormState);
+};
+
+// Function to clear errors
+const clearErrors = () => {
+  form.errors = {};
+};
 
 function confirmTimezone() {
   timezoneConfirmed.value = true
@@ -350,7 +397,7 @@ function goToNextStep() {
       stepError.value = 'Please select a start date.'
     } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(24, 'hour'))) {
       // If the start date is within the next 24 hours when the current step is 4, set an error message
-      stepError.value = 'Start date must be at least 24 hours in the future.';
+      stepError.value = 'Start date must be at least 24 hours in the future.'
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
       // Allow the end date to be up to one week beyond exactly three months from the start date
       // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
@@ -519,10 +566,10 @@ updateDurationDisplay()
 const formattedStartTimeForOneTime = computed(() => {
   if (!form.startDate) return ''
   // Directly parse and format the date in local time without converting timezones
-  const timeIn = dayjs(form.startDate).format('hh:mm A');
-  console.log('formattedStartTimeForOneTime time in: ' + form.startDate);
-  console.log('formattedStartTimeForOneTime time out: ' + timeIn);
-  return timeIn; // This should match the local time equivalent of the input
+  const timeIn = dayjs(form.startDate).format('hh:mm A')
+  console.log('formattedStartTimeForOneTime time in: ' + form.startDate)
+  console.log('formattedStartTimeForOneTime time out: ' + timeIn)
+  return timeIn // This should match the local time equivalent of the input
 
 
 })
@@ -555,9 +602,9 @@ const provisionalEndDate = ref('')
 // Handle date selection from DatePicker
 const handleStartDateSelected = ({date}) => {
   stepError.value = '' // Clear any existing error messages
-  const dayjsDate = dayjs(date);
+  const dayjsDate = dayjs(date)
   // form.startDate = dayjsDate.tz(userStore.canadianTimezone, true).format(); // Update the start date
-  form.startDate = date; // Update the start date
+  form.startDate = date // Update the start date
   console.log('handleStartDate form.startDate: ' + form.startDate)
   console.log('handleStartDate raw date: ' + date)
 
@@ -593,28 +640,29 @@ const handleEndDateSelected = ({date}) => {
 }
 
 const submit = async () => {
-  closeConfirmAddShowModal();
+  closeConfirmAddShowModal()
 
   try {
-    const payload = showStore.preparePayload(form.value, userStore);
-    console.log('==================================================');
-    console.log('PAYLOAD:', payload);
+    const payload = showStore.preparePayload(form)
+    console.log('==================================================')
+    console.log('PAYLOAD:', payload)
 
-    const response = await showStore.addShowToSchedule(payload);
-    console.log('Success:', response);
-    emit('add-show');
-    goToStep(6);
-    startConfetti();
+    const response = await showStore.addShowToSchedule(payload)
+    console.log('Success:', response)
+    goToStep(6)
+    startConfetti()
   } catch (error) {
-    console.error('Error submitting form:', error);
-    goToStep(6);
+    console.error('Error submitting form:', error)
+    goToStep(6)
     if (error.response && error.response.data) {
-      form.value.errors = error.response.data;
+      form.errors = error.response.data
+      notificationStore.setToastNotification(form.errors, 'error', 10000)
     } else {
-      form.value.errors = error.message || 'An unknown error occurred';
+      form.errors = error.message || 'An unknown error occurred'
+      notificationStore.setToastNotification(form.errors, 'error', 10000)
     }
   }
-};
+}
 
 // async function submit() {
 //   closeConfirmAddShowModal()
@@ -780,8 +828,6 @@ const submit = async () => {
 //
 //   }
 //
-//   const emit = defineEmits(['add-show']);
-//
 //   // Prepare the payload for the API based on the schedule type
 //   const handleAddShow = async () => {
 //     const payload = {
@@ -837,20 +883,15 @@ const submit = async () => {
 //   }
 // }
 
-const postSubmissionActions = async () => {
-  form.reset() // Reset form fields
-  closeModal() // Close modal
-}
-
 function closeModal() {
   document.getElementById('addShowToScheduleModal').close()
   // Reset the form fields to their initial values
-  form.reset()
+  resetForm()
   // Clear all validation errors
-  form.clearErrors()
+  clearErrors()
   stopConfetti()
   currentStep.value = 0
-  Inertia.visit(`/shows/${props.show.slug}/manage`);
+  // Inertia.visit(`/shows/${props.show.slug}/manage`)
 }
 
 function closeConfirmAddShowModal() {
@@ -860,7 +901,7 @@ function closeConfirmAddShowModal() {
 const closeModalAndReset = () => {
   currentStep.value = 0
   closeModal()
-  Inertia.visit(`/shows/${props.show.slug}/manage`);
+  // Inertia.visit(`/shows/${props.show.slug}/manage`)
 }
 
 // Watcher for currentStep to display Confetti
@@ -870,51 +911,34 @@ const closeModalAndReset = () => {
 //   }
 // })
 
-import { getCurrentInstance } from 'vue'
-import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
-import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
-import { Inertia } from '@inertiajs/inertia'
-import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
-
-// Access the global properties
-const {proxy} = getCurrentInstance()
-
-const startConfetti = () => {
-  proxy.$confetti.start()
-}
-
-const stopConfetti = () => {
-  proxy.$confetti.stop()
-}
-
 // Initialize selectedTimezone with the current value from userStore
-const selectedTimezone = ref(userStore.canadianTimezone);
+const selectedTimezone = ref(userStore.canadianTimezone)
 
 // Watch for changes in userStore's timezone and update selectedTimezone accordingly
 watch(() => userStore.canadianTimezone, (newTimezone) => {
-  selectedTimezone.value = newTimezone;
+  selectedTimezone.value = newTimezone
   // dayjs.tz.setDefault(userStore.timezone);
-});
+})
 
 
 // Function to handle the keydown event
 const handleKeydown = (event) => {
-  if (event.key === "Escape") {
-    console.log('ESC pressed, modal is open');
-    stopConfetti();
+  if (event.key === 'Escape') {
+    console.log('ESC pressed, modal is open')
+    stopConfetti()
     currentStep.value = 0
     Inertia.redirect(`/shows/${props.show.slug}/manage`)
 
   }
-};
+}
 
 onMounted(() => {
-  document.addEventListener('keydown', handleKeydown);
-});
+  document.addEventListener('keydown', handleKeydown)
+})
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
-});
+  document.removeEventListener('keydown', handleKeydown)
+})
 
 // onMounted(async () => {
 //   timezones.value = await getTimeZones(); // Fetch the list of timezones
@@ -922,7 +946,7 @@ onUnmounted(() => {
 
 function updateTimezone() {
   // Update the timezone in your store
-  userStore.setUserTimezone(selectedTimezone.value);
+  userStore.setUserTimezone(selectedTimezone.value)
   // Optionally, send the updated timezone to your backend here
 }
 

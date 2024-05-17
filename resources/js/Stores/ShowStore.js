@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
-import { useUserStore} from '@/Stores/UserStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
+import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const initialState = () => ({
-    id: 0,
+    id: null,
     name: '',
+    slug: '',
     url: '',
     episodeName: '',
     episodeUrl: '',
@@ -35,7 +36,11 @@ const initialState = () => ({
     isLive: false,
     liveScheduledStartTime: '',
     liveMistStreamName: '',
-    savingShowIds: new Set(),
+    isScheduled: null,
+    isUpdatingSchedule: false,
+    updatedBy: null,
+    isSaving: null,
+    loadingUpdatingStatus: false, // to show a loader
 })
 
 export const useShowStore = defineStore('showStore', {
@@ -44,6 +49,29 @@ export const useShowStore = defineStore('showStore', {
         reset() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
+        },
+        initializeShow(show) {
+            console.log('initializeShow')
+
+            let meta = {};
+            try {
+                if (show.meta) {
+                    meta = typeof show.meta === 'string' ? JSON.parse(show.meta) : show.meta;
+                }
+            } catch (error) {
+                console.error('Error parsing meta:', error);
+            }
+
+            this.$patch({
+                id: show.id,
+                name: show.name,
+                slug: show.slug,
+                isScheduled: meta.isScheduled ?? false,
+                isSaving: meta.isSaving ?? false,
+                isUpdatingSchedule: meta.isUpdatingSchedule ?? null,
+                updatedBy: meta.updatedBy ?? null,
+            });
+
         },
         async checkIsLive(showSlug) {
             try {
@@ -55,10 +83,10 @@ export const useShowStore = defineStore('showStore', {
                 console.error('Error checking if show is live:', error)
             }
         },
-        async fill() {
-            let r = await import('@/Json/show.json')
-            this.$state = r.default
-        },
+        // async fill() {
+        //     let r = await import('@/Json/show.json')
+        //     this.$state = r.default
+        // },
         setName(name) {
             this.name = name
         },
@@ -93,60 +121,79 @@ export const useShowStore = defineStore('showStore', {
             this.sub_category_description = subCategory ? subCategory.description : ''
         },
         async addShowToSchedule(payload) {
-            this.savingShowIds.add(payload.contentId);
+            this.loadingUpdatingStatus = true
             try {
-                const response = await axios.post('/api/schedule/addToSchedule', payload);
-                this.savingShowIds.delete(payload.contentId);
-                return response.data;
+                // Append contentType and contentId to the payload
+                payload.contentType = 'show'; // Adjust this if necessary
+                payload.contentId = this.id;
+
+                const response = await axios.post('/api/schedule/addToSchedule', payload)
+                this.loadingUpdatingStatus = false
+                this.isScheduled = true
+                return response.data
             } catch (error) {
-                this.savingShowIds.delete(payload.contentId);
-                throw error;
+                this.loadingUpdatingStatus = false
+                throw error
             }
         },
-        setSavingState(showId, state) {
-            if (state) {
-                this.savingShowIds.add(showId);
-            } else {
-                this.savingShowIds.delete(showId);
+        async setUpdatingStatus(state, userName, slug) {
+            const notificationStore = useNotificationStore();
+            this.loadingUpdatingStatus = true
+            try {
+                // Set the local saving state
+                this.isUpdatingSchedule = state;
+                this.updatedBy = state ? userName : null;
+                console.log(userName);
+                // Update the meta field in the database
+                const response = await axios.put(`/api/shows/${slug}/meta`, {
+                    // isSaving: null,
+                    isUpdatingSchedule: state,
+                    updatedBy: userName,
+                })
+                this.loadingUpdatingStatus = false
+                notificationStore.setToastNotification(response.data.message, 'info')
+            } catch (error) {
+                console.error('Error updating saving state:', error)
+                this.loadingUpdatingStatus = false
+                notificationStore.setToastNotification(error.message, 'error')
+                throw error
             }
         },
         preparePayload(form) {
             const userStore = useUserStore()
-            let startDate, endDate, formattedDuration;
-
+            let startDate, endDate, formattedDuration
+            console.log(form)
             if (form.scheduleType === 'one-time') {
                 // One-time scheduling logic
-                startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true);
-                form.startDate = startDate.format();
+                startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true)
+                form.startDate = startDate.format()
 
-                let durationHours = Number(form.durationHour);
-                let durationMinutes = Number(form.durationMinute);
-                form.duration = (durationHours * 60) + durationMinutes;
+                let durationHours = Number(form.durationHour)
+                let durationMinutes = Number(form.durationMinute)
+                form.duration = (durationHours * 60) + durationMinutes
 
-                endDate = startDate.add(durationHours, 'hour').add(durationMinutes, 'minute');
-                form.endDate = endDate.tz(userStore.canadianTimezone, true).format();
+                endDate = startDate.add(durationHours, 'hour').add(durationMinutes, 'minute')
+                form.endDate = endDate.tz(userStore.canadianTimezone, true).format()
 
-                form.startTime = null;
-                form.daysOfWeek = null;
-            }
-
-            if (form.scheduleType === 'recurring') {
+                form.startTime = null
+                form.daysOfWeek = null
+            } else if (form.scheduleType === 'recurring') {
                 // Recurring scheduling logic
-                let hour = parseInt(form.startTime.hour) % 12;
-                if (form.startTime.meridian === 'PM') hour += 12;
-                startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute);
-                form.startDate = startDate.tz(userStore.canadianTimezone, true).format();
+                let hour = parseInt(form.startTime.hour) % 12
+                if (form.startTime.meridian === 'PM') hour += 12
+                startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute)
+                form.startDate = startDate.tz(userStore.canadianTimezone, true).format()
 
-                let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes');
-                form.endTime = newEndTime.format('HH:mm:ss');
+                let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes')
+                form.endTime = newEndTime.format('HH:mm:ss')
 
-                let endDateOnly = dayjs(form.endDate).format('YYYY-MM-DD');
-                form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss');
-                form.endDate = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format();
+                let endDateOnly = dayjs(form.endDate).format('YYYY-MM-DD')
+                form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss')
+                form.endDate = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format()
 
-                form.startTime = startDate.format('HH:mm:ss');
-                formattedDuration = (parseInt(form.durationHour) * 60) + parseInt(form.durationMinute);
-                form.duration = formattedDuration;
+                form.startTime = startDate.format('HH:mm:ss')
+                formattedDuration = (parseInt(form.durationHour) * 60) + parseInt(form.durationMinute)
+                form.duration = formattedDuration
             }
 
             return {
@@ -159,21 +206,43 @@ export const useShowStore = defineStore('showStore', {
                 endDate: form.endDate,
                 daysOfWeek: form.scheduleType === 'recurring' ? form.daysOfWeek : [],
                 timezone: userStore.canadianTimezone,
-            };
+            }
         },
-        initializeEchoListener(showId) {
-            const showChannel = `show.${showId}`;
-            Echo.channel(showChannel)
-                .listen('ScheduleUpdated', (event) => {
-                    if (event.showId === showId) {
-                        this.setSavingState(showId, false);
-                    }
-                });
+        async removeFromSchedule(contentType, contentId) {
+            this.loadingUpdatingStatus = true
+            const notificationStore = useNotificationStore()
+            try {
+                const payload = {
+                    data: {
+                        contentType,
+                        contentId,
+                    },
+                }
+                console.log(payload)
+                await axios.delete('/api/schedule/removeFromSchedule', payload)
+                this.loadingUpdatingStatus = false
+                this.isScheduled = false
+                // Optionally, update the state here if needed
+            } catch (error) {
+                notificationStore.setToastNotification('There was an error.', 'error')
+                console.error('There was an error removing the item from the schedule:', error)
+                this.loadingUpdatingStatus = false
+                throw error
+            }
         },
-        leaveEchoListener(showId) {
-            const showChannel = `show.${showId}`;
-            Echo.leaveChannel(showChannel);
-        }
+        // initializeEchoListener(showId) {
+        //     const showChannel = `show.${showId}`
+        //     Echo.channel(showChannel)
+        //         .listen('ScheduleUpdated', (event) => {
+        //             if (event.showId === showId) {
+        //                 this.setUpdatingStatus(showId, false)
+        //             }
+        //         })
+        // },
+        // leaveEchoListener(showId) {
+        //     const showChannel = `show.${showId}`
+        //     Echo.leaveChannel(showChannel)
+        // },
 
     },
 

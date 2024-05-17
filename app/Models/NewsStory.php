@@ -25,8 +25,13 @@ class NewsStory extends Model {
       'news_subnational_electoral_district_id',
       'image_id',
       'status',
+      'meta',
       'published_at',
       'video_id',
+  ];
+
+  protected $casts = [
+      'meta' => 'json',
   ];
 
   public function getRouteKeyName() {

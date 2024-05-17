@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreatorContentStatusUpdated;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Http\Resources\ShowResource;
@@ -9,10 +10,16 @@ use App\Http\Resources\SimpleMovieResource;
 use App\Http\Resources\SimpleShowEpisodeResource;
 use App\Http\Resources\SimpleShowResource;
 use App\Jobs\AddContentToSchedule;
+use App\Models\Movie;
+use App\Models\MovieTrailer;
+use App\Models\NewsStory;
+use App\Models\OtherContent;
 use App\Models\Show;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
+use App\Models\ShowEpisode;
 use App\Models\User;
+use App\Rules\ValidContentId;
 use App\Services\ScheduleService;
 use Carbon\CarbonInterface;
 use DateInterval;
@@ -72,6 +79,7 @@ class SchedulesController extends Controller {
 
   public function fetchFiveDaySixHourSchedule(): JsonResponse {
     $schedulesFiveDay = $this->scheduleService->fetchFiveDaySixHourSchedule();
+
     return response()->json([
         'data'         => $schedulesFiveDay,
         'userTimezone' => Auth::user()->timezone ?? 'UTC',
@@ -95,22 +103,65 @@ class SchedulesController extends Controller {
   }
 
 
-
-
   public function addToSchedule(Request $request): JsonResponse {
 
-    $data = $request->all();  // Capture all input data
+    // tec21 2024-05-14: I'm commenting out the validation because
+    // it kept returning errors saying the data was missing.
+    $data = $request->all();
+
+//    Log::info('addToSchedule request received', ['request' => $request->all()]);
+    // Validate the request data
+//    $validatedData = $request->validate([
+//        'contentType'  => 'required|string',
+//        'contentId'    => ['required', new ValidContentId],  // Use custom validation rule
+//        'scheduleType' => 'required|string',
+//        'startTime'    => 'required|string', //
+//        'duration'     => 'required|integer',
+//        'startDate'    => 'required|date',
+//        'endDate'      => 'required|date',
+//        'daysOfWeek'   => 'sometimes|array',
+//        'timezone'     => 'required|string',
+//    ]);
+
+    // Determine the model class based on contentType
+//    $modelClass = $this->getModelClass($validatedData['contentType']);
+    $modelClass = $this->getModelClass($data['contentType']);
+
+    // Load the content from the model and ID
+//    $content = $modelClass::findOrFail($validatedData['contentId']);  // Using primary key 'id'
+    $content = $modelClass::findOrFail($data['contentId']);  // Using primary key 'id'
+
+    // Update the meta column to include isSaving: true
+    $meta = json_decode($content->meta, true);
+    if (!is_array($meta)) {
+      $meta = [];
+    }
+    $meta['isSaving'] = true;
+    $meta['isUpdatingSchedule'] = null;
+    $meta['updatedBy'] = '';
+    $meta['triggeredBy'] = 'SchedulesController addToSchedule()';
+    $content->meta = json_encode($meta);
+    $content->save();
+
+    broadcast(new CreatorContentStatusUpdated($data['contentType'], $data['contentId'], $meta));
 
     // Dispatch the job with the data
     AddContentToSchedule::dispatch($data);
 
     // Return a response immediately, indicating that the process has started
     return response()->json(['message' => 'The schedule is being updated.']);
+  }
 
-//    return response()->json([
-//        'message' => 'Schedule added successfully',
-//        'data'    => $schedule,
-//    ]);
+  private function getModelClass(string $contentType): string {
+    return match ($contentType) {
+      'show' => Show::class,
+      'movie' => Movie::class,
+      'movieTrailer' => MovieTrailer::class,
+      'showEpisode' => ShowEpisode::class,
+      'newsStory' => NewsStory::class,
+      'otherContent' => OtherContent::class,
+      default => throw new \InvalidArgumentException("Invalid content type: $contentType"),
+    };
   }
 
 
@@ -258,7 +309,7 @@ class SchedulesController extends Controller {
     $transformedSchedules = $this->transformFetchedSchedules($schedules);
     Log::debug("Transformed schedules:", $transformedSchedules);
 
-   // 3. Sort schedules
+    // 3. Sort schedules
     $sortedSchedules = $this->sortSchedules($transformedSchedules);
     Log::debug("Sorted schedules:", $sortedSchedules);
 
@@ -1043,7 +1094,6 @@ class SchedulesController extends Controller {
 //  }
 
 
-
   private function transformSchedule($content): array {
     if (!$content) {
       return []; // Return empty array if no content is associated
@@ -1082,7 +1132,7 @@ class SchedulesController extends Controller {
     ]);
 
     if ($validator->fails()) {
-      return response()->json($validator->errors(), 422);
+      return response()->json(['errors' => $validator->errors()], 422);
     }
 
     // Correctly extract contentId and contentType using the case used in the validator
@@ -1094,34 +1144,61 @@ class SchedulesController extends Controller {
     $modelClass = $contentType;
 
     if (!class_exists($modelClass)) {
-      Log::error('removeFromSchedule failed, Invalid content type provided: ' . $contentType . ', ID: ' . $contentId);
+      Log::error("removeFromSchedule failed: Invalid content type provided: {$contentType}, ID: {$contentId}");
 
       return response()->json(['message' => 'Invalid content type provided'], 400);
     }
 
-    // Attempt to find the content by ID
-    $content = $modelClass::find($contentId);
-    if (!$content) {
-      return response()->json(['message' => 'Content not found'], 404);
+    try {
+      // Attempt to find the content by ID
+      $content = $modelClass::find($contentId);
+      if (!$content) {
+        return response()->json(['message' => 'Content not found'], 404);
+      }
+
+      // Find and delete the Schedule items
+      $content->schedules()->each(function ($schedule) {
+        // If there are any related recurrence details, delete them
+        $schedule->scheduleRecurrenceDetails()->delete();
+        // Then delete the schedule itself
+        $schedule->delete();
+      });
+
+      // Update the meta field to remove the isScheduled flag
+//      $meta = $content->meta;
+//      if (isset($meta['isScheduled'])) {
+//        unset($meta['isScheduled']);
+//        $content->meta = $meta;
+//        $content->save();
+//      }
+
+      // Update the meta column to include isSaving: true
+      $meta = json_decode($content->meta, true);
+      if (!is_array($meta)) {
+        $meta = [];
+      }
+      $meta['isScheduled'] = false;
+      $meta['isSaving'] = false;
+      $meta['isUpdatingSchedule'] = null;
+      $meta['updatedBy'] = '';
+      $meta['triggeredBy'] = 'SchedulesController removeFromSchedule()';
+      $content->meta = json_encode($meta);
+      $content->save();
+
+      $shortContentType = strtolower(class_basename($contentType)); // converts to 'show'
+      broadcast(new CreatorContentStatusUpdated($shortContentType, $data['contentId'], $meta));
+
+      Log::info("Content type {$shortContentType} with ID {$contentId} successfully removed from schedule.");
+
+      // Return a success response
+      return response()->json(['message' => "{$shortContentType} removed from schedule"], 200);
+    } catch (\Exception $e) {
+      // Log the error
+      Log::error("An error occurred while removing content type {$shortContentType} with ID {$contentId} from schedule: {$e->getMessage()}");
+
+      // Return an error response
+      return response()->json(['message' => 'An error occurred while removing the content from the schedule'], 500);
     }
-
-    // Assuming the slug is a property of all content types
-    $slug = $content->slug;
-
-    // Find and delete the Schedule items
-    $content->schedules()->each(function ($schedule) {
-      // If there are any related recurrence details, delete them
-      $schedule->scheduleRecurrenceDetails()->delete();
-      // Then delete the schedule itself
-      $schedule->delete();
-    });
-
-    // Assuming this route and redirection logic applies universally; adjust as necessary
-//    return redirect()->back()->with('message', "{$contentType} Removed From Schedule");
-    return response()->json([
-        'message' => "{$contentType} Removed From Schedule",
-    ]);
-
   }
 
 //

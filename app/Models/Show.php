@@ -35,6 +35,7 @@ class Show extends Model
         'image_id',
         'name',
         'description',
+        'meta',
         'slug',
         'isBeingEditedByUser_id',
         'show_status_id',
@@ -53,6 +54,7 @@ class Show extends Model
 
   protected $casts = [
       'ulid' => 'string',
+      'meta' => 'json',
   ];
 
     public function getRouteKeyName(): string {

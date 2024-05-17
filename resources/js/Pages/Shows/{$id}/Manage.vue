@@ -52,7 +52,7 @@
 
         </div>
 
-        <ShowHeader
+        <ShowManageHeader
             :show="props.show"
             :team="props.team"
             :can="can"
@@ -185,12 +185,13 @@
 
 <script setup>
 import { onBeforeUnmount, onMounted, onUnmounted } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
-import ShowHeader from '@/Components/Pages/Shows/Layout/ShowHeader'
+import ShowManageHeader from '@/Components/Pages/Shows/Layout/ShowManageHeader'
 import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
 import ShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShowEpisodesList'
 import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCreditsList'
@@ -198,7 +199,6 @@ import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 import ShowRecordings from '@/Components/Pages/Shows/Elements/ShowRecordings.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Inertia } from '@inertiajs/inertia'
 
 usePageSetup('shows/slug/manage')
 
@@ -211,7 +211,9 @@ const toggleComponent = (componentName) => {
   showStore.openComponent = showStore.openComponent === componentName ? null : componentName
 }
 
-let props = defineProps({
+const page = usePage().props
+
+const props = defineProps({
   show: Object,
   team: Object,
   episodes: Object,
@@ -239,19 +241,75 @@ const goLive = () => {
   appSettingStore.btnRedirect(`/golive`)
 }
 
+onMounted(() => {
+  console.log(`Subscribing to channel creator.show.${props.show.id}`);
+
+  // Echo.private(`creator.show.${props.show.id}`)
+  //     .subscribed(() => {
+  //       console.log(`Successfully subscribed to channel creator.show.${props.show.id}`);
+  //     })
+  //     .listen('.CreatorContentStatusUpdated', (event) => {
+  //       // console.log('CreatorContentStatusUpdated event received', event);
+  //       showStore.$patch({
+  //         isSaving: event.meta.isSaving,
+  //         isUpdatingSchedule: event.meta.isUpdatingSchedule,
+  //         updatedBy: event.meta.updatedBy,
+  //       });
+  //       // console.log('showStore.isSaving:', showStore.isSaving); // Log to verify update
+  //     })
+  //     .error((error) => {
+  //       console.error('Error subscribing to channel:', error);
+  //     });
+
+  Echo.join(`creator.show.${props.show.id}`)
+      .here((users) => {
+        console.log('Users currently in the channel:', users);
+      })
+      .joining((user) => {
+        console.log('User joined the channel:', user);
+      })
+      .leaving((user) => {
+        console.log('User left the channel:', user);
+        if (user.id === page.value.user.id) {
+          console.log('user left!')
+          showStore.setUpdatingStatus(false, user.name);
+          // Emit the event to the server
+          axios.post(`/api/${props.show.slug}/user-left-channel`, {
+            user: user,
+            channel: `creator.show.${props.show.id}`
+          });
+        }
+      })
+      .listen('.CreatorContentStatusUpdated', (event) => {
+        console.log('CreatorContentStatusUpdated event received:', event);
+        showStore.isSaving = event.meta.isSaving;
+        showStore.isUpdatingSchedule = event.meta.isUpdatingSchedule;
+        showStore.updatedBy = event.meta.updatedBy;
+      })
+      .error((error) => {
+        console.error('Error subscribing to channel:', error);
+      });
+
+});
+
+onBeforeUnmount(() => {
+  // Echo.leave(`creator.show.${props.show.id}`);
+  console.log(`Unsubscribed from channel creator.show.${props.show.id}`);
+});
+
 // Subscribe to Laravel Echo channel
 onMounted(() => {
-  showStore.initializeEchoListener(props.show.id);
+  showStore.initializeShow(props.show)
 });
 
 // Unsubscribe from Laravel Echo channel
 onBeforeUnmount(() => {
-  showStore.leaveEchoListener(props.show.id);
 });
 
 
 onUnmounted(() => {
   showStore.errorMessage = ''
+  showStore.reset()
   // const topDiv = document.getElementById("topDiv");
   // if (topDiv) {
   //   topDiv.scrollIntoView();

@@ -8,9 +8,7 @@ use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -149,7 +147,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
         $oneTimeDates[] = $startTimeUTC->toDateTimeString();
       } else {
         // Handle recurring schedules
-        $this->processRecurrentSchedule($schedule, $recurrentDates);
+        $recurrentDates = $this->processRecurrentSchedule($schedule);
       }
     } catch (Exception $e) {
       Log::error('Error processing schedule', [
@@ -287,7 +285,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
   /**
    * @throws Exception
    */
-  protected function processRecurrentSchedule($schedule, &$recurrentDates): void {
+  protected function processRecurrentSchedule($schedule): array {
     try {
       $details = $schedule->scheduleRecurrenceDetails;
 //      $currentDateUTC = Carbon::now('UTC');
@@ -311,6 +309,9 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
             ->second(0); // Ensure seconds are zeroed out
       }
 
+      // Initialize the recurrentDates array
+      $recurrentDates = [];
+
       // Setting the time of the effective start date
       $effectiveStartDateLocal = ($startDateLocal->isPast() ? $currentDateLocal : $startDateLocal)->copy();
       $effectiveStartDateLocal->second(0); // Ensure seconds are zeroed out
@@ -328,22 +329,26 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
         $effectiveStartDateLocal->addWeek(); // Move to the next week on the same day
       }
 
-//      // Ensure endDateLocal is included if it matches the days of the week
-//      if (in_array(strtolower($endDateLocal->format('l')), $daysOfWeek) &&
-//          !in_array($endDateLocal->toDateTimeString(), array_map(function ($date) { return $date->toDateTimeString(); }, $recurrentDates))) {
-//        $recurrentDates[] = $endDateLocal;
-//      }
+      // Ensure endDateLocal is included if it matches the days of the week
+      if (in_array(strtolower($endDateLocal->format('l')), $daysOfWeek) &&
+          !in_array($endDateLocal->toDateTimeString(), array_map(function ($date) { return $date->toDateTimeString(); }, $recurrentDates))) {
+        $recurrentDates[] = $endDateLocal->copy()->second(0); // Store a copy with zeroed seconds
+      }
 
       // Convert all local dates in the array to UTC
       $recurrentDatesUTC = array_map(function ($date) {
         return $date->setTimezone(new DateTimeZone('UTC'))->toIso8601String();
       }, $recurrentDates);
 
+      // Log the results for debugging
 //      Log::debug('Recurrent schedule processed successfully', [
 //          'scheduleId' => $schedule->id,
 //          'datesProcessed' => count($recurrentDates),
 //          'UTC DatesAdded' => implode(', ', $recurrentDatesUTC)  // Log the converted dates
 //      ]);
+
+      return $recurrentDatesUTC; // Return the processed dates in UTC
+
     } catch (Exception $e) {
       Log::error('Failed to process recurrent schedule', [
           'scheduleId' => $schedule->id,

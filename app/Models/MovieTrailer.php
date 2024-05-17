@@ -14,7 +14,12 @@ class MovieTrailer extends Model {
       'size',
       'file_path',
       'file_url',
+      'meta',
       'video_id',
+  ];
+
+  protected $casts = [
+      'meta' => 'json',
   ];
 
   public function movie() {

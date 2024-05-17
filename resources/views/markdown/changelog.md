@@ -3,6 +3,14 @@
 Last Update: May 13, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.15
+May 13, 2024
+* Add show listener to handle real-time updates of show components.
+  * Add Show To Schedule now gets disabled if a Team Member is changing the schedule
+  * Fixed the bug where the button was stuck in disabled mode.
+  * Added a label to say who is updating the schedule.
+  * Added Toast Notifications when using the Add Show To Schedule Modal.
+
 ## v0.9.0.14
 May 13, 2024
 * Fix the shows index page on logged out missing nav bar and footer.

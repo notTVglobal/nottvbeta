@@ -183,7 +183,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
                 this.showOttButtons = true;
                 videoPlayerStore.controls = true;
                 if (userStore.isMobile || window.innerWidth < 1024) {
-                    this.osd = this.ott !== 0;
+                    // this.osd = this.ott !== 0;
                 }
             }
         },

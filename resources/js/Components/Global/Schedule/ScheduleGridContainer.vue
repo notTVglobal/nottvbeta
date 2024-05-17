@@ -60,10 +60,11 @@
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.startTime, true) }}</p>
               <p class="text-yellow-400">
-                <span v-if="dayjs(item.startTime).isBefore(dayjs())">Started </span>
+                <span v-if="dayjs(item.startTime).isBefore(scheduleStore.baseTime)">Started </span>
                 <ConvertDateTimeToTimeAgo
-                  :dateTime="item.startTime"
-                  :timezone="userStore.timezone"
+                    :key="scheduleStore.baseTime"
+                    :dateTime="item.startTime"
+                    :timezone="userStore.timezone"
               /></p>
             </div>
           </div>
@@ -99,6 +100,7 @@
           <p class="text-lg">{{ formatLongDate(show.startTime) }}</p>
           <p class="text-lg">{{ formatTime(show.startTime, true) }} - {{ formatTime(show.endTime, true) }}</p>
           <ConvertDateTimeToTimeAgo
+              :key="scheduleStore.baseTime"
               :dateTime="show.startTime"
               :timezone="userStore.timezone"
               class="text-yellow-400"

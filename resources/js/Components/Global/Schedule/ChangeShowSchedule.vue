@@ -30,9 +30,14 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia';
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { useShowStore } from '@/Stores/ShowStore'
 import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
+
+const showStore = useShowStore()
+
+const page = usePage().props
 
 let props = defineProps({
   show: Object
@@ -40,26 +45,14 @@ let props = defineProps({
 
 const errors = ref()
 
-const removeFromSchedule = async() => {
-  const payload = {
-    data: {
-      contentType: props.show.scheduleDetails.contentType,
-      contentId: props.show.scheduleDetails.contentId,
-    }
-  }
-  await axios.delete('/api/schedule/removeFromSchedule', payload)
-      .then(() => {
-        // Assuming `show` is accessible here, otherwise, you might need `props.show.slug`
-        Inertia.visit(`/shows/${props.show.slug}/manage`);
-      })
-      .catch(error => {
-        console.error('There was an error removing the item from the schedule:', error);
-        errors.value = error
-        // Handle error (show a message, etc.)
-      });
-}
-
-function closeModal() {
+const closeModal = () => {
   document.getElementById('changeScheduleModal').close()
 }
+
+const removeFromSchedule = async () => {
+  await showStore.removeFromSchedule(props.show.scheduleDetails.contentType, props.show.scheduleDetails.contentId)
+  closeModal()
+};
+
+
 </script>
