@@ -991,7 +991,7 @@ Route::middleware([
     ->name('shows.checkLive');
 
   Route::put('/api/shows/{show}/meta', [ShowsController::class, 'updateMeta'])
-    ->name('shows.checkLive');
+    ->name('shows.updateMeta');
 
   Route::post('/api/{show}/user-left-channel', [ShowsController::class, 'userLeftChannel']);
 
