@@ -287,8 +287,7 @@
 </template>
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-import { getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc' // Required for UTC support
@@ -296,7 +295,7 @@ import timezone from 'dayjs/plugin/timezone' // Required for timezone support
 import { useUserStore } from '@/Stores/UserStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import { useShowStore } from '@/Stores/ShowStore'
-import { useNotificationStore } from "@/Stores/NotificationStore"
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
 import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
 import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
@@ -321,7 +320,7 @@ let props = defineProps({
 })
 
 // Access the global properties
-const { proxy } = getCurrentInstance()
+const {proxy} = getCurrentInstance()
 
 const startConfetti = () => {
   proxy.$confetti.start()
@@ -360,19 +359,19 @@ const initialFormState = {
   startDate: '',
   endDate: '',
   errors: {},
-};
+}
 
-const form = reactive({ ...initialFormState }); // on modal load, reset form.
+const form = reactive({...initialFormState}) // on modal load, reset form.
 
 // Function to reset the form
 const resetForm = () => {
-  Object.assign(form, initialFormState);
-};
+  Object.assign(form, initialFormState)
+}
 
 // Function to clear errors
 const clearErrors = () => {
-  form.errors = {};
-};
+  form.errors = {}
+}
 
 function confirmTimezone() {
   timezoneConfirmed.value = true
@@ -389,15 +388,38 @@ function goToNextStep() {
   stepError.value = ''
 
   if (form.scheduleType === 'recurring') {
+
+    // Combine startDate and startTime into a single dayjs object
+    let startHour = parseInt(form.startTime.hour)
+    const startMinute = parseInt(form.startTime.minute)
+
+    if (form.startTime.meridian === 'PM' && startHour !== 12) {
+      startHour += 12
+    } else if (form.startTime.meridian === 'AM' && startHour === 12) {
+      startHour = 0
+    }
+
+    // Combine form.startDate and form.startTime
+    const startDateTime = dayjs(form.startDate)
+        .hour(startHour)
+        .minute(startMinute)
+        .second(0)
+        .millisecond(0)
+
+    const now = dayjs().tz(userStore.timezone)
+    const sixHoursFromNow = now.add(6, 'hour')
+
+    const isBeforeSixHours = startDateTime.isBefore(sixHoursFromNow)
+
     if (currentStep.value === 1 && form.daysOfWeek.length === 0) {
       // If no days are selected and the current step is 1, set an error message
       stepError.value = 'Please select at least one day of the week.'
     } else if (currentStep.value === 4 && !form.startDate) {
       // If no start date is selected and the current step is 4, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs(form.startDate).add(6, 'hour'))) {
+    } else if (currentStep.value === 4 && isBeforeSixHours) {
       // If the start date is within the next 6 hours when the current step is 4, set an error message
-      stepError.value = 'Start date must be at least 6 hours in the future.';
+      stepError.value = 'Start date must be at least 6 hours in the future.'
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
       // Allow the end date to be up to one week beyond exactly three months from the start date
       // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
@@ -409,12 +431,18 @@ function goToNextStep() {
       currentStep.value++
     }
   } else if (form.scheduleType === 'one-time') {
+
+    const now = dayjs().tz(userStore.timezone)
+    const sixHoursFromNow = now.add(6, 'hour')
+
+    const isBeforeSixHours = dayjs(form.startDate).isBefore(sixHoursFromNow)
+
     if (currentStep.value === 1 && !form.startDate) {
       // If no start date is selected and the current step is 1, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 1 && dayjs(form.startDate).isBefore(dayjs().add(1, 'day').startOf('day'))) {
+    } else if (currentStep.value === 1 && isBeforeSixHours) {
       // If the start date is today or earlier when the current step is 1, set an error message
-      stepError.value = 'Start date must be later than today.'
+      stepError.value = 'Start date must be at least 6 hours in the future.'
     } else if (currentStep.value === 2) {
       document.getElementById('confirmAddShowModal').showModal()
     } else if (currentStep.value < totalSteps.value) {
@@ -566,10 +594,9 @@ updateDurationDisplay()
 const formattedStartTimeForOneTime = computed(() => {
   if (!form.startDate) return ''
   // Directly parse and format the date in local time without converting timezones
-  const timeIn = dayjs(form.startDate).format('hh:mm A')
   // console.log('formattedStartTimeForOneTime time in: ' + form.startDate)
   // console.log('formattedStartTimeForOneTime time out: ' + timeIn)
-  return timeIn // This should match the local time equivalent of the input
+  return dayjs(form.startDate).format('hh:mm A') // This should match the local time equivalent of the input
 
 
 })
@@ -625,7 +652,7 @@ const handleStartDateSelected = ({date}) => {
 
   form.endDate = endDate
   // console.log('handleStartDate form.endDate: ' + form.endDate)
-  provisionalEndDate.value = form.endDate.format('ddd MMM D YYYY') // Update the endDate in the form
+  provisionalEndDate.value = dayjs(form.endDate).format('ddd MMM D YYYY') // Update the endDate in the form
   // console.log('provisionalEndDate: ' + provisionalEndDate.value)
 }
 
