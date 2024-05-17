@@ -1128,14 +1128,14 @@ class SchedulesController extends Controller {
     $data = $request->json()->all();
 
     // Manually create a validator instance
-    $validator = Validator::make($data, [
-        'contentId'   => 'required|integer',
-        'contentType' => 'required|string',
-    ]);
+//    $validator = Validator::make($data, [
+//        'contentId'   => 'required|integer',
+//        'contentType' => 'required|string',
+//    ]);
 
-    if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()], 422);
-    }
+//    if ($validator->fails()) {
+//      return response()->json(['errors' => $validator->errors()], 422);
+//    }
 
     // Correctly extract contentId and contentType using the case used in the validator
     $contentId = $data['contentId'];
