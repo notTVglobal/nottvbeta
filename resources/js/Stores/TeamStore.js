@@ -109,6 +109,9 @@ export const useTeamStore = defineStore('teamStore', {
         async fetchTeamMembers() {
             await axios.get('/team/team-members').then().error()
         },
+        setCreators(creators) {
+            this.creators = creators;
+        },
     },
 
     getters: {

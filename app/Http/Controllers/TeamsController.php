@@ -357,7 +357,7 @@ class TeamsController extends Controller {
     $isTeamOwner = $team->user_id === $userId;
     $isTeamMember = $team->members->contains('id', $userId);
 
-    $creators = $this->getCreators(); // we need to pass back the $search don't we??
+//    $creators = $this->getCreators(); // we need to pass back the $search don't we??
     $shows = $this->getShows($team->id);
 
     return Inertia::render('Teams/{$id}/Manage', [
@@ -367,10 +367,10 @@ class TeamsController extends Controller {
         'teamLeader'     => $teamLeaderData,
         'members'        => $team->members,
         'managers'       => $managers,
-        'creators'       => $creators,
+//        'creators'       => $creators,
         'shows'          => $shows,
         'filters'        => Request::only(['team_id']),
-        'creatorFilters' => Request::only(['search']),
+//        'creatorFilters' => Request::only(['search']),
         'can'            => $this->getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember),
     ]);
   }
@@ -416,7 +416,9 @@ class TeamsController extends Controller {
     return TeamMember::query()->where('user_id', $userId)->pluck('team_id');
   }
 
+  // tec21: 2024-05-17 we are replacing this with searchCreators
   protected function getCreators() {
+
     // Assuming Creator model is related to User and has a 'status' relationship
     // Adjust the logic as per your actual model relationships and requirements
     return Creator::join('users', 'creators.user_id', '=', 'users.id')
@@ -429,9 +431,11 @@ class TeamsController extends Controller {
         ->withQueryString()
         ->through(function ($creator) {
           return [
-              'id'    => $creator->user->id,
-              'name'  => $creator->user_name,
-              'teams' => $this->getTeams($creator->user->id),
+              'id'                 => $creator->user->id,
+              'name'               => $creator->user_name,
+              'teams'              => $this->getTeams($creator->user->id),
+              'profile_photo_path' => $creator->user->profile_photo_path,
+              'profile_photo_url'  => $creator->user->profile_photo_url
             // Add other necessary fields
           ];
         });
@@ -621,6 +625,34 @@ class TeamsController extends Controller {
 //        ]
 //        ]);
 //    }
+
+////////////  SEARCH CREATORS (add Team Member)
+//////////////////////////////////////////////
+
+  public function searchCreators(HttpRequest $request): \Illuminate\Http\JsonResponse {
+    $search = $request->input('search');
+    $creators = Creator::join('users', 'creators.user_id', '=', 'users.id')
+        ->select('creators.*', 'users.name as user_name')
+        ->when($search, function ($query, $search) {
+          return $query->where('users.name', 'like', "%{$search}%");
+        })
+        ->latest()
+        ->paginate(3);
+
+    $creators->getCollection()->transform(function ($creator) {
+      return [
+          'id'                 => $creator->user->id,
+          'name'               => $creator->user_name,
+          'teams'              => $this->getTeams($creator->user->id),
+          'profile_photo_path' => $creator->user->profile_photo_path,
+          'profile_photo_url'  => $creator->user->profile_photo_url
+        // Add other necessary fields
+      ];
+    });
+
+    return response()->json($creators);
+  }
+
 
 ////////////  TRANSFER
 //////////////////////

@@ -28,7 +28,7 @@
                   @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
                   class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-orange-500 hover:bg-orange-600 rounded-lg"
               >Back to<br/>
-                Team Page
+                Manage Team
               </button>
             </div>
             <div class="flex flex-wrap-reverse justify-end">
