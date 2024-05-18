@@ -6,7 +6,8 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.9.0.23
 May 17, 2024
 * Finish editing lock functions, if a user is adding a show to the schedule and closes their browser the lock gets released by the user who is tagged as 'leader' for the purposes of handling function execution', or if no one is on the page, then it gets handled by the next person to land on the page. This is on the Show Manage page"
-  * Add Show To Schedule should properly handle Recurring Dates now.
+* Add Show To Schedule should properly handle Recurring Dates now.
+* Added slug column to creator table. Generate creator slugs via command.
 
 ## v0.9.0.22
 May 17, 2024
