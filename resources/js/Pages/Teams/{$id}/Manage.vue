@@ -85,7 +85,7 @@
               Team Members
             </div>
             <div v-if="teamStore.openComponent === 'teamMembers'">
-              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <div class="mt-4 mb-12 pb-6 shadow overflow-hidden sm:rounded-lg">
                 <TeamMembersList :creatorFilters="creatorFilters" :creators="creators" :team="team" :can="can"/>
               </div>
             </div>

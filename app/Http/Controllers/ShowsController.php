@@ -1612,7 +1612,7 @@ class ShowsController extends Controller {
     return $creatorId;
   }
 
-  public function updateMeta(HttpRequest $request, Show $show): \Illuminate\Http\JsonResponse {
+  public function updateMeta(HttpRequest $request, Show $show) {
     try {
       $validatedData = $request->validate([
 //          'isSaving' => 'nullable|boolean',
@@ -1632,13 +1632,19 @@ class ShowsController extends Controller {
       // Check if someone else is already updating the schedule
       if (isset($meta['isUpdatingSchedule']) && $meta['isUpdatingSchedule'] && isset($meta['updatedBy']) && $meta['updatedBy'] !== $validatedData['updatedBy']) {
         // Return a response indicating that the schedule is already being updated by someone else
-        return response()->json(['message' => 'The schedule is currently being updated by ' . $meta['updatedBy'] . '.'], 409);
+//        return response()->json(['message' => 'The schedule is currently being updated by ' . $meta['updatedBy'] . '.'], 409);
+        // Skip the conflict response and fail silently
+        // Optionally, you could log the conflict for debugging purposes
+        Log::info('Schedule update conflict: currently being updated by ' . $meta['updatedBy']);
+        // Return a silent response to avoid triggering a notification
+        return response()->json(['message' => '', 'notificationType' => 'silent']);
       }
 
       // Ensure 'isSaving', 'isUpdatingSchedule' and 'updatedBy' keys exist
 //      $meta['isSaving'] = $validatedData['isSaving'];
       $meta['isUpdatingSchedule'] = $validatedData['isUpdatingSchedule'] ?? null;
-      $meta['updatedBy'] = $validatedData['updatedBy'] ?? null;
+      // if isUpdatingSchedule is false then set updatedBy to null.
+      $meta['updatedBy'] = $validatedData['isUpdatingSchedule'] ? ($validatedData['updatedBy'] ?? null) : null;
       $meta['triggeredBy'] = 'ShowsController updateMeta()';
 
 //      Log::debug('Updated meta data', ['meta' => $meta]);
@@ -1663,14 +1669,60 @@ class ShowsController extends Controller {
     }
   }
 
-  public function userLeftChannel(Request $request)
+  // Internal method to update meta without request validation
+  protected function updateMetaInternally(Show $show): void {
+    try {
+      $meta = json_decode($show->meta, true);
+      if (!is_array($meta)) {
+        $meta = [];
+      }
+
+      // Update the meta data
+      $meta['isUpdatingSchedule'] = false;
+      $meta['updatedBy'] = null;
+      $meta['triggeredBy'] = 'ShowsController updateMetaInternally()';
+
+      Log::debug('Updated meta data', ['meta' => $meta]);
+
+      // Encode the meta array back to JSON and save it
+      $show->meta = json_encode($meta);
+      $show->save();
+
+      broadcast(new CreatorContentStatusUpdated('show', $show->id, $meta));
+
+      Log::info('Show meta updated successfully internally.');
+    } catch (\Exception $e) {
+      Log::error('Error updating meta for show internally', [
+          'show_id' => $show->id,
+          'error' => $e->getMessage(),
+          'stack' => $e->getTraceAsString()
+      ]);
+    }
+  }
+
+  public function userLeftChannel(HttpRequest $request): \Illuminate\Http\JsonResponse
   {
     $user = $request->input('user');
     $channel = $request->input('channel');
+    $showSlug = $request->input('showSlug'); // Assuming you pass the show slug
 
     Log::info('User left the channel', ['user' => $user, 'channel' => $channel]);
 
-    event(new UserLeftCreatorContentChannel($user, $channel));
+    // Find the show based on the slug
+    $show = Show::where('slug', $showSlug)->first();
+
+    if ($show) {
+      $meta = json_decode($show->meta, true);
+      if (!is_array($meta)) {
+        $meta = [];
+      }
+
+      // Check if the user that left is the one updating the schedule
+      if (isset($meta['isUpdatingSchedule']) && $meta['isUpdatingSchedule'] && isset($meta['updatedBy']) && $meta['updatedBy'] === $user['name']) {
+        // Call updateMeta internally
+        $this->updateMetaInternally($show);
+      }
+    }
 
     return response()->json(['message' => 'Event broadcasted.']);
   }

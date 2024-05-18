@@ -2,7 +2,7 @@
     <div class="capitalize" :class="props.class">{{ timeAgo }}</div>
 </template>
 <script setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';

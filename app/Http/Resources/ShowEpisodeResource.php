@@ -24,12 +24,12 @@ class ShowEpisodeResource extends JsonResource {
       // Include video using VideoResource
         'video'       => $this->whenLoaded('video') ? new VideoResource($this->video) : null,
         'category'        => [
-            'name'        => $this->show->category->name ?? null,
-            'description' => $this->show->category->description ?? null,
+            'name'        => $this->resource->show->getCachedCategory()->name ?? null,
+            'description' => $this->resource->show->getCachedCategory()->description ?? null,
         ],
         'subCategory'     => [
-            'name'        => $this->show->subCategory->name ?? null,
-            'description' => $this->show->subCategory->description ?? null,
+            'name'        => $this->resource->show->getCachedSubCategory()->name ?? null,
+            'description' => $this->resource->show->getCachedSubCategory()->description ?? null,
         ],
         'show'          => [
           'name'        => $this->show->name ?? null,

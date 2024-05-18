@@ -33,13 +33,9 @@
         </div>
       </div>
 
-      <button
-          v-if="!can?.manageShow"
-          @click="appSettingStore.btnRedirect(`/teams/${team.slug}`)"
-          class="px-4 py-2 mr-2 h-fit text-white bg-orange-600 hover:bg-orange-500 rounded-lg shadow-md"
-      >Visit the<br/>
-        Team Page
-      </button>
+      <div v-if="!can?.manageShow" class="flex flex-row w-full justify-center lg:justify-end pb-6 lg:pb-0">
+        <button @click="appSettingStore.btnRedirect(`/teams/${team.slug}`)" class="btn btn-wide">Visit the Team Page</button>
+      </div>
 
     </div>
 
@@ -49,6 +45,7 @@
 <script setup>
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import ShowIdIndexHeaderContents from '@/Components/Pages/Shows/Elements/ShowIdIndexHeaderContents.vue'
+import { Inertia } from '@inertiajs/inertia'
 
 const appSettingStore = useAppSettingStore()
 

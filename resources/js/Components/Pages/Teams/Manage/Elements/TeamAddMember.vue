@@ -9,32 +9,29 @@
       <form @submit.prevent="submit">
         <input v-model="search"
                type="search"
+               @input="searchCreators"
                placeholder="Search by name..."
                class="border px-2 rounded-lg mb-2"
         />
         <div class="h-32">
-          <div v-show="props.creatorFilters != ''" class="">
-            <div v-for="creator in creators.data"
-                 :key="creator.id">
-              <div>
-                <button @click.prevent="addTeamMember(creator)"
-                        :for="creator.id"
-                        class="flex pb-1 cursor-pointer disabled:cursor-not-allowed"
-                        :disabled="isUserOnTeam(creator)"
-                >
-                  <img :src="creator.profile_photo_url" class="rounded-full mr-3 h-10 w-10 object-cover">
-                  <div>{{ creator.name }}</div>
+          <div v-for="creator in filteredCreators"
+               :key="creator.id">
+              <button @click.prevent="addTeamMember(creator)"
+                      class="flex pb-1 cursor-pointer disabled:cursor-not-allowed"
+                      :disabled="isUserOnTeam(creator)"
+              >
+                <img v-if="creator.profile_photo_path" :alt="creator.name"
+                     :src="`/storage/${creator.profile_photo_path}`" class="rounded-full mr-3 h-10 w-10 object-cover">
+                <img v-else-if="creator.profile_photo_url" :alt="creator.name" :src="creator.profile_photo_url"
+                     class="rounded-full mr-3 h-10 w-10 object-cover">
+                <span>{{ creator.name }}</span>
 
-                  <div v-if="creator.teams.includes(teamStore.id)"
-                       class="text-xs text-white bg-green-800 uppercase justify-center items-center ml-3 top-1.5
+                <span v-if="creator.teams.includes(teamStore.id)"
+                      class="text-xs text-white bg-green-800 uppercase justify-center items-center ml-3 top-1.5
                                             font-semibold inline-block h-1/2 py-0.5 px-1 rounded last:mr-0 mr-1">
                     team member
-                  </div>
-
-                </button>
-              </div>
-
-            </div>
+                  </span>
+              </button>
           </div>
         </div>
         <div class="pt-4 font-semibold">
@@ -66,12 +63,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
-import Modal from "@/Components/Global/Modals/Modal"
-import throttle from "lodash/throttle"
-import { useForm } from "@inertiajs/inertia-vue3"
-import { Inertia } from "@inertiajs/inertia"
-import { useTeamStore } from "@/Stores/TeamStore"
+import { ref, watch } from 'vue'
+import Modal from '@/Components/Global/Modals/Modal'
+import throttle from 'lodash/throttle'
+import { useForm } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
+import { useTeamStore } from '@/Stores/TeamStore'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 const teamStore = useTeamStore()
 
@@ -80,58 +78,66 @@ let props = defineProps({
   creatorFilters: Object,
 })
 
-let search = ref(props.creatorFilters.search)
+let search = ref('')
 
-watch(search, throttle(function (value) {
-  Inertia.get('/teams/' + teamStore.slug + '/manage', {search: value}, {
-    preserveState: true,
-    replace: true
-  });
-}, 300));
+const fetchCreators = async () => {
+  try {
+    const response = await axios.get('/api/creators'); // New endpoint to fetch all creators
+    teamStore.setCreators(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+watch(search, (value) => {
+  searchCreators(value);
+});
+// watch(search, throttle(function (value) {
+//   Inertia.get('/teams/' + teamStore.slug + '/manage', {search: value}, {
+//     preserveState: true,
+//     replace: true,
+//   })
+// }, 300))
 
 function closeModal() {
-  teamStore.showModal = false;
+  teamStore.showModal = false
 
   // tec21: this isn't working...
-  search = '';
+  // search = ''
 }
 
 function isUserOnTeam(creator) {
-  if (creator.teams.includes(teamStore.id)) {
-    return true;
-  }
-  return false;
+  return !!creator.teams.includes(teamStore.id)
 }
 
 let form = useForm({
   user_id: '',
   team_id: teamStore.id,
   team_slug: teamStore.slug,
-});
+})
 
 async function addTeamMember(creator) {
-
   if (creator.teams.includes(teamStore.id)) {
-    return alert(creator.name + ' is already on this team.');
+    return alert(creator.name + ' is already on this team.')
   }
 
-  form.user_id = creator.id;
-  teamStore.showModal = false;
-  await submit();
-  form.user_id = '';
+  form.user_id = creator.id
+  teamStore.showModal = false
+  submit()
+  form.user_id = ''
 }
 
 function submit() {
   form.post(route('teams.addTeamMember'), {
     preserveScroll: true,
     onSuccess: () => {
-      form.reset();
+      form.reset()
       Inertia.visit(route('teams.manage', [teamStore.slug]), {
         method: 'get',
         preserveScroll: true,
       })
-    }
+    },
   })
-};
+}
 
 </script>

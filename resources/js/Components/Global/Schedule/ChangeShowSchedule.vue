@@ -50,7 +50,7 @@ const closeModal = () => {
 }
 
 const removeFromSchedule = async () => {
-  await showStore.removeFromSchedule(props.show.scheduleDetails.contentType, props.show.scheduleDetails.contentId)
+  await showStore.removeFromSchedule('App\\Models\\Show', props.show.id)
   closeModal()
 };
 

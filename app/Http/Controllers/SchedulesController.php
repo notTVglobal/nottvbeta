@@ -105,6 +105,7 @@ class SchedulesController extends Controller {
 
 
   public function addToSchedule(Request $request): JsonResponse {
+    Log::alert('this should only run once: addToSchedule in SchedulesController');
 
     // tec21 2024-05-14: I'm commenting out the validation because
     // it kept returning errors saying the data was missing.
@@ -126,7 +127,7 @@ class SchedulesController extends Controller {
 
     // Determine the model class based on contentType
 //    $modelClass = $this->getModelClass($validatedData['contentType']);
-    $modelClass = $this->getModelClass($data['contentType']);
+    $modelClass = getModelClass($data['contentType']);
 
     // Load the content from the model and ID
 //    $content = $modelClass::findOrFail($validatedData['contentId']);  // Using primary key 'id'
@@ -153,17 +154,18 @@ class SchedulesController extends Controller {
     return response()->json(['message' => 'The schedule is being updated.']);
   }
 
-  private function getModelClass(string $contentType): string {
-    return match ($contentType) {
-      'show' => Show::class,
-      'movie' => Movie::class,
-      'movieTrailer' => MovieTrailer::class,
-      'showEpisode' => ShowEpisode::class,
-      'newsStory' => NewsStory::class,
-      'otherContent' => OtherContent::class,
-      default => throw new \InvalidArgumentException("Invalid content type: $contentType"),
-    };
-  }
+  // tec21 2024-05-17 - This is now a helper function:
+//  private function getModelClass(string $contentType): string {
+//    return match ($contentType) {
+//      'show' => Show::class,
+//      'movie' => Movie::class,
+//      'movieTrailer' => MovieTrailer::class,
+//      'showEpisode' => ShowEpisode::class,
+//      'newsStory' => NewsStory::class,
+//      'otherContent' => OtherContent::class,
+//      default => throw new \InvalidArgumentException("Invalid content type: $contentType"),
+//    };
+//  }
 
 
 //  /**

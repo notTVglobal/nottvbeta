@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Events\CreatorRegistrationCompleted;
+use App\Http\Resources\CreatorResource;
 use App\Mail\InviteExistingCreatorMail;
 use App\Models\Creator;
 use App\Models\InviteCode;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -454,35 +456,25 @@ class CreatorsController extends Controller {
   /**
    * Display API listing of the resource.
    *
-   * @return Builder[]|Collection
+   * @param HttpRequest $request
+   * @return AnonymousResourceCollection
    */
-  public function getCreators(HttpRequest $request): Collection|array {
-    $creator = Creator::with('user')->get();
+  public function getCreators(HttpRequest $request): AnonymousResourceCollection {
+    $search = $request->input('search');
 
-    return $creator;
+    $creatorsQuery = Creator::with('user', 'teams')
+        ->when($search, function ($query) use ($search) {
+          $query->whereHas('user', function ($q) use ($search) {
+            $q->where('name', 'LIKE', "%{$search}%");
+          });
+        })
+        ->latest();
 
-    $data = Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
-        ->select('creators.*', 'user.name AS name')
-        ->when(Request::input('search'), function ($query, $search) {
-          $query->where('name', 'LIKE', "%{$search}%")->get();
-        });
+    $creators = $creatorsQuery->paginate(10);
 
-    return ([
-        'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
-            ->select('creators.*', 'user.name AS name')
-            ->with('user')
-            ->when(Request::input('search'), function ($query, $search) {
-              $query->where('name', 'LIKE', "%{$search}%");
-            })
-            ->paginate(10)
-            ->withQueryString()
-            ->through(fn($creator) => [
-                'id'   => $creator->user_id,
-                'name' => $creator->user->name
-            ]),
-        'filters'  => Request::only(['search'])
-    ])->toJSON();
-
+    return CreatorResource::collection($creators)->additional([
+        'filters' => $request->only(['search']),
+    ]);
   }
 
 

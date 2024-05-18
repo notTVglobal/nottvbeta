@@ -14,6 +14,7 @@ dayjs.extend(timezone)
 // const appSettingStore = useAppSettingStore()
 
 const initialState = () => ({
+    currentTimeUtc: dayjs().toISOString(),
     isMobile: Boolean,
     showNavDropdown: Boolean,
 
@@ -261,9 +262,21 @@ export const useUserStore = defineStore('userStore', {
             this.timezone = newTimezone
             await axios.post('/users/update-timezone', {'timezone': this.timezone})
         },
+        updateTime() {
+            this.currentTimeUtc = dayjs().toISOString();
+        },
+        startTimer() {
+            this.timer = setInterval(() => {
+                this.updateTime();
+            }, 1000); // Update every second
+        },
+        stopTimer() {
+            clearInterval(this.timer);
+        },
     },
 
     getters: {
+        userCurrentTime: (state) => dayjs(state.currentTimeUtc).tz(state.timezone).format(),
         uploadPercentageRounded(state) {
             if (this.uploadPercentage !== 0) {
                 return Math.round(state.uploadPercentage * 10) / 10

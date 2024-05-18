@@ -42,6 +42,7 @@ const initialState = () => ({
     updatedBy: null,
     isSaving: null,
     loadingUpdatingStatus: false, // to show a loader
+    leader: null // for handling functions on the Echo broadcast channel
 })
 
 export const useShowStore = defineStore('showStore', {
@@ -74,6 +75,13 @@ export const useShowStore = defineStore('showStore', {
                 updatedBy: meta.updatedBy ?? null,
             });
 
+        },
+        setLeader(user) {
+            this.leader = user;
+        },
+        resetLeader() {
+            this.leader = null;
+            // Reset other states...
         },
         async checkIsLive(showSlug) {
             try {
@@ -153,7 +161,10 @@ export const useShowStore = defineStore('showStore', {
                     updatedBy: userName,
                 })
                 this.loadingUpdatingStatus = false
-                notificationStore.setToastNotification(response.data.message, 'info')
+                // Check for the notification type and handle it accordingly
+                if (response.data.notificationType !== 'silent') {
+                    notificationStore.setToastNotification(response.data.message, 'info');
+                }
             } catch (error) {
                 console.error('Error updating saving state:', error)
                 this.loadingUpdatingStatus = false

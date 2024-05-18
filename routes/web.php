@@ -886,7 +886,7 @@ Route::middleware([
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
         ->name('teams.edit');
 
-    // Add team member
+    // Team transfer
     Route::post('/teams/{team}/transfer', [TeamsController::class, 'sendTransferRequest'])
         ->name('teams.sendTransferRequest');
 
@@ -928,6 +928,8 @@ Route::middleware([
   // Mark First Time As Seen ( The Welcome Creator Message on the Dashboard )
     Route::post('/api/creator/mark-as-seen', [CreatorsController::class, 'markAsSeen'])
         ->name('creators.markAsSeen');
+  // Search creators (used in TeamAddMember.vue)
+    Route::get('/api/search-creators', [TeamsController::class, 'searchCreators']);
 
 
 

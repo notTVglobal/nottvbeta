@@ -22,12 +22,12 @@ class MovieResource extends JsonResource
           'logline' => $this->logline,
           'image' => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
           'category' => $this->category ? [
-              'name' => $this->category->name,
-              'description' => $this->category->description,
+              'name'        => $this->resource->getCachedCategory()->name,
+              'description' => $this->resource->getCachedCategory()->description,
           ] : null,
           'subCategory' => $this->subCategory ? [
-              'name' => $this->subCategory->name,
-              'description' => $this->subCategory->description,
+              'name'        => $this->resource->getCachedSubCategory()->name,
+              'description' => $this->resource->getCachedSubCategory()->description,
           ] : null,
         // Include video using VideoResource
           'video' => $this->whenLoaded('video') ? new VideoResource($this->video) : null,
