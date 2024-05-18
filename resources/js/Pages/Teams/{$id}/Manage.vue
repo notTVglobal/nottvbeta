@@ -179,9 +179,6 @@ props.teamLeader && (teamStore.teamLeader = props.teamLeader)
 //     teamStore.teamLeader = props.teamLeader
 
 // }
-
-teamStore.members = props.members
-teamStore.managers = props.managers
 teamStore.can = props.can
 
 

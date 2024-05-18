@@ -10,6 +10,7 @@ import videojs from "video.js";
 
 const initialState = () => ({
     showChat: false,
+    showEmojiPicker: false,
     class: '',
     oldMessages: [],
     newMessages: [],
@@ -31,6 +32,16 @@ export const useChatStore = defineStore('chatStore', {
         reset() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
+        },
+        toggleEmojiPicker() {
+            this.showEmojiPicker = !this.showEmojiPicker
+        },
+        closeEmojiPicker() {
+            this.showEmojiPicker = false
+        },
+        addEmoji(emoji) {
+            this.message += emoji
+            this.closeEmojiPicker()
         },
         toggleChatOn() {
             this.showChat = true

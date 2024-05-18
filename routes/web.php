@@ -925,6 +925,9 @@ Route::middleware([
   // Get list of creators
   Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
       ->name('creators.getCreators');
+  // Get all creators
+  Route::get('/api/all-creators', [CreatorsController::class, 'getAllCreators'])
+  ->name('creators.getAllCreators');
   // Mark First Time As Seen ( The Welcome Creator Message on the Dashboard )
     Route::post('/api/creator/mark-as-seen', [CreatorsController::class, 'markAsSeen'])
         ->name('creators.markAsSeen');

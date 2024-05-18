@@ -10,7 +10,7 @@
         <Link :href="`/teams/${team.slug}`" class="uppercase text-black">{{ team.name }}</Link>
         <div
             class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -left-3 -top-0.5">
-          {{ membersCount }}
+          {{ teamStore.membersCount }}
         </div>
       </div>
       <div>
@@ -84,11 +84,13 @@
 <script setup>
 import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useTeamStore } from '@/Stores/TeamStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import { computed, reactive, ref, watchEffect } from 'vue'
 
 const userStore = useUserStore()
 const appSettingStore = useAppSettingStore()
+const teamStore = useTeamStore()
 
 const props = defineProps({
   team: Object,

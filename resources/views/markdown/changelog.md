@@ -3,6 +3,10 @@
 Last Update: May 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.25
+May 17, 2024
+* 
+
 ## v0.9.0.24
 May 17, 2024
 * Add unique constraint to Creator slugs.

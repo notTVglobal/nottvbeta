@@ -477,6 +477,28 @@ class CreatorsController extends Controller {
     ]);
   }
 
+  /**
+   * Display API listing of the resource.
+   *
+   * @param HttpRequest $request
+   * @return AnonymousResourceCollection
+   */
+  public function getAllCreators(HttpRequest $request): AnonymousResourceCollection {
+    $search = $request->input('search');
+
+    $creatorsQuery = Creator::with(['user.teams', 'user.teamManager'])
+        ->when($search, function ($query) use ($search) {
+          $query->whereHas('user', function ($q) use ($search) {
+            $q->where('name', 'LIKE', "%{$search}%");
+          });
+        })
+        ->latest();
+
+    $creators = $creatorsQuery->get();
+
+    return CreatorResource::collection($creators);
+  }
+
 
   public function fetchCreatorSettings(User $user) {
     // Ensure the authenticated user matches the requested user

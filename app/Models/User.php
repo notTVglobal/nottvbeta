@@ -214,8 +214,8 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->belongsToMany(Team::class, 'team_managers', 'user_id', 'team_id')
         ->using(TeamManager::class)
         ->as('teamManager')
-        ->withTimestamps()
-        ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
+        ->withTimestamps();
+//        ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
   }
 
   public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {

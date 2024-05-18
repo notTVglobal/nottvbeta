@@ -16,6 +16,7 @@ class Creator extends Model {
   protected $fillable = [
       'user_id',
       'slug',
+      'status_id',
       'first_time',
       'settings'
   ];
