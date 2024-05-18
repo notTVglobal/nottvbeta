@@ -25,6 +25,12 @@
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
             <div v-if="showStore.isScheduled && showStore.scheduleDetails">
+              <div v-if="nextBroadcastDate">
+                The next broadcast date is <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(nextBroadcastDate) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong>. <ConvertDateTimeToTimeAgo :dateTime="nextBroadcastDate" :class="`text-yellow-500`" />
+              </div>
+              <div v-else-if="isFutureBroadcast">
+                The next broadcast date is <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(showStore.scheduleDetails.startTime) }}&nbsp;{{ userStore.timezoneAbbreviation }}</strong>. <ConvertDateTimeToTimeAgo :dateTime="showStore.scheduleDetails.startTime" :class="`text-yellow-500`" />
+              </div>
               <div>
                 Your show is currently scheduled as <strong>{{ showStore.scheduleDetails.type }}</strong>.
                 <div v-if="showStore.scheduleDetails.type === 'one-time'">
@@ -84,7 +90,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -93,6 +99,13 @@ import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
 import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
 import ChangeSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const showStore = useShowStore()
 const userStore = useUserStore()
@@ -107,6 +120,35 @@ const props = defineProps({
 })
 
 const errors = ref();
+
+const nextBroadcastDate = computed(() => {
+  console.log('showStore.scheduleDetails:', showStore.scheduleDetails);
+
+  const now = dayjs();
+  if (showStore.scheduleDetails && showStore.scheduleDetails.broadcastDates) {
+    const broadcastDatesObj = JSON.parse(showStore.scheduleDetails.broadcastDates);
+    console.log('Parsed broadcastDates:', broadcastDatesObj);
+
+    if (Array.isArray(broadcastDatesObj.broadcastDates)) {
+      const upcomingDates = broadcastDatesObj.broadcastDates
+          .map(dateStr => {
+            const date = dayjs.tz(dateStr, broadcastDatesObj.timezone);
+            console.log('date:', date.toString());
+            return date;
+          })
+          .filter(date => date.isAfter(now))
+          .sort((a, b) => a - b);
+
+      console.log('upcomingDates:', upcomingDates);
+      return upcomingDates.length > 0 ? upcomingDates[0].toISOString() : null;
+    }
+  }
+  return null;
+});
+
+const isFutureBroadcast = computed(() => {
+  return dayjs(showStore.scheduleDetails.startTime).isAfter(dayjs());
+});
 
 // Function to set up MutationObserver for a modal
 const watchModal = (modalId, onClose) => {

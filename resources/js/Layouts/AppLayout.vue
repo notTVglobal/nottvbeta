@@ -93,16 +93,6 @@ let props = defineProps({
   user: Object,
 })
 
-onMounted(async () => {
-  if (props.user) { // Checking if user is logged in based on page props
-    await userStore.updateUserTimezone()
-    await userStore.fetchUserData()
-    userStore.videoSettings = props.user.videoSettings
-    // console.log('get user data on AppLayout')
-    // Call any other user-specific initialization functions here
-  }
-})
-
 // listen for new firstPlayVideo
 // this could change to stop listening
 // in the future, or it can listen for
@@ -153,18 +143,26 @@ onBeforeMount(() => {
   appSettingStore.checkScreenSize()
 })
 
-onMounted(() => {
+onMounted(async () => {
   console.log('we are here.')
-  nowPlayingStore.fetchFirstPlayData()
+  await nowPlayingStore.fetchFirstPlayData()
   ottStore.showContentForDemo()
+  if (props.user) { // Checking if user is logged in based on page props
+    await userStore.updateUserTimezone()
+    await userStore.fetchUserData()
+    userStore.startTimer();
+    userStore.videoSettings = props.user.videoSettings
+    // console.log('get user data on AppLayout')
+    // Call any other user-specific initialization functions here
+  }
 })
 
 onBeforeUnmount(() => {
+  userStore.stopTimer();
   channelStore.viewerCount = 0
   disconnect()
   appSettingStore.removeResizeListener()
 })
-
 
 function setPage() {
   isStreamPage = appSettingStore.currentPage === 'stream'

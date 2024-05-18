@@ -41,18 +41,20 @@ class AddContentToSchedule implements ShouldQueue {
    * @param string $contentType The type of content.
    * @return string|null The fully qualified class name of the model or null if not found.
    */
-  protected function getModelClass(string $contentType): ?string {
-    $map = [
-        'show'         => \App\Models\Show::class,
-        'episode'      => \App\Models\ShowEpisode::class,
-        'movie'        => \App\Models\Movie::class,
-        'movieTrailer' => \App\Models\MovieTrailer::class,
-        'otherContent' => \App\Models\OtherContent::class,
-      // Add more mappings as needed
-    ];
 
-    return $map[$contentType] ?? null;
-  }
+  // tec21: 2024-05-17 This is now a Helper function:
+//  protected function getModelClass(string $contentType): ?string {
+//    $map = [
+//        'show'         => \App\Models\Show::class,
+//        'episode'      => \App\Models\ShowEpisode::class,
+//        'movie'        => \App\Models\Movie::class,
+//        'movieTrailer' => \App\Models\MovieTrailer::class,
+//        'otherContent' => \App\Models\OtherContent::class,
+//      // Add more mappings as needed
+//    ];
+//
+//    return $map[$contentType] ?? null;
+//  }
 
 
   /**
@@ -98,7 +100,7 @@ class AddContentToSchedule implements ShouldQueue {
 //    $scheduleType = $data['scheduleType'];
 
     // Determine the correct model class based on the contentType
-    $modelClass = $this->getModelClass($contentType);
+    $modelClass = getModelClass($contentType); // getModelClass is a Helper function
     if (!$modelClass) {
       Log::error('Invalid content type provided', ['contentType' => $contentType]);
 
@@ -212,6 +214,7 @@ class AddContentToSchedule implements ShouldQueue {
 
         // Create ScheduleRecurrenceDetails within the transaction
         $recurrenceDetails = ScheduleRecurrenceDetails::create($recurrenceDetailsData);
+
         $recurrenceDetailsId = $recurrenceDetails->id;
 
         // Generate a human-readable description for the days of the week
@@ -243,13 +246,12 @@ class AddContentToSchedule implements ShouldQueue {
           'content_id'     => $content->id,
           'content_type'   => get_class($content),
           'schedule_id'    => $schedule->id,
-          'next_broadcast' => $schedule->start_time,  // Assuming start_time is the next broadcast
+          'next_broadcast' => $schedule->start_date,  // Assuming start_date is the next broadcast
       ];
 
       // Create the SchedulesIndex entry
       SchedulesIndex::create($schedulesIndexData);
 //      Log::debug('SchedulesIndex created successfully', ['scheduleId' => $schedule->id]);
-
 
       // Commit the transaction
       DB::commit();
@@ -283,14 +285,18 @@ class AddContentToSchedule implements ShouldQueue {
           $content->id,
           $meta
       ));
+      Log::debug('tec21: before construct details');
 
-      $scheduleDetails = $this->constructScheduleDetails($shortContentType, $contentId, (object) $scheduleData);
+      $scheduleDetails = $this->constructScheduleDetails($shortContentType, $content->id, (object) $scheduleData);
+      Log::debug('tec21: after construct details');
+      Log::debug('tec21: broadcast Show Schedule Details Updated from ScheduleUpdateShowBroadcastDates Job', $scheduleData);
 
       broadcast(new ShowScheduleDetailsUpdated(
           $scheduleDetails['contentType'],
           $scheduleDetails['contentId'],
           $scheduleDetails
       ));
+
 
 //      Log::debug('Broadcasted CreatorContentStatusUpdated event successfully');
 
@@ -350,6 +356,9 @@ class AddContentToSchedule implements ShouldQueue {
         'type'            => $scheduleData->recurrence_details_id ? 'recurring' : 'one-time',
     ];
   }
+
+
+
 
   // Function to generate a user-friendly string of days
   protected function formatDaysOfWeek($daysOfWeek): string {

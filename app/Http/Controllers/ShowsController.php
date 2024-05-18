@@ -1647,7 +1647,7 @@ class ShowsController extends Controller {
       $meta['updatedBy'] = $validatedData['isUpdatingSchedule'] ? ($validatedData['updatedBy'] ?? null) : null;
       $meta['triggeredBy'] = 'ShowsController updateMeta()';
 
-      Log::debug('Updated meta data', ['meta' => $meta]);
+//      Log::debug('Updated meta data', ['meta' => $meta]);
 
       // Encode the meta array back to JSON and save it
       $show->meta = json_encode($meta);
