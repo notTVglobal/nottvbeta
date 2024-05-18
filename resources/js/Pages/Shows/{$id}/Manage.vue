@@ -185,7 +185,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, onUnmounted } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -227,6 +227,8 @@ teamStore.setActiveTeam(props.team)
 teamStore.setActiveShow(props.show)
 teamStore.can = props.can
 
+const currentUsers = ref([]);
+
 // let search = ref(props.filters.search);
 //
 // watch(search, throttle(function (value) {
@@ -243,6 +245,7 @@ const goLive = () => {
 }
 
 onMounted(() => {
+  showStore.initializeShow(props.show)
   console.log(`Subscribing to channel creator.show.${props.show.id}`)
 
   // Echo.private(`creator.show.${props.show.id}`)
@@ -263,29 +266,72 @@ onMounted(() => {
   //     });
 
   Echo.join(`creator.show.${props.show.id}`)
-      .here((users) => {
+      .here(async (users) => {
         console.log('Users currently in the channel:', users)
+        currentUsers.value = users;
+        // Elect the leader (first user in the list)
+        if (users.length > 0) {
+          const leader = users[0];
+          showStore.setLeader(leader);
+          console.log(`Leader elected: ${leader.name}`);
+        }
+
+        console.log(showStore.isUpdatingSchedule, showStore.updatedBy)
+        // Check if the user is the only one in the channel
+        if (currentUsers.value.length === 1 && showStore.isUpdatingSchedule && showStore.updatedBy) {
+          try {
+            // Reset the isUpdatingSchedule and updatedBy fields
+            await axios.put(`/api/shows/${props.show.slug}/meta`, {
+              isUpdatingSchedule: false,
+              updatedBy: showStore.updatedBy,
+            });
+            console.log('isUpdatingSchedule and updatedBy fields reset');
+
+            // Update the showStore accordingly
+            // showStore.isUpdatingSchedule = false;
+            // showStore.updatedBy = null;
+          } catch (error) {
+            console.error('Error updating meta:', error);
+          }
+        }
       })
       .joining((user) => {
         console.log('User joined the channel:', user)
+        currentUsers.value.push(user);
       })
       .leaving((user) => {
         console.log('User left the channel:', user)
-        if (user.id === page.value.user.id) {
-          console.log('user left!')
-          showStore.setUpdatingStatus(false, user.name)
-          // Emit the event to the server
+        currentUsers.value = currentUsers.value.filter(u => u.id !== user.id);
+
+        if (user.id === showStore.leader.id) {
+          console.log('Leader left, electing new leader');
+          // Elect a new leader if the current leader leaves
+          if (currentUsers.value.length > 0) {
+            const newLeader = currentUsers.value[0];
+            showStore.setLeader(newLeader);
+            console.log(`New leader elected: ${newLeader.name}`);
+          }
+        }
+        // If current user is still the leader, run the command
+        if (showStore.leader.id === page.value.user.id) {
           axios.post(`/api/${props.show.slug}/user-left-channel`, {
             user: user,
             channel: `creator.show.${props.show.id}`,
-          })
+            showSlug: props.show.slug, // Pass the show slug
+          }).then(response => {
+            console.log('Successfully posted to user-left-channel:', response.data);
+          }).catch(error => {
+            console.error('Error posting to user-left-channel:', error);
+          });
         }
       })
       .listen('.CreatorContentStatusUpdated', (event) => {
         console.log('CreatorContentStatusUpdated event received:', event)
-        showStore.isSaving = event.meta.isSaving
-        showStore.isUpdatingSchedule = event.meta.isUpdatingSchedule
-        showStore.updatedBy = event.meta.updatedBy
+        showStore.$patch({
+          isSaving: event.meta.isSaving,
+          isUpdatingSchedule: event.meta.isUpdatingSchedule,
+          updatedBy: event.meta.updatedBy,
+        })
       })
       .listen('.ShowScheduleDetailsUpdated', (event) => {
         console.log('ShowScheduleDetailsUpdated event received:', event)
@@ -299,27 +345,12 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   // Echo.leave(`creator.show.${props.show.id}`);
+  Echo.leave(`creator.show.${props.show.id}`)
+
+  showStore.setUpdatingStatus(false, page.value.user.name, props.show.slug)
+
   console.log(`Unsubscribed from channel creator.show.${props.show.id}`)
   showStore.reset()
-})
-
-// Subscribe to Laravel Echo channel
-onMounted(() => {
-  showStore.initializeShow(props.show)
-})
-
-// Unsubscribe from Laravel Echo channel
-onBeforeUnmount(() => {
-})
-
-
-onUnmounted(() => {
-  showStore.errorMessage = ''
-  showStore.reset()
-  // const topDiv = document.getElementById("topDiv");
-  // if (topDiv) {
-  //   topDiv.scrollIntoView();
-  // }
 })
 
 </script>
