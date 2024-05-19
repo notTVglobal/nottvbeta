@@ -63,11 +63,16 @@ class AppSettingController extends Controller {
     return Response::json(['message' => 'Invite code settings updated successfully']);
   }
 
-  public function redirectStats() {
+  public function redirectStats(): \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse {
     $statsUrl = AppSetting::find(1)->value('public_stats_url');
-    return Inertia::location($statsUrl);
-  }
 
+    if ($statsUrl) {
+      return Inertia::location($statsUrl);
+    } else {
+      // Fallback URL or error handling
+      return redirect()->route('fallback.route')->with('error', 'Public stats URL is not configured.');
+    }
+  }
 
   /**
    * Display a listing of the resource.

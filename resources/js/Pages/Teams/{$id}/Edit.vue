@@ -93,19 +93,21 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700 bg-white dark:bg-gray-800 dark:text-red-200"
-                             for="description"
+                      <label
+                          class="block mb-2 uppercase font-bold text-xs text-light text-red-700 bg-white dark:bg-gray-800 dark:text-red-200"
+                          for="description"
                       >
                         Description
                       </label>
-<!--                      <TabbableTextarea v-model="form.description"-->
-<!--                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white text-black bg-white dark:bg-gray-800 dark:text-white"-->
-<!--                                        name="description"-->
-<!--                                        id="description"-->
-<!--                                        rows="10" cols="30"-->
-<!--                                        required-->
-<!--                      />-->
-                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="team?.description"/>
+                      <!--                      <TabbableTextarea v-model="form.description"-->
+                      <!--                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white text-black bg-white dark:bg-gray-800 dark:text-white"-->
+                      <!--                                        name="description"-->
+                      <!--                                        id="description"-->
+                      <!--                                        rows="10" cols="30"-->
+                      <!--                                        required-->
+                      <!--                      />-->
+                      <tip-tap-description-editor @updateContent="handleContentUpdate"
+                                                  :description="team?.description"/>
                       <div v-if="form.errors.description" v-text="form.errors.description"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
@@ -178,7 +180,7 @@
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
-                    <SocialMediaLinksStoreUpdateForForm v-model:form="form" />
+                    <SocialMediaLinksStoreUpdateForForm v-model:form="form"/>
 
                     <div class="flex justify-end mb-6">
                       <JetValidationErrors class="mr-4"/>
@@ -214,6 +216,7 @@ import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import TeamEditHeader from '@/Components/Pages/Teams/Edit/TeamEditHeader'
 import TeamEditBody from '@/Components/Pages/Teams/Edit/TeamEditBody'
@@ -229,6 +232,7 @@ usePageSetup('teams/slug/edit')
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
+const notificationStore = useNotificationStore()
 
 let props = defineProps({
   team: Object,
@@ -268,7 +272,6 @@ watch(() => props.team.description, (newDescription) => {
 })
 
 
-
 let form = useForm({
   id: props.team.id,
   name: props.team.name,
@@ -295,6 +298,11 @@ let reloadImage = () => {
 }
 
 let submit = () => {
+  if (teamStore.membersCount > form.totalSpots) {
+    const message = `Your team has ${teamStore.membersCount} members, which exceeds the available spots (${form.totalSpots}). Please adjust the total spots or remove some members.`;
+    notificationStore.setGeneralServiceNotification('Team Capacity Alert', message);
+    return;
+  }
   form.patch(route('teams.update', props.team.slug))
 }
 

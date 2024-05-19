@@ -3,6 +3,14 @@
 Last Update: May 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.0.25
+May 17, 2024
+* Fixed adding Team Members and remove Team Members from Teams
+  Manage page.
+* Added emojis to the chat.
+* Team members can now be invited directly to the team from the Team Members panel on the Team Manage page.
+* Add the News Category and News City pages
+
 ## v0.9.0.24
 May 17, 2024
 * Add unique constraint to Creator slugs.

@@ -4,15 +4,15 @@
       <img v-if="message.user_profile_photo_path"
            :src="'/storage/' + message.user_profile_photo_path" class="rounded-full h-8 w-8 object-cover">
       <img v-if="!message.user_profile_photo_path"
-           src="" class="rounded-full h-8 w-8 object-cover bg-gray-300">
+           :src="message.user_profile_photo_url" class="rounded-full h-8 w-8 object-cover bg-gray-300">
     </div>
     <div class="flex flex-col">
       <div :class="[pipMessageBgClass, messageBgClass]"
            class="flex flex-col rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50">
         <div class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</div>
-        <div class="text-white" v-html="message.message" />
+        <div class="text-white break-all" v-html="message.message" />
       </div>
-      <div class="text-xs text-gray-200 pl-2 opacity-60">{{ timeAgo }}</div>
+      <div class="text-xs text-gray-200 pl-2 opacity-80 drop-shadow">{{ timeAgo }}</div>
     </div>
 
   </div>
@@ -37,7 +37,7 @@ let props = defineProps({
 const timeAgo = useTimeAgo(props.message.created_at)
 
 const messageBgClass = computed(() => {
-  return appSettingStore.fullPage ? 'lg:bg-gray-800 lg:bg-opacity-60' : ''
+  return appSettingStore.fullPage ? 'lg:bg-gray-800 lg:bg-opacity-80' : ''
 });
 
 const pipMessageBgClass = computed(() => {

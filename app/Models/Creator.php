@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Creator extends Model {
   use HasFactory;
@@ -16,6 +17,7 @@ class Creator extends Model {
   protected $fillable = [
       'user_id',
       'slug',
+      'status_id',
       'first_time',
       'settings'
   ];

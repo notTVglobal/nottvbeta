@@ -21,7 +21,6 @@ class Team extends Model {
       'name',
       'description',
       'public_message',
-      'memberSpots',
       'totalSpots',
       'team_members_profiles_are_visible',
       'slug',
@@ -60,22 +59,38 @@ class Team extends Model {
     return $this->belongsToMany(User::class, 'team_managers', 'team_id', 'user_id')
         ->using(TeamManager::class)
         ->as('teamManagers')
-        ->withTimestamps()
-        ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
+        ->withTimestamps();
+//        ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
   }
 
   public function user(): BelongsTo {
     return $this->belongsTo(User::class);
   }
 
+  // Define relationship with creators
+  public function creators()
+  {
+    return $this->belongsToMany(Creator::class, 'team_members', 'team_id', 'user_id');
+  }
+
   public function members(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
     return $this->belongsToMany(User::class, 'team_members')
         ->using(TeamMember::class)
         ->as('teamMembers')
-        ->withPivot('active', 'team_profile_is_public')
+        ->withPivot('active', 'team_profile_is_public', 'created_at', 'updated_at')
         ->withTimestamps()
         ->select('id', 'name', 'email', 'phone', 'profile_photo_path');
   }
+
+  // Define the relationship with members
+//  public function members(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
+//    return $this->belongsToMany(User::class, 'team_members')
+//        ->using(TeamMember::class)
+//        ->withPivot('active', 'team_profile_is_public', 'created_at', 'updated_at')
+//        ->withTimestamps()
+//        ->select('id', 'name', 'email', 'phone', 'profile_photo_path', 'profile_photo_url');
+//  }
+
 
   public function teamLeader(): BelongsTo {
     return $this->belongsTo(Creator::class, 'team_leader');

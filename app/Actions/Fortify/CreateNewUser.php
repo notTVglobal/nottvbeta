@@ -78,7 +78,7 @@ class CreateNewUser implements CreatesNewUsers {
     } catch (\Exception $e) {
       DB::rollBack();
       // Log the error or handle it as needed
-      Log::error('Failed to create a new creator account', [
+      Log::error('Failed to create a new user account', [
           'error_message' => $e->getMessage(),
           'stack_trace'   => $e->getTraceAsString(), // Optionally include the stack trace for more detailed debug information
           'input_name'    => $input['name'], // Be mindful of logging sensitive data like passwords

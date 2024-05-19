@@ -22,6 +22,7 @@ class InviteCode extends Model {
       'code',
       'user_role_id',
       'created_by',
+      'team_id',
       'volume',
       'expiry_date',
       'notes',

@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NewsStoryResource;
+use App\Models\NewsCategory;
+use App\Models\NewsCity;
 use App\Models\NewsPerson;
 use App\Models\NewsCountry;
+use App\Models\NewsStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\SearchableNewsTrait;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class NewsController extends Controller
 {
 
+  use SearchableNewsTrait;
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return Response
      */
-    public function index()
-    {
+    public function index(): Response {
       $user = Auth::user();
 
       return Inertia::render('News/Index', [
@@ -31,6 +38,70 @@ class NewsController extends Controller
       $countries = NewsCountry::orderBy('name', 'asc')->get(['id', 'name']);
       return response()->json($countries);
     }
+
+  public function indexCities(Request $request): Response {
+    $user = Auth::user();
+    $component = $user ? 'News/City/Index' : 'LoggedOut/News/City/Index';
+
+    $cities = NewsCity::all();
+    return Inertia::render($component, [
+        'newsCities' => $cities,
+    ]);
+  }
+
+  public function showCity(Request $request, NewsCity $newsCity): Response {
+    $user = Auth::user();
+    $component = $user ? 'News/City/{$id}/Index' : 'LoggedOut/News/City/{$id}/Index';
+
+    $newsStoriesQuery = NewsStory::with([
+        'image.appSetting',
+        'video.appSetting',
+        'newsPerson.user',
+    ])->where('city_id', $newsCity->id);
+
+    $this->applySearch($newsStoriesQuery);
+
+    $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
+    $newsStories = NewsStoryResource::collection($paginatedNewsStories);
+
+    return Inertia::render($component, [
+        'newsCity' => $newsCity,
+        'newsStories' => $newsStories,
+    ]);
+  }
+
+  public function indexCategories(Request $request): Response {
+    $user = Auth::user();
+    $component = $user ? 'News/Category/Index' : 'LoggedOut/News/Category/Index';
+
+    $categories = NewsCategory::all();
+    return Inertia::render($component, [
+        'newsCategories' => $categories,
+    ]);
+  }
+
+  public function showCategory(Request $request, NewsCategory $newsCategory): Response {
+    $user = Auth::user();
+    $component = $user ? 'News/Category/{$id}/Index' : 'LoggedOut/News/Category/{$id}/Index';
+
+    $newsStoriesQuery = NewsStory::with([
+        'image.appSetting',
+        'video.appSetting',
+        'newsPerson.user',
+    ])->where('news_category_id', $newsCategory->id);
+
+    $this->applySearch($newsStoriesQuery);
+
+    $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
+    $newsStories = NewsStoryResource::collection($paginatedNewsStories);
+
+    return Inertia::render($component, [
+        'newsCategory' => $newsCategory,
+        'newsStories' => $newsStories,
+    ]);
+  }
+
+
 
     /**
      * Show the form for creating a new resource.

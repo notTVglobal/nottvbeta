@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
 use App\Http\Resources\ShowResource;
+use App\Http\Resources\TeamMemberResource;
 use App\Http\Resources\TeamResource;
 use App\Models\Notification;
 use App\Models\SchedulesIndex;
@@ -115,7 +116,7 @@ class TeamsController extends Controller {
                 'status'      => $team->teamStatus,
                 'slug'        => $team->slug,
                 'totalShows'  => $team->shows->count(),
-                'memberSpots' => $team->memberSpots,
+                'memberSpots' => $team->members()->count(),
                 'totalSpots'  => $team->totalSpots,
                 'can'         => [
                     'editTeam' => optional($user)->can('editTeam', $team),
@@ -341,37 +342,44 @@ class TeamsController extends Controller {
 ////////////////////
 
   public function manage(Team $team) {
-    $team->load(['user', 'teamLeader.user', 'managers', 'members', 'image.appSetting']);
+    // Load necessary relationships
+    $team->load([
+        'user',
+        'teamLeader.user',
+        'managers',
+        'members',
+        'image.appSetting'
+    ]);
 
+    // Retrieve team data
     $teamCreatorData = $this->getTeamUserData($team->user);
     $teamLeaderData = $team->teamLeader ? $this->getTeamUserData($team->teamLeader->user) : $this->getEmptyTeamUserData();
     $managers = $team->managers->map->only(['id', 'name']);
     $userId = Auth::id();
 
-    // Use ImageResource to format image data
+    // Format image data using ImageResource
     $imageData = $team->image ? (new ImageResource($team->image))->resolve() : null;
 
-    // Check roles and permissions
+    // Check user roles and permissions
     $isTeamManager = $team->managers->contains('id', $userId);
     $isTeamLeader = optional($team->teamLeader)->user_id === $userId;
     $isTeamOwner = $team->user_id === $userId;
     $isTeamMember = $team->members->contains('id', $userId);
 
-//    $creators = $this->getCreators(); // we need to pass back the $search don't we??
+    // Retrieve shows
     $shows = $this->getShows($team->id);
 
+    // Prepare the response data
     return Inertia::render('Teams/{$id}/Manage', [
-        'team'           => $team,
-        'image'          => $imageData, // Use the ImageResource for the image data
-        'teamCreator'    => $teamCreatorData,
-        'teamLeader'     => $teamLeaderData,
-        'members'        => $team->members,
-        'managers'       => $managers,
-//        'creators'       => $creators,
-        'shows'          => $shows,
-        'filters'        => Request::only(['team_id']),
-//        'creatorFilters' => Request::only(['search']),
-        'can'            => $this->getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember),
+        'team'        => $team,
+        'image'       => $imageData,
+        'teamCreator' => $teamCreatorData,
+        'teamLeader'  => $teamLeaderData,
+//        'members'        => TeamMemberResource::collection($team->members), // this isn't working.
+        'managers'    => $managers,
+        'shows'       => $shows,
+        'filters'     => Request::only(['team_id']),
+        'can'         => $this->getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember),
     ]);
   }
 
@@ -397,16 +405,18 @@ class TeamsController extends Controller {
     ];
   }
 
-  protected function getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember) {
+  protected function getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember): array {
+    $user = Auth::user();
     return [
-        'editTeam'      => Auth::user()->can('update', $team),
-        'manageTeam'    => Auth::user()->can('manage', $team),
-        'transferTeam'  => Auth::user()->can('transfer', $team),
+        'editTeam'      => $user->can('update', $team),
+        'manageTeam'    => $user->can('manage', $team),
+        'transferTeam'  => $user->can('transfer', $team),
         'isTeamOwner'   => $isTeamOwner,
         'isTeamLeader'  => $isTeamLeader,
         'isTeamManager' => $isTeamManager,
         'isTeamMember'  => $isTeamMember,
-        'isAdmin'       => Auth::user()->isAdmin,
+        'isAdmin'       => $user->isAdmin,
+        'hasSpecialPermission' => $isTeamOwner || $isTeamLeader || $isTeamManager || $user->isAdmin,
     ];
   }
 
@@ -799,7 +809,8 @@ class TeamsController extends Controller {
             'totalSpots'       => $team->totalSpots,
             'team_status_id'   => $team->teamStatus->id,
             'team_status_name' => $team->teamStatus->status,
-            'socialMediaLinks' => $socialMediaLinks
+            'socialMediaLinks' => $socialMediaLinks,
+            'members'          => $team->members,
         ],
         'teamCreator'         => $teamCreatorData,
         'teamLeader'          => $teamLeaderData,
@@ -840,7 +851,7 @@ class TeamsController extends Controller {
    */
   public function update(HttpRequest $request, Team $team) {
 
-    if ($request->totalSpots < $team->memberSpots) {
+    if ($request->totalSpots < $team->members()->count()) {
       return redirect(route('teams.edit', [$team->slug]))->with('message', 'You already have the maximum. Please remove team members or increase the maximum # of team members.');
     }
 

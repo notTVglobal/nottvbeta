@@ -15,7 +15,7 @@
         </div>
       </transition>
       <div v-if="divClass" :class="divClass">
-
+        <EmojiPicker :showPicker="chatStore.showEmojiPicker" @select="chatStore.addEmoji" />
         <OttChatMessages/>
 
         <!--        <OttChatInput-->
@@ -51,6 +51,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import OttChatMessages from '@/Components/Global/Chat/OttChatMessages'
 import OttChatInput from '@/Components/Global/Chat/OttChatInput'
 import { computed, onMounted } from 'vue'
+import EmojiPicker from '@/Components/Global/Text/EmojiPicker.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

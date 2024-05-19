@@ -8,16 +8,14 @@
         News Stories
       </PublicNavLink>
       <PublicNavLink
-          disabled
-          @click="() => Inertia.visit('/news/categories')"
-          :active="appSettingStore.currentPage === 'news.categories'"
+          @click="() => Inertia.visit('/news/category')"
+          :active="appSettingStore.currentPage === 'news.category.index'"
           class="min-w-fit">
         Categories
       </PublicNavLink>
       <PublicNavLink
-          disabled
-          @click="() => Inertia.visit('/news/cities')"
-          :active="appSettingStore.currentPage === 'news.cities'"
+          @click="() => Inertia.visit('/news/city')"
+          :active="appSettingStore.currentPage === 'news.city.index'"
           class="min-w-fit">
         Cities
       </PublicNavLink>

@@ -17,14 +17,6 @@
           @processfile="handleProcessedFile"
           :max-file-size="maxSize"
       />
-      <!--        <file-pond-->
-      <!--            ref="filePond"-->
-      <!--            :files="files"-->
-      <!--            :server="serverOptions"-->
-      <!--            @init="handleFilePondInit"-->
-      <!--            @beforeaddfile="handleBeforeAddFile"-->
-      <!--            @processfile="handleProcessedFile"-->
-      <!--        />-->
     </div>
   </div>
 
@@ -53,29 +45,8 @@ let props = defineProps({
   fileTypes: String,
 })
 
-
-// // Initialize FilePond with the File Metadata plugin
-// const filePondOptions = {
-//     allowMultiple: false,
-//     labelIdle: "Drop files here or click to upload",
-//     plugins: [FilePondPluginFileMetadata()],
-// };
-
-
-// Files array to store uploaded files
-// const files = ref([]);
-
 const metadataKey = props.metadataKey
 const metadataValue = props.metadataValue
-const customMetadata = {
-  [metadataKey]: metadataValue
-};
-// customMetadata.value[props.metadataKey] = 'bar';
-// customMetadata.value[props.metadataKey] = props.metadataValue;
-// const customMetadata = ref({ [props.metadataKey]: props.metadataValue });
-// const customMetadata = computed(() => ({
-//     [props.metadataKey]: props.metadataValue,
-// }));
 
 // FilePond server options (you can customize this)
 const serverOptions = {
@@ -104,6 +75,9 @@ const serverOptions = {
           // FilePond expects the server to return a file ID on successful upload,
           // but you can adjust this based on your response structure.
           load(response.data.fileId);
+          // Emit the new image URL
+          emit('imageUploaded', response.data);  // Assuming your response contains the image URL
+
         })
         .catch(err => {
           // Default error message and title in case err.response is undefined
@@ -144,22 +118,6 @@ const serverOptions = {
   },
 };
 
-
-// Initialize FilePond
-// const handleFilePondInit = () => {
-//     // FilePond has been initialized
-//     console.log("FilePond is ready");
-// };
-
-// Handle the beforeaddfile event
-// const handleBeforeAddFile = (file) => {
-//     // Add metadata to the file object
-//     file.setMetadata("key", "value");
-//     // You can set multiple metadata fields as needed
-//     // file.setMetadata("anotherKey", "anotherValue");
-// };
-
-
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
     FilePondPluginFileValidateSize,
@@ -167,36 +125,17 @@ const FilePond = vueFilePond(
     FilePondPluginFileMetadata
 );
 
-// Handle the beforeaddfile event
-// const handleBeforeAddFile = (file) => {
-//     // Add metadata to the file object
-//     file.setMetadata("show_id", "1");
-//     // You can set multiple metadata fields as needed
-//     // file.setMetadata("anotherKey", "anotherValue");
-// };
-
-// FilePond.registerPlugin(FilePondPluginFileMetadata);
 FilePond.setOptions = ({
   fileMetadataObject: {
     show_id: '1',
   },
 });
 
-
-// Initialize FilePond with the File Metadata plugin
-// const filePondOptions = {
-//     allowMultiple: true,
-//     labelIdle: "Drop files here or click to upload",
-//     plugins: [FilePondPluginFileMetadata()],
-// };
-
 function filepondInitialized() {
   console.log("Filepond is ready!");
-  // console.log('Filepond object:', FilePond);
-
 }
 
-const emit = defineEmits(['reloadImage'])
+const emit = defineEmits(['reloadImage', 'imageUploaded'])
 
 function handleProcessedFile(error, file) {
   if (error) {
@@ -207,10 +146,6 @@ function handleProcessedFile(error, file) {
   }
 
   emit('reloadImage')
-
-  // Inertia.reload({
-  //     only: ['image'],
-  // });
 }
 
 </script>

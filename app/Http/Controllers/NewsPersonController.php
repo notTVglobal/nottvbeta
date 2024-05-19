@@ -19,15 +19,36 @@ use Inertia\Inertia;
 class NewsPersonController extends Controller {
 
   public function fetchNewsPersons(): JsonResponse {
-    // Eager load the 'user' relationship to get the user's name
-    // and the 'roles' relationship to get the roles for each news person.
-    $newsPersons = NewsPerson::with(['user:id,name', 'roles:id,name'])->get();
-    // Transform the newsPersons collection to include role names as an array
-    $newsPersons->transform(function ($newsPerson) {
-      // Map roles relationship to only include role names
-      $newsPerson->roles = $newsPerson->roles->pluck('name');
+//    // Eager load the 'user' relationship to get the user's name
+//    // and the 'roles' relationship to get the roles for each news person.
+//    $newsPersons = NewsPerson::with(['user:id,name', 'roles:id,name'])->get();
+//    // Transform the newsPersons collection to include role names as an array
+//    $newsPersons->transform(function ($newsPerson) {
+//      // Map roles relationship to only include role names
+//      $newsPerson->roles = $newsPerson->roles->pluck('name');
+//
+//      return $newsPerson;
+//    });
+//
+//    return response()->json($newsPersons);
 
-      return $newsPerson;
+    // Eager load the 'user' and 'roles' relationships
+    $newsPersons = NewsPerson::with(['user', 'roles'])->get();
+
+    // Transform the newsPersons collection
+    $newsPersons->transform(function ($newsPerson) {
+      return [
+          'id' => $newsPerson->id,
+          'name' => $newsPerson->user->name,
+          'roles' => $newsPerson->roles->map(function ($role) {
+            return [
+                'id' => $role->id,
+                'name' => $role->name,
+            ];
+          }),
+          'profile_photo_path' => $newsPerson->user->profile_photo_path,
+          'profile_photo_url' => $newsPerson->user->profile_photo_url,
+      ];
     });
 
     return response()->json($newsPersons);

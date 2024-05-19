@@ -625,6 +625,8 @@ class AdminController extends Controller {
       return $logo;
     }
 
+
+
     return Inertia::render('Admin/Teams', [
         'teams'   => Team::with('user', 'image', 'shows', 'teamStatus')
             ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
@@ -649,7 +651,7 @@ class AdminController extends Controller {
                 'status'      => $team->teamStatus,
                 'slug'        => $team->slug,
                 'totalShows'  => $team->shows->count(),
-                'memberSpots' => $team->memberSpots,
+                'memberSpots' => $team->members()->count(), // Calculate member spots dynamically
                 'totalSpots'  => $team->totalSpots,
                 'can'         => [
                     'editTeam' => Auth::user()->can('update', $team),

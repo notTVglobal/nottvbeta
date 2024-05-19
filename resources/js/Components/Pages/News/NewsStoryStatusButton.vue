@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!userStore.isAdmin">
-      <button v-if="can.editNewsStory && newsStory.status !== 9 && newsStory.status !== 10"
+      <button v-if="can.editNewsStory && newsStory.status.id !== 9 && newsStory.status.id !== 10"
               :class="newsStoryStatusClass" @click="openNewsStoryStatuses">{{ newsStory.status.name }}
       </button>
       <div v-if="!can.editNewsStory || props.episodeStatusId === 9 || props.episodeStatusId === 10"

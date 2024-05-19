@@ -221,6 +221,12 @@ Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepap
 
 Route::get('/first-play-data', [AppSettingController::class, 'serveFirstPlayData']);
 
+Route::get('/fallback', function () {
+  return Inertia::render('Fallback', [
+      'error' => session()->flash('error', 'The link provided does not work.')
+  ]);
+})->name('fallback.route');
+
 
 // Creator Invite and Register (public, everyone can see these)
 ////////////////////////////////////////////////////////////////
@@ -241,8 +247,9 @@ Route::post('/invite/{inviteCode}/check-registration-access', [CreatorsControlle
 Route::get('/register/{inviteCode}', [CreatorsController::class, 'showRegistrationForm'])->name('creator.register.show');
 //Route::post('/register/{inviteCode}', [CreatorsController::class, 'store'])->name('creator.store');
 Route::post('/register/creator/{inviteCode}', [CreatorsController::class, 'register'])->name('creator.register.submit');
-
-
+Route::get('/check-email', function () {
+  return Inertia::render('Creators/Register/CheckEmail');
+})->name('creators.register.checkEmail');
 
 // News (public, everyone can see these)
 ////////////////////////////////////////
@@ -268,6 +275,13 @@ Route::get('news/story', function () {
 // Public news story route
 Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
     ->name('news/story.show');
+
+Route::prefix('news')->group(function () {
+  Route::get('/city', [NewsController::class, 'indexCities'])->name('news.city.index');
+  Route::get('/city/{newsCity}', [NewsController::class, 'showCity'])->name('news.city.show');
+  Route::get('/category', [NewsController::class, 'indexCategories'])->name('news.category.index');
+  Route::get('/category/{newsCategory}', [NewsController::class, 'showCategory'])->name('news.category.show');
+});
 
 
 // Public view .. Teams/{team}/Index
@@ -529,6 +543,10 @@ Route::middleware([
   Route::post('/newsStory/save', [NewsStoryController::class, 'save'])
       ->name('newsStory.save');
 
+  Route::post('/newsStory/cache', [NewsStoryController::class, 'cacheContent'])
+      ->name('newsStory.cache');
+
+
   // NewsStory
   ////////////
   // Separate route for the NewsStory 'index' method
@@ -541,7 +559,8 @@ Route::middleware([
   Route::resource('newsStory', NewsStoryController::class)->except(['index', 'show']);
   Route::patch('newsStoryChangeNewsStoryStatus', [NewsStoryController::class, 'changeStatus'])->name('news.story.changeStatus');
 
-  Route::get('/api/news-locations', [NewsStoryController::class, 'fetchNewsLocations']);
+  Route::get('/api/news/cities', [NewsStoryController::class, 'fetchNewsCities']);
+  Route::get('/api/news/categories', [NewsStoryController::class, 'fetchCategories']);
 
 // News Districts
 /////////////////
@@ -557,7 +576,7 @@ Route::middleware([
   // Standard resource route for newsPerson
   Route::resource('newsroom/newsPerson', NewsPersonController::class);
 
-  Route::get('/api/news-persons', [NewsPersonController::class, 'fetchNewsPersons']);
+  Route::get('/api/news/persons', [NewsPersonController::class, 'fetchNewsPersons']);
 
 // News Locations and APIs
 //////////////////////////
@@ -913,6 +932,9 @@ Route::middleware([
     Route::post('/teams/removeTeamManager', [TeamManagersController::class, 'detach'])
         ->name('teams.removeTeamManager');
 
+    // Invite team member
+    Route::post('/teams/{team}/invite', [TeamMembersController::class, 'inviteMember']);
+
 
 
 // Creators
@@ -925,6 +947,9 @@ Route::middleware([
   // Get list of creators
   Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
       ->name('creators.getCreators');
+  // Get all creators
+  Route::get('/api/all-creators', [CreatorsController::class, 'getAllCreators'])
+  ->name('creators.getAllCreators');
   // Mark First Time As Seen ( The Welcome Creator Message on the Dashboard )
     Route::post('/api/creator/mark-as-seen', [CreatorsController::class, 'markAsSeen'])
         ->name('creators.markAsSeen');
@@ -1297,6 +1322,8 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 
   Route::post('/api/movies/upload', [MovieUploadController::class, 'upload'])
       ->name('moviesApi.upload');
+
+  Route::post('/api/remove-image', [ImageController::class, 'removeImage']);
 
 
 // End Authenticated Routes

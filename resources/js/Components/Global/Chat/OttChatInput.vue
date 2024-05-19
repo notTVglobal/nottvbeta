@@ -5,14 +5,15 @@
       <div class="flex flex-col w-full justify-center items-center">
         <div class="flex flex-col">
           <div class="flex">
-            <!-- Display error message -->
+
+            <button type="button" @click.prevent="chatStore.toggleEmojiPicker" class="text-2xl transition-all duration-200 transform hover:scale-125 mr-1">😀</button>
             <input
                 class="right-auto  p-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 ref="messageInput"
                 type="text"
                 maxlength=”300″
                 placeholder="Write a message..."
-                v-model="form.message"
+                v-model="chatStore.message"
                 @keyup.enter="sendMessage"
                 v-on:focus="appSettingStore.turnPipChatModeOn"
                 v-on:blur="appSettingStore.turnPipChatModeOff"
@@ -23,7 +24,7 @@
             </div>
           </div>
           <div class="flex flex-row w-full justify-start">
-            <div class="pt-2 right-auto lg:right-10 font-thin text-xs">{{ form.message.length }}</div>
+            <div class="pt-2 right-auto lg:right-10 font-thin text-xs">{{ chatStore.message.length }}</div>
           </div>
         </div>
 
@@ -33,13 +34,14 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import EmojiPicker from '@/Components/Global/Text/EmojiPicker.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
@@ -49,58 +51,53 @@ const notificationStore = useNotificationStore()
 
 const messageInput = ref(null)
 const errorMessage = ref('')
-// const cooldown = ref(false)
 
 let props = defineProps({
   user: Object,
 })
 
 let form = useForm({
-  message: '',
   user_name: props.user.name,
   user_profile_photo_path: props.user.profile_photo_path,
   user_profile_photo_url: props.user.profile_photo_url,
 })
 
 // Watch the form.message for changes
-watch(() => form.message, (newValue) => {
+watch(() => chatStore.message, (newValue) => {
   chatStore.inputTooLong = newValue.length > 300
 })
 
+
+const showEmojiPicker = ref(false)
+
+// const toggleEmojiPicker = (event) => {
+//   if (event instanceof MouseEvent) {
+//     showEmojiPicker.value = !showEmojiPicker.value
+//   }
+// }
+// const addEmoji = (emoji) => {
+//   form.message += emoji
+//   chatStore.closeEmojiPicker()
+// }
 
 const vFocus = {
   mounted: (el) => el.focus(),
 }
 
-// const focusInput = () => {
-//     if (userStore.isMobile) {
-//         videoPlayerStore.makeVideoPiP()
-//         console.log('toggle PiP Chat Mode: focus Input')
-//     }
-// }
-//
-// let blurInput = () => {
-//     if (userStore.isMobile) {
-//         videoPlayerStore.makeVideoTopRight();
-//         appSettingStore.togglePipChatMode();
-//         console.log('toggle PiP Chat Mode: blur Input')
-//     }
-// };
-
-
 function sendMessage() {
+  showEmojiPicker.value = false
   if (chatStore.cooldown) {
     chatStore.setErrorMessage('')
     chatStore.setErrorMessage('Whoa there, speedy! Let\'s give others a chance to chime in. Try sending your message in a bit. 🕒')
     return
   }
 
-  if (form.message === '') {
+  if (chatStore.message === '') {
     chatStore.setErrorMessage('Looks like you\'re sending an invisible message! 🕵️‍♂️ Please type something to share with the community.')
     return
   }
 
-  if (form.message.length > 300) {
+  if (chatStore.message.length > 300) {
     chatStore.setErrorMessage('')
     notificationStore.setGeneralServiceNotification('Keep it short and sweet!', 'Messages must be 300 characters or shorter. 😊')
     return
@@ -108,59 +105,16 @@ function sendMessage() {
 
   chatStore.setErrorMessage('')
 
-
-  //
-  //
-  // axios.post('/chat/message', {
-  //   message: form.message,
-  //   channel_id: chatStore.currentChannel.id,
-  //   user_name: form.user_name,
-  //   user_profile_photo_path: form.user_profile_photo_path,
-  //   // Add other necessary fields
-  // }).then(response => {
-  //   if (response.status === 201) {
-  //     form.message = ''
-  //     console.log('Message sent – high five!')
-  //     errorMessage.value = '' // Clear any previous error message
-  //   }
-  // }).catch(error => {
-  //   if (error.response && error.response.status === 429) {
-  //     let countdownSeconds = 60
-  //
-  //     errorMessage.value = `Hold your horses! Wait for ${countdownSeconds} more seconds before your next message. 🕒`
-  //     chatStore.handleCooldown() // Start the cooldown in the store
-  //
-  //     const cooldownInterval = setInterval(() => {
-  //       countdownSeconds -= 1
-  //       errorMessage.value = `Hold your horses! Wait for ${countdownSeconds} more seconds before your next message. 🕒`
-  //
-  //       if (countdownSeconds <= 0) {
-  //         clearInterval(cooldownInterval)
-  //         errorMessage.value = ''
-  //         chatStore.cooldown = false // Reset the cooldown state in the store
-  //       }
-  //     }, 1000)
-  //
-  //     // Clear the interval when the component is unmounted
-  //     onUnmounted(() => {
-  //       clearInterval(cooldownInterval)
-  //     })
-  //   } else {
-  //     console.error(error)
-  //     errorMessage.value = 'Oops! Something went wonky on our end. Give it another whirl? 🌀'
-  //   }
-  // })
-
-
   axios.post('/chat/message', {
-    message: form.message,
+    message: chatStore.message,
     channel_id: chatStore.currentChannel.id,
     user_name: form.user_name,
     user_profile_photo_path: form.user_profile_photo_path,
+    user_profile_photo_url: form.user_profile_photo_url,
     // Add other necessary fields
   }).then(response => {
     if (response.status === 201) {
-      form.message = ''
+      chatStore.message = ''
       console.log('Message sent – high five!')
       errorMessage.value = '' // Clear any previous error message
     }
@@ -191,37 +145,23 @@ function sendMessage() {
       errorMessage.value = 'Oops! Something went wonky on our end. Give it another whirl? 🌀'
     }
   })
-
 }
 
+const closeEmojiPicker = (event) => {
+  if (
+      chatStore.showEmojiPicker &&
+      !event.target.closest('.emoji-picker') &&
+      !event.target.closest('button')
+  ) {
+    chatStore.closeEmojiPicker()
+  }
+}
 
-// function sendMessage() {
-//   messageInput.value.focus();
-//   //
-//   if (form.message === "") {
-//     return;
-//   }
-//   //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-//
-//   if (form.message.length > 300) {
-//     alert('Message must be 300 characters or shorter.');
-//     return;
-//   }
-//   axios.post('/chat/message', {
-//     message: form.message,
-//     channel_id: chatStore.currentChannel.id,
-//     user_name: form.user_name,
-//     user_profile_photo_path: form.user_profile_photo_path,
-//   }).then(response => {
-//     if (response.status === 201) {
-//       form.message = '';
-//       console.log('MESSAGE SENT');
-//     }
-//   })
-//       .catch(error => {
-//         console.log(error);
-//       })
-//
-// }
+onMounted(() => {
+  document.addEventListener('click', closeEmojiPicker)
+})
 
+onUnmounted(() => {
+  document.removeEventListener('click', closeEmojiPicker)
+})
 </script>
