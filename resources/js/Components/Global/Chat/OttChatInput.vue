@@ -6,7 +6,7 @@
         <div class="flex flex-col">
           <div class="flex">
 
-            <button type="button" @click.prevent="chatStore.toggleEmojiPicker" class="text-2xl">😀</button>
+            <button type="button" @click.prevent="chatStore.toggleEmojiPicker" class="text-2xl transition-all duration-200 transform hover:scale-125 mr-1">😀</button>
             <input
                 class="right-auto  p-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 ref="messageInput"
@@ -110,6 +110,7 @@ function sendMessage() {
     channel_id: chatStore.currentChannel.id,
     user_name: form.user_name,
     user_profile_photo_path: form.user_profile_photo_path,
+    user_profile_photo_url: form.user_profile_photo_url,
     // Add other necessary fields
   }).then(response => {
     if (response.status === 201) {

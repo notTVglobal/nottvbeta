@@ -1,23 +1,25 @@
 <template>
   <TipTapButtons :editor="editor"/>
-  <div
-      class="tiptap hide-scrollbar h-auto overflow-y-auto min-h-[13rem] max-h-[96rem] mb-2 pb-2 bg-gray-50 border border-1 border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500">
-    <editor-content :editor="editor" class="news-story"/>
-    <div class="character-count" v-if="editor">
-      {{ editor.storage.characterCount.characters() }}/{{ limit }} characters
-      <br>
-      {{ editor.storage.characterCount.words() }} words
+  <div class="relative">
+    <div
+        class="tiptap hide-scrollbar h-auto overflow-y-auto min-h-[13rem] max-h-[96rem] mb-2 pb-2 bg-gray-50 border border-1 border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500">
+      <editor-content :editor="editor" class="news-story"/>
+      <div class="character-count" v-if="editor">
+        {{ editor.storage.characterCount.characters() }}/{{ limit }} characters
+        <br>
+        {{ editor.storage.characterCount.words() }} words
+      </div>
     </div>
-
   </div>
+
 </template>
 
 <script setup>
-import { onBeforeUnmount, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useNewsStore } from '@/Stores/NewsStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import { History } from '@tiptap/extension-history'
-import { useNewsStore } from '@/Stores/NewsStore'
 import TipTapButtons from '@/Components/Global/TextEditor/TipTapNewsStoryButtons'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
@@ -30,24 +32,55 @@ import { Underline } from '@tiptap/extension-underline'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Superscript } from '@tiptap/extension-superscript'
 import Link from '@tiptap/extension-link'
+import { throttle } from 'lodash'
 
 const newsStore = useNewsStore()
+const notificationStore = useNotificationStore()
 
 const limit = 5000
+const editor = ref(null)
+const hasShownSaveMessage = ref(false)
+const isUnmounting = ref(false)
 
-// Watch for changes in the content and update the editor
-watch(() => newsStore.newsArticleContentTipTap, (newContent) => {
-  if (editor && newContent) {
-    editor.commands.setContent(newContent)
+const saveContent = throttle(async () => {
+  if (isUnmounting.value) return // Skip saving if the component is unmounting
+
+  if (!newsStore.id) {
+    if (!hasShownSaveMessage.value) {
+      console.log('Please save the story and go to editing mode to enable automatic saving.')
+      notificationStore.setGeneralServiceNotification('Save Required', 'Please save the story and go to editing mode to enable automatic saving.')
+      hasShownSaveMessage.value = true
+    }
+    return
   }
-}, {immediate: true})
+  try {
+    await axios.post('/newsStory/cache', {
+      id: newsStore.id,
+      slug: newsStore.slug,
+      status: newsStore.status,
+      title: newsStore.title,
+      content: newsStore.content,
+      newsPerson: newsStore.newsPerson,
+      category: newsStore.category,
+      subCategory: newsStore.subCategory,
+      city: newsStore.city,
+      province: newsStore.province,
+      federalElectoralDistrict: newsStore.federalElectoralDistrict,
+      subnationalElectoralDistrict: newsStore.subnationalElectoralDistrict
+    })
+    newsStore.showSaveMessage = true
+    setTimeout(() => {
+      newsStore.showSaveMessage = false
+    }, 2000)  // Show the save message for 2 seconds
+  } catch (error) {
+    console.error('Error caching content:', error)
+  }
+}, 5000) // Throttle delay set to 5 seconds
 
-const editor = new Editor({
-  content: newsStore.newsArticleContentTiptop,
+const editorInstance = new Editor({
+  content: newsStore.content,
   extensions: [
     StarterKit,
-    Document,
-    Text,
     TextStyle,
     FontFamily,
     Color,
@@ -62,20 +95,15 @@ const editor = new Editor({
       openOnClick: true,
     }),
     CharacterCount.configure({
-      limit: limit,
+      limit: 5000,
     }),
     Placeholder.configure({
       placeholder: 'Write something …',
     }),
   ],
-  onUpdate: ({editor}) => {
-    // newsStore.newsArticleContentTiptop = editor.getJSON()
-    newsStore.newsArticleContentTiptop = editor.getHTML()
-
-    // Auto-save -> triggered on every change,
-    // currently disabled. Needs to be throttled.
-    //
-    // axios.post('/news/save', { id: newsStore.newsArticleIdTiptop, body:newsStore.newsArticleContentTiptop, title:newsStore.newsArticleTitleTiptop })
+  onUpdate: ({ editor }) => {
+    newsStore.content = editor.getHTML()
+    saveContent()
   },
   autofocus: true,
   editorProps: {
@@ -84,18 +112,21 @@ const editor = new Editor({
     },
   },
 })
-History.configure({
-  depth: 10,
-})
 
+editor.value = editorInstance
+
+onMounted(() => {
+  editor.value.commands.setContent(newsStore.content)
+
+})
 
 // Ensure editor is destroyed properly on component unmount
 onBeforeUnmount(() => {
-  if (editor) {
-    editor.destroy()
+  isUnmounting.value = true
+  if (editor.value) {
+    editor.value.destroy()
   }
 })
-
 </script>
 
 <style scoped>
@@ -118,6 +149,18 @@ onBeforeUnmount(() => {
   color: #adb5bd;
   pointer-events: none;
   height: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.save-message {
+  font-size: 1.5rem;
 }
 
 

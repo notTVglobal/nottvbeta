@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\Creator;
 use App\Models\User;
+use App\Models\UserVideoSetting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -45,6 +46,11 @@ class CreateNewCreator implements CreatesNewUsers {
           'phone'           => $input['phone'] ?? null,
       ]);
 
+      // Create video settings for the new user
+      UserVideoSetting::create([
+          'user_id' => $user->id,
+      ]);
+
       Creator::create([
           'user_id' => $user->id,
       ]);
@@ -53,6 +59,7 @@ class CreateNewCreator implements CreatesNewUsers {
       $inviteCode->used_count += 1;
       // Check if the invite code should be claimed
       if ($inviteCode->volume <= $inviteCode->used_count) {
+        $inviteCode->claimed_by = $user->id;
         $inviteCode->claimed = true;
         $inviteCode->claimed_at = now();
       }

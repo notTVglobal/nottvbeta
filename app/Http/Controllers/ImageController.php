@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CheckImageHashAndHandleDuplicate;
+use App\Models\AppSetting;
 use App\Models\Movie;
+use App\Models\NewsRssFeedItemArchive;
+use App\Models\NewsStory;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
@@ -20,48 +23,46 @@ use Illuminate\Http\File;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 
-class ImageController extends Controller
-{
+class ImageController extends Controller {
 
-    // This is the /image index page.
-    public function index() {
-        // tec21: this search functionality only works with Illuminate\Support\Facades\Request
-        // which ends up breaking the filepond upload function which uses Illuminate\Http\Request
-        return Inertia::render('Admin/Images', [
-            'images' => Image::query()
+  // This is the /image index page.
+  public function index() {
+    // tec21: this search functionality only works with Illuminate\Support\Facades\Request
+    // which ends up breaking the filepond upload function which uses Illuminate\Http\Request
+    return Inertia::render('Admin/Images', [
+        'images' => Image::query()
 //                ->when(Request::input('search'), function ($query, $search) {
 //                    $query->where('name', 'like', "%{$search}%");
 //                })
-                ->latest()
-                ->paginate(10)
-                ->withQueryString()
-                ->through(fn($image) => [
-                    'id' => $image->id,
-                    'name' => $image->name,
-                    'extension' => $image->extension,
-                    'folder' => $image->folder,
-                    'cdn_endpoint' => $image->appSetting->cdn_endpoint,
-                    'cloud_folder' => $image->cloud_folder,
-                    'placeholder_url' => $image->placeholder_url,
-                ]),
+            ->latest()
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn($image) => [
+                'id'              => $image->id,
+                'name'            => $image->name,
+                'extension'       => $image->extension,
+                'folder'          => $image->folder,
+                'cdn_endpoint'    => $image->appSetting->cdn_endpoint,
+                'cloud_folder'    => $image->cloud_folder,
+                'placeholder_url' => $image->placeholder_url,
+            ]),
 //            'filters' => Request::only(['search'])
-        ]);
-    }
+    ]);
+  }
 
-    public function show()
-    {
-        // this is where we will create a page
-        // to edit an image and manage its
-        // versions.. thumb,small,medium, etc.
-        //
-        // refactor this to /image/{$id}
-        // return all images
-        return Image::latest()->pluck('name')->toArray();
-    }
+  public function show() {
+    // this is where we will create a page
+    // to edit an image and manage its
+    // versions.. thumb,small,medium, etc.
+    //
+    // refactor this to /image/{$id}
+    // return all images
+    return Image::latest()->pluck('name')->toArray();
+  }
 
 
-    ////////////// GENERIC STORE IMAGE
-    //////////////////////////////////
+  ////////////// GENERIC STORE IMAGE
+  //////////////////////////////////
 //    public function store(HttpRequest $request)
 //    {
 //
@@ -106,8 +107,8 @@ class ImageController extends Controller
 //    }
 
 
-    ////////////// UPLOAD SHOW POSTER
-    //////////////////////////////////
+  ////////////// UPLOAD SHOW POSTER
+  //////////////////////////////////
 
 //    public function uploadShowPoster(HttpRequest $request)
 //    {
@@ -173,8 +174,8 @@ class ImageController extends Controller
 //
 //    }
 
-    ////////////// UPLOAD SHOW EPISODE POSTER
-    //////////////////////////////////
+  ////////////// UPLOAD SHOW EPISODE POSTER
+  //////////////////////////////////
 
 //    public function uploadShowEpisodePoster(HttpRequest $request)
 //    {
@@ -241,17 +242,16 @@ class ImageController extends Controller
 //
 //    }
 
-    ////////////// UPLOAD FORMERLY UPLOAD TEAM LOGO
-    ///////////////////////////////////////////////
+  ////////////// UPLOAD FORMERLY UPLOAD TEAM LOGO
+  ///////////////////////////////////////////////
 
 
-  public function upload(HttpRequest $request)
-  {
+  public function upload(HttpRequest $request) {
     // Updated validation rules
     $rules = [
-        'image' => 'required|image|max:30720', // Max 30MB
-        'modelType' => 'nullable|string|in:team,show,showEpisode', // Validate if present
-        'modelId' => 'nullable|integer', // Validate if present
+        'image'     => 'required|image|max:30720', // Max 30MB
+        'modelType' => 'nullable|string|in:team,show,showEpisode,newsStory', // Validate if present
+        'modelId'   => 'nullable|integer', // Validate if present
     ];
 
     // Perform validation
@@ -267,20 +267,24 @@ class ImageController extends Controller
     $modelType = $request->input('modelType', null); // Default to null if not provided
     $modelId = $request->input('modelId', null); // Default to null if not provided
 
-    $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-    $folder = Carbon::now()->format('/Y/m').'/images';
-    Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
+    // Retrieve cloud_folder and cdn_endpoint from app_settings
+    $appSettings = AppSetting::where('id', 1)->first(['cloud_folder', 'cdn_endpoint']);
+    $cloud_folder = $appSettings->cloud_folder;
+    $cdn_endpoint = $appSettings->cdn_endpoint;
+    $folder = Carbon::now()->format('/Y/m') . '/images';
+
+    Storage::disk('spaces')->putFile($cloud_folder . $folder, $file);
 
     // Create the image record
     $image = Image::create([
-        'name' => $file->hashName(),
-        'extension' => $file->extension(),
-        'size' => $file->getSize(),
-        'folder' => $folder,
-        'cloud_folder' => $cloud_folder,
+        'name'             => $file->hashName(),
+        'extension'        => $file->extension(),
+        'size'             => $file->getSize(),
+        'folder'           => $folder,
+        'cloud_folder'     => $cloud_folder,
         'storage_location' => 'do_spaces',
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now()
+        'created_at'       => Carbon::now(),
+        'updated_at'       => Carbon::now()
     ]);
 
     CheckImageHashAndHandleDuplicate::dispatch($image, $modelType, $modelId);
@@ -289,6 +293,9 @@ class ImageController extends Controller
     if (!is_null($modelType) && !is_null($modelId)) {
       $this->updateModelWithImageId($modelType, $modelId, $image->id);
     }
+
+    // Append the CDN endpoint to the image data
+    $image->cdn_endpoint = $cdn_endpoint;
 
     return $image;
   }
@@ -334,6 +341,66 @@ class ImageController extends Controller
     } else {
       // Handle error: Model not found
     }
+  }
+
+  public function removeImage(HttpRequest $request): \Illuminate\Http\JsonResponse {
+    $request->validate([
+        'modelId'   => 'required|integer',
+        'modelType' => 'required|string',
+        'imageId'   => 'required|integer',
+    ]);
+
+    $image = Image::find($request->input('imageId'));
+
+    if ($image) {
+      // Check if the image is referenced by any other models
+      $otherReferences = false;
+
+      // Get all models that might reference the image
+      $referencingModels = [
+          'NewsStory',
+          'Movie',
+          'Show',
+          'ShowEpisode',
+          'OtherContent',
+          'Team',
+          'Video',
+          'NewsRssFeedItemArchive',
+          'Product'
+        // Add other models here
+      ];
+
+      foreach ($referencingModels as $modelClass) {
+        $modelClass = 'App\\Models\\' . $modelClass;
+        if ($modelClass::where('image_id', $image->id)->where('id', '!=', $request->input('modelId'))->exists()) {
+          $otherReferences = true;
+          break;
+        }
+      }
+
+      if (!$otherReferences) {
+        if ($image->cloud_folder) {
+          // Delete the image file from storage
+          $imagePath = $image->cloud_folder . $image->folder . '/' . $image->name;
+          Storage::disk('spaces')->delete($imagePath);
+        }
+
+        // Delete the image record from the database
+        $image->delete();
+      }
+
+      // Remove the image_id from the related model
+      $modelClass = 'App\\Models\\' . ucfirst($request->input('modelType'));
+      $model = $modelClass::find($request->input('modelId'));
+
+      if ($model) {
+        $model->image_id = null;
+        $model->save();
+      }
+
+    }
+
+    return response()->json(['success' => true, 'message' => 'Image removed successfully.']);
   }
 
 //    public function upload(HttpRequest $request)
@@ -402,7 +469,7 @@ class ImageController extends Controller
 
 
 ////////////// UPLOAD MOVIE POSTER
-    ///////////////////////////////
+  ///////////////////////////////
 
 //    public function uploadMoviePoster(HttpRequest $request)
 //    {
@@ -468,18 +535,16 @@ class ImageController extends Controller
 //    }
 
 
+  ////////////// CREATE FILENAME
+  //////////////////////////////
+  protected function createFilename(UploadedFile $file) {
+    $extension = $file->getClientOriginalExtension();
+    $filename = str_replace("." . $extension, "", $file->getClientOriginalName()); // Filename without extension
 
-    ////////////// CREATE FILENAME
-    //////////////////////////////
-    protected function createFilename(UploadedFile $file)
-    {
-        $extension = $file->getClientOriginalExtension();
-        $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
+    // Add timestamp hash to name of the file
+    $filename .= "_" . md5(time()) . "." . $extension;
 
-        // Add timestamp hash to name of the file
-        $filename .= "_" . md5(time()) . "." . $extension;
-
-        return $filename;
-    }
+    return $filename;
+  }
 
 }

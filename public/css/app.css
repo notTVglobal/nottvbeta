@@ -5216,6 +5216,14 @@ html {
 .chatMessages {
     z-index: 200;
 }
+.newMessage a {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+.newMessage a:hover {
+  --tw-text-opacity: 1;
+  color: rgb(251 146 60 / var(--tw-text-opacity));
+}
 .channelsSelectMenu {
     z-index: 500;
 }
@@ -7244,6 +7252,22 @@ hr {
     margin: 1.2em 0;
 }
 
+/* Hide scrollbar for Chrome, Safari, and Opera for <pre> and <code> */
+.tiptap pre::-webkit-scrollbar,
+.tiptap code::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+/* Hide scrollbar for IE, Edge, and Firefox for <pre> and <code> */
+.tiptap pre {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.tiptap code {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
 .z-60 {
     z-index: 60;
 }
@@ -7385,6 +7409,10 @@ hr {
   bottom: 0.75rem;
 }
 
+.bottom-32 {
+  bottom: 8rem;
+}
+
 .bottom-36 {
   bottom: 9rem;
 }
@@ -7493,14 +7521,6 @@ hr {
   top: 14rem;
 }
 
-.bottom-10 {
-  bottom: 2.5rem;
-}
-
-.bottom-32 {
-  bottom: 8rem;
-}
-
 .z-0 {
   z-index: 0;
 }
@@ -7563,10 +7583,6 @@ hr {
 
 .m-auto {
   margin: auto;
-}
-
-.m-2 {
-  margin: 0.5rem;
 }
 
 .-mx-2 {
@@ -9607,6 +9623,11 @@ hr {
   background-color: rgb(187 247 208 / var(--tw-bg-opacity));
 }
 
+.bg-green-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(134 239 172 / var(--tw-bg-opacity));
+}
+
 .bg-green-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(74 222 128 / var(--tw-bg-opacity));
@@ -9798,6 +9819,11 @@ hr {
 .bg-red-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 202 202 / var(--tw-bg-opacity));
+}
+
+.bg-red-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
 }
 
 .bg-red-500 {
@@ -10149,6 +10175,22 @@ hr {
 
 .stroke-current {
   stroke: currentColor;
+}
+
+.stroke-error {
+  stroke: var(--fallback-er,oklch(var(--er)/1));
+}
+
+.stroke-info {
+  stroke: var(--fallback-in,oklch(var(--in)/1));
+}
+
+.stroke-success {
+  stroke: var(--fallback-su,oklch(var(--su)/1));
+}
+
+.stroke-warning {
+  stroke: var(--fallback-wa,oklch(var(--wa)/1));
 }
 
 .object-contain {
@@ -11033,16 +11075,16 @@ hr {
   opacity: 0.5;
 }
 
-.opacity-60 {
-  opacity: 0.6;
-}
-
 .opacity-70 {
   opacity: 0.7;
 }
 
 .opacity-75 {
   opacity: 0.75;
+}
+
+.opacity-80 {
+  opacity: 0.8;
 }
 
 .opacity-95 {
@@ -11648,21 +11690,6 @@ hr {
 
 .hover\:fill-accent:hover {
   fill: var(--fallback-a,oklch(var(--a)/1));
-}
-
-.hover\:text-3xl:hover {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
-
-.hover\:text-5xl:hover {
-  font-size: 3rem;
-  line-height: 1;
-}
-
-.hover\:text-4xl:hover {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
 }
 
 .hover\:text-accent\/80:hover {
@@ -12296,6 +12323,11 @@ hr {
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
+:is(.dark .dark\:hover\:bg-gray-700:hover) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+
 :is(.dark .dark\:hover\:bg-gray-900:hover) {
   --tw-bg-opacity: 1;
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
@@ -12597,6 +12629,14 @@ hr {
 
   .md\:mt-6 {
     margin-top: 1.5rem;
+  }
+
+  .md\:mb-0 {
+    margin-bottom: 0px;
+  }
+
+  .md\:ml-6 {
+    margin-left: 1.5rem;
   }
 
   .md\:block {
@@ -13038,8 +13078,8 @@ hr {
     background-color: rgb(31 41 55 / var(--tw-bg-opacity));
   }
 
-  .lg\:bg-opacity-60 {
-    --tw-bg-opacity: 0.6;
+  .lg\:bg-opacity-80 {
+    --tw-bg-opacity: 0.8;
   }
 
   .lg\:px-2 {

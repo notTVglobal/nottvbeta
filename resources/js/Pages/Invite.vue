@@ -40,7 +40,7 @@
         </div>
       </section>
 
-      <section v-if="inviteCodes.creatorInviteCodes.length === 0" class="mt-8 max-w-4xl mx-auto">
+      <section v-if="filteredInviteCodes.length === 0" class="mt-8 max-w-4xl mx-auto">
         <h2 class="text-2xl font-bold my-4">No Creator Invites Available</h2>
         <p class="text-lg mb-2">
           We appreciate your eagerness to grow the community! Rest assured, you'll be the first to know when new invites
@@ -48,7 +48,7 @@
         </p>
       </section>
 
-      <form v-if="inviteCodes.creatorInviteCodes.length > 0 && !$page.props.flash.success && !$page.props.flash.error"
+      <form v-if="filteredInviteCodes.length > 0 && !$page.props.flash.success && !$page.props.flash.error"
             @submit.prevent="submit" class="max-w-4xl mx-auto">
         <h2 class="text-2xl font-bold my-4">How to Invite a Fellow Creator</h2>
         <p class="text-lg mb-2">
@@ -61,17 +61,17 @@
         <div class="mt-5 space-y-3">
           <div>
             <!-- Conditionally render the select if more than one invite -->
-            <select v-if="inviteCodes.creatorInviteCodes.length > 1" class="select select-bordered w-full max-w-xs"
-                    v-model="selectedInvite">
-              <option disabled selected :value="defaultSelectedInvite">Select an invite</option>
-              <option v-for="invite in inviteCodes.creatorInviteCodes" :key="invite.id" :value="invite.id">
+            <select v-if="filteredInviteCodes.length > 1" class="select select-bordered w-full max-w-xs bg-white dark:bg-gray-800 dark:text-white"
+                    v-model="selectedInvite" required>
+              <option disabled :value="''">Select an invite</option>
+              <option v-for="invite in filteredInviteCodes" :key="invite.ulid" :value="invite.ulid">
                 {{ invite.code }} <!-- Assuming each invite has a unique code or some identifier -->
               </option>
             </select>
 
             <!-- If only one invite, you could display it directly or use it as the default model value -->
             <p v-else>{{
-                inviteCodes.creatorInviteCodes.length === 1 ? `Invite code: ${inviteCodes.creatorInviteCodes[0].code}` : 'No invites available'
+                filteredInviteCodes.length === 1 ? `Invite code: ${filteredInviteCodes[0].code}` : 'No invites available'
               }}</p>
           </div>
           <label class="input input-bordered flex items-center gap-2 bg-white dark:bg-gray-800 dark:text-white">
@@ -128,7 +128,7 @@
 
       <div class="mt-4 max-w-4xl mx-auto space-y-6">
         <!-- Creator Invite Codes Table -->
-        <section v-if="inviteCodes.creatorInviteCodes.length > 0"
+        <section v-if="filteredInviteCodes.length > 0"
                  class="card bg-primary-content/30 w-full px-6 py-4 shadow-xl">
           <h2 class="card-title">Creator Invites</h2>
           <p>Expand the notTV community by inviting more creators to share and create with us.</p>
@@ -142,7 +142,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="code in inviteCodes.creatorInviteCodes" :key="code.id">
+            <tr v-for="code in filteredInviteCodes" :key="code.id">
               <td>
                 <div class="relative">
                   <button @click="copyToClipboard(`${$page.props.appUrl}/invite/${code.ulid}`, code.id, 'link')">
@@ -277,7 +277,7 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import Message from '@/Components/Global/Modals/Messages'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useForm } from '@inertiajs/inertia-vue3'
 
@@ -296,18 +296,36 @@ let form = useForm({
   message: '',
 })
 
+// Computed property to filter invite codes
+const filteredInviteCodes = computed(() => {
+  return props.inviteCodes.creatorInviteCodes.filter(code => !code.team_id && !code.claimed);
+});
+
 // Model for the selected invite
-const selectedInvite = ref(props.inviteCodes.creatorInviteCodes.length === 1 ? props.inviteCodes.creatorInviteCodes[0].ulid : '')
+const selectedInvite = ref(filteredInviteCodes.value.length === 1 ? filteredInviteCodes.value[0].ulid : '');
 
 // Computed property to default to the first invite if more than one
 const defaultSelectedInvite = computed(() => {
-  return props.inviteCodes.creatorInviteCodes.length > 0 ? props.inviteCodes.creatorInviteCodes[0].ulid : ''
-})
+  return filteredInviteCodes.value.length > 0 ? filteredInviteCodes.value[0].ulid : '';
+});
 
 // Dynamically set source for the clipboard
 const sourceToCopy = ref('')
 const {copy, copied} = useClipboard()
 const lastCopied = ref({id: null, type: null})
+
+// Watch for changes in the inviteCodes and set the default selected invite if only one invite code is available
+watch(() => props.inviteCodes, (newInviteCodes) => {
+  const newFilteredInviteCodes = newInviteCodes.creatorInviteCodes.filter(code => !code.team_id && !code.claimed);
+  if (newFilteredInviteCodes.length === 1) {
+    selectedInvite.value = newFilteredInviteCodes[0].ulid;
+  } else if (newFilteredInviteCodes.length > 1) {
+    selectedInvite.value = defaultSelectedInvite.value;
+  } else {
+    selectedInvite.value = '';
+  }
+}, { immediate: true });
+
 
 let submit = () => {
   console.log('form submitted, ulid: ' + selectedInvite.value)

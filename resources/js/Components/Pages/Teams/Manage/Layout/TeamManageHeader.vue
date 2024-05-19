@@ -13,7 +13,7 @@
           {{ teamStore.membersCount }}
         </div>
       </div>
-      <div>
+      <div v-if="can.hasSpecialPermission">
         <button @click="openEditPublicMessageModal" class="btn bg-yellow-500 hover:bg-yellow-600 text-black hover:cursor-pointer">
           Change Public Message
         </button>
@@ -39,10 +39,7 @@
         </form>
         <h3 class="font-bold text-lg">Change Your Public Message</h3>
         <div v-if="!successMessage && !errorMessage" class="py-4 text-xl mt-4 font-medium tracking-wide">
-          <textarea v-model="publicMessage"
-                    class="textarea textarea-bordered h-40 w-full p-4 bg-white dark:bg-gray-800 dark:text-white"
-                    placeholder="Type your public message here..."
-                    rows="4"></textarea>
+          <tip-tap-description-editor :placeholder="`Start typing the public message...`" :description="publicMessage" @updateContent="handleContentUpdate"/>
           <div :class="{'text-red-500': publicMessage?.length > 440, 'text-gray-800': publicMessage?.length <= 440}"
                class="mt-2 text-left text-xs font-light">
             {{ publicMessage?.length }}/440 max characters
@@ -87,6 +84,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import { computed, reactive, ref, watchEffect } from 'vue'
+import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
 
 const userStore = useUserStore()
 const appSettingStore = useAppSettingStore()
@@ -102,7 +100,7 @@ const props = defineProps({
 
 
 // Initialize publicMessage from props
-const publicMessage = ref(props.team.public_message);
+const publicMessage = ref(props.team.public_message || '');
 
 // Initialize nextBroadcast from props
 const nextBroadcast = props.team.nextBroadcast[0];
@@ -120,9 +118,13 @@ const successMessage = ref('')
 const errorMessage = ref('')
 const hasError = ref(false); // New state variable to track if there was an error
 
-watchEffect(() => {
-  publicMessage.value = props.team.public_message || ''
-})
+// watchEffect(() => {
+//   publicMessage.value = props.team.public_message || ''
+// })
+
+const handleContentUpdate = (html) => {
+  publicMessage.value = html
+}
 
 const membersCount = computed(() => {
   const count = props.team.members.length

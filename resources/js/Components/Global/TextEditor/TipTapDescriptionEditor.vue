@@ -34,9 +34,12 @@ const emits = defineEmits(['updateContent'])
 
 const props = defineProps({
   description: String,
+  placeholder: String,
 })
 
-const initialContent = props.description ? props.description : '<p>Start typing the description...</p>'
+const initialContent = props.description
+    ? props.description
+    : (props.placeholder ? props.placeholder : '<p>Start typing the description...</p>')
 
 const editor = useEditor({
   autofocus: true, // Setting autofocus to true

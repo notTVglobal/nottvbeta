@@ -405,16 +405,18 @@ class TeamsController extends Controller {
     ];
   }
 
-  protected function getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember) {
+  protected function getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember): array {
+    $user = Auth::user();
     return [
-        'editTeam'      => Auth::user()->can('update', $team),
-        'manageTeam'    => Auth::user()->can('manage', $team),
-        'transferTeam'  => Auth::user()->can('transfer', $team),
+        'editTeam'      => $user->can('update', $team),
+        'manageTeam'    => $user->can('manage', $team),
+        'transferTeam'  => $user->can('transfer', $team),
         'isTeamOwner'   => $isTeamOwner,
         'isTeamLeader'  => $isTeamLeader,
         'isTeamManager' => $isTeamManager,
         'isTeamMember'  => $isTeamMember,
-        'isAdmin'       => Auth::user()->isAdmin,
+        'isAdmin'       => $user->isAdmin,
+        'hasSpecialPermission' => $isTeamOwner || $isTeamLeader || $isTeamManager || $user->isAdmin,
     ];
   }
 

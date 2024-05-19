@@ -12,8 +12,10 @@ use App\Models\InviteCode;
 use App\Models\NewsCountry;
 use App\Mail\InviteCreatorMail;
 use App\Actions\Fortify\CreateNewCreator;
+use App\Models\Team;
 use App\Models\User;
 use App\Rules\UnclaimedInviteCode;
+use App\Services\NotificationService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,6 +24,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
@@ -82,9 +85,9 @@ class CreatorsController extends Controller {
     ]);
 
     $url = config('app.url') . '/invite/' . $inviteCode->ulid;
-    $name = $validatedRequest['name'];
+    $name = e($validatedRequest['name']);
     $email = $validatedRequest['email'];
-    $message = $validatedRequest['message'];
+    $message = e($validatedRequest['message']);
     $from_name = $inviteCode->createdBy->name;
     $invite_url = $url;
     $invite_code = $inviteCode->code;
@@ -314,12 +317,30 @@ class CreatorsController extends Controller {
     try {
       $creatorAction = new CreateNewCreator();
       $user = $creatorAction->create($validatedData + ['invite_code' => $inviteCode]);
+      $team = null;
+      // If the invite code includes a team ID, add the user to the team
+      if ($inviteCode->team_id) {
+        // Fetch the team
+        $team = Team::findOrFail($inviteCode->team_id);
+        // Attach the user to the team's members
+        $team->members()->attach($user->id);
+
+        // Notify the new team member
+        NotificationService::createAndDispatchNotification(
+            $user->id,
+            $team->image_id,
+            '/teams/' . $team->slug,
+            $team->name,
+            '<span class="text-green-500">You have been added to the team.</span>'
+        );
+      }
 
       event(new Registered($user));
       event(new CreatorRegistrationCompleted($user, $inviteCode));
+
       Log::debug('Registered User and Creator Registration Completed.');
-      // Redirect to dashboard with a full page reload
-      return redirect('/dashboard');
+      // Redirect to check email for verification link page.
+      return redirect('/check-email');
     } catch (\Exception $e) {
       Log::error('Registration failed: ' . $e->getMessage());
 
@@ -328,26 +349,77 @@ class CreatorsController extends Controller {
   }
 
   protected function updateUserToCreator($user, $validatedData, $inviteCode): \Illuminate\Http\RedirectResponse {
-    // Update user information and set them as a creator
-    $user->update([
-        'name'       => $validatedData['name'],
-        'address1'   => $validatedData['address1'] ?? null,
-        'address2'   => $validatedData['address2'] ?? null,
-        'city'       => $validatedData['city'] ?? null,
-        'province'   => $validatedData['province'] ?? null,
-        'country'    => $validatedData['country'],
-        'postalCode' => $validatedData['postalCode'] ?? null,
-        'phone'      => $validatedData['phone'] ?? null,
-    ]);
+    // Begin a transaction to ensure data integrity
+    DB::beginTransaction();
 
-    $user->creator()->create([
-        'invite_code_id' => $inviteCode->id,
-    ]);
+    try {
+      // Update user information and set them as a creator
+      $user->update([
+          'name'       => $validatedData['name'],
+          'address1'   => $validatedData['address1'] ?? null,
+          'address2'   => $validatedData['address2'] ?? null,
+          'city'       => $validatedData['city'] ?? null,
+          'province'   => $validatedData['province'] ?? null,
+          'country'    => $validatedData['country'],
+          'postalCode' => $validatedData['postalCode'] ?? null,
+          'phone'      => $validatedData['phone'] ?? null,
+      ]);
 
-    event(new CreatorRegistrationCompleted($user, $inviteCode));
-    Log::debug('Creator Registration Completed with already registered user.');
-    // Redirect to dashboard with a full page reload
-    return redirect('/dashboard');
+      // Create a creator profile for the user
+      $user->creator()->create([
+          'invite_code_id' => $inviteCode->id,
+      ]);
+
+      // Increment the used count
+      $inviteCode->used_count += 1;
+      // Check if the invite code should be claimed
+      if ($inviteCode->volume <= $inviteCode->used_count) {
+        $inviteCode->claimed_by = $user->id;
+        $inviteCode->claimed = true;
+        $inviteCode->claimed_at = now();
+      }
+      $inviteCode->save();
+
+      $team = null;
+
+      // If the invite code includes a team ID, add the user to the team
+      if ($inviteCode->team_id) {
+        // Fetch the team
+        $team = Team::findOrFail($inviteCode->team_id);
+        // Attach the user to the team's members
+        $team->members()->attach($user->id);
+
+        // Notify the new team member
+        NotificationService::createAndDispatchNotification(
+            $user->id,
+            $team->image_id,
+            '/teams/' . $team->slug,
+            $team->name,
+            '<span class="text-green-500">You have been added to the team.</span>'
+        );
+      }
+
+      // Dispatch an event indicating the creator registration has been completed
+      event(new CreatorRegistrationCompleted($user, $inviteCode));
+
+      // Log the completion of the registration process
+      Log::debug('Creator Registration Completed with already registered user.');
+
+      // Commit the transaction
+      DB::commit();
+
+      // Redirect to the dashboard with a full page reload
+      return redirect('/dashboard');
+    } catch (\Exception $e) {
+      // Rollback the transaction in case of any error
+      DB::rollBack();
+
+      // Log the error
+      Log::error('Error during creator registration: ' . $e->getMessage(), ['exception' => $e]);
+
+      // Optionally, you can redirect back with an error message or handle it as per your application's needs
+      return redirect()->back()->with('error', 'An error occurred during registration. Please try again.');
+    }
   }
 
   public function markAsSeen(): \Illuminate\Http\JsonResponse {

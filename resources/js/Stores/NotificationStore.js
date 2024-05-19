@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import { Inertia } from "@inertiajs/inertia";
+import { defineStore } from 'pinia'
+import { Inertia } from '@inertiajs/inertia'
 
 // the purpose of the notificationStore is to allow the system/user
 // to clear out their notifications... instead of using only page props
@@ -14,6 +14,7 @@ import { Inertia } from "@inertiajs/inertia";
 const initialState = () => ({
     title: '',
     body: '',
+    confirmation: null,
     buttonLabel: 'OKAY',
     popUpModalTitle: '',
     popUpModalMessage: '',
@@ -27,6 +28,7 @@ const initialState = () => ({
     redirectPageUri: '',
     generalServiceNotification: null, // put a title and a body in here, the modal opens in AppLayout
     showGeneralServiceNotification: false, // used with the generalServiceNotification title and body, the modal opens in AppLayout
+    showConfirmNotificationModal: false, // used with the confirmNotificationModal title and body, the modal opens in AppLayout
     toastNotificationVisible: false,
     toastNotificationMessage: '',
     toastNotificationStatus: '', // success, error, info, warning
@@ -40,109 +42,126 @@ export const useNotificationStore = defineStore('notificationStore', {
     actions: {
         reset() {
             // Reset the store to its original state (clear all data)
-            Object.assign(this, initialState());
+            Object.assign(this, initialState())
         },
         setErrorMessage(error) {
-          this.errorMessage = error
+            this.errorMessage = error
         },
         clearErrorMessage() {
-          this.errorMessage = null
+            this.errorMessage = null
         },
         setGeneralServiceNotification(title, body) {
             console.log('open modal')
-          this.generalServiceNotification = {
-              'title': title,
-              'body': body
-          }
-          document.getElementById('generalServiceNotificationModal').showModal()
-          this.showGeneralServiceNotification = true
+            this.generalServiceNotification = {
+                'title': title,
+                'body': body,
+            }
+            document.getElementById('generalServiceNotificationModal').showModal()
+            this.showGeneralServiceNotification = true
         },
         clearGeneralServiceNotification() {
             this.generalServiceNotification = null
             this.showGeneralServiceNotification = false
         },
+        setConfirmNotification(title, body) {
+            this.title = title
+            this.body = body
+            const modal = document.getElementById('confirmNotificationModal')
+            if (modal && modal.showModal) {
+                modal.showModal()
+            }
+        },
+        clearConfirmNotification() {
+            this.title = ''
+            this.body = ''
+            this.confirmation = null
+            // document.getElementById('confirmNotificationModal').closeModal()
+        },
+        setConfirmationNotification(value) {
+            this.confirmation = value
+        },
         setToastNotification(message, status, customTimeoutValue = 5000) {
             // Ensure any existing timeout is cleared before setting a new one
             if (this.timeoutId) {
-                clearTimeout(this.timeoutId);
+                clearTimeout(this.timeoutId)
             }
 
-            this.toastNotificationVisible = true;
-            this.toastNotificationMessage = message;
-            this.toastNotificationStatus = status;
+            this.toastNotificationVisible = true
+            this.toastNotificationMessage = message
+            this.toastNotificationStatus = status
 
             // Use either the customTimeoutValue or the default
-            this.toastNotificationTimeout = customTimeoutValue;
+            this.toastNotificationTimeout = customTimeoutValue
 
             // Automatically reset the notification after the specified timeout
             this.timeoutId = setTimeout(() => {
-                this.resetToastNotification();
-            }, this.toastNotificationTimeout);
+                this.resetToastNotification()
+            }, this.toastNotificationTimeout)
         },
         resetToastNotification() {
-            this.toastNotificationVisible = false;
-            this.toastNotificationMessage = '';
-            this.toastNotificationStatus = '';
-            this.timeoutId = null; // Reset the timeout ID
+            this.toastNotificationVisible = false
+            this.toastNotificationMessage = ''
+            this.toastNotificationStatus = ''
+            this.timeoutId = null // Reset the timeout ID
         },
         clearNotification() {
-            this.title = '';
-            this.body = '';
-            this.buttonLabel = 'OKAY';
-            this.uri = '';
-            this.redirectPageUri = '';
-            this.onClickAction = '';
+            this.title = ''
+            this.body = ''
+            this.buttonLabel = 'OKAY'
+            this.uri = ''
+            this.redirectPageUri = ''
+            this.onClickAction = ''
         },
         redirectAndClear() {
-            this.active = false;
-            Inertia.visit(this.redirectPageUri);
-            this.clearNotification();
+            this.active = false
+            Inertia.visit(this.redirectPageUri)
+            this.clearNotification()
         },
         closeAndClear() {
-            this.active = false;
-            this.clearNotification();
+            this.active = false
+            this.clearNotification()
         },
         // use this to open the @/Components/Global/Modals/DialogNotification
         // it only takes a title and body
         openDialogNotification(title, message) {
-            const modal = document.getElementById('dialogNotificationModal');
+            const modal = document.getElementById('dialogNotificationModal')
             if (modal) {
                 this.title = title
                 this.body = message
-                modal.showModal();
+                modal.showModal()
             }
         },
         showSuccess(title, message) {
-            this.title = title;
-            this.message = message;
-            this.showModal = true;
+            this.title = title
+            this.message = message
+            this.showModal = true
         },
         showError(error) {
-            let errorMessage = "An unexpected error occurred. Please try again later.";
+            let errorMessage = 'An unexpected error occurred. Please try again later.'
             if (error.response && error.response.data && error.response.data.message) {
-                errorMessage = error.response.data.message;
+                errorMessage = error.response.data.message
             } else if (error.message) {
-                errorMessage = error.message;
+                errorMessage = error.message
             }
-            this.title = 'Error';
-            this.message = errorMessage;
-            this.showModal = true;
+            this.title = 'Error'
+            this.message = errorMessage
+            this.showModal = true
         },
         closeModal() {
-            this.showModal = false;
-        }
+            this.showModal = false
+        },
     },
     getters: {
         formattedErrorMessage: (state) => {
             // Check if errorMessage is not empty
             if (Object.keys(state.errorMessage).length > 0) {
                 // Extract all error messages and flatten them into a single array
-                const messages = Object.values(state.errorMessage).flat();
+                const messages = Object.values(state.errorMessage).flat()
                 // Join all messages into a single string, separated by a space or any delimiter you prefer
-                return messages.join('. '); // Adjust based on how you want to display them
+                return messages.join('. ') // Adjust based on how you want to display them
             }
-            return ''; // Return an empty string if there is no error message
-        }
+            return '' // Return an empty string if there is no error message
+        },
     },
 
 })

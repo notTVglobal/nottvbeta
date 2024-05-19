@@ -16,9 +16,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref } from "vue"
-import dayjs from 'dayjs'
-import relativeTime from "dayjs/plugin/relativeTime"
+import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -46,8 +44,8 @@ channel.subscribed(() => {
 //
 // });
 
-onMounted( async() => {
-  await connect();
+onMounted(() => {
+  connect();
 })
 
 //

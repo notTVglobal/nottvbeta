@@ -1,34 +1,56 @@
 import { defineStore } from 'pinia'
+import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
-    newsStory: [],
-    newsArticleIdTiptop: '',
-    newsArticleTitleTiptop: '',
-    newsArticleContentTiptop: '',
-    content_json: {},
-    news_category_id: null,
-    news_category_sub_id: null,
+    id: null,
+    slug: '',
+    title: '',
+    content: '',
+    newsPerson: [],
+    category: {},
+    subCategory: {},
+    city: {},
+    province: {},
+    federalElectoralDistrict: {},
+    subnationalElectoralDistrict: {},
+    country: [],
+    image: {},
+    status: [],
+    video: {},
+    created_at: '',
+    published_at: '',
+    cachedContent: {},
+
     categories: [],
-    subcategories: [],
-    city_id: 0,
-    province_id: 0,
-    federal_electoral_district_id: 0,
-    subnational_electoral_district_id: 0,
+    subCategories: [],
+
     type: '',
     displayText: '',
-    country: [],
-    selectedCategory: [], // initially no selected category
-    selectedSubcategory: [],
-    selectedLocation: [], // the selected location
-    locationSearchItems: [], // array of locations for the dropdown
+
+    newsPersons: [],
+    // selectedCategory: [], // initially no selected category
+    // selectedSubcategory: [],
+    // selectedLocation: [], // the selected location
+    // selectedNewsPerson: [],
+
+    citySearchItems: [], // array of locations for the dropdown
+
+    showEditor: false,
+    showNewsPersonSelector: false,
+    showCategoryCitySelector: false,
     citySelectDropdownVisible: false, // visibility of the dropdown
+    showSaveMessage: false,
+
     focusedIndex: 0, // for managing focused item in the dropdown
     searchQuery: '',
     filters: [],
     search: '',
-    formErrors: [],
+    errors: [],
+
+
     isLoadingCategoryCityData: false,
-    newsPersons: [],
+    isLoading: true,
+    processing: false,
 
     // Computed property for displaying
 })
@@ -41,35 +63,36 @@ export const useNewsStore = defineStore('newsStore', {
             Object.assign(this, initialState())
             // await this.setSelectedLocation()
         },
-        // load NewsStory props into NewsStore
-        loadNewsStory(newsStory) {
-            this.newsStory = newsStory
+        initializeNewsStore(newsStory) {
+            this.id = newsStory.id
+            this.slug = newsStory.slug
+            this.title = newsStory.title
+            this.status = newsStory.status
+            this.content = newsStory.content
+            this.newsPerson = newsStory.newsPerson
+            this.category = newsStory.category
+            this.subCategory = newsStory.subCategory
+            this.city = newsStory.city
+            this.province = newsStory.province
+            this.federalElectoralDistrict = newsStory.federalElectoralDistrict
+            this.subnationalElectoralDistrict = newsStory.subnationalElectoralDistrict
+            this.image = newsStory.image
+            this.video = newsStory.video
+            this.created_at = newsStory.created_at
+            this.published_at = newsStory.published_at
+            this.cachedContent = newsStory.cachedContent
         },
-        updateNewsStoryData(newsStory, relatedData) {
-            this.newsStory = newsStory
-            this.newsArticleIdTiptop = newsStory.id
-            this.newsArticleTitleTiptop = newsStory.title
-            this.newsArticleContentTiptop = JSON.parse(newsStory.content_json)
-            this.content_json = JSON.parse(newsStory.content_json)
-            this.news_category_id = newsStory.news_category_id
-            this.news_category_sub_id = newsStory.news_category_sub_id
-            this.city_id = newsStory.city_id
-            this.province_id = newsStory.province_id
-            this.federal_electoral_district_id = newsStory.federal_electoral_district_id
-            this.subnational_electoral_district_id = newsStory.subnational_electoral_district_id
-            this.type = newsStory.type
-            // Set related data that isn't part of the newsStory object
-            this.country = relatedData.country
-            this.categories = relatedData.categories
-            // Any additional related data setup can go here
+        toggleCategoryCitySelector() {
+            this.showCategoryCitySelector = !this.showCategoryCitySelector
+        },
+        toggleNewsPersonSelector() {
+            this.showNewsPersonSelector = !this.showNewsPersonSelector
         },
         // Action to set the selected Category
         setSelectedCategory() {
             let matchingCategory = this.categories.find(category => category.id === this.news_category_id)
             this.selectedCategory = matchingCategory || null
             if (this.news_category_sub_id) {
-                this.getSubcategories() // After setting the category, get the subcategory
-                this.getSelectedSubcategory() // Call after subcategories are populated
             }
             // Check if the selected category is 3 (Local News)
             if (this.news_category_id === 3) {
@@ -78,100 +101,98 @@ export const useNewsStore = defineStore('newsStore', {
                 this.resetLocationIds() // Reset location-related IDs for other categories
             }
         },
-        // Action to get the Subcategories
-        getSubcategories() {
-
-            // Find the matching category using selectedCategory.id
-            const matchingCategory = this.categories.find(category => category.id === this.selectedCategory.id)
-
-            if (matchingCategory) {
-                // Set the subcategories from the matched category
-                this.subcategories = matchingCategory.news_category_subs
-            } else {
-                // Handle the case where no matching category is found
-                this.subcategories = [] // Set subcategories to an empty array
-                console.log('No matching category found')
-            }
-        },
-
-        getSelectedSubcategory() {
-            // console.log('start getting selected subcategory')
-
-            // Find the subcategory that matches the news_category_sub_id
-            const matchingSubcategory = this.subcategories.find(subcategory => subcategory.id === this.news_category_sub_id)
-
-            if (matchingSubcategory) {
-                // Set the selectedSubcategory to the found subcategory
-                this.selectedSubcategory = matchingSubcategory
-                // console.log('selected subcategory updated:', this.selectedSubcategory)
-            } else {
-                // Handle the case where no matching subcategory is found
-                this.selectedSubcategory = null
-                // console.log('No matching subcategory found')
-            }
-        },
-
-        async fetchLocationsForSearch() {
+        async fetchCategories() {
+            this.isLoadingCityData = true
             try {
-                const response = await fetch('/api/news-locations')
+                const response = await fetch('/api/news/categories')
                 if (response.ok) {
-                    this.locationSearchItems = await response.json()
+                    this.categories = await response.json()
+                } else {
+                    console.error('Failed to fetch categories:', response.statusText)
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error)
+            } finally {
+                this.isLoadingCityData = false
+            }
+        },
+        async fetchCitiesForSearch() {
+            try {
+                const response = await fetch('/api/news/cities')
+                if (response.ok) {
+                    this.citySearchItems = await response.json()
                 } else {
                     // Handle HTTP error responses (e.g., 404, 500)
                     console.error('Failed to fetch locations:', response.statusText)
                 }
-                this.isLoadingCategoryCityData = false
+                this.isLoadingCityData = false
             } catch (error) {
                 // Handle errors that occur during the fetch operation
                 console.error('Error fetching locations:', error)
-                this.isLoadingCategoryCityData = false
+                this.isLoadingCityData = false
             }
         },
-
         // Action to set the selected Location
         setSelectedLocation() {
+            // Reset all location types
+            this.city = {}
+            this.province = {}
+            this.federalElectoralDistrict = {}
+            this.subnationalElectoralDistrict = {}
+
             let matchingLocation = null
 
             // Simplified conditional logic
-            if (this.city_id) {
-                matchingLocation = this.locationSearchItems.find(location => location.city_id === this.city_id)
-            } else if (this.province_id) {
-                matchingLocation = this.locationSearchItems.find(location => location.province_id === this.province_id && !location.city_id)
-            } else if (this.federal_electoral_district_id) {
-                matchingLocation = this.locationSearchItems.find(location => location.federal_electoral_district_id === this.federal_electoral_district_id)
-            } else if (this.subnational_electoral_district_id) {
-                matchingLocation = this.locationSearchItems.find(location => location.subnational_electoral_district.id === this.subnational_electoral_district_id)
+            if (this.city.id) {
+                matchingLocation = this.citySearchItems.find(location => location.id === this.city.id && (location.type === 'city' || location.type === 'town'))
+            } else if (this.province.id) {
+                matchingLocation = this.citySearchItems.find(location => location.id === this.province.id && location.type === 'province')
+            } else if (this.federalElectoralDistrict.id) {
+                matchingLocation = this.citySearchItems.find(location => location.id === this.federalElectoralDistrict.id && location.type === 'federalElectoralDistrict')
+            } else if (this.subnationalElectoralDistrict.id) {
+                matchingLocation = this.citySearchItems.find(location => location.id === this.subnationalElectoralDistrict.id && location.type === 'subnationalElectoralDistrict')
             }
 
             // Handling null case
             if (matchingLocation) {
-                this.selectedLocation = matchingLocation
-
-                // Set displayText based on type
-                switch (this.type) {
+                // Set the appropriate location object
+                switch (matchingLocation.type) {
                     case 'city':
-                        this.displayText = 'City'
-                        this.type = 'city'
-                        break
                     case 'town':
-                        this.displayText = 'Town'
-                        this.type = 'town'
+                        this.city = {
+                            id: matchingLocation.id,
+                            name: matchingLocation.name,
+                            type: matchingLocation.type,
+                        }
+                        this.province = {
+                            id: matchingLocation.province.id,
+                            name: matchingLocation.province.name,
+                        }
+                        this.displayText = `${matchingLocation.name}, ${matchingLocation.province.name}`
                         break
                     case 'province':
-                        this.displayText = 'Province'
-                        this.type = 'province'
-                        break
-                    case 'territory':
-                        this.displayText = 'Territory'
-                        this.type = 'territory'
+                        this.province = {
+                            id: matchingLocation.id,
+                            name: matchingLocation.name,
+                            type: matchingLocation.type,
+                        }
+                        this.displayText = matchingLocation.name
                         break
                     case 'federalElectoralDistrict':
-                        this.displayText = 'Federal Electoral District'
-                        this.type = 'federalElectoralDistrict'
+                        this.federalElectoralDistrict = {
+                            id: matchingLocation.id,
+                            name: matchingLocation.name,
+                            type: matchingLocation.type,
+                        }
+                        this.displayText = matchingLocation.name
                         break
                     case 'subnationalElectoralDistrict':
-                        this.displayText = 'Subnational Electoral District'
-                        this.type = 'subnationalElectoralDistrict'
+                        this.subnationalElectoralDistrict = {
+                            id: matchingLocation.id,
+                            name: matchingLocation.name,
+                            type: matchingLocation.type,
+                        }
+                        this.displayText = matchingLocation.name
                         break
                     default:
                         this.displayText = ''
@@ -179,69 +200,85 @@ export const useNewsStore = defineStore('newsStore', {
                 }
             } else {
                 // Handle the case where no matching location is found
-                // this.selectedLocation = null
-                // this.selectedType = null
-                // this.city_id = null // or keep the existing value?
-                // this.type = null
-                // this.displayText = ''
+                this.displayText = ''
             }
         },
-        async updateNewsStoryAndSetLocation(newsStory, relatedData) {
+        async fetchCitiesAndCategories() {
             // console.log("News story type:", newsStory.type); // Or relatedData.type, depending on your structure
-            await this.fetchLocationsForSearch(); // Load location items first
-            // console.log("Locations fetched");
-            //
-            // // Example: Set this.type based on newsStory or relatedData if applicable
-            // this.type = newsStory.type || relatedData.type; // Adjust based on your data structure
-            // console.log("Type set to:", this.type);
-
-            this.setSelectedLocation(); // Then set the selected location
-            // console.log("Selected location set");
-            // Finally, update the news story data
-            this.updateNewsStoryData(newsStory, relatedData);
+            await this.fetchCitiesForSearch() // Load location items first
+            this.setSelectedLocation() // Then set the selected location
         },
-// Action to set the selected Location
+        // Action to set the selected Location
         updateSelectedLocation(location) {
             if (!location) {
                 // Handle the case where no location is passed
-                this.selectedLocation = null
-                this.displayText = ''
-                this.resetLocationIds(null)
-                return
+                this.city = {};
+                this.province = {};
+                this.federalElectoralDistrict = {};
+                this.subnationalElectoralDistrict = {};
+                this.displayText = '';
+                return;
             }
 
             // Update the selectedLocation based on the type of location
             this.selectedLocation = location
             this.displayText = this.getDisplayTextForType(location.type)
 
-            // Update the relevant IDs based on the type
-            this.city_id = null
-            this.province_id = null
-            this.federal_electoral_district_id = null
-            this.subnational_electoral_district_id = null
+            // Reset all location types
+            this.city = {};
+            this.province = {};
+            this.federalElectoralDistrict = {};
+            this.subnationalElectoralDistrict = {};
+
+            // Update the selected location based on the type of location
+            this.displayText = this.getDisplayTextForType(location.type);
 
             switch (location.type) {
                 case 'city':
                 case 'town':
-                    this.city_id = location.city_id
-                    // Assuming province_id is also part of city data
-                    this.province_id = location.province_id || null
-                    break
+                    this.city = {
+                        id: location.id,
+                        name: location.name,
+                        province: location.province,
+                    };
+                    this.province = {
+                        id: location.province.id,
+                        name: location.province.name,
+                    };
+                    this.displayText = `${location.name}, ${location.province.name}`;
+                    break;
                 case 'province':
                 case 'territory':
-                    this.province_id = location.province_id
-                    break
+                    this.province = {
+                        id: location.id,
+                        name: location.name,
+                        type: location.type,
+                    };
+                    this.displayText = location.name;
+                    break;
                 case 'federalElectoralDistrict':
-                    this.federal_electoral_district_id = location.federal_electoral_district_id
-                    break
+                    this.federalElectoralDistrict = {
+                        id: location.id,
+                        name: location.name,
+                        type: location.type,
+                    };
+                    this.displayText = location.name;
+                    break;
                 case 'subnationalElectoralDistrict':
-                    this.subnational_electoral_district_id = location.subnational_electoral_district_id
-                    break
-                // Add more cases as needed for other types
+                    this.subnationalElectoralDistrict = {
+                        id: location.id,
+                        name: location.name,
+                        type: location.type,
+                    };
+                    this.displayText = location.name;
+                    break;
+                default:
+                    this.displayText = '';
+                    break;
             }
         },
 
-// Helper function to get display text based on type
+        // Helper function to get display text based on type
         getDisplayTextForType(type) {
             switch (type) {
                 case 'city':
@@ -269,9 +306,6 @@ export const useNewsStore = defineStore('newsStore', {
 
         // Setter action for searchInput
         setSearchInput(value) {
-            if (this.selectedLocation?.name !== value) {
-                this.selectedLocation = null
-            }
             this.search = value
         },
 
@@ -303,52 +337,104 @@ export const useNewsStore = defineStore('newsStore', {
             }
         },
         updateSearch(query) {
-            this.search = query;
+            this.search = query
         },
         async fetchNewsPersons() {
+            console.log('get news persons')
             try {
-                const response = await fetch('/api/news-persons');
-                this.newsPersons = await response.json();
+                const response = await fetch('/api/news/persons')
+                this.newsPersons = await response.json()
             } catch (error) {
-                console.error('Failed to fetch news persons:', error);
+                console.error('Failed to fetch news persons:', error)
             }
         },
+        setNewsPerson(newNewsPerson) {
+            this.newsPerson = newNewsPerson
+        },
+        async submit() {
+            this.processing = true
+
+            const data = {
+                id: this.id,
+                title: this.title,
+                status: this.status.id,
+                content: this.content,
+                news_category_id: this.category.id,
+                news_category_sub_id: this.subCategory.id,
+                city_id: this.city.id,
+                province_id: this.province.id,
+                federal_electoral_district_id: this.federalElectoralDistrict.id,
+                subnational_electoral_district_id: this.subnationalElectoralDistrict.id,
+                type: this.type,
+                news_person_id: this.newsPerson.id,
+            }
+
+            try {
+                if (this.id) {
+                    await Inertia.patch(route('newsStory.update', this.slug), data, {
+                        onError: (errors) => {
+                            this.errors = errors
+                            this.processing = false
+                        },
+                        onSuccess: () => {
+                            this.processing = false
+                        }
+                    })
+                } else {
+                    await Inertia.post(route('newsStory.store'), data, {
+                        onError: (errors) => {
+                            this.errors = errors
+                            this.processing = false
+                        },
+                        onSuccess: () => {
+                            this.processing = false
+                        }
+                    })
+                }
+            } catch (error) {
+                console.error('An unexpected error occurred:', error)
+                this.processing = false
+            }
+        }
     },
 
     getters: {
-        filteredLocationSearchItems: (state) => {
-            if (!state.search) return state.locationSearchItems;
-            return state.locationSearchItems.filter(item =>
-                item.name.toLowerCase().includes(state.search.toLowerCase())
-            );
+        filteredCitySearchItems: (state) => {
+            if (!state.search) return state.citySearchItems
+            return state.citySearchItems.filter(item =>
+                item.name.toLowerCase().includes(state.search.toLowerCase()),
+            )
         },
         searchInput: (state) => {
-            if (state.selectedLocation) {
-                if (state.selectedLocation.type === 'city' || state.selectedLocation.type === 'town') {
-                    return `${state.selectedLocation.name}, ${state.selectedLocation.province_name}`
-                }
-                return state.selectedLocation.name
+            if (state.city.id) {
+                return `${state.city.name}, ${state.province.name}`;
+            } else if (state.province.id) {
+                return state.province.name;
+            } else if (state.federalElectoralDistrict.id) {
+                return state.federalElectoralDistrict.name;
+            } else if (state.subnationalElectoralDistrict.id) {
+                return state.subnationalElectoralDistrict.name;
             }
-            return state.search
+            return state.search;
         },
         locationType(state) {
             if (!state.selectedLocation) {
                 state.type = ''
                 state.displayText = ''
-                return 'location type is not set';
+                return 'location type is not set'
             }
 
             // Assuming `selectedLocation` has a property to indicate its type
             // Adjust the logic based on how you determine the type
             switch (state.selectedLocation.type) {
                 case 'city':
-                    state.type = 'city';
-                    state.displayText = 'City';
-                    break;
+                    state.type = 'city'
+                    state.displayText = 'City'
+                    break
                 case 'town':
-                    state.type = 'town';
-                    state.displayText = 'Town';
-                    break;
+                    state.type = 'town'
+                    state.displayText = 'Town'
+                    break
                 case 'province':
                     state.displayText = 'Province'
                     state.type = 'province'
@@ -370,7 +456,7 @@ export const useNewsStore = defineStore('newsStore', {
                     break
             }
 
-            return 'location type is set';
+            return 'location type is set'
         },
         // filteredNewsPersons: (state) => {
         //     if (!state.searchQuery) return state.newsPersons;

@@ -25,10 +25,9 @@ return [
     'settings'      => [
         'default' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
-            'HTML.Allowed'             => 'div,b,strong,i,em,u,a[href|title],ul,ol,li,p[style],br,span[style],img[width|height|alt|src]',
-            'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
+            'HTML.Allowed'             => 'div,b,strong,i,em,u,a[href|title],ul,ol,li,p[style],br,span[style],img[width|height|alt|src],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],code,pre,blockquote,hr,sup,sub,s,strike',            'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'AutoFormat.AutoParagraph' => true,
-            'AutoFormat.RemoveEmpty'   => true,
+            'AutoFormat.RemoveEmpty'   => false,
         ],
         'test'    => [
             'Attr.EnableID' => 'true',
@@ -42,48 +41,55 @@ return [
             'rev' => 1,
             'debug' => false,
             'elements' => [
-                // http://developers.whatwg.org/sections.html
+              // http://developers.whatwg.org/sections.html
                 ['section', 'Block', 'Flow', 'Common'],
                 ['nav',     'Block', 'Flow', 'Common'],
                 ['article', 'Block', 'Flow', 'Common'],
                 ['aside',   'Block', 'Flow', 'Common'],
                 ['header',  'Block', 'Flow', 'Common'],
                 ['footer',  'Block', 'Flow', 'Common'],
-				
-				// Content model actually excludes several tags, not modelled here
+
+              // Content model actually excludes several tags, not modelled here
                 ['address', 'Block', 'Flow', 'Common'],
                 ['hgroup', 'Block', 'Required: h1 | h2 | h3 | h4 | h5 | h6', 'Common'],
-				
-				// http://developers.whatwg.org/grouping-content.html
+
+              // http://developers.whatwg.org/grouping-content.html
                 ['figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common'],
                 ['figcaption', 'Inline', 'Flow', 'Common'],
-				
-				// http://developers.whatwg.org/the-video-element.html#the-video-element
+
+              // http://developers.whatwg.org/the-video-element.html#the-video-element
                 ['video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', [
                     'src' => 'URI',
-					'type' => 'Text',
-					'width' => 'Length',
-					'height' => 'Length',
-					'poster' => 'URI',
-					'preload' => 'Enum#auto,metadata,none',
-					'controls' => 'Bool',
+                    'type' => 'Text',
+                    'width' => 'Length',
+                    'height' => 'Length',
+                    'poster' => 'URI',
+                    'preload' => 'Enum#auto,metadata,none',
+                    'controls' => 'Bool',
                 ]],
                 ['source', 'Block', 'Flow', 'Common', [
-					'src' => 'URI',
-					'type' => 'Text',
+                    'src' => 'URI',
+                    'type' => 'Text',
                 ]],
 
-				// http://developers.whatwg.org/text-level-semantics.html
+              // http://developers.whatwg.org/text-level-semantics.html
                 ['s',    'Inline', 'Inline', 'Common'],
                 ['var',  'Inline', 'Inline', 'Common'],
                 ['sub',  'Inline', 'Inline', 'Common'],
                 ['sup',  'Inline', 'Inline', 'Common'],
                 ['mark', 'Inline', 'Inline', 'Common'],
                 ['wbr',  'Inline', 'Empty', 'Core'],
-				
-				// http://developers.whatwg.org/edits.html
+
+              // http://developers.whatwg.org/edits.html
                 ['ins', 'Block', 'Flow', 'Common', ['cite' => 'URI', 'datetime' => 'CDATA']],
                 ['del', 'Block', 'Flow', 'Common', ['cite' => 'URI', 'datetime' => 'CDATA']],
+
+              // Custom elements
+                ['code', 'Inline', 'Inline', 'Common'],
+                ['pre', 'Block', 'Flow', 'Common'],
+                ['blockquote', 'Block', 'Flow', 'Common'],
+                ['hr', 'Block', 'Empty', 'Common'],
+                ['u', 'Inline', 'Inline', 'Common'],
             ],
             'attributes' => [
                 ['iframe', 'allowfullscreen', 'Bool'],
@@ -93,6 +99,17 @@ return [
                 ['tr', 'width', 'Text'],
                 ['tr', 'height', 'Text'],
                 ['tr', 'border', 'Text'],
+              // Allowing style attribute for heading tags
+                ['h1', 'style', 'Text'],
+                ['h2', 'style', 'Text'],
+                ['h3', 'style', 'Text'],
+                ['h4', 'style', 'Text'],
+                ['h5', 'style', 'Text'],
+                ['h6', 'style', 'Text'],
+                ['p', 'style', 'Text'],
+                ['div', 'style', 'Text'],
+                ['blockquote', 'style', 'Text'],
+                ['pre', 'style', 'Text'],
             ],
         ],
         'custom_attributes' => [

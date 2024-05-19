@@ -6,7 +6,7 @@
     </template>
     <template #default>
 
-      <form @submit.prevent="submit">
+      <div>
         <input v-model="search"
                type="search"
                @input="searchCreators"
@@ -45,18 +45,28 @@
         <div class="pb-2">
           Send an email invitation to join your team.
         </div>
-        <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
-          In development. Not currently working.
-        </div>
         <div class="flex gap-2">
           <input
+              v-model="inviteEmail"
               type="email"
               placeholder="Email Address..."
               class="rounded flex-1"
           >
-          <button class="bg-green-500 hover:bg-green-600 text-white rounded w-20 p-2">Invite</button>
+          <button @click="sendInvite" class="bg-green-500 hover:bg-green-600 text-white rounded w-20 p-2">Invite</button>
         </div>
-      </form>
+        <div class="message-container">
+          <transition name="fade">
+            <div v-if="successMessage" class="message bg-green-300 text-green-800">
+              {{ successMessage }}
+            </div>
+          </transition>
+          <transition name="fade">
+            <div v-if="errorMessage" class="message bg-red-300 text-red-800">
+              {{ errorMessage }}
+            </div>
+          </transition>
+        </div>
+      </div>
     </template>
     <template #footer>
       <!--            <button @click="closeModal" class="text-blue-600 hover:text-gray-500">Cancel</button>-->
@@ -112,22 +122,60 @@ const paginatedCreators = computed(() => {
   return filteredCreators.value.slice(start, start + pageSize)
 })
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredCreators.value.length / pageSize)
-})
+// const totalPages = computed(() => {
+//   return Math.ceil(filteredCreators.value.length / pageSize)
+// })
+//
+// const prevPage = () => {
+//   if (currentPage.value > 1) {
+//     currentPage.value--
+//   }
+// }
+//
+// const nextPage = () => {
+//   if (currentPage.value < totalPages.value) {
+//     currentPage.value++
+//   }
+// }
 
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
+const inviteEmail = ref('');
+const successMessage = ref('');
+const errorMessage = ref('');
+
+const clearMessages = () => {
+  setTimeout(() => {
+    successMessage.value = '';
+    errorMessage.value = '';
+  }, 3000); // Clear messages after 3 seconds
+};
+
+const sendInvite = async () => {
+  console.log('Send Invite Function Called'); // Debugging log
+  console.log(`Sending invite to: ${inviteEmail.value}`); // Debugging log
+  console.log(`Endpoint: /teams/${teamStore.slug}/invite`); // Debugging log
+
+  try {
+    const response = await axios.post(`/teams/${teamStore.slug}/invite`, {
+      email: inviteEmail.value,
+    });
+
+    console.log('Response:', response); // Debugging log
+
+    successMessage.value = response.data.message;
+    errorMessage.value = '';
+    inviteEmail.value = ''; // Clear the input field
+    clearMessages(); // Call clearMessages to clear the messages after a few seconds
+  } catch (error) {
+    console.log('Error:', error); // Debugging log
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage.value = error.response.data.message;
+    } else {
+      errorMessage.value = 'An error occurred while sending the invitation.';
+    }
+    successMessage.value = '';
+    clearMessages(); // Call clearMessages to clear the messages after a few seconds
   }
-}
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-  }
-}
-
+};
 onMounted(() => {
   fetchCreators()
 })
@@ -204,3 +252,25 @@ async function addTeamMember(creator) {
 // }
 
 </script>
+<style scoped>
+.message-container {
+  height: 20px; /* Adjust this height as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  margin-top: 16px;
+  padding: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s ease-in-out;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+</style>

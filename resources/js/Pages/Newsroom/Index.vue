@@ -101,38 +101,43 @@
                             class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200"
                         >{{ newsStory.title }}
                         </button>
-                        <div>By {{ newsStory.news_person && newsStory.news_person.name ? newsStory.news_person.name : newsStory.user.name }}
+                        <div>By {{ newsStory.newsPerson && newsStory.newsPerson.name ? newsStory.newsPerson.name : '' }}
                         </div>
 
                         <div class="flex flex-col pt-2 text-sm">
-                          <div v-if="newsStory.newsCategory" class="font-medium text-orange-800">
-                            {{newsStory.newsCategory}}
-                            <span v-if="newsStory.newsCategorySub"><span class="text-black"> | </span>{{newsStory.newsCategorySub}}</span>
+                          <div v-if="newsStory.category" class="font-medium text-orange-800">
+                            {{ newsStory.category.name }}
+                            <span v-if="newsStory.subCategory"><span class="text-black"> | </span>{{ newsStory.subCategory.name }}</span>
                           </div>
-                          <div v-if="newsStory.city">
-                            <div class="font-semibold">{{newsStory.city}}, <span class="font-medium text-gray-800">{{newsStory.province}}</span></div>
+
+                          <div v-if="locationDisplay && locationDisplay.city && locationDisplay.province">
+                            <div class="font-semibold">{{ locationDisplay.city }}, <span class="font-medium text-gray-800">{{ locationDisplay.province }}</span></div>
                           </div>
-                          <div v-if="newsStory.province && !newsStory.city && !newsStory.federalElectoralDistrict && !newsStory.subnationalElectoralDistrict">
-                            <div class="font-semibold">{{newsStory.province}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Province</span></div>
+
+                          <div v-else-if="locationDisplay && locationDisplay.province && locationDisplay.type === 'Province'">
+                            <div class="font-semibold">{{ locationDisplay.province }} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Province</span></div>
                           </div>
-                          <div v-if="newsStory.federalElectoralDistrict">
-                            <div class="font-semibold">{{newsStory.federalElectoralDistrict}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Federal Electoral District</span></div>
+
+                          <div v-else-if="locationDisplay && locationDisplay.type === 'Federal Electoral District'">
+                            <div class="font-semibold">{{ locationDisplay.name }} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Federal Electoral District</span></div>
                           </div>
-                          <div v-if="newsStory.subnationalElectoralDistrict">
-                            <div class="font-semibold">{{newsStory.subnationalElectoralDistrict}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Subnational Electoral District</span></div>
+
+                          <div v-else-if="locationDisplay && locationDisplay.type === 'Subnational Electoral District'">
+                            <div class="font-semibold">{{ locationDisplay.name }} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Subnational Electoral District</span></div>
                           </div>
+
 
                         </div>
                         <div class="block xl:hidden">
                           <div class="">
                               <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
                               <span class="text-xs uppercase">Created on</span>
-                              {{ formatDate(newsStory.created_at) }}</span>
+                              {{ userStore.formatDateTimeFromUtcToUserTimezone(newsStory.created_at) }}</span>
                           </div>
                           <div class="">
                               <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
                               <span class="text-xs uppercase">Last updated</span>
-                              {{ formatDate(newsStory.updated_at) }}</span>
+                              {{ userStore.formatDateTimeFromUtcToUserTimezone(newsStory.updated_at) }}</span>
                           </div>
                         </div>
                         <div>
@@ -152,12 +157,12 @@
                         <div class="">
                               <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
                               <span class="text-xs uppercase">Created on</span>
-                              {{ formatDate(newsStory.created_at) }}</span>
+                              {{ userStore.formatDateTimeFromUtcToUserTimezone(newsStory.created_at) }}</span>
                         </div>
                         <div class="">
                               <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
                               <span class="text-xs uppercase">Last updated</span>
-                              {{ formatDate(newsStory.updated_at) }}</span>
+                              {{ userStore.formatDateTimeFromUtcToUserTimezone(newsStory.updated_at) }}</span>
                         </div>
                       </div>
 
@@ -392,7 +397,7 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import throttle from 'lodash/throttle'
@@ -435,6 +440,37 @@ let props = defineProps({
 
 const selectedNewsStory = ref(null)
 let search = ref(props.filters.search)
+
+// Computed property for location display
+const locationDisplay = computed(() => {
+  const newsStory = props.newsStory;
+
+  if (newsStory?.city?.name && newsStory?.province?.name) {
+    return {
+      city: newsStory.city.name,
+      province: newsStory.province.name
+    };
+  }
+  if (newsStory?.province?.name && !newsStory.city && !newsStory.federalElectoralDistrict && !newsStory.subnationalElectoralDistrict) {
+    return {
+      province: newsStory.province.name,
+      type: 'Province'
+    };
+  }
+  if (newsStory?.federalElectoralDistrict?.name) {
+    return {
+      name: newsStory.federalElectoralDistrict.name,
+      type: 'Federal Electoral District'
+    };
+  }
+  if (newsStory?.subnationalElectoralDistrict?.name) {
+    return {
+      name: newsStory.subnationalElectoralDistrict.name,
+      type: 'Subnational Electoral District'
+    };
+  }
+  return null;
+});
 
 let form = useForm({})
 

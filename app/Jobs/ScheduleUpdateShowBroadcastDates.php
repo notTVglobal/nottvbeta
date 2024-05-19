@@ -46,11 +46,8 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     }
 
     // First, update broadcast dates and find the closest broadcast date
-    Log::debug('tec21: 1212121212121212');
     $broadcastDates = $this->updateBroadcastDates();
-    Log::debug('tec21: 343434343434343434');
     $closestBroadcastDate = $this->findClosestBroadcastDate($broadcastDates);
-    Log::debug('tec21: 56565656565656565656');
 
     // Now update the schedules index with the closest broadcast date
     if ($closestBroadcastDate) {
@@ -73,7 +70,6 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     // Update the compiled dates into the database
     $reloadedSchedule->broadcast_dates = json_encode($broadcastDates);
     $reloadedSchedule->save();
-    Log::debug('tec21: 787878787878787878');
 
 //    Log::debug('Updated broadcast dates', ['scheduleId' => $reloadedSchedule->id, 'dates' => $broadcastDates]);
   }
@@ -314,11 +310,11 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
       }, $recurrentDates);
 
       // Log final results
-      Log::debug('Recurrent schedule processed successfully', [
-          'scheduleId' => $schedule->id,
-          'datesProcessed' => count($recurrentDates),
-          'UTC DatesAdded' => implode(', ', $recurrentDatesUTC)  // Log the converted dates
-      ]);
+//      Log::debug('Recurrent schedule processed successfully', [
+//          'scheduleId' => $schedule->id,
+//          'datesProcessed' => count($recurrentDates),
+//          'UTC DatesAdded' => implode(', ', $recurrentDatesUTC)  // Log the converted dates
+//      ]);
 
       return $recurrentDatesUTC; // Return the processed dates in UTC
 

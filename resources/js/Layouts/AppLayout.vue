@@ -32,11 +32,15 @@
           :user="user"/>
 
       <!-- Notifications -->
-      <CookieBanner />
+      <CookieBanner/>
       <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
-      <GeneralServiceNotification v-if="user"/>
-      <OrangeFeedbackBox v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage"/>
+      <ConfirmNotificationModal v-if="user"/>
+      <Teleport to="body">
+        <GeneralServiceNotification v-if="user"/>
+      </Teleport>
+      <OrangeFeedbackBox
+          v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage"/>
       <ToastNotification/>
 
     </div>
@@ -73,6 +77,7 @@ import NotificationModal from '@/Components/Global/Notifications/NotificationMod
 import DialogNotification from '@/Components/Global/Modals/DialogNotification'
 import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 import CookieBanner from '@/Components/Global/Banners/CookieBanner.vue'
+import ConfirmNotificationModal from '@/Components/Global/Modals/ConfirmNotificationModal.vue'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()
@@ -100,9 +105,9 @@ let props = defineProps({
 
 const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
 firstPlayVideoEcho.subscribed(() => {
-  console.log('Subscribed to firstPlayVideo channel');
+  console.log('Subscribed to firstPlayVideo channel')
 }).listen('.changeFirstPlayVideo', (e) => {
-  console.log('Broadcast notification, first play video changed:', e);
+  console.log('Broadcast notification, first play video changed:', e)
 
   // Check if 'skip_first_playback_video' is not enabled
   if (userStore.videoSettings.skip_first_playback_video !== 1) {
@@ -111,14 +116,13 @@ firstPlayVideoEcho.subscribed(() => {
       mediaType: e.firstPlayVideo.mediaType || 'mistStream', // Default to 'mistStream' if not specified
       type: e.firstPlayVideo.type,
       name: e.firstPlayVideo.name,
-    };
+    }
 
-    videoPlayerStore.updateFirstPlay(source);
+    videoPlayerStore.updateFirstPlay(source)
     // Load new video with the source data
-    videoPlayerStore.loadNewVideo(source);
+    videoPlayerStore.loadNewVideo(source)
   }
-});
-
+})
 
 
 // const userTimezone = ref('');
@@ -150,7 +154,7 @@ onMounted(async () => {
   if (props.user) { // Checking if user is logged in based on page props
     await userStore.updateUserTimezone()
     await userStore.fetchUserData()
-    userStore.startTimer();
+    userStore.startTimer()
     userStore.videoSettings = props.user.videoSettings
     // console.log('get user data on AppLayout')
     // Call any other user-specific initialization functions here
@@ -158,7 +162,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  userStore.stopTimer();
+  userStore.stopTimer()
   channelStore.viewerCount = 0
   disconnect()
   appSettingStore.removeResizeListener()
@@ -170,7 +174,7 @@ function setPage() {
 
 function disconnect() {
   window.Echo.leave('channel.' + channelStore.currentChannelId)
-  window.Echo.leave('firstPlayVideo');
+  window.Echo.leave('firstPlayVideo')
   console.log('CHANNEL DISCONNECTED')
 }
 

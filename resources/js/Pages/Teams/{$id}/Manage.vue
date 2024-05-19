@@ -78,7 +78,7 @@
               </div>
             </div>
 
-            <div @click="toggleComponent('teamMembers')"
+            <div v-if="can.hasSpecialPermission" @click="toggleComponent('teamMembers')"
                  :class="{'rounded-t-lg': teamStore.openComponent === 'teamMembers', 'rounded-lg': teamStore.openComponent !== 'teamMembers'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
               <font-awesome-icon icon="fa-user-group" class=""/>

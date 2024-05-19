@@ -25,6 +25,7 @@
           <div v-if="team.public_message" class="text-lg md:text-xl leading-relaxed font-medium text-gray-800 dark:text-gray-200 p-3 mb-4 rounded">
             <span v-html="team.public_message" />
           </div>
+
           <div v-if="nextBroadcast && nextBroadcast?.broadcastDetails?.zoomLink" class="w-20 md:border-t border-gray-400 dark:border-gray-600">
           </div>
           <div v-if="nextBroadcast && nextBroadcast?.broadcastDetails?.zoomLink">
@@ -82,6 +83,7 @@ import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
 import TeamIdIndexUpcomingBroadcasts from '@/Components/Pages/Teams/Elements/TeamIdIndexUpcomingBroadcasts.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import TipTapDescriptionRender from '@/Components/Global/TextEditor/TipTapDescriptionRender.vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

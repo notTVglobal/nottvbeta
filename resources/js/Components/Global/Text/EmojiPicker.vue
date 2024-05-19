@@ -32,8 +32,8 @@ const selectEmoji = (emoji) => {
 
 const emojiPickerClass = computed(() => {
   return [
-    'absolute h-32 right-2 bg-white border border-gray-300 shadow-md flex flex-wrap p-2 z-50 rounded-lg',
-    appSettingStore.fullPage ? 'bottom-4' : 'bottom-24'
+    'fixed h-32 right-2 bg-white border border-gray-300 shadow-md flex flex-wrap p-2 z-50 rounded-lg',
+    appSettingStore.fullPage ? 'bottom-32 w-96' : 'bottom-24 w-96'
   ]
 })
 </script>
