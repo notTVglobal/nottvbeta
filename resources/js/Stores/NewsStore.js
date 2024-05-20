@@ -47,6 +47,8 @@ const initialState = () => ({
     search: '',
     errors: [],
 
+    newsStoryStatuses: {},
+    newsStoryId: '',
 
     isLoadingCategoryCityData: false,
     isLoading: true,
@@ -395,7 +397,18 @@ export const useNewsStore = defineStore('newsStore', {
                 console.error('An unexpected error occurred:', error)
                 this.processing = false
             }
-        }
+        },
+        changeNewsStoryStatus(statusId) {
+            document.getElementById('newsStoryStatusChangeModal').close()
+            Inertia.patch(route('news.story.changeStatus'), {
+              newsStory_id: this.newsStoryId, // Assuming you have the ID available in `newsStory`
+              new_status_id: statusId
+            }, {
+              onError: (errors) => {
+                console.error('Error changing status:', errors);
+              }
+            });
+        },
     },
 
     getters: {

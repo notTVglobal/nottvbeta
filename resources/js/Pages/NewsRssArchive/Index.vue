@@ -9,8 +9,10 @@
   <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 mb-10">
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
+
       <NewsHeader>Newsroom</NewsHeader>
+
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-5">
         <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">

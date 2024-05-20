@@ -8634,6 +8634,16 @@ hr {
   max-width: 20rem;
 }
 
+.max-w-fit {
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
+.max-w-3xl {
+  max-width: 48rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -8948,6 +8958,10 @@ hr {
 
 .gap-y-3 {
   row-gap: 0.75rem;
+}
+
+.gap-y-4 {
+  row-gap: 1rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
@@ -9903,6 +9917,11 @@ hr {
 .bg-yellow-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(66 32 6 / var(--tw-bg-opacity));
+}
+
+.bg-purple-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 245 255 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-0 {
@@ -12438,6 +12457,10 @@ hr {
     display: flex;
   }
 
+  .sm\:table-cell {
+    display: table-cell;
+  }
+
   .sm\:hidden {
     display: none;
   }
@@ -13164,6 +13187,11 @@ hr {
     margin-right: 0px;
   }
 
+  .xl\:mx-12 {
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+
   .xl\:mb-0 {
     margin-bottom: 0px;
   }
@@ -13196,6 +13224,10 @@ hr {
     display: block;
   }
 
+  .xl\:flex {
+    display: flex;
+  }
+
   .xl\:table-cell {
     display: table-cell;
   }
@@ -13218,6 +13250,10 @@ hr {
 
   .xl\:max-w-xl {
     max-width: 36rem;
+  }
+
+  .xl\:max-w-4xl {
+    max-width: 56rem;
   }
 
   .xl\:grid-cols-3 {
@@ -13252,12 +13288,24 @@ hr {
   .xl\:text-left {
     text-align: left;
   }
+
+  .xl\:align-middle {
+    vertical-align: middle;
+  }
 }
 
 @media (min-width: 1536px) {
 
+  .\32xl\:flex {
+    display: flex;
+  }
+
   .\32xl\:table-cell {
     display: table-cell;
+  }
+
+  .\32xl\:hidden {
+    display: none;
   }
 
   .\32xl\:h-auto {

@@ -14,7 +14,7 @@
           <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn"/>
           <div class="w-full">
             <Breadcrumbs :classType="'dark'"
-                         :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.newsStory.category.name, to: '' }, { text: $page.props.newsStory.subCategory.name, to: '' }]"/>
+                         :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.newsStory.category.name, to: `/news/category/${$page.props.newsStory.category.slug}` }, { text: $page.props.newsStory.subCategory.name, to: '' }]"/>
           </div>
 
           <div v-if="userStore.loggedIn" class="w-full flex flex-row flex-wrap justify-end px-6 gap-2">
@@ -60,14 +60,14 @@
                   <div class="">by {{ newsStory.newsPerson.name }}</div>
 
                   <div v-if="newsStory.published_at" class="font-light mt-4">Published
-                    {{ userStore.formatDateTimeFromUtcToUserTimezone(newsStory.published_at) }}
+                    {{ userStore.formatDateTimeFullWithYearFromUtcToUserTimezone(newsStory.published_at) }} {{ userStore.timezoneAbbreviation }}
                   </div>
                   <div v-else-if="newsStory.status.name === 'Creators Only'" class="text-gray-700 italic">
                     {{ newsStory.status.name }}
                   </div>
                   <div v-else class="font-light mt-4 italic">not published yet</div>
                   <div v-if="newsStory.published_at < newsStory.updated_at" class="font-light">Last updated
-                    {{ userStore.formatDateTimeFromUtcToUserTimezone(newsStory.updated_at) }}
+                    {{ userStore.formatDateTimeFullWithYearFromUtcToUserTimezone(newsStory.updated_at) }} {{ userStore.timezoneAbbreviation }}
                   </div>
 
                   <div class="pt-6">
@@ -147,7 +147,7 @@ appSettingStore.setPrevUrl()
 onMounted(() => {
   newsStore.reset()
   // newsStore.content_json = JSON.parse(props.newsStory.content_json)
-  newsStore.newsArticleContentTiptop = props.newsStory.content
+  newsStore.content = props.newsStory.content
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 })

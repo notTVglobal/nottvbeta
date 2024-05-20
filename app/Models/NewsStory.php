@@ -106,7 +106,7 @@ class NewsStory extends Model {
   public function getCachedCategory()
   {
     return Cache::rememberForever('newsCategory_' . $this->news_category_id, function () {
-      return $this->newsCategory ? $this->newsCategory->only(['id', 'name', 'description']) : null;
+      return $this->newsCategory ? $this->newsCategory->only(['id', 'slug', 'name', 'description']) : null;
     });
   }
 
@@ -114,7 +114,7 @@ class NewsStory extends Model {
   public function getCachedSubCategory()
   {
     return Cache::rememberForever('newsSubcategory_' . $this->news_category_sub_id, function () {
-      return $this->newsCategorySub ? $this->newsCategorySub->only(['id', 'name', 'description']) : null;
+      return $this->newsCategorySub ? $this->newsCategorySub->only(['id', 'slug', 'name', 'description']) : null;
     });
   }
 
@@ -122,7 +122,7 @@ class NewsStory extends Model {
   public function getCachedCity()
   {
     return Cache::rememberForever('newsCity_' . $this->city_id, function () {
-      return $this->city ? $this->city->only(['id', 'name', 'description']) : null;
+      return $this->city ? $this->city->only(['id', 'slug', 'name', 'description']) : null;
     });
   }
 
@@ -130,23 +130,23 @@ class NewsStory extends Model {
   public function getCachedProvince()
   {
     return Cache::rememberForever('newsProvince_' . $this->province_id, function () {
-      return $this->province ? $this->province->only(['id', 'name', 'description']) : null;
+      return $this->province ? $this->province->only(['id', 'slug', 'name', 'description']) : null;
     });
   }
 
   // Retrieves the cached federal electoral district or loads it if not cached
   public function getCachedFederalElectoralDistrict()
   {
-    return Cache::rememberForever('newsFederalElectoralDistrict_' . $this->federal_electoral_district_id, function () {
-      return $this->federalElectoralDistrict ? $this->federalElectoralDistrict->only(['id', 'name', 'description']) : null;
+    return Cache::rememberForever('newsFederalElectoralDistrict_' . $this->news_federal_electoral_district_id, function () {
+      return $this->federalElectoralDistrict ? $this->federalElectoralDistrict->only(['id', 'slug', 'name', 'description']) : null;
     });
   }
 
   // Retrieves the cached subnational electoral district or loads it if not cached
   public function getCachedSubnationalElectoralDistrict()
   {
-    return Cache::rememberForever('newsSubnationalElectoralDistrict_' . $this->subnational_electoral_district_id, function () {
-      return $this->subnationalElectoralDistrict ? $this->subnationalElectoralDistrict->only(['id', 'name', 'description']) : null;
+    return Cache::rememberForever('newsSubnationalElectoralDistrict_' . $this->news_subnational_electoral_district_id, function () {
+      return $this->subnationalElectoralDistrict ? $this->subnationalElectoralDistrict->only(['id', 'slug', 'name', 'description']) : null;
     });
   }
 
