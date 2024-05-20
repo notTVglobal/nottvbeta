@@ -3,13 +3,14 @@
 Last Update: May 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.9.0.25
+## v0.9.0.25b
 May 17, 2024
 * Fixed adding Team Members and remove Team Members from Teams
   Manage page.
 * Added emojis to the chat.
 * Team members can now be invited directly to the team from the Team Members panel on the Team Manage page.
-* Add the News Category and News City pages
+* Add the News Category and News City pages.
+* Make image nullable on news stories table a 2 part migration. (Allow NewsStories to have no image)
 
 ## v0.9.0.24
 May 17, 2024
