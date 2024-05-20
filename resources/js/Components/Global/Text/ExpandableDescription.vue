@@ -7,7 +7,7 @@
       <!-- Use v-html to render the description with HTML formatting -->
       <!--      <span v-html="showFullDescription ? description : truncatedDescription"></span>-->
       <!-- Use TipTapDescriptionRender component to render HTML content -->
-      <tip-tap-description-render :description="displayedDescription" :key="showFullDescription"/>
+      <tip-tap-render :content="displayedDescription" :key="showFullDescription"/>
       <div class="flex w-full justify-center">
         <button v-if="needsTruncation && !showFullDescription"
                 @click="toggleDescription"
@@ -21,7 +21,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import TipTapDescriptionRender from '@/Components/Global/TextEditor/TipTapDescriptionRender.vue'
+import TipTapRender from '@/Components/Global/TextEditor/TipTapRender.vue'
 
 // Props
 const props = defineProps({
@@ -44,8 +44,6 @@ const needsTruncation = computed(() => {
 })
 
 const toggleDescription = () => {
-  console.log('Toggling Description:', showFullDescription.value)
-  console.log(props.description)
   showFullDescription.value = !showFullDescription.value
 }
 

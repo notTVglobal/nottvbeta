@@ -1,6 +1,6 @@
 <template>
   <div class="pt-8">
-    <h1 class="text-2xl font-bold">{{ newsCity.name }}</h1>
+    <h1 class="text-2xl font-bold">{{ newsCity?.name }}</h1>
     <div v-if="newsStories?.data?.length">
       <ul>
         <li v-for="newsStory in newsStories?.data" :key="newsStory.id">

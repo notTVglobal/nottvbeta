@@ -14,7 +14,7 @@
 
         <section>
 
-          <NewsCityIndexContainer :newsCities="newsCities" :filters="filters"/>
+          <NewsCityIndexContainer :newsCities="newsCities"/>
 
         </section>
 
@@ -39,7 +39,6 @@ const videoPlayerStore = useVideoPlayerStore()
 
 const props = defineProps({
   newsCities: Object,
-  filters: Object,
 })
 
 usePageSetup(`news.city.index`);

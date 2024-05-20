@@ -203,6 +203,20 @@ export const useUserStore = defineStore('userStore', {
             }
             return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
         },
+        formatDateTimeWithYearFromUtcToUserTimezone(dateTime, formatString = 'ddd DD MMM, YYYY [at] h:mm a') {
+            if (!this.timezone) {
+                console.error('Timezone is not set.')
+                return dateTime // Or handle this case as appropriate for your app
+            }
+            return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
+        },
+        formatDateTimeFullWithYearFromUtcToUserTimezone(dateTime, formatString = 'dddd MMMM DD, YYYY [at] h:mm a') {
+            if (!this.timezone) {
+                console.error('Timezone is not set.')
+                return dateTime // Or handle this case as appropriate for your app
+            }
+            return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
+        },
         formatLongDateTimeFromUtcToUserTimezone(dateTime, formatString = 'dddd MMMM D [at] h:mm a') {
             if (!this.timezone) {
                 console.error('Timezone is not set.')

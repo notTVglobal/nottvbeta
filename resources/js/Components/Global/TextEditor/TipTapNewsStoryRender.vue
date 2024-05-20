@@ -6,7 +6,7 @@
 <script setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import { FontFamily } from '@tiptap/extension-font-family'
@@ -42,7 +42,7 @@ let editor = ref(
           openOnClick: true,
         }),
       ],
-      content: props.content, // Use the passed Tiptap JSON content
+      content: props.content, // HTML content
       editable: false
     })
 );

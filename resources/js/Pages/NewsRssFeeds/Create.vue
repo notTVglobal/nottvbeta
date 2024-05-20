@@ -2,10 +2,14 @@
 
   <Head title="Add RSS Feed"/>
 
-  <div class="place-self-center flex flex-col gap-y-3 mt-3">
-    <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="min-h-screen bg-white text-black dark:bg-gray-800 dark:text-gray-50">
+
+      <NewsHeader :can="can">Newsroom</NewsHeader>
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
+
+      <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg py-5 max-w-3xl mx-auto">
 
       <div class="flex flex-row justify-between">
         <h2 class="text-xl font-semibold leading-tight">
@@ -74,7 +78,7 @@
         </form>
       </div>
 
-
+      </div>
     </div>
 
   </div>
@@ -89,6 +93,7 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import Button from "@/Jetstream/Button"
 import Message from "@/Components/Global/Modals/Messages"
 import CancelButton from '@/Components/Global/Buttons/CancelButton.vue'
+import NewsHeader from '@/Components/Pages/News/NewsHeader.vue'
 
 usePageSetup('newsFeedCreate')
 

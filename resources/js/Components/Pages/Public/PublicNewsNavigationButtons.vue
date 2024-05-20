@@ -1,6 +1,6 @@
 <template>
-  <div class="hidden md:block flex py-10 px-16 justify-center">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-center">
+  <div class="md:block flex py-10 px-16 justify-center">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 py-10 px-16 justify-center max-w-7xl mx-auto">
       <PublicNavLink
           @click="() => Inertia.visit('/news')"
           :active="appSettingStore.currentPage === 'news'"
@@ -9,25 +9,25 @@
       </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news/category')"
-          :active="appSettingStore.currentPage === 'news.category.index'"
+          :active="appSettingStore.currentPage.includes('news.category.index')"
           class="min-w-fit">
         Categories
       </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news/city')"
-          :active="appSettingStore.currentPage === 'news.city.index'"
+          :active="appSettingStore.currentPage.includes('news.city')"
           class="min-w-fit">
         Cities
       </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news-districts')"
-          :active="appSettingStore.currentPage === 'newsDistricts.index'"
+          :active="appSettingStore.currentPage.includes('newsDistricts')"
           class="min-w-fit">
         Districts
       </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news/reporters')"
-          :active="appSettingStore.currentPage === 'news.reporters'"
+          :active="appSettingStore.currentPage.includes('news.reporter')"
           class="min-w-fit">
         Reporters
       </PublicNavLink>

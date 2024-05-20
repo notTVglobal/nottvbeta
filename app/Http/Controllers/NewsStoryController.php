@@ -75,7 +75,19 @@ class NewsStoryController extends Controller {
   private function getNewsStories() {
     $user = Auth::user();
 
-    return NewsStory::with('image', 'user', 'newsPerson.user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
+    $newsStoriesQuery  = NewsStory::with([
+        'image.appSetting',
+        'user',
+        'newsPerson.user',
+        'newsCategory',
+        'newsCategorySub',
+        'city',
+        'province',
+        'federalElectoralDistrict',
+        'subnationalElectoralDistrict',
+        'newsStatus',
+        'video.appSetting'
+    ])
         ->when(Request::input('search'), function ($query, $search) {
           $lowerSearch = strtolower($search); // Convert search term to lowercase
           $query->whereRaw('LOWER(title) like ?', "%{$lowerSearch}%")
@@ -133,33 +145,39 @@ class NewsStoryController extends Controller {
               });
         })
         ->whereNotNull('published_at')
-        ->orderBy('published_at', 'desc')
-        ->paginate(10, ['*'], 'news')
-        ->withQueryString()
-        ->through(fn($newsStory) => [
-            'id'                           => $newsStory->id,
-            'user'                         => [
-                'name' => $newsStory->user->name,
-            ],
-            'news_person'                  => [
-                'id'   => $newsStory->news_person_id ?? null,
-                'name' => $newsStory->newsPerson->user->name ?? null,
-            ],
-            'title'                        => html_entity_decode($newsStory->title),
-            'slug'                         => $newsStory->slug,
-            'newsCategory'                 => $newsStory->newsCategory->name ?? null,
-            'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
-            'content'                      => $newsStory->content,
-            'city'                         => $newsStory->city->name ?? null,
-            'province'                     => $newsStory->province->name ?? null,
-            'federalElectoralDistrict'     => $newsStory->federalElectoralDistrict->name ?? null,
-            'subnationalElectoralDistrict' => $newsStory->subnationalElectoralDistrict->name ?? null,
-            'image'                        => $newsStory->image,
-            'status'                       => $newsStory->newsStatus->name,
-            'video'                        => $newsStory->video ?? null,
-            'created_at'                   => $newsStory->created_at,
-            'published_at'                 => $newsStory->published_at,
-        ]);
+        ->orderBy('published_at', 'desc');
+
+        $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
+
+    return NewsStoryResource::collection($paginatedNewsStories);
+
+//
+//        ->paginate(10, ['*'], 'news')
+//        ->withQueryString()
+//        ->through(fn($newsStory) => [
+//            'id'                           => $newsStory->id,
+//            'user'                         => [
+//                'name' => $newsStory->user->name,
+//            ],
+//            'news_person'                  => [
+//                'id'   => $newsStory->news_person_id ?? null,
+//                'name' => $newsStory->newsPerson->user->name ?? null,
+//            ],
+//            'title'                        => html_entity_decode($newsStory->title),
+//            'slug'                         => $newsStory->slug,
+//            'newsCategory'                 => $newsStory->newsCategory->name ?? null,
+//            'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
+//            'content'                      => $newsStory->content,
+//            'city'                         => $newsStory->city->name ?? null,
+//            'province'                     => $newsStory->province->name ?? null,
+//            'federalElectoralDistrict'     => $newsStory->federalElectoralDistrict->name ?? null,
+//            'subnationalElectoralDistrict' => $newsStory->subnationalElectoralDistrict->name ?? null,
+//            'image'                        => $newsStory->image,
+//            'status'                       => $newsStory->newsStatus->name,
+//            'video'                        => $newsStory->video ?? null,
+//            'created_at'                   => $newsStory->created_at,
+//            'published_at'                 => $newsStory->published_at,
+//        ]);
   }
 
 

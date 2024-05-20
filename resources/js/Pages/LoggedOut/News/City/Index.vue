@@ -17,7 +17,7 @@
 
       <section>
 
-        <NewsCityShowContainer :newsCity="newsCity" :newsStories="newsStories"/>
+        <NewsCityIndexContainer :newsCities="newsCities"/>
 
       </section>
 
@@ -38,7 +38,7 @@ import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNav
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
-import NewsCityShowContainer from '@/Components/Pages/News/City/Layout/NewsCityShowContainer.vue'
+import NewsCityIndexContainer from '@/Components/Pages/News/City/Layout/NewsCityIndexContainer.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
@@ -58,8 +58,7 @@ onMounted(() => {
 });
 
 defineProps({
-  newsStories: Object,
-  newsCity: Object,
+  newsCities: Object,
 })
 
 </script>

@@ -83,7 +83,7 @@ import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
 import TeamIdIndexUpcomingBroadcasts from '@/Components/Pages/Teams/Elements/TeamIdIndexUpcomingBroadcasts.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
-import TipTapDescriptionRender from '@/Components/Global/TextEditor/TipTapDescriptionRender.vue'
+import TipTapRender from '@/Components/Global/TextEditor/TipTapRender.vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

@@ -21,7 +21,7 @@ import Link from '@tiptap/extension-link'
 
 
 const props = defineProps({
-  description: String,
+  content: String,
 })
 
 let editor = ref(
@@ -41,7 +41,7 @@ let editor = ref(
           openOnClick: true,
         }),
       ],
-      content: props.description, // Use the passed Tiptap HTML content
+      content: props.content, // Use the passed Tiptap HTML content
       editable: false,
     }),
 )

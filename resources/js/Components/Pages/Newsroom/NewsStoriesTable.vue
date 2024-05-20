@@ -49,32 +49,35 @@
       </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
+
       <tr v-for="story in newsStories.data" :key="story.id">
-        <td v-if="story.newsCategory" class="px-6 py-4 whitespace-normal">
+
+        <td v-if="story.category.id" class="px-6 py-4 whitespace-normal">
+
           <span class="block font-semibold uppercase"
-                v-if="story.city">
-            {{ story.city }}<br><span class="uppercase font-thin">{{ story.province}}</span></span>
-          <div v-if="story.province && !story.city && !story.federalElectoralDistrict && !story.subnationalElectoralDistrict">
+                v-if="story.city.id">
+            {{ story.city.name }}<br><span class="uppercase font-thin">{{ story.province.name }}</span></span>
+          <div v-if="story.province.id && !story.city.id && !story.federalElectoralDistrict.id && !story.subnationalElectoralDistrict.id">
             <span class="block uppercase font-semibold">
-            {{ story.province }}</span>
+            {{ story.province.name }}</span>
             <span class="block text-sm uppercase font-thin">Province</span>
           </div>
-          <div v-if="story.federalElectoralDistrict">
+          <div v-if="story.federalElectoralDistrict.id">
             <span class="block uppercase font-semibold">
-            {{ story.federalElectoralDistrict }}</span>
+            {{ story.federalElectoralDistrict.name }}</span>
             <span class="block text-sm uppercase font-thin">Federal Electoral District</span>
           </div>
-          <div v-if="story.subnationalElectoralDistrict">
+          <div v-if="story.subnationalElectoralDistrict.id">
             <span class="block uppercase font-semibold">
-            {{ story.subnationalElectoralDistrict }}</span>
+            {{ story.subnationalElectoralDistrict.name }}</span>
             <span class="block text-sm uppercase font-thin">Subnational Electoral District</span>
           </div>
           <span class="px-4"></span>
           <span class="block text-lg font-semibold text-orange-800">
-            {{ story.newsCategory }}</span>
+            {{ story.category.name }}</span>
           <span class="block text-wrap"
-                v-if="story.newsCategorySub">
-            {{ story.newsCategorySub }}</span>
+                v-if="story.subCategory.id">
+            {{ story.subCategory.name }}</span>
         </td>
         <td class="px-6 py-4 whitespace-normal"
             v-if="story.title" >
@@ -91,7 +94,7 @@
                 </div>
                 <div>
                   <span class="uppercase text-xs font-semibold">By</span>
-                  {{ story.news_person && story.news_person.name ? story.news_person.name : story.user.name }}
+                  {{ story.newsPerson.id && story.newsPerson.name ? story.newsPerson.name : '' }}
                 </div>
               </div>
             </div>
@@ -108,7 +111,7 @@
             <div v-if="story.published_at" class="flex flex-col justify-end">
 <!--              <span v-if="!story.published_at">{{ story.status }}</span><br>-->
               <div class="text-xs uppercase font-semibold">Published</div>
-              <div>{{ formatDate(new Date(story.published_at).toLocaleDateString()) }}</div>
+              <div>{{ userStore.formatDateTimeWithYearFromUtcToUserTimezone(story.published_at) }}</div>
             </div>
           </div>
         </td>
@@ -121,23 +124,23 @@
     </div>
 
     <div class="w-full flex justify-center">
-      <Pagination :data="newsStories" class="" />
+      <Pagination :data="newsStories.meta" class="" />
     </div>
 
   </div>
 </template>
 
-
-
 <script setup>
 import { ref, watch } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import Pagination from '@/Components/Global/Paginators/Pagination.vue'
 import throttle from 'lodash/throttle'
 import { Inertia } from '@inertiajs/inertia'
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 
 const props = defineProps({
   newsStories: Object,
