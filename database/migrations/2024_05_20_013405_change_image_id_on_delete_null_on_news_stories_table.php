@@ -14,6 +14,11 @@ return new class extends Migration
     public function up()
     {
       Schema::table('news_stories', function (Blueprint $table) {
+        // Drop the existing foreign key constraint
+        $table->dropForeign(['image_id']);
+      });
+
+      Schema::table('news_stories', function (Blueprint $table) {
         // Re-add the foreign key constraint with on delete set null
         $table->foreign('image_id')->references('id')->on('images')->onDelete('set null');
       });
@@ -30,8 +35,11 @@ return new class extends Migration
         // Drop the foreign key constraint with on delete set null
         $table->dropForeign(['image_id']);
 
-        // Re-add the foreign key constraint without on delete set null
-        $table->foreign('image_id')->references('id')->on('images');
+        // Add the original foreign key constraint
+        $table->foreign('image_id')
+            ->references('id')
+            ->on('images')
+            ->onDelete('restrict'); // Change this to whatever the original action was
       });
     }
 };
