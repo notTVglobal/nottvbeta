@@ -1,6 +1,6 @@
 <template>
   <div class="md:block flex py-10 px-16 justify-center">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-center">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 py-10 px-16 justify-center max-w-7xl mx-auto">
       <PublicNavLink
           @click="() => Inertia.visit('/news')"
           :active="appSettingStore.currentPage === 'news'"
@@ -9,7 +9,7 @@
       </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news/category')"
-          :active="appSettingStore.currentPage.includes('news.category')"
+          :active="appSettingStore.currentPage.includes('news.category.index')"
           class="min-w-fit">
         Categories
       </PublicNavLink>

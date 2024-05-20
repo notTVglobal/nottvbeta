@@ -32,8 +32,6 @@ import Pagination from '@/Components/Global/Paginators/Pagination'
 
 
 import ConfirmPublishNewsDialog from '@/Components/Global/Modals/ConfirmPublishNewsDialog.vue'
-import { Inertia } from '@inertiajs/inertia'
-import { computed, ref } from 'vue'
 
 import NewsStoryItem from '@/Components/Pages/Newsroom/Elements/NewsStoryItem.vue'
 

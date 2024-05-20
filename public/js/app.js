@@ -4463,10 +4463,12 @@ var map = {
 	],
 	"./LoggedOut/News/Category/{$id}/Index": [
 		"./resources/js/Pages/LoggedOut/News/Category/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_LoggedOut_News_Category_id_Index_vue"
 	],
 	"./LoggedOut/News/Category/{$id}/Index.vue": [
 		"./resources/js/Pages/LoggedOut/News/Category/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_LoggedOut_News_Category_id_Index_vue"
 	],
 	"./LoggedOut/News/City/Index": [
@@ -4629,10 +4631,12 @@ var map = {
 	],
 	"./News/Category/{$id}/Index": [
 		"./resources/js/Pages/News/Category/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_News_Category_id_Index_vue"
 	],
 	"./News/Category/{$id}/Index.vue": [
 		"./resources/js/Pages/News/Category/{$id}/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_News_Category_id_Index_vue"
 	],
 	"./News/City/Index": [

@@ -1803,6 +1803,12 @@ html {
 .card-body :where(p) {
   flex-grow: 1;
 }
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
 .card figure {
   display: flex;
   align-items: center;
@@ -8184,6 +8190,10 @@ hr {
   height: 100vh;
 }
 
+.h-60 {
+  height: 15rem;
+}
+
 .max-h-1\/2screen {
   max-height: 50vh;
 }
@@ -12924,6 +12934,14 @@ hr {
     grid-column: span 4 / span 4;
   }
 
+  .lg\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+
+  .lg\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
   .lg\:m-0 {
     margin: 0px;
   }
@@ -13152,6 +13170,10 @@ hr {
 
   .lg\:pt-6 {
     padding-top: 1.5rem;
+  }
+
+  .lg\:pl-4 {
+    padding-left: 1rem;
   }
 
   .lg\:text-left {
