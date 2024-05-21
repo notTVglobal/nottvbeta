@@ -47,7 +47,7 @@ class NewsFederalElectoralDistrictsCANSeeder extends Seeder
 
         // Get all the records
         foreach ($csv->getRecords() as $record) {
-            $provinceNameFromCsv = $record['province_name'] ?? null;
+            $provinceNameFromCsv = $record['prov_name_en'] ?? null;
             $provinceId = $provinces[$provinceNameFromCsv] ?? null;
 
             if (!$provinceId) {
@@ -56,19 +56,19 @@ class NewsFederalElectoralDistrictsCANSeeder extends Seeder
             }
 
             // Parse latitude and longitude from the combined string
-            $coordinates = explode(',', trim($record['latitude_longitude'], '"'));
+            $coordinates = explode(',', trim($record['geo_point_2d'], '"'));
             $latitude = $coordinates[0] ?? null;
             $longitude = $coordinates[1] ?? null;
 
             NewsFederalElectoralDistrict::create([
-                'name'           => $record['name'],
-                'slug'           => Str::slug($record['name']),
+                'name'           => $record['riding_name_en'],
+                'slug'           => Str::slug($record['riding_name_en']),
                 'latitude'       => $latitude,
                 'longitude'      => $longitude,
-                'year_updated'   => (int) $record['year_updated'],
+                'year_updated'   => (int) $record['year'],
                 'province_id'    => $provinceId,
                 'country_id'     => $countryId,
-                'geo_shape_json' => $record['coordinates'], // Storing the geo_shape_json
+                'geo_shape_json' => $record['geo_shape_json'], // Storing the geo_shape_json
                 'created_at'     => now(),
                 'updated_at'     => now(),
             ]);

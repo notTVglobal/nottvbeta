@@ -628,6 +628,7 @@
                       <pre data-prefix="14."><code>Run: npm install</code></pre>
                       <pre data-prefix="15."><code>Run: sail php artisan migrate</code></pre>
                       <pre data-prefix="16."><code>Run: sail php artisan db:seed (for testing)</code></pre>
+                      <pre data-prefix="16."><code>Run: php artisan slugs:update</code></pre>
 
                       <h2 class="pt-8 pb-2">If you have Composer, PHP 8.1, and Node.js installed:</h2>
                       <pre data-prefix="$"><code>composer update</code></pre>

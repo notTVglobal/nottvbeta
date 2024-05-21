@@ -57,6 +57,7 @@ $ php artisan storage:link
 ```bash
 $ php artisan migrate
 $ php artisan db:seed --class=FirstRunSeeder
+$ php artisan slugs:update
 ```
 # An Administrator account will be created: #
 
@@ -96,6 +97,9 @@ $ php artisan db:seed --class=MasterSeeder # sets up categories
 
 ## Setting up notTV from a Git Repo
   __More detail will be found in the Admin/Settings page, login as admin@not.tv after you run the database migration.__
+
+You will need to provide your SSH key to development team (@tec21) to gain access to the repo. This is until the foundation is in place, then we will expand the project for open development.
+
 1. Unzip `README.zip` (it will add images to the `/storage/app/public/images` folder)
 2. Install PHP 8.1
 3. Install PHP Extensions: `curl`, `mbstring`, ...
