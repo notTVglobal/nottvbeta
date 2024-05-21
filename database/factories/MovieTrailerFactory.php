@@ -12,23 +12,20 @@ use App\Models\Video;
  */
 class MovieTrailerFactory extends Factory
 {
+    protected $model = MovieTrailer::class;
 
-  protected $model = MovieTrailer::class;
+    public function definition()
+    {
+        $video = Video::inRandomOrder()->first();
+        $movie = Movie::inRandomOrder()->first();
 
-  public function definition()
-  {
-
-    $video = Video::inRandomOrder()->first();
-
-    $movie = Movie::inRandomOrder()->first();
-
-    return [
-        'movie_id' => $movie->id,  // Find a random Movie and get its ID
-        'extension' => $this->faker->randomElement(['mp4', 'mov', 'avi']),  // Example extensions
-        'size' => $this->faker->numberBetween(1000, 10000),  // Example size in KB
-        'file_path' => $this->faker->filePath(),  // Generates a random file path
-        'file_url' => $this->faker->url,  // Generates a random URL
-        'video_id' => $video->id,  // Creates a new Video and gets its ID
-    ];
-  }
+        return [
+            'movie_id' => $movie ? $movie->id : null,  // Handle the case where there is no movie
+            'extension' => $this->faker->randomElement(['mp4', 'mov', 'avi']),  // Example extensions
+            'size' => $this->faker->numberBetween(1000, 10000),  // Example size in KB
+            'file_path' => $this->faker->filePath(),  // Generates a random file path
+            'file_url' => $this->faker->url,  // Generates a random URL
+            'video_id' => $video ? $video->id : null,  // Handle the case where there is no video
+        ];
+    }
 }

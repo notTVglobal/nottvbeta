@@ -30,7 +30,7 @@ class NewsFederalElectoralDistrictsMoreInfoCANSeeder extends Seeder
       // Load the CSV document from a file path
       // we need to upload the dataset manually.
       // Put the CSV in storage/app/csv
-      $path = storage_path('../storage/app/csv/news_federal_electoral_districts_more_info_CAN.csv');
+      $path = storage_path('../support_files/csv_files/news_federal_electoral_districts_more_info_CAN.csv');
 
       // Check if the CSV file exists
       if (!file_exists($path)) {

@@ -19,6 +19,11 @@ return new class extends Migration
       });
 
       Schema::table('news_stories', function (Blueprint $table) {
+          // First, make the image_id column nullable
+          $table->unsignedBigInteger('image_id')->nullable()->change();
+      });
+
+      Schema::table('news_stories', function (Blueprint $table) {
         // Re-add the foreign key constraint with on delete set null
         $table->foreign('image_id')->references('id')->on('images')->onDelete('set null');
       });

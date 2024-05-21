@@ -550,37 +550,108 @@
 
 
 
-        <div class="card w-full mx-6 bg-neutral text-neutral-content">
-          <div class="card-body items-center text-center">
+          <div class="card w-full mx-6 bg-neutral text-neutral-content">
+              <div class="card-body items-center text-center">
+                  <div class="mockup-code break-words">
+                      <h1 class="pb-4">First Time Setup from Clone</h1>
+                      <pre data-prefix="$"><code>unzip README.zip</code></pre>
 
-            <div class="mockup-code break-words">
-              <h1 class="pb-4">First Time Setup from Clone</h1>
-              <pre data-prefix="$"><code>unzip README.zip</code></pre>
-              <h2 class="pt-8 pb-2">If you have composer, php 8.1 and nodeJS installed:</h2>
-              <pre data-prefix="$"><code>composer update</code></pre>
-              <pre data-prefix="$"><code>sail up</code></pre>
-              <pre data-prefix="$"><code>npx mix watch</code></pre>
-              <pre data-prefix="$"><code>sail php artisan horizon</code></pre>
+                      <h2 class="pt-4 pb-2">Step-by-Step Instructions:</h2>
 
-              <h2 class="py-4">.env settings</h2>
-              <pre data-prefix=""><code>MISTSERVER_HOST=http://localhost:4242/api</code></pre>
-              <pre data-prefix=""><code>MISTSERVER_USERNAME=nottvadmin</code></pre>
-              <pre data-prefix=""><code>MISTSERVER_PASSWORD=123</code></pre>
+                      <p class="py-3 text-left">Recommend: Ubuntu 22.04 or Mac. If using Windows install WSL2, Docker Desktop and Ubuntu 22.04</p>
 
-              <h2 class="py-4">Admin Settings</h2>
-              <pre data-prefix=""><code>MISTSERVER URI: http://localhost:8080/</code></pre>
-              <pre data-prefix=""><code>MISTSERVER RTMP URI: rtmp://localhost/</code></pre>
+                      <h3 class="my-3 text-left">1. Install PHP 8.1</h3>
+                      <pre data-prefix="1.1"><code>sudo apt update</code></pre>
+                      <pre data-prefix="1.2"><code>sudo apt install software-properties-common ca-certificates lsb-release apt-transport-https -y</code></pre>
+                      <pre data-prefix="1.3"><code>sudo add-apt-repository ppa:ondrej/php</code></pre>
+                      <p class="py-3 text-left">NOTE: if Apache2 gets installed at this point then remove it to use Laravel Sail without conflicting ports.</p>
+                      <pre data-prefix="1.4"><code>sudo apt update</code></pre>
+                      <pre data-prefix="1.5"><code>sudo apt install php8.1 php8.1-cli php8.1-common php8.1-curl php8.1-xml php8.1-mbstring php8.1-zip</code></pre>
+                      <pre data-prefix="1.6"><code>php -v</code></pre>
 
-              <h2 class="py-4">Use these tools:</h2>
-              <pre data-prefix=""><code>http://localhost:4242 (MistServer)</code></pre>
-              <pre data-prefix=""><code>http://localhost:8025 (Mailhog)</code></pre>
-              <pre data-prefix=""><code>http://localhost/horizon (Horizon Job Queue)</code></pre>
+                      <h3 class="my-3 text-left">2. Install Node.js and npm</h3>
+                      <pre data-prefix="2.1"><code>curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -</code></pre>
+                      <pre data-prefix="2.2"><code>sudo apt-get install -y nodejs</code></pre>
+                      <pre data-prefix="2.3"><code>node -v</code></pre>
+                      <pre data-prefix="2.4"><code>npm -v</code></pre>
 
-            </div>
+                      <h3 class="my-3 text-left">3. Install Composer and move it to a global command</h3>
+                      <pre data-prefix="3.1"><code>php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"</code></pre>
+                      <pre data-prefix="3.2"><code>php -r "if (hash_file('SHA384', 'composer-setup.php') === '$(php -r "echo trim(file_get_contents('https://composer.github.io/installer.sig'));")') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"</code></pre>
+                      <pre data-prefix="3.3"><code>php composer-setup.php</code></pre>
+                      <pre data-prefix="3.4"><code>php -r "unlink('composer-setup.php');"</code></pre>
+                      <pre data-prefix="3.5"><code>sudo mv composer.phar /usr/local/bin/composer</code></pre>
+                      <pre data-prefix="3.6"><code>composer --version</code></pre>
 
+                      <h3 class="my-3 text-left">4. Add Laravel Sail to your bash profile</h3>
+                      <pre data-prefix="4.1"><code>echo "alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'" >> ~/.bashrc</code></pre>
+                      <pre data-prefix="4.2"><code>source ~/.bashrc</code></pre>
 
+                      <h3 class="my-3 text-left">5. Create an SSH key to access GitHub repo</h3>
+                      <pre data-prefix="5.1"><code>ssh-keygen -t rsa -b 4096 -C "your.email@example.com"</code></pre>
+                      <pre data-prefix="5.2"><code>eval "$(ssh-agent -s)"</code></pre>
+                      <pre data-prefix="5.3"><code>ssh-add ~/.ssh/id_rsa</code></pre>
+                      <pre data-prefix="5.4"><code>cat ~/.ssh/id_rsa.pub</code></pre>
+                      <pre data-prefix="5.5"><code># Copy the output and add it to your GitHub account under SSH keys</code></pre>
+
+                      <h3 class="my-3 text-left">6. Clone repo</h3>
+                      <pre data-prefix="6.1"><code>git clone [repository URL]</code></pre>
+                      <pre data-prefix="6.2"><code>cd [repository-directory]</code></pre>
+                      <pre data-prefix="6.3"><code>git checkout development && git pull origin development</code></pre>
+                      <pre data-prefix="6.4"><code>git config --global user.name "Your Name"</code></pre>
+                      <pre data-prefix="6.5"><code>git config --global user.email "your.email@example.com"</code></pre>
+
+                      <h3 class="my-3 text-left">7. Create the required database</h3>
+                      <p class="mt-3 text-left">NOTE: Laravel sail comes pre-configured with a database.</p>
+                      <p class="mb-3 text-left">database = nottvbeta, username = sail, password = password</p>
+                      <pre data-prefix="7.1"><code>mysql -u root -p</code></pre>
+                      <pre data-prefix="7.2"><code>CREATE DATABASE your_database_name;</code></pre>
+
+                      <h3 class="my-3 text-left">8. Getting things ready</h3>
+                      <pre data-prefix="8.1"><code>Copy .env.example to .env</code></pre>
+                      <pre data-prefix="8.2"><code>cp .env.example .env</code></pre>
+
+                      <p class="my-3 text-left">Ensure there is no APP_KEY in .env and run:</p>
+                      <pre data-prefix="9."><code>sail artisan key:generate</code></pre>
+
+                      <h3 class="my-3 text-left">10. Create the cache directories:</h3>
+                      <p class="mt-3 text-left">Ensure the correct folder/file permissions:</p>
+                      <p class="mb-3 text-left">sudo chown -R $USER:www-data storage && sudo chmod -R 775 storage</p>
+                      <pre data-prefix="10.1"><code>mkdir -p storage/framework/cache/data</code></pre>
+                      <pre data-prefix="10.2"><code>mkdir -p storage/framework/views</code></pre>
+                      <pre data-prefix="10.3"><code>mkdir -p storage/framework/sessions</code></pre>
+
+                      <h3 class="my-3 text-left">Final steps:</h3>
+                      <pre data-prefix="11."><code>Run: sail php artisan optimize:clear</code></pre>
+                      <pre data-prefix="12."><code>Run: composer install</code></pre>
+                      <pre data-prefix="13."><code>Run: composer update</code></pre>
+                      <pre data-prefix="14."><code>Run: npm install</code></pre>
+                      <pre data-prefix="15."><code>Run: sail php artisan migrate</code></pre>
+                      <pre data-prefix="16."><code>Run: sail php artisan db:seed (for testing)</code></pre>
+
+                      <h2 class="pt-8 pb-2">If you have Composer, PHP 8.1, and Node.js installed:</h2>
+                      <pre data-prefix="$"><code>composer update</code></pre>
+                      <pre data-prefix="$"><code>sail up</code></pre>
+                      <pre data-prefix="$"><code>npx mix watch</code></pre>
+                      <pre data-prefix="$"><code>sail php artisan horizon</code></pre>
+
+                      <h2 class="py-4">.env Settings</h2>
+                      <pre data-prefix=""><code>MISTSERVER_HOST=http://mistserver/api2</code></pre>
+                      <pre data-prefix=""><code>MISTSERVER_USERNAME=nottvadmin</code></pre>
+                      <pre data-prefix=""><code>MISTSERVER_PASSWORD=123</code></pre>
+
+                      <h2 class="py-4">Admin Settings</h2>
+                      <pre data-prefix=""><code>MISTSERVER URI: http://localhost:8080/</code></pre>
+                      <pre data-prefix=""><code>MISTSERVER RTMP URI: rtmp://localhost/</code></pre>
+
+                      <h2 class="py-4">Use These Tools:</h2>
+                      <pre data-prefix=""><code>http://localhost:4242 (MistServer)</code></pre>
+                      <pre data-prefix=""><code>http://localhost:8025 (Mailhog)</code></pre>
+                      <pre data-prefix=""><code>http://localhost/horizon (Horizon Job Queue)</code></pre>
+                  </div>
+              </div>
           </div>
-        </div>
+
 
 
 
