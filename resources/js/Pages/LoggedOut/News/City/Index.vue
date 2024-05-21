@@ -17,7 +17,7 @@
 
       <section>
 
-        <NewsCityIndexContainer :newsCities="newsCities"/>
+        <NewsCityIndexContainer :newsProvinces="newsProvinces "/>
 
       </section>
 
@@ -58,7 +58,7 @@ onMounted(() => {
 });
 
 defineProps({
-  newsCities: Object,
+  newsProvinces: Object,
 })
 
 </script>

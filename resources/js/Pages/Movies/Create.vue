@@ -212,8 +212,8 @@ let save = () => {
 
 let submit = () => {
   // form.append('form', json);
-  // axios.post("/api/movies/upload", form.data);
-  form.post(route('movies.store', form))
+  // axios.post("/api/movie/upload", form.data);
+  form.post(route('movie.store', form))
 }
 
 let dropzoneFile = ref([])

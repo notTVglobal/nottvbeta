@@ -38,7 +38,7 @@ class NewsCity extends Model
   }
 
   public function province() {
-    return $this->belongsTo(NewsProvince::class);
+    return $this->belongsTo(NewsProvince::class, 'province_id');
   }
 
   public function country()

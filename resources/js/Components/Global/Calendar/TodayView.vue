@@ -221,7 +221,7 @@ const goToContentPage = (item) => {
   if (item.type === 'show') {
     Inertia.visit(`/shows/${item.content.show.slug}`)
   } else if (item.type === 'movie') {
-    Inertia.visit(`/movies/${item.content.slug}`)
+    Inertia.visit(`/movie/${item.content.slug}`)
   }
 }
 

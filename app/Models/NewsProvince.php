@@ -35,7 +35,7 @@ class NewsProvince extends Model
   }
 
   public function cities() {
-    return $this->hasMany(NewsCity::class);
+    return $this->hasMany(NewsCity::class, 'province_id');
   }
 
   public function country() {

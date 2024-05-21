@@ -5,7 +5,8 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
 ## v0.9.0.26
 May 20, 2024
-* 
+* Refactor Newsroom and News Stories Table. 
+* Rough style the News Categories page.
 
 ## v0.9.0.25b
 May 17, 2024

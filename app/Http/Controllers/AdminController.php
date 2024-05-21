@@ -12,6 +12,7 @@ use App\Models\Image;
 use App\Models\InviteCode;
 use App\Models\MistStreamWildcard;
 use App\Models\Movie;
+use App\Models\NewsCity;
 use App\Models\NewsCountry;
 use App\Models\SecureNote;
 use App\Models\Show;
@@ -33,6 +34,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Inertia\Inertia;
+use League\Csv\Reader;
+use League\Csv\Statement;
 
 //use function GuzzleHttp\Promise\all;
 
@@ -733,5 +736,89 @@ class AdminController extends Controller {
     }
   }
 
+  //// ADMIN: UPLOAD JSON DATA FOR NEWS
+  public function uploadNewsData(Request $request)
+  {
+    $request->validate([
+        'dataFile' => 'required|file|mimes:csv,txt',
+        'model' => 'required|string|in:NewsCity,NewsProvince,NewsFederalElectoralDistrict,NewsSubnationalElectoralDistrict',
+        'columns' => 'required|string',
+    ]);
+
+    $file = $request->file('dataFile');
+    $modelName = $request->input('model');
+    $columns = json_decode($request->input('columns'), true);
+    $csv = Reader::createFromPath($file->getRealPath(), 'r');
+    $csv->setHeaderOffset(0);
+
+    $records = (new Statement())->process($csv);
+
+    foreach ($records as $record) {
+      $this->updateModelData($modelName, $record, $columns);
+    }
+
+    return response()->json(['message' => 'Data updated successfully']);
+  }
+
+  private function updateModelData($modelName, $record, $columns)
+  {
+    switch ($modelName) {
+      case 'NewsCity':
+        $this->updateNewsCity($record, $columns);
+        break;
+      case 'NewsProvince':
+        $this->updateNewsProvince($record, $columns);
+        break;
+      case 'NewsFederalElectoralDistrict':
+        $this->updateNewsFederalElectoralDistrict($record, $columns);
+        break;
+      case 'NewsSubnationalElectoralDistrict':
+        $this->updateNewsSubnationalElectoralDistrict($record, $columns);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private function updateNewsCity($record, $columns)
+  {
+    $latitude = $record['latitude'];
+    $longitude = $record['longitude'];
+
+    $existingRecord = NewsCity::where('name', $record['name'])
+        ->whereBetween('latitude', [$latitude - 1.0, $latitude + 1.0])
+        ->whereBetween('longitude', [$longitude - 1.0, $longitude + 1.0])
+        ->first();
+
+    if ($existingRecord) {
+      foreach ($columns as $column) {
+        if (isset($record[$column]) && !is_null($record[$column])) {
+          $existingRecord->$column = $record[$column];
+        }
+      }
+      $existingRecord->save();
+    } else {
+      $data = [];
+      foreach ($columns as $column) {
+        if (isset($record[$column]) && !is_null($record[$column])) {
+          $data[$column] = $record[$column];
+        }
+      }
+      NewsCity::create($data);
+    }
+  }
+
+  // Implement similar methods for other models
+  private function updateNewsProvince($record, $columns) {
+    // Implementation for NewsProvince
+  }
+
+  private function updateNewsFederalElectoralDistrict($record, $columns) {
+    // Implementation for NewsFederalElectoralDistrict
+  }
+
+  private function updateNewsSubnationalElectoralDistrict($record, $columns) {
+    // Implementation for NewsSubnationalElectoralDistrict
+  }
 
 }

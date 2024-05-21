@@ -69,7 +69,7 @@
                             class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
                           <!--                                                    <img :src="`/storage/images/${movie.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                          <Link :href="`/movies/${movie.slug}`" class="text-blue-800 hover:text-blue-600">
+                          <Link :href="`/movie/${movie.slug}`" class="text-blue-800 hover:text-blue-600">
                             <SingleImage :image="movie.image" :alt="'movie cover'"
                                          :class="'rounded-full h-20 w-20 object-cover'"/>
                           </Link>
@@ -80,7 +80,7 @@
                             scope="row"
                             class="px-6 py-4 text-xl text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          <Link :href="`/movies/${movie.slug}`"
+                          <Link :href="`/movie/${movie.slug}`"
                                 class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
                             {{ movie.name }}
                           </Link>
@@ -131,7 +131,7 @@
                           </div>
                         </th>
                         <td class="px-6 py-4 space-x-2">
-                          <Link v-if="movie.can.editMovie" :href="`/movies/${movie.slug}/edit`">
+                          <Link v-if="movie.can.editMovie" :href="`/movie/${movie.slug}/edit`">
                             <button
                                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                             >Edit
@@ -158,7 +158,7 @@
 
 
       <div class="flex items-center">
-        <!--               <Link :href="`/movies/${movie.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a movie</Link>-->
+        <!--               <Link :href="`/movie/${movie.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a movie</Link>-->
 
       </div>
     </div>

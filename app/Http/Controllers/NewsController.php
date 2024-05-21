@@ -7,6 +7,7 @@ use App\Models\NewsCategory;
 use App\Models\NewsCity;
 use App\Models\NewsPerson;
 use App\Models\NewsCountry;
+use App\Models\NewsProvince;
 use App\Models\NewsStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,9 +44,15 @@ class NewsController extends Controller
     $user = Auth::user();
     $component = $user ? 'News/City/Index' : 'LoggedOut/News/City/Index';
 
-    $cities = NewsCity::all();
+    // Eager load the provinces with their cities, selecting only the required fields
+    $provinces = NewsProvince::select('id', 'name', 'slug')
+        ->with(['cities' => function ($query) {
+          $query->select('id', 'name', 'slug', 'province_id');
+        }])
+        ->get();
+
     return Inertia::render($component, [
-        'newsCities' => $cities,
+        'newsProvinces' => $provinces,
     ]);
   }
 

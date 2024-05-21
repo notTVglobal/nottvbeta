@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MovieResource;
 use App\Jobs\ProcessVideoInfo;
 use App\Models\CreativeCommons;
 use App\Models\Image;
@@ -15,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Request;
@@ -55,6 +57,56 @@ class MovieController extends Controller {
         'mostAnticipated'  => $this->fetchMostAnticipated(),
         'comingSoon'       => $this->fetchComingSoon(),
         'filters'          => Request::only(['search']),
+    ]);
+  }
+
+  public function indexCategories(): Response {
+    $categories = Cache::rememberForever('movie_categories', function () {
+      return MovieCategory::select('name', 'slug', 'description')->get();
+    });
+
+    return Inertia::render('Movies/Category/Index', [
+        'categories' => $categories,
+    ]);
+  }
+
+  public function showCategory(MovieCategory $movieCategory, HttpRequest $request): Response
+  {
+    $cacheKey = 'movie_category_subcategories_' . $movieCategory->id;
+
+    $subCategories = Cache::rememberForever($cacheKey, function () use ($movieCategory) {
+      return $movieCategory->subCategories()->select('name', 'description', 'id')->get();
+    });
+
+    $query = $movieCategory->movies()->with(['image.appSetting', 'video.appSetting']);
+
+    // Apply search filter if provided
+    if ($search = $request->input('search')) {
+      $query->where('title', 'like', "%{$search}%")
+          ->orWhere('description', 'like', "%{$search}%");
+    }
+
+    // Apply subcategory filter if provided
+    if ($subCategoryId = $request->input('subCategory')) {
+      $query->where('sub_category_id', $subCategoryId);
+    }
+
+    // Paginate results
+    $movies = $query->paginate(10);
+    $moviesResource = MovieResource::collection($movies);
+
+    return Inertia::render('Movies/Category/{$id}/Index}', [
+        'category' => $movieCategory,
+        'subCategories' => $subCategories,
+        'movies' => $moviesResource,
+        'pagination' => [
+            'total' => $movies->total(),
+            'per_page' => $movies->perPage(),
+            'current_page' => $movies->currentPage(),
+            'last_page' => $movies->lastPage(),
+            'from' => $movies->firstItem(),
+            'to' => $movies->lastItem()
+        ]
     ]);
   }
 

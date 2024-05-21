@@ -77,7 +77,7 @@
             <button @click="appSettingStore.btnRedirect(`/admin/movies`)" class="action-button">All Movies</button>
             <button @click="appSettingStore.btnRedirect(`/admin/images`)" class="action-button">Images</button>
             <button @click="appSettingStore.btnRedirect(`/videoupload`)" class="action-button">Video Upload</button>
-            <button @click="appSettingStore.btnRedirect(`/movies/create`)" class="action-button">Add a Movie</button>
+            <button @click="appSettingStore.btnRedirect(`/movie/create`)" class="action-button">Add a Movie</button>
           </div>
 
           <div class="actions-group">
@@ -117,100 +117,6 @@
           <div v-if="firstPlaySettingsSaving"><span class="loading loading-bars loading-md"></span> Saving...</div>
         </div>
       </div>
-
-
-      <!--      <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">-->
-      <!--        <div class="font-semibold text-xl pb-2">Administrator only links</div>-->
-      <!--        <div class="flex flex-wrap md:flex-row justify-items-start gap-2">-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/users`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
-      <!--          >All Users-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/episodes`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
-      <!--          >All Episodes-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/shows`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
-      <!--          >All Shows-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/movies`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
-      <!--          >All Movies-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/teams`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
-      <!--          >All Teams-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/channels`)"-->
-      <!--              class="bg-orange-600 hover:bg-orange-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
-      <!--          >Channels-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
-      <!--          >MistServer API Test Page-->
-      <!--          </button>-->
-      <!--          <a-->
-      <!--              :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
-      <!--          >MistServer Management Interface</a>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/admin/images`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
-      <!--          >Images-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/videoupload`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
-      <!--          >Video Upload-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/movies/create`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
-      <!--          >Add a Movie-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="appSettingStore.btnRedirect(`/invite_codes`)"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
-      <!--          >Invite Codes-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="backupMistServerConfig"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
-      <!--          >Backup MistServer Config-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="restoreMistServerConfig"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
-      <!--          >Restore MistServer Config-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="restoreAllStreams"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
-      <!--          >Restore All MistStreams-->
-      <!--          </button>-->
-      <!--          <button-->
-      <!--              @click="getEpisodesFromEmbedCodes"-->
-      <!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"-->
-      <!--              :disabled="!getAllEpisodesButtonActive"-->
-      <!--          >Get All Episode Videos From Embed Codes-->
-      <!--          </button>-->
-      <!--          &lt;!&ndash;                    <Link&ndash;&gt;-->
-      <!--          &lt;!&ndash;                        :href="`/admin/phpmyinfo`"><button&ndash;&gt;-->
-      <!--          &lt;!&ndash;                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"&ndash;&gt;-->
-      <!--          &lt;!&ndash;                    >phpinfo()</button>&ndash;&gt;-->
-      <!--          &lt;!&ndash;                    </Link>&ndash;&gt;-->
-
-      <!--        </div>-->
-
-      <!--      </div>-->
 
       <div>
         <form @submit.prevent="submit">
@@ -298,6 +204,8 @@
             <div v-if="form.errors.cloud_private_folder" v-text="form.errors.cloud_private_folder"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
+
+          <UploadNewsData />
 
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
@@ -714,6 +622,7 @@ import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea.vue'
 import FirstPlayVideoSourceSelector from '@/Components/Pages/Admin/Settings/FirstPlayVideoSourceSelector.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import UploadNewsData from '@/Pages/Admin/Settings/Elements/UploadNewsData.vue'
 
 usePageSetup('admin.settings')
 
