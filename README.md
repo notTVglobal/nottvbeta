@@ -53,22 +53,24 @@ Add `client_max_body_size xxM` inside the http section in `/etc/nginx/nginx.conf
 $ php artisan storage:link
 ```
 ## 5. Seed the Database
+#### Note: if you are using Laravel Sail you need to run commands like this: '$ sail php artisan'
 
 ```bash
 $ php artisan migrate
 $ php artisan db:seed --class=FirstRunSeeder
 $ php artisan slugs:update
 ```
-# An Administrator account will be created: #
+## An Administrator account will be created: #
 
 - **Email:** admin@not.tv
 - **Password:** nottv123
 
 ## 6. Change CDN Endpoint and Cloud Folder
 
-Update the CDN Endpoint and Cloud Folder in the Admin Settings.
+Update the CDN Endpoint and Cloud Folder in the Admin/Settings (/admin/settings).
 
 ### Additional Seeders
+#### Note: These get installed with the FirstRunSeeder.
 
 ```bash
 $ php artisan db:seed --class=UserSeeder
@@ -111,5 +113,6 @@ You will need to provide your SSH key to development team (@tec21) to gain acces
     - `PUSHER_LOCAL_DEV`
 7. Run Sail:
     - `sail up`
-    - `sail artisan migrate`
-    - `sail artisan db:seed`
+    - `sail php artisan migrate`
+    - `sail php artisan db:seed`
+    - `sail php artisan slugs:update`
