@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class MovieCategory extends Model
 {
@@ -15,7 +16,11 @@ class MovieCategory extends Model
         'description'
     ];
 
-    public function movie()
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
+
+  public function movies()
     {
         return $this->hasMany(Movie::class);
     }
@@ -28,12 +33,16 @@ class MovieCategory extends Model
   protected static function boot() {
     parent::boot();
 
+    static::saving(function ($model) {
+      $model->slug = Str::slug($model->name);
+    });
+
     static::updated(function ($category) {
-      Cache::forget('category_' . $category->id);
+      Cache::forget('movie_category_' . $category->id);
     });
 
     static::deleted(function ($category) {
-      Cache::forget('category_' . $category->id);
+      Cache::forget('movie_category_' . $category->id);
     });
   }
 }

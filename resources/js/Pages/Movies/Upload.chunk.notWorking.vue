@@ -218,7 +218,7 @@ let props = defineProps({
 //
 let submit = () => {
   // form.append('form', json);
-  // axios.post("/movies/upload", form.data);
+  // axios.post("/movie/upload", form.data);
   form.post(route('movies.store', form))
 }
 

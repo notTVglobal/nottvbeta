@@ -100,7 +100,7 @@ class Movie extends Model {
   // Retrieves the cached category or loads it if not cached
   public function getCachedCategory()
   {
-    return Cache::rememberForever('movieCategory_' . $this->movie_category_id, function () {
+    return Cache::rememberForever('movie_category_' . $this->movie_category_id, function () {
       return $this->category;
     });
   }
@@ -108,7 +108,7 @@ class Movie extends Model {
   // Retrieves the cached subcategory or loads it if not cached
   public function getCachedSubCategory()
   {
-    return Cache::rememberForever('movieSubcategory_' . $this->movie_category_sub_id, function () {
+    return Cache::rememberForever('movie_subcategory_' . $this->movie_category_sub_id, function () {
       return $this->subCategory;
     });
   }

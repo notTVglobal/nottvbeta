@@ -9,7 +9,7 @@
 
       <header v-if="props.can.editMovie" class="flex justify-end mt-6 mr-4 pb-3 border-b border-gray-800">
         <button
-            @click="appSettingStore.btnRedirect(`/movies/${props.movie.slug}/edit`)"
+            @click="appSettingStore.btnRedirect(`/movie/${props.movie.slug}/edit`)"
             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
         >Edit
         </button>
@@ -174,10 +174,10 @@
 
       <!--                <div class="flex justify-center mt-12">-->
       <!--                    <video class="w-full" controls>-->
-      <!--&lt;!&ndash;                        https://beta-staging-files.not.tv/uploads/movies/${movie.filePath}&ndash;&gt;-->
+      <!--&lt;!&ndash;                        https://beta-staging-files.not.tv/uploads/movie/${movie.filePath}&ndash;&gt;-->
       <!--                        <source-->
       <!--                            v-if="!movie.fileUrl"-->
-      <!--                            :src="`https://nottvbeta-staging.sfo3.cdn.digitaloceanspaces.com/uploads/movies/${movie.filePath}`">-->
+      <!--                            :src="`https://nottvbeta-staging.sfo3.cdn.digitaloceanspaces.com/uploads/movie/${movie.filePath}`">-->
       <!--                        <source-->
       <!--                            v-if="movie.fileUrl"-->
       <!--                            :src="`${movie.fileUrl}`">-->

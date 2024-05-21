@@ -12,7 +12,7 @@
                     <div>
                         <div class="font-bold mb-4 text-red-700">EDIT MOVIE</div>
                         <h1 class="text-3xl">
-                            <Link :href="`/movies/${movie.slug}`" class="text-red-700 font-bold uppercase">{{ movie.name }}</Link>
+                            <Link :href="`/movie/${movie.slug}`" class="text-red-700 font-bold uppercase">{{ movie.name }}</Link>
                         </h1>
                     </div>
                   <div class="flex flex-row flex-wrap">

@@ -675,17 +675,17 @@ Route::middleware([
   })->can('viewAdmin', 'App\Models\User')
       ->name('quiz');
 
-  //// SETTINGS
+  //// ADMIN: SETTINGS
   Route::get('/admin/settings', [AdminController::class, 'settings'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.settings');
 
-  //// SETTINGS - SAVE
+  //// ADMIN: SETTINGS - SAVE
   Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.saveSettings');
 
-  //// FIRST PLAY SETTINGS
+  //// ADMIN: FIRST PLAY SETTINGS
 
   Route::post('/admin/fetch-first-play-settings', [AdminController::class, 'fetchFirstPlaySettings'])
       ->can('viewAdmin', 'App\Models\User')
@@ -705,7 +705,7 @@ Route::middleware([
     ->name('admin.fetchActiveStreams');
 
 
-  //// ADMIN - SECURE NOTES
+  //// ADMIN: SECURE NOTES
   Route::get('/admin/secure-notes',
       [AdminController::class, 'fetchSecureNotes'])
       ->can('viewAdmin', 'App\Models\User');
@@ -714,32 +714,34 @@ Route::middleware([
       [AdminController::class, 'putSecureNotes'])
       ->can('viewAdmin', 'App\Models\User');
 
-  //// MOVIES - INDEX
+
+
+  //// ADMIN: MOVIES - INDEX
   Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.movies');
 
-  //// SHOWS - INDEX
+  //// ADMIN: SHOWS - INDEX
   Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.shows');
 
-  //// EPISODES - INDEX
+  //// ADMIN: EPISODES - INDEX
   Route::get('/admin/episodes', [AdminController::class, 'episodesIndex'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.episodes');
 
-  //// TEAMS - INDEX
+  //// ADMIN: TEAMS - INDEX
   Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.teams');
 
-  //// INVITE CODES - INDEX
+  //// ADMIN: INVITE CODES - INDEX
   Route::get('/admin/invite_codes', [AdminController::class, 'inviteCodes'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.inviteCodes');
 
-  //// INVITE CODES - SAVE
+  //// ADMIN: INVITE CODES - SAVE
   Route::post('/admin/invite_codes', [AdminController::class, 'saveInviteCodes'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.saveInviteCodes');
@@ -749,9 +751,9 @@ Route::middleware([
       ->name('inviteCodes.myCodes');
 
 
-  //// NEW INVITE CODE ROUTES FOR INVITECODECONTROLLER
+  //// ADMIN: NEW INVITE CODE ROUTES FOR INVITECODECONTROLLER
 
-  // Listing invite codes
+  // ADMIN: Listing invite codes
   Route::get('/invite_codes', [InviteCodeController::class, 'index'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('inviteCodes');
@@ -759,20 +761,20 @@ Route::middleware([
   // Search invite codes
 //  Route::post('/invite_codes', [InviteCodeController::class, 'index'])->name('inviteCodes')
 //      ->can('viewAdmin', 'App\Models\User');
-
+  // ADMIN:
   Route::get('/generate-invite-code', [InviteCodeController::class, 'generateUniqueInviteCodeJson'])
       ->name('generate.invite.code')
       ->can('viewAdmin', 'App\Models\User');
 
-  // Showing the form to create a new code
+  // ADMIN: Showing the form to create a new code
   Route::get('/invite_codes/create', [InviteCodeController::class, 'create'])->name('inviteCodes.create')
       ->can('viewAdmin', 'App\Models\User');
 
-  // Storing the new code
+  // ADMIN: Storing the new code
   Route::post('/invite_codes', [InviteCodeController::class, 'store'])->name('inviteCodes.store')
       ->can('viewAdmin', 'App\Models\User');
 
-  // Storing the new code
+  // ADMIN: Storing the new code
   Route::post('/invite_codes/quick-add', [InviteCodeController::class, 'inviteCodeQuickAdd'])->name('inviteCodes.quickAdd')
       ->can('viewAdmin', 'App\Models\User');
 
@@ -784,13 +786,13 @@ Route::middleware([
       ->name('inviteCodes.update')
       ->can('viewAdmin', 'App\Models\User');
 
-  //// INVITE CODES - EXPORT
+  //// ADMIN: INVITE CODES - EXPORT
   Route::get('/invite_codes/export', [InviteCodeController::class, 'exportInviteCodes'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('inviteCodes.export');
 
 
-  // Delete the code
+  // ADMIN: Delete the code
   Route::delete('/invite_codes/{inviteCode}', [InviteCodeController::class, 'destroy'])
       ->name('inviteCodes.destroy')
       ->can('viewAdmin', 'App\Models\User');
@@ -815,10 +817,15 @@ Route::middleware([
   Route::patch('/invite-code-settings', [AppSettingController::class, 'patchInviteCodeSettings']);
 
 
-  //// DELETE USER
+  //// ADMIN: DELETE USER
   Route::post('/admin/user/delete', [AdminController::class, 'deleteUser'])
       ->can('delete', 'App\Models\User')
       ->name('admin.deleteUser');
+
+
+  //// ADMIN: UPLOAD DATA FOR NEWS TABLES (CITIES, PROVINCES, DISTRICTS)
+  Route::post('/admin/upload-news-data', [AdminController::class, 'uploadNewsData'])->name('admin.uploadNewsData');
+
 
   //// CALCULATIONS
   Route::get('/calculations', function () {
@@ -1088,7 +1095,22 @@ Route::middleware([
 
 // Movies
 ///////////
-  Route::resource('movies', MovieController::class);
+  // Index route
+    Route::get('movies', [MovieController::class, 'index'])->name('movies.index');
+
+  // Categories index
+    Route::get('movies/categories', [MovieController::class, 'indexCategories'])->name('movies.category.index');
+    Route::get('movies/{movieCategory}', [MovieController::class, 'showCategory'])->name('movies.category.show');
+
+  // Group other resource routes under /movie
+    Route::group(['prefix' => 'movie'], function () {
+      Route::get('create', [MovieController::class, 'create'])->name('movie.create');
+      Route::post('/', [MovieController::class, 'store'])->name('movie.store');
+      Route::get('{movie}', [MovieController::class, 'show'])->name('movie.show');
+      Route::get('{movie}/edit', [MovieController::class, 'edit'])->name('movie.edit');
+      Route::put('{movie}', [MovieController::class, 'update'])->name('movie.update');
+      Route::delete('{movie}', [MovieController::class, 'destroy'])->name('movie.destroy');
+    });
 
 // Testing
 ///////////

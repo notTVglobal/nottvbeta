@@ -8111,6 +8111,10 @@ hr {
   height: 1.5rem;
 }
 
+.h-60 {
+  height: 15rem;
+}
+
 .h-64 {
   height: 16rem;
 }
@@ -8190,10 +8194,6 @@ hr {
   height: 100vh;
 }
 
-.h-60 {
-  height: 15rem;
-}
-
 .max-h-1\/2screen {
   max-height: 50vh;
 }
@@ -8252,6 +8252,10 @@ hr {
 
 .max-h-\[96rem\] {
   max-height: 96rem;
+}
+
+.max-h-48 {
+  max-height: 12rem;
 }
 
 .min-h-12 {
@@ -8556,6 +8560,10 @@ hr {
   max-width: 42rem;
 }
 
+.max-w-3xl {
+  max-width: 48rem;
+}
+
 .max-w-48 {
   max-width: 12rem;
 }
@@ -8616,6 +8624,12 @@ hr {
   max-width: 8rem;
 }
 
+.max-w-fit {
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
 .max-w-full {
   max-width: 100%;
 }
@@ -8642,16 +8656,6 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
-}
-
-.max-w-fit {
-  max-width: -webkit-fit-content;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
-}
-
-.max-w-3xl {
-  max-width: 48rem;
 }
 
 .flex-1 {
@@ -8968,10 +8972,6 @@ hr {
 
 .gap-y-3 {
   row-gap: 0.75rem;
-}
-
-.gap-y-4 {
-  row-gap: 1rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
@@ -9927,11 +9927,6 @@ hr {
 .bg-yellow-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(66 32 6 / var(--tw-bg-opacity));
-}
-
-.bg-purple-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 245 255 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-0 {
@@ -12930,16 +12925,16 @@ hr {
     top: 2.5rem;
   }
 
-  .lg\:col-span-4 {
-    grid-column: span 4 / span 4;
-  }
-
   .lg\:col-span-1 {
     grid-column: span 1 / span 1;
   }
 
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
   }
 
   .lg\:m-0 {
@@ -12988,10 +12983,6 @@ hr {
 
   .lg\:ml-16 {
     margin-left: 4rem;
-  }
-
-  .lg\:ml-6 {
-    margin-left: 1.5rem;
   }
 
   .lg\:ml-8 {
@@ -13160,6 +13151,10 @@ hr {
     padding-left: 0.5rem;
   }
 
+  .lg\:pl-4 {
+    padding-left: 1rem;
+  }
+
   .lg\:pr-6 {
     padding-right: 1.5rem;
   }
@@ -13170,10 +13165,6 @@ hr {
 
   .lg\:pt-6 {
     padding-top: 1.5rem;
-  }
-
-  .lg\:pl-4 {
-    padding-left: 1rem;
   }
 
   .lg\:text-left {
@@ -13207,11 +13198,6 @@ hr {
   .xl\:mx-0 {
     margin-left: 0px;
     margin-right: 0px;
-  }
-
-  .xl\:mx-12 {
-    margin-left: 3rem;
-    margin-right: 3rem;
   }
 
   .xl\:mb-0 {
@@ -13270,12 +13256,12 @@ hr {
     width: 75%;
   }
 
-  .xl\:max-w-xl {
-    max-width: 36rem;
-  }
-
   .xl\:max-w-4xl {
     max-width: 56rem;
+  }
+
+  .xl\:max-w-xl {
+    max-width: 36rem;
   }
 
   .xl\:grid-cols-3 {
@@ -13309,10 +13295,6 @@ hr {
 
   .xl\:text-left {
     text-align: left;
-  }
-
-  .xl\:align-middle {
-    vertical-align: middle;
   }
 }
 

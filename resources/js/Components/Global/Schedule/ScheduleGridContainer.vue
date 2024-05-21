@@ -428,7 +428,7 @@ function handleShowClick(item) {
       // url = `/teams/${item.content.teamSlug}/`
       break
     case 'movie':
-      url = `/movies/${item.content.slug}/`
+      url = `/movie/${item.content.slug}/`
       break
     case 'showEpisode':
       url = `/shows/${item.content.show.slug}/episode/${item.content.slug}`

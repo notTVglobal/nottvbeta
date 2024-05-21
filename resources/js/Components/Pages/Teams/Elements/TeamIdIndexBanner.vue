@@ -180,7 +180,7 @@ const goToBroadcast = (broadcast) => {
   if (!nextBroadcast.value) return;
   const baseLink = {
     'show': `/shows/${broadcast.slug}/`,
-    'movie': `/movies/${broadcast.slug}/`,
+    'movie': `/movie/${broadcast.slug}/`,
     'showEpisode': `/shows/${broadcast?.show?.slug}/episode/${broadcast.slug}/`
   }
   const url = baseLink[broadcast.type] || '/';

@@ -55,7 +55,7 @@
                               <div v-else-if="movie.isNew" class="absolute flex justify-end w-full -mt-3 z-50">
                                 <NewContentBadge />
                               </div>
-                                <Link :href="`/movies/${movie.slug}`">
+                                <Link :href="`/movie/${movie.slug}`">
 <!--                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">-->
                                     <SingleImage :image="movie.image" :alt="'movie cover'" :class="'h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150'"/>
 
@@ -65,7 +65,7 @@
 
                                 </div>
                             </div>
-                            <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
+                            <Link :href="`/movie/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
                             <div class="text-yellow-700 mt-1 uppercase tracking-wide">{{ movie.category?.name }}
                                 <span v-if="movie.release_year">({{movie.release_year}})</span></div>
                             <div class="text-yellow-500 mt-1 tracking-wide">{{ movie.subCategory?.name }}</div>
@@ -86,7 +86,7 @@
                       <div v-for="movie in recentlyReviewed.data"
                            :key="movie.id"
                            class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
-                        <Link :href="`/movies/${movie.slug}`" class="flex flex-row bg-gray-800 rounded-lg shadow-md px-6 py-6">
+                        <Link :href="`/movie/${movie.slug}`" class="flex flex-row bg-gray-800 rounded-lg shadow-md px-6 py-6">
                           <div class="relative w-48 min-w-[12rem]">
                             <div v-if="movie.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
                               <CreatorsOnlyBadge />
@@ -128,11 +128,11 @@
                             <div v-for="movie in mostAnticipated.data"
                                  :key="movie.id"
                                  class="movie flex">
-                                <Link :href="`/movies/${movie.slug}`">
+                                <Link :href="`/movie/${movie.slug}`">
                                     <SingleImage :image="movie.image" :alt="'movie cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                                 </Link>
                                 <div class="ml-4">
-                                    <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
+                                    <Link :href="`/movie/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
                                     <div class="text-gray-400 text-sm mt-1">{{ movie.category?.name }}<span class="hidden">, {{ movie.subCategory?.name }}</span></div>
                                 </div>
                             </div>
@@ -143,11 +143,11 @@
                             <div v-for="movie in comingSoon.data"
                                  :key="movie.id"
                                  class="movie flex">
-                                <Link :href="`/movies/${movie.slug}`">
+                                <Link :href="`/movie/${movie.slug}`">
                                     <SingleImage :image="movie.image" :alt="'movie cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                                 </Link>
                                 <div class="ml-4">
-                                    <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
+                                    <Link :href="`/movie/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
                                     <div class="text-gray-400 text-sm mt-1">{{ movie.category?.name }}<span class="hidden">, {{ movie.subCategory?.name }}</span></div>
                                 </div>
                             </div>

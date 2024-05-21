@@ -4093,6 +4093,14 @@ var map = {
 		"./resources/js/Pages/Admin/Settings.vue",
 		"resources_js_Pages_Admin_Settings_vue"
 	],
+	"./Admin/Settings/Elements/UploadNewsData": [
+		"./resources/js/Pages/Admin/Settings/Elements/UploadNewsData.vue",
+		"resources_js_Pages_Admin_Settings_Elements_UploadNewsData_vue"
+	],
+	"./Admin/Settings/Elements/UploadNewsData.vue": [
+		"./resources/js/Pages/Admin/Settings/Elements/UploadNewsData.vue",
+		"resources_js_Pages_Admin_Settings_Elements_UploadNewsData_vue"
+	],
 	"./Admin/Shows": [
 		"./resources/js/Pages/Admin/Shows.vue",
 		"/js/vendor",
@@ -4574,6 +4582,22 @@ var map = {
 		"./resources/js/Pages/LoggedOut/Teams/{$id}/Index.vue",
 		"/js/vendor",
 		"resources_js_Pages_LoggedOut_Teams_id_Index_vue"
+	],
+	"./Movies/Category/Index": [
+		"./resources/js/Pages/Movies/Category/Index.vue",
+		"resources_js_Pages_Movies_Category_Index_vue"
+	],
+	"./Movies/Category/Index.vue": [
+		"./resources/js/Pages/Movies/Category/Index.vue",
+		"resources_js_Pages_Movies_Category_Index_vue"
+	],
+	"./Movies/Category/{$id}/Index": [
+		"./resources/js/Pages/Movies/Category/{$id}/Index.vue",
+		"resources_js_Pages_Movies_Category_id_Index_vue"
+	],
+	"./Movies/Category/{$id}/Index.vue": [
+		"./resources/js/Pages/Movies/Category/{$id}/Index.vue",
+		"resources_js_Pages_Movies_Category_id_Index_vue"
 	],
 	"./Movies/Create": [
 		"./resources/js/Pages/Movies/Create.vue",

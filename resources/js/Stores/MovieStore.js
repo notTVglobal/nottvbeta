@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
     category_id: 0,
@@ -7,6 +8,11 @@ const initialState = () => ({
     sub_category_id: 0,
     sub_category_description: '',
     sub_categories: [],
+
+    movies: [],
+    pagination: {},
+    selectedSubCategory: null,
+    searchQuery: '',
 })
 
 export const useMovieStore = defineStore('movieStore', {
@@ -32,6 +38,18 @@ export const useMovieStore = defineStore('movieStore', {
         //     this.updateSubCategoryDescription(subCategoryId);
         // },
 
+        async fetchMovies(categorySlug, page = 1, searchQuery = '', subCategoryId = null) {
+            const params = { page, search: searchQuery, subCategory: subCategoryId };
+            const response = await Inertia.get(`/movies/${categorySlug}`, params, { preserveState: true });
+
+            this.movies = response.props.movies.data;
+            this.pagination = response.props.pagination;
+            this.searchQuery = searchQuery;
+            this.selectedSubCategory = subCategoryId;
+        },
+        filterMovies(subCategoryId) {
+            this.selectedSubCategory = subCategoryId;
+        },
 
         initializeDescriptions(categoryId, subCategoryId) {
             this.category_id = categoryId;
@@ -78,6 +96,11 @@ export const useMovieStore = defineStore('movieStore', {
     },
 
     getters: {
-        //
+        filteredMovies(state) {
+            if (state.selectedSubCategory) {
+                return state.movies.filter(movie => movie.sub_category_id === state.selectedSubCategory);
+            }
+            return state.movies;
+        },
     }
 });

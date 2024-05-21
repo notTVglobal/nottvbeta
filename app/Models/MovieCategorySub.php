@@ -33,11 +33,11 @@ class MovieCategorySub extends Model
     parent::boot();
 
     static::updated(function ($subCategory) {
-      Cache::forget('subcategory_' . $subCategory->id);
+      Cache::forget('movie_subcategory_' . $subCategory->id);
     });
 
     static::deleted(function ($subCategory) {
-      Cache::forget('subcategory_' . $subCategory->id);
+      Cache::forget('movie_subcategory_' . $subCategory->id);
     });
   }
 }
