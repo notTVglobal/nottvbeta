@@ -23,7 +23,7 @@ class NewsPostalCodeCANSeeder extends Seeder
     // Load the CSV document from a file path
     // we need to upload the dataset manually.
     // Put the CSV in storage/app/csv
-    $path = storage_path('app/csv/news_postal_codes_CAN.csv');
+    $path = storage_path('../support_files/csv_files/news_postal_codes_CAN.csv');
 
     // Set the path to save a list of cities missed during the postal code import,
     // this goes to our local storage: storage/app

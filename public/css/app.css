@@ -8222,6 +8222,10 @@ hr {
   max-height: 10rem;
 }
 
+.max-h-48 {
+  max-height: 12rem;
+}
+
 .max-h-50 {
   max-height: 12.5rem;
 }
@@ -8252,10 +8256,6 @@ hr {
 
 .max-h-\[96rem\] {
   max-height: 96rem;
-}
-
-.max-h-48 {
-  max-height: 12rem;
 }
 
 .min-h-12 {
@@ -8904,10 +8904,6 @@ hr {
 
 .justify-around {
   justify-content: space-around;
-}
-
-.justify-items-start {
-  justify-items: start;
 }
 
 .justify-items-center {

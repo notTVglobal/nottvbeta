@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\NewsCountry;
 use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -36,7 +37,17 @@ class FirstRunSeeder extends Seeder
         ]);
 
         // Set default country_id
-        DB::table('app_settings')->update(['country_id' => 4]);
+        // Find the country with the name 'Canada'
+        $country = NewsCountry::where('name', 'Canada')->first();
+
+        if ($country) {
+            // If the country exists, proceed with the update
+            DB::table('app_settings')->update(['country_id' => $country->id]);
+        } else {
+            // Handle the case where the country does not exist
+            // You might want to log an error or create the country entry
+            $this->command->warn("Country with the name 'Canada' does not exist in news_countries table.");
+        }
 
         Team::create([
             'name' => 'notTV Founders',

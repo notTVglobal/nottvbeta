@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: May 17, 2024\
+Last Update: May 21, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.0.27
+May 21, 2024
+* Update the README.md
+* Fix the migrations and seeders for first run.
 
 ## v0.9.0.26
 May 20, 2024

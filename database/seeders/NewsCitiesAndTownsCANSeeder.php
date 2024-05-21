@@ -21,7 +21,7 @@ class NewsCitiesAndTownsCANSeeder extends Seeder
     // Load the CSV document from a file path
     // we need to upload the dataset manually.
     // Put the CSV in storage/app/csv
-    $path = storage_path('../storage/app/csv/news_cities_CAN.csv');
+    $path = storage_path('../support_files/csv_files/news_cities_CAN.csv');
 
     // Get the country ID from the iso_alpha3_code
     $countryISO3 = 'CAN';
