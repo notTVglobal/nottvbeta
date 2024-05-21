@@ -270,12 +270,12 @@
     </div>
 
     <dialog id="newsPersonRoleSelectModal" class="modal">
-      <div class="modal-box text-black">
+      <div class="modal-box text-black bg-white dark:text-gray-100 dark:bg-gray-900">
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <h3 class="font-bold text-lg mb-2">Select News Person Role</h3>
-        <select v-model="selectedRoles" class="select select-bordered w-full max-w-xs" multiple>
+        <select v-model="selectedRoles" class="select select-bordered w-full max-w-xs text-black bg-white dark:text-gray-100 dark:bg-gray-900" multiple>
           <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
         </select>
 

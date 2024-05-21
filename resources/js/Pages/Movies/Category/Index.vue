@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col py-8 max-w-7xl justify-center items-center gap-8">
-    <h1 class="text-2xl font-bold">Movie Categories</h1>
+  <div class="flex flex-col py-8 max-w-7xl justify-center items-center gap-8 mx-auto">
+    <h1 class="text-4xl font-bold">Movie Categories</h1>
     <div class="flex flex-row flex-wrap justify-center gap-6 mx-auto">
       <div
           v-for="category in categories"
