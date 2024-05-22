@@ -3,6 +3,10 @@
 Last Update: May 21, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.1.0
+May 21, 2024
+* Upgrade Laravel from 9.x to 10.x
+
 ## v0.9.0.27
 May 21, 2024
 * Update the README.md
