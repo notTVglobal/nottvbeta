@@ -51,7 +51,8 @@
                             </div>
 
 
-                            <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
+                          <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0"/>
+
 
                             <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
                                 <JetSectionBorder />
@@ -82,8 +83,6 @@ import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfile
 import UserUpdateContactForm from "@/Components/Pages/Users/UserUpdateContactForm"
 
 usePageSetup('settings')
-
-appSettingStore.currentPage = 'settings'
 
 defineProps({
     // can: Object,

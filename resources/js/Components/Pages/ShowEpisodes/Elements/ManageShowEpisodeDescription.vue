@@ -7,9 +7,13 @@
                 class="bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded-lg">
           <font-awesome-icon icon="fa-pencil"/>
         </button>
+
         Episode Description
+
       </div>
-      {{ episode.description }}
+
+      <expandable-description :description="episode.description" :hideTitle="true"/>
+
     </div>
 
   </div>
@@ -17,6 +21,8 @@
 </template>
 
 <script setup>
+
+import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 
 defineProps({
   episode: Object,

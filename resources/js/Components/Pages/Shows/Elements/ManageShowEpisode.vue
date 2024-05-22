@@ -120,7 +120,7 @@ showStore.noteEdit = 0
 const componentKey = ref(0);
 
 function reloadNote() {
-  props.episode.notes = showStore.note;
+  props.episode.notes = showStore.notes;
   componentKey.value += 1;
 }
 

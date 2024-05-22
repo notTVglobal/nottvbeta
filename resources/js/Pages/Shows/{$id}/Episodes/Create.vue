@@ -13,18 +13,6 @@
         </div>
       </div>
 
-      <div class="mx-4">
-        <div class="alert alert-info mt-4">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-               class="stroke-current shrink-0 w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span><span class="font-semibold">NOTE: </span>
-                    We are working on an episode poster and video uploader for this page. For the time being, please
-                    go to the episode EDIT page after you create the episode to add a video and a poster.</span>
-        </div>
-      </div>
 
       <form @submit.prevent="submit" class="mt-8">
 
@@ -49,39 +37,15 @@
               >
                 Category
               </label>
-              <div class="font-bold text-orange-600">{{ props?.show?.category?.name }}</div>
-              <div class="font-bold text-yellow-700">{{ props?.show?.subCategory?.name }}</div>
-            </div>
-
-            <div class="mb-6">
-              <label class="block mb-2 uppercase font-bold dark:text-gray-200"
-                     for="creative_commons"
-              >
-                Creative Commons / Copyright License <br /><span class="text-md text-red-500">* REQUIRED</span>
-              </label>
-              <div class="font-semibold">** Please choose carefully ** <br />
-                You will require assistance to change this once it's set.</div>
-              <div>Read about the different licenses to the right right <span class="text-xl">👉</span> <br />or click the button below for a visual explanation.</div>
-
-              <select class="border border-gray-400 text-gray-800 mt-2 py-2 pl-2 pr-8 w-fit rounded-lg block mb-2 uppercase font-bold text-xs"
-                      v-model="selectedCreativeCommons" @change="handleCreativeCommonsChange">
-                <option disabled :value="null">Choose a license...</option>
-                <option v-for="cc in creative_commons" :key="cc.id" :value="cc.id">{{ cc.name }}</option>
-              </select>
-
-              <div class="">{{ selectedCreativeCommonsDescription }}</div>
-
-              <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_id"
-                   class="text-xs text-red-600 mt-1"></div>
-
-              <LicensingExplained class="my-2"/>
+              <div class="font-bold">{{ props?.show?.category?.name }}</div>
+              <div class="font-semibold">{{ props?.show?.subCategory?.name }}</div>
             </div>
 
             <div class="mb-6">
               <label class="block mb-2 uppercase font-bold  dark:text-gray-200"
                      for="name"
               >
-                Episode Name <span class="text-red-500">* REQUIRED</span>
+                Episode Name <span :class="form.errors.name ? 'text-red-500' : 'text-indigo-500'">* REQUIRED</span>
               </label>
 
               <input v-model="form.name"
@@ -95,22 +59,7 @@
               <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
             </div>
 
-            <div class="mb-6">
-              <label class="block mb-2 uppercase font-bold dark:text-gray-200"
-                     for="description"
-              >
-                Description <span class="text-red-500">* REQUIRED</span>
-              </label>
-              <textarea v-model="form.description"
-                        class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
-                        type="text"
-                        name="description"
-                        id="description"
-                        required
-                        placeholder="Description"
-              ></textarea>
-              <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
-            </div>
+            <CreateEpisodeSetDescription :errors="form.errors"/>
 
 
             <div class="mb-6">
@@ -227,6 +176,26 @@
 
           </div>
           <div class="flex flex-col max-w-md text-justify mt-24 mb-8">
+            <div class="mb-6">
+              <label class="block mb-2 uppercase font-bold dark:text-gray-200"
+                     for="creative_commons"
+              >
+                Creative Commons / Copyright License <br /><span :class="form.errors.creative_commons_id ? 'text-red-500' : 'text-indigo-500'">* REQUIRED</span>
+              </label>
+
+              <select class="border border-gray-400 text-gray-800 mt-6 py-2 pl-2 pr-8 w-fit rounded-lg block mb-2 uppercase font-bold text-xs"
+                      v-model="selectedCreativeCommons" @change="handleCreativeCommonsChange">
+                <option disabled :value="null">Choose a license...</option>
+                <option v-for="cc in creative_commons" :key="cc.id" :value="cc.id">{{ cc.name }}</option>
+              </select>
+
+              <div class="">{{ selectedCreativeCommonsDescription }}</div>
+
+              <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_id"
+                   class="text-xs text-red-600 mt-1"></div>
+
+              <LicensingExplained class="my-2"/>
+            </div>
             <div>
               <div class="license-info">
                 <h2 class="font-semibold mb-6">About The License Options:</h2>
@@ -295,14 +264,18 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import { useForm } from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
-import { computed, ref } from 'vue'
 import LicensingExplained from '@/Components/Global/CreativeCommonsLicensing/LicensingExplained.vue'
+import CreateEpisodeSetDescription from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeSetDescription.vue'
 
 usePageSetup('shows/slug/episodes/create')
+
+const showEpisodeStore = useShowEpisodeStore()
 
 let props = defineProps({
   user: Object,
@@ -383,6 +356,7 @@ let submit = () => {
   } else
     form.creative_commons_id = selectedCreativeCommons.value
     form.copyrightYear = selectedCopyrightYear.value
+    form.description = showEpisodeStore.description
     form.post(route('showEpisodes.store', props.show.slug));
 };
 

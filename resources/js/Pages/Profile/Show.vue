@@ -74,7 +74,7 @@ import UpdateCreatorSettings from '@/Pages/Profile/Partials/UpdateCreatorSetting
 
 const userStore = useUserStore()
 
-usePageSetup('settings')
+usePageSetup('/user/profile')
 
 defineProps({
   confirmsTwoFactorAuthentication: Boolean,

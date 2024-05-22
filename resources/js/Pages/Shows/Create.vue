@@ -13,174 +13,26 @@
         </div>
       </div>
 
-      <div class="bg-orange-700 text-white w-full p-6"><span class="font-bold">NOTE: </span>
-        We are working on an episode poster and video uploader for this page. For the time being, please
-        go to the show <span class="font-bold">EDIT</span> page after you create the show to add a video and a poster.
-      </div>
-
       <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                 for="team"
-          >
-            Team
-          </label>
-          <select
-              class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
-              v-model="selectedTeamId"
-              required
-          >
-            <option disabled value="">Select Team</option>
-            <option
-                v-for="team in props.teams"
-                :key="team.id"
-                :value="team.id"
-                class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
-                :class="'status-' + team.status.id"
-            >
-              {{ team.name }} ({{ team.status.status }})
-            </option>
-
-          </select>
 
 
-          <div v-if="form.errors.team_id" v-text="form.errors.team_id" class="text-xs text-red-600 mt-1"></div>
-        </div>
-
-        <div class="mb-6 border-2 p-3">
-          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
-                 for="show_runner_creator_id"
-          >
-            Show Runner <span class="text-red-500">* REQUIRED</span>
-          </label>
-          <select
-              class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
-              v-model="selectedShowRunnerCreatorId"
-              required
-          >
-            <option disabled value="">Select Show Runner</option>
-            <option
-                v-for="member in teamMembers"
-                :key="member.creator_id"
-                :value="member.creator_id"
-                class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
-            >
-              {{ member.name }}
-            </option>
-          </select>
-
-          <!-- Button to toggle the explanation -->
-          <button @click.prevent="toggleShowRunnerInfo"
-                  class="btn mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold uppercase text-xs">
-            👉 Who is a Show Runner?
-          </button>
-
-          <!-- Conditional rendering of the show runner explanation -->
-          <div v-if="showRunnerInfoVisible" class="mt-2 text-gray-800 dark:text-gray-200">
-            <div class="mb-2">
-              <strong>Show Runner:</strong> The chief architect behind a show, responsible for overseeing every element
-              of production. Comparable to an event planner, but for new media production, the show runner handles the
-              creative vision and daily operations, ensuring the show’s vision is realized through managing everything
-              from scriptwriting to final edits. They lead the production team, make critical decisions on content and
-              direction, and maintain the show's consistency and quality across episodes.
-            </div>
-            <div>
-              <div class="mt-2 text-gray-800 dark:text-gray-200">
-                <h3 class="font-bold">Show Runner for Informal and Community-Driven Productions:</h3>
-                <p class="mt-1">
-                  A show runner in informal settings acts much like an event coordinator, emphasizing flexibility and
-                  audience engagement. They adapt quickly to live interactions and maintain the creative vision,
-                  ensuring the production is engaging and cohesive. Key responsibilities include:
-                </p>
-                <ul class="list-disc pl-5 mt-1">
-                  <li>Adjusting plans on-the-fly in response to audience dynamics and unscripted moments.</li>
-                  <li>Integrating audience feedback in real-time to guide the show’s direction.</li>
-                  <li>Managing schedules and coordinating with participants, akin to event planning.</li>
-                  <li>Maintaining the show's tone and style to align with overarching goals.</li>
-                  <li>Leading the production team effectively in dynamic, less controlled environments.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="form.errors.show_runner_creator_id" v-text="form.errors.show_runner_creator_id"
-               class="text-xs text-red-600 mt-1"></div>
-        </div>
-
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
-                 for="name"
-          >
-            Show Name <span class="text-red-500">* REQUIRED</span>
-          </label>
-
-          <input v-model="form.name"
-                 class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                 type="text"
-                 name="name"
-                 id="name"
-                 required
-                 placeholder="Show Name"
-          >
-          <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
-        </div>
-
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
-                 for="category"
-          >
-            Category <span class="text-red-500">* REQUIRED</span>
-          </label>
+        <CreateShowSelectTeam :teams="teams" :errors="form.errors"/>
 
 
-          <select
-              class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs "
-              v-model="selectedCategoryId" @change="chooseCategory"
-          >
-            <option disabled :value="null">Choose a category...</option>
-            <option v-for="category in categories"
-                    :key="category.id" :value="category.id">{{ category.name }}
-            </option>
+        <CreateShowSelectShowRunner :defaultShowRunnerId="creatorId"
+                                    :teamMembers="teamMembers"
+                                    @selectedShowRunnerCreatorId="selectedShowRunnerCreatorIdHandler"
+                                    :errors="form.errors"/>
 
-          </select>
-          <div v-if="form.errors.category" v-text="form.errors.category"
-               class="text-xs text-red-600 mt-1"></div>
+        <CreateShowSetShowName :errors="form.errors"/>
 
-          <span class="">{{ showStore.category_description }}</span>
-        </div>
 
-        <div class="mb-6">
-          <label class="block mb-1 uppercase font-bold dark:text-gray-200"
-                 for="sub_category"
-          >
-            Sub-category
-          </label>
+        <CreateShowSetCategories :errors="form.errors"
+                                 :categories="categories" />
 
-          <select
-              class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
-              v-model="selectedSubCategoryId" @change="chooseSubCategory"
-          >
-            <option v-if="!selectedCategoryId" disabled :value="null">Choose a category first</option>
-            <option v-else disabled :value="null">Choose a subcategory...</option>
-            <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">
-              {{ subCategory?.name }}
-            </option>
-          </select>
-          <span class="">{{ showStore.sub_category_description }}</span>
-          <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
-               class="text-xs text-red-600 mt-1"></div>
-        </div>
 
-        <div class="mb-6">
-          <label class="block mb-2 uppercase font-bold dark:text-gray-200"
-                 for="description"
-          >
-            Description <span class="text-red-500">* REQUIRED</span>
-          </label>
-          <tip-tap-description-editor @updateContent="handleContentUpdate" />
+        <CreateShowSetDescription :errors="form.errors"/>
 
-          <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
-        </div>
 
         <SocialMediaLinksStoreUpdateForForm v-model:form="form"/>
 
@@ -220,7 +72,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -232,7 +84,11 @@ import CheckboxNotification from '@/Components/Global/Modals/CheckboxNotificatio
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import Message from '@/Components/Global/Modals/Messages'
 import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
-import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
+import CreateShowSelectTeam from '@/Components/Pages/Shows/Elements/CreateShowSelectTeam.vue'
+import CreateShowSelectShowRunner from '@/Components/Pages/Shows/Elements/CreateShowSelectShowRunner.vue'
+import CreateShowSetShowName from '@/Components/Pages/Shows/Elements/CreateShowSetShowName.vue'
+import CreateShowSetCategories from '@/Components/Pages/Shows/Elements/CreateShowSetCategories.vue'
+import CreateShowSetDescription from '@/Components/Pages/Shows/Elements/CreateShowSetDescription.vue'
 
 usePageSetup('showsCreate')
 
@@ -248,62 +104,26 @@ let props = defineProps({
   categories: Object,
 })
 
-let selectedCategoryId = ref(null)
-let selectedSubCategoryId = ref(null)
-
-const subCategories = computed(() => {
-  const category = props.categories.find(cat => cat.id === selectedCategoryId.value)
-  return category ? category.sub_categories : []
-})
-
-// Watchers to update the store based on category and subcategory selections
-watch(selectedCategoryId, () => {
-  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-}, {immediate: true})
-
-watch(selectedSubCategoryId, () => {
-  showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
-})
-
 onMounted(() => {
-  selectedShowRunnerCreatorId.value = defaultShowRunnerId.value
+  // selectedShowRunnerCreatorId.value = defaultShowRunnerId.value
   showStore.categories = props.categories
-  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-  selectedTeamId.value = defaultTeamId.value
+  // showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+  showStore.selectedTeamId = defaultTeamId.value
 })
 
 const defaultTeamId = computed(() => {
   return teamStore.id || (props.teams.length > 0 ? props.teams[0].id : null)
 })
 
-const defaultShowRunnerId = computed(() => {
-  return props.creatorId
-})
-
-// Reactive property for the selected team ID
-const selectedTeamId = ref(null)
+// const defaultShowRunnerId = computed(() => {
+//   return props.creatorId
+// })
 
 // Reactive property for the selected show_runner ID
-const selectedShowRunnerCreatorId = ref(null)
-
-// Watcher to update the teamStore.id when selectedTeamId changes
-watch(selectedTeamId, (newId) => {
-  teamStore.id = newId
-})
-
-const chooseCategory = () => {
-  // Update the selected category ID based on the new selection
-  // Vue automatically updates selectedCategoryId due to v-model binding
-  // So, there is no need to manually set it here
-
-  // Call the store method to update descriptions and subcategories
-  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-}
-
-const chooseSubCategory = () => {
-  // Update the store state based on the new subcategory selection
-  showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
-}
+const selectedShowRunnerCreatorId = ref(props.defaultShowRunnerId);
+const selectedShowRunnerCreatorIdHandler = (id) => {
+  selectedShowRunnerCreatorId.value = id;
+};
 
 // fetch Team Members
 const teamMembers = ref([]) // Store team members locally in the component
@@ -320,22 +140,8 @@ const fetchTeamMembers = async () => {
   }
 }
 
-const showRunnerInfoVisible = ref(false)
-
-const toggleShowRunnerInfo = () => {
-  showRunnerInfoVisible.value = !showRunnerInfoVisible.value
-}
-
 // Use watch to react to changes in defaultTeamId computed property
-watch(defaultTeamId, fetchTeamMembers, {immediate: true}) // immediate: true to run on mount
-
-const description = ref('')
-
-const handleContentUpdate = (html) => {
-  description.value = html
-}
-
-
+watch(defaultTeamId, fetchTeamMembers, { immediate: true }) // immediate: true to run on mount
 
 let form = useForm({
   name: '',
@@ -352,7 +158,7 @@ let form = useForm({
   show_runner_creator_id: '',
 })
 
-let showCategoryDescription = ref(null)
+// let showCategoryDescription = ref(null)
 
 const checkForTeams = () => {
   if (props.teams.length === 0) {
@@ -377,11 +183,12 @@ onMounted(() => {
 })
 
 let submit = () => {
-  form.description = description.value
+  form.name = showStore.name
+  form.description = showStore.description
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
-  form.team_id = selectedTeamId
-  form.show_runner_creator_id = selectedShowRunnerCreatorId
+  form.team_id = showStore.selectedTeamId
+  form.show_runner_creator_id = selectedShowRunnerCreatorId.value;
   form.post('/shows')
 }
 
@@ -392,6 +199,10 @@ let submit = () => {
 function reset() {
   form.reset()
 }
+
+onBeforeUnmount(() => {
+  showStore.reset()
+})
 
 </script>
 

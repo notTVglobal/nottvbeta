@@ -313,7 +313,7 @@ onMounted(() => {
           }
         }
         // If current user is still the leader, run the command
-        if (showStore.leader.id === page.value.user.id) {
+        if (showStore.leader.id === page.user.id) {
           axios.post(`/api/${props.show.slug}/user-left-channel`, {
             user: user,
             channel: `creator.show.${props.show.id}`,
@@ -347,7 +347,7 @@ onBeforeUnmount(() => {
   // Echo.leave(`creator.show.${props.show.id}`);
   Echo.leave(`creator.show.${props.show.id}`)
 
-  showStore.setUpdatingStatus(false, page.value.user.name, props.show.slug)
+  showStore.setUpdatingStatus(false, page.user.name, props.show.slug)
 
   console.log(`Unsubscribed from channel creator.show.${props.show.id}`)
   showStore.reset()

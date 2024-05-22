@@ -14,214 +14,50 @@
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg mb-10">
 
-              <div v-if="form.errors.name" v-text="form.errors.name"
-                   class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
-              <div v-if="form.errors.description" v-text="form.errors.description"
-                   class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
+            <CreateShowErrorsContainer :errors="form.errors"/>
 
               <!-- Begin grid 2-col -->
               <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
 
                 <!--Left Column-->
-                <div>
-                  <div class="flex space-y-3">
-                    <div class="mb-6">
-                      <SingleImage :image="image" :key="image" :alt="'show poster'" class=""/>
-                    </div>
-                  </div>
-
-                  <div class="w-full">
-
-                    <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                           for="name"
-                    >
-                      Change Show Poster
-                    </label>
-
-                    <ImageUpload :image="image"
-                                 :modelType="'show'"
-                                 :modelId="`${show.id}`"
-                                 :name="'Upload Show Poster'"
-                                 :maxSize="'30MB'"
-                                 :fileTypes="'image/jpg, image/jpeg, image/png'"
-                                 @reloadImage="reloadImage"
-                    />
-
-                  </div>
-
-                </div>
+                <CreateShowSetImage :image="image" :show="show" @reloadImage="reloadImageHandler"/>
 
 
                 <!--Right Column-->
                 <div>
-                  <!--                                    <ShowPosterUpload-->
-                  <!--                                        :team="props.show"-->
-                  <!--                                        :images="props.images"-->
-                  <!--                                    />-->
                   <form @submit.prevent="submit">
 
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Show Name
-                      </label>
 
-                      <input v-model="form.name"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="name"
-                             id="name"
-                             required
-                      >
-                      <div v-if="form.errors.name" v-text="form.errors.name"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="description"
-                      >
-                        Description
-                      </label>
-                      <tip-tap-description-editor @updateContent="handleContentUpdate" :description="show?.description"/>
-
-                      <div v-if="form.errors.description" v-text="form.errors.description"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Show Notes (only visible to team members)
-                      </label>
-
-                      <!--                      <input v-model="form.notes"-->
-                      <!--                             class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
-                      <!--                             type="text"-->
-                      <!--                             name="notes"-->
-                      <!--                             id="notes"-->
-
-                      <!--                      >-->
-                      <TabbableTextarea v-model="form.notes"
-                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white"
-                      />
-                      <div v-if="form.errors.notes" v-text="form.errors.notes"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
-                             for="show_runner_creator_id"
-                      >
-                        Show Runner
-                      </label>
-
-                      <select
-                          class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
-                          v-model="selectedShowRunnerCreatorId"
-                      >
-                        <option v-for="member in teamMembers"
-                                :key="member.creator_id" :value="member.creator_id">{{ member.name }}
-                        </option>
+                    <CreateShowSetShowName :errors="form.errors"/>
 
 
-                      </select>
-                      <div v-if="form.errors.show_runner_creator_id" v-text="form.errors.show_runner_creator_id"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
-
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
-                             for="status"
-                      >
-                        Status
-                      </label>
-
-                      <select required
-                              class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
-                              v-model="form.show_status_id"
-                      >
-                        <option v-for="status in statuses"
-                                :key="status.id" :value="status.id">{{ status.name }}
-                        </option>
+                    <CreateShowSetEpisodePlayOrder :errors="form.errors"/>
 
 
-                      </select>
-                      <div v-if="form.errors.show_status_id" v-text="form.errors.show_status_id"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
+                    <CreateShowSetShowStatus :statuses="statuses" :errors="form.errors"/>
 
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
-                             for="episode_play_order"
-                      >
-                        Episode Play Order
-                      </label>
 
-                      <select required
-                              class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
-                              v-model="form.episode_play_order"
-                              id="episode_play_order"
-                      >
-                        <option disabled value="">Please select one</option> <!-- Disabled placeholder option -->
-                        <option value="newest">Start with the Newest Episode</option>
-                        <option value="oldest">Start with the First Episode</option>
+                    <CreateShowSetDescription :description="show.description" :errors="form.errors"/>
 
-                      </select>
-                      <div v-if="form.errors.episode_play_order" v-text="form.errors.episode_play_order"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
 
-                    <div class="mb-6">
-                    </div>
+                    <CreateShowSetShowNotes :notes="show.notes" :errors="form.errors"/>
 
-                    <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="category"
-                      >
-                        Category
-                      </label>
 
-                      <select
-                          class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block my-2 uppercase font-bold text-xs "
-                          v-model="selectedCategoryId" @change="chooseCategory"
-                      >
-                        <option v-for="category in categories"
-                                :key="category.id" :value="category.id">{{ category?.name }}
-                        </option>
 
-                      </select>
-                      <div v-if="form.errors.category" v-text="form.errors.category"
-                           class="text-xs text-red-600 mt-1">
-                      </div>
-                      <span class="">{{ showStore.category_description }}</span>
+                    <CreateShowSelectShowRunner :defaultShowRunnerId="show?.showRunner?.creator_id"
+                                                :teamMembers="teamMembers"
+                                                @selectedShowRunnerCreatorId="selectedShowRunnerCreatorIdHandler"
+                                                :errors="form.errors"/>
 
-                    </div>
 
-                    <div class="mb-6">
-                      <label class="block mb-1 uppercase font-bold text-xs text-light text-red-700"
-                             for="sub_category"
-                      >
-                        Sub-category
-                      </label>
-
-                      <select
-                          class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
-                          v-model="selectedSubCategoryId" :disabled="!selectedCategoryId" @change="chooseSubCategory"
-                      >
-                        <option disabled value="">Select a subcategory</option>
-                        <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">
-                          {{ subCategory?.name }}
-                        </option>
-                      </select>
-                      <span class="">{{ showStore.sub_category_description }}</span>
-                      <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
-                           class="text-xs text-red-600 mt-1"></div>
-                    </div>
 
                     <SocialMediaLinksStoreUpdateForForm v-model:form="form"/>
+
+
+                    <CreateShowSetCategories :errors="form.errors"
+                                             :categories="categories" />
+
+
 
                     <div class="flex justify-end mb-6">
                       <JetValidationErrors class="mr-4"/>
@@ -264,14 +100,19 @@ import { useShowStore } from '@/Stores/ShowStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ShowEditHeader from '@/Components/Pages/Shows/Layout/EditShowHeader'
-import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea'
-import SingleImage from '@/Components/Global/Multimedia/SingleImage'
-import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
 import Message from '@/Components/Global/Modals/Messages'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import SocialMediaLinksStoreUpdateForForm from '@/Components/Global/SocialMedia/SocialMediaLinksStoreUpdateForForm.vue'
-import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
+import CreateShowSelectShowRunner from '@/Components/Pages/Shows/Elements/CreateShowSelectShowRunner.vue'
+import CreateShowSetCategories from '@/Components/Pages/Shows/Elements/CreateShowSetCategories.vue'
+import CreateShowSetShowName from '@/Components/Pages/Shows/Elements/CreateShowSetShowName.vue'
+import CreateShowSetImage from '@/Components/Pages/Shows/Elements/CreateShowSetImage.vue'
+import CreateShowErrorsContainer from '@/Components/Pages/Shows/Elements/CreateShowErrorsContainer.vue'
+import CreateShowSetEpisodePlayOrder from '@/Components/Pages/Shows/Elements/CreateShowSetEpisodePlayOrder.vue'
+import CreateShowSetShowStatus from '@/Components/Pages/Shows/Elements/CreateShowSetShowStatus.vue'
+import CreateShowSetDescription from '@/Components/Pages/Shows/Elements/CreateShowSetDescription.vue'
+import CreateShowSetShowNotes from '@/Components/Pages/Shows/Elements/CreateShowSetShowNotes.vue'
 
 usePageSetup('shows/slug/edit')
 
@@ -291,29 +132,38 @@ let props = defineProps({
 })
 
 // Reactive property for the selected show_runner ID
-const selectedShowRunnerCreatorId = ref(null)
+const selectedShowRunnerCreatorId = ref(props.defaultShowRunnerId);
+const selectedShowRunnerCreatorIdHandler = (id) => {
+  selectedShowRunnerCreatorId.value = id;
+};
 
 let selectedCategoryId = ref(props?.show?.category?.id)
 let selectedSubCategoryId = ref(props?.show?.subCategory?.id)
 
-const subCategories = computed(() => {
-  const category = props.categories.find(cat => cat.id === selectedCategoryId.value)
-  return category ? category.sub_categories : []
-})
+
+
+// const subCategories = computed(() => {
+//   const category = props.categories.find(cat => cat.id === selectedCategoryId.value)
+//   return category ? category.sub_categories : []
+// })
 
 // Watchers to update the store based on category and subcategory selections
-watch(selectedCategoryId, () => {
-  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-}, {immediate: true})
-
-watch(selectedSubCategoryId, () => {
-  showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
-})
+// watch(selectedCategoryId, () => {
+//   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+// }, {immediate: true})
+//
+// watch(selectedSubCategoryId, () => {
+//   showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
+// })
 
 onMounted(() => {
-  selectedShowRunnerCreatorId.value = props?.show?.showRunner?.creator_id
   document.getElementById('topDiv').scrollIntoView({behavior: 'smooth'})
+  showStore.name = props.show.name
+  showStore.description = props.show.description
+  showStore.notes = props.show.notes
   showStore.categories = props.categories
+  showStore.episode_play_order = props.show.episode_play_order
+  showStore.show_status_id = props.show.show_status_id
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
   if (!props.show.showRunner) {
     notificationStore.setGeneralServiceNotification('Please set the show runner.', 'You must set a show runner before you can edit the show.')
@@ -321,25 +171,25 @@ onMounted(() => {
 
 })
 
-const chooseCategory = () => {
-  // Update the selected category ID based on the new selection
-  // Vue automatically updates selectedCategoryId due to v-model binding
-  // So, there is no need to manually set it here
+// const chooseCategory = () => {
+//   // Update the selected category ID based on the new selection
+//   // Vue automatically updates selectedCategoryId due to v-model binding
+//   // So, there is no need to manually set it here
+//
+//   // Call the store method to update descriptions and subcategories
+//   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+// }
 
-  // Call the store method to update descriptions and subcategories
-  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-}
+// const chooseSubCategory = () => {
+//   // Update the store state based on the new subcategory selection
+//   showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
+// }
 
-const chooseSubCategory = () => {
-  // Update the store state based on the new subcategory selection
-  showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
-}
+// const description = ref(props.show.description)
 
-const description = ref(props.show.description)
-
-const handleContentUpdate = (html) => {
-  description.value = html
-}
+// const handleContentUpdate = (html) => {
+//   description.value = html
+// }
 
 
 let form = useForm({
@@ -359,16 +209,21 @@ let form = useForm({
 
 // let showCategoryDescription = props.showCategory?.Description
 
-let reloadImage = () => {
+const reloadImageHandler = () => {
   router.reload({
     only: ['image'],
   })
 }
 
 let submit = () => {
-  form.description = description.value
+  form.name = showStore.name
+  form.description = showStore.description
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
+  form.episode_play_order = showStore.episode_play_order
+  form.show_status_id = showStore.show_status_id
+  form.notes = showStore.notes
+  form.show_runner_creator_id = selectedShowRunnerCreatorId.value;
   form.patch(route('shows.update', props.show.slug))
 }
 

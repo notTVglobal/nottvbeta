@@ -172,7 +172,7 @@ const watchModal = (modalId, onClose) => {
 
 const openAddShowToScheduleModal = async () => {
   try {
-    await showStore.setUpdatingStatus(true, page.value.user.name, props.show.slug);
+    await showStore.setUpdatingStatus(true, page.user.name, props.show.slug);
     document.getElementById('addShowToScheduleModal').showModal();
     notificationStore.setToastNotification('Show meta loaded.', 'info')
   } catch (error) {
@@ -183,7 +183,7 @@ const openAddShowToScheduleModal = async () => {
 
 const openChangeScheduleModal = async () => {
   try {
-    await showStore.setUpdatingStatus(true, page.value.user.name, props.show.slug);
+    await showStore.setUpdatingStatus(true, page.user.name, props.show.slug);
     document.getElementById('changeScheduleModal').showModal();
     notificationStore.setToastNotification('Show meta loaded.', 'info')
   } catch (error) {
@@ -198,11 +198,11 @@ let changeScheduleObserver;
 
 onMounted(async () => {
   addShowToScheduleObserver = watchModal('addShowToScheduleModal', async () => {
-    await showStore.setUpdatingStatus(false, page.value.user.name, props.show.slug);
+    await showStore.setUpdatingStatus(false, page.user.name, props.show.slug);
   });
 
   changeScheduleObserver = watchModal('changeScheduleModal', async () => {
-    await showStore.setUpdatingStatus(false, page.value.user.name, props.show.slug);
+    await showStore.setUpdatingStatus(false, page.user.name, props.show.slug);
   });
 
   // Check the flag in meta on page load
@@ -212,11 +212,11 @@ onMounted(async () => {
   console.log('Parsed meta:', meta);
   console.log('isUpdatingSchedule:', meta.isUpdatingSchedule);
   console.log('updatedBy:', meta.updatedBy);
-  console.log('current user:', page.value.user.name);
+  console.log('current user:', page.user.name);
 
-  if (meta.isUpdatingSchedule && meta.updatedBy === page.value.user.name) {
+  if (meta.isUpdatingSchedule && meta.updatedBy === page.user.name) {
     console.log('Resetting isUpdatingSchedule and updatedBy');
-    await showStore.setUpdatingStatus(false, page.value.user.name, props.show.slug);
+    await showStore.setUpdatingStatus(false, page.user.name, props.show.slug);
   }
 });
 

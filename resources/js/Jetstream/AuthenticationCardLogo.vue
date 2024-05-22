@@ -20,7 +20,7 @@ const returnToWelcomePage = () => {
 </script>
 
 <template>
-  <Link @click="returnToWelcomePage">
+  <Link @click="returnToWelcomePage" :href="`#`">
 
     <img :src="`/storage/images/logo_black_311.png`" alt="image" class="justify-center">
     <!--        <svg-->

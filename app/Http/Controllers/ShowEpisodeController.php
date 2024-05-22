@@ -78,7 +78,7 @@ class ShowEpisodeController extends Controller {
 ///
 
   public function store(HttpRequest $request) {
-    $validator = Validator::make($request->all(), [
+    $validatedData = Validator::make($request->all(), [
         'name'                => [
             'required',
             'max:255',
@@ -86,16 +86,18 @@ class ShowEpisodeController extends Controller {
             'distinct:ignore_case',
             new UniqueEpisodeName($request->show_id)
         ],
-        'description'         => 'required',
-        'user_id'             => 'required',
-        'show_id'             => 'required',
+        'description'         => 'required|string|max:5000',
+        'user_id'             => 'required|exists:users,id',
+        'show_id'             => 'required|exists:shows,id',
+        'show_slug'           => 'required|exists:shows,slug',
+        'episode_number'      => 'nullable|string|min:1|max:10',
+        'video_url'           => 'nullable|ends_with:.mp4',
+        'video_embed_code'    => 'nullable|string|max:2000',
+        'notes'               => 'nullable|string|max:2000',
+      // 'youtube_url'         => 'active_url', // Commented out
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
       // The 'copyrightYear' validation is conditionally added below
-        'episode_number'      => 'nullable|string|min:1|max:10',
-        'notes'               => 'nullable|string',
-        'video_url'           => 'nullable|ends_with:.mp4',
-      // 'youtube_url'         => 'active_url', // Commented out
-        'video_embed_code'    => 'nullable|string',
+
     ], [
       // Custom error messages
         'name.required'                => 'The name is required.',
@@ -110,13 +112,14 @@ class ShowEpisodeController extends Controller {
     ]);
 
     // Conditional validation for copyrightYear
-    $validator->sometimes('copyrightYear', 'required|integer|min:1900|max:' . date('Y'), function ($input) {
+    $validatedData->sometimes('copyrightYear', 'required|integer|min:1900|max:' . date('Y'), function ($input) {
       return $input->creative_commons_id != 8;
     });
 
-    if ($validator->fails()) {
-      return redirect()->back()->withErrors($validator)->withInput();
+    if ($validatedData->fails()) {
+      return redirect()->back()->withErrors($validatedData)->withInput();
     }
+
 
     // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
     // get the *.mp4 video url from embed code
@@ -129,32 +132,36 @@ class ShowEpisodeController extends Controller {
 //                $videoUrl = $videoUrlFromEmbedCode;
 //        } else $videoUrl = $request->video_url;
 
+    // Sanitize description
+    $sanitizedDescription = Purifier::clean($validatedData['description']);
+
     DB::beginTransaction();
+
+    $user = Auth::user();
 
     try {
       $showEpisode = new ShowEpisode();
       $showEpisode->ulid = (string) Ulid::generate();
-      $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
-      $showEpisode->name = $request->name;
-      $showEpisode->description = $request->description;
-      $showEpisode->user_id = Auth::user()->id;
-      $showEpisode->show_id = $request->show_id;
-      $showEpisode->episode_number = $request->episode_number;
-      $showEpisode->slug = \Str::slug($request->name);
-      $showEpisode->notes = $request->notes;
+      $showEpisode->isBeingEditedByUser_id = $user->id;
+      $showEpisode->name = e($validatedData['name']);
+      $showEpisode->description = $sanitizedDescription;
+      $showEpisode->user_id = $user->id;
+      $showEpisode->show_id = $validatedData['show_id'];
+      $showEpisode->episode_number = e($validatedData['episode_number']);
+      $showEpisode->slug = \Str::slug($validatedData['name']);
+      $showEpisode->notes = e($validatedData['notes']);
       $showEpisode->release_year = Carbon::now()->format('Y');
-      $showEpisode->copyrightYear = $request->copyrightYear;
-      $showEpisode->creative_commons_id = $request->creative_commons_id;
-      $showEpisode->video_embed_code = $request->video_embed_code;
+      $showEpisode->copyrightYear = e($validatedData['copyrightYear']);
+      $showEpisode->creative_commons_id = $validatedData['creative_commons_id'];
+      $showEpisode->video_embed_code = e($validatedData['video_embed_code']);
 
       $showEpisode->save();
 
-      if ($request->video_embed_code && !$request->video_url) {
+      if ($validatedData['video_embed_code'] && !$validatedData['video_url']) {
 
         // Create and save the notification
         $notification = new Notification;
-        $userId = auth()->user()->id;
-        $notification->user_id = $userId;
+        $notification->user_id = $user->id;
 
         // make the image the show_episode_poster
         $notification->image_id = $showEpisode->image_id;
@@ -172,11 +179,11 @@ class ShowEpisodeController extends Controller {
 
         // Create and save the video as before
         $video = new Video([
-            'user_id'          => Auth::user()->id,
+            'user_id'          => $user->id,
             'name'             => 'External video',
             'file_name'        => 'external_video_' . Str::uuid(),
             'type'             => 'video/mp4',
-            'video_url'        => $request->video_url,
+            'video_url'        => $validatedData['video_url'],
             'storage_location' => 'external',
             'show_episodes_id' => $showEpisode->id,
         ]);
@@ -187,8 +194,8 @@ class ShowEpisodeController extends Controller {
         dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
 
         $showEpisode->video_id = $video->id;
-        $showEpisode->youtube_url = $request->youtube_url;
-        $showEpisode->video_embed_code = $request->video_embed_code;
+        $showEpisode->youtube_url = $validatedData['youtube_url'];
+        $showEpisode->video_embed_code = $validatedData['video_embed_code'];
         $showEpisode->save();
 
       }
@@ -200,7 +207,7 @@ class ShowEpisodeController extends Controller {
         $show->save();
       }
 
-      $showSlug = $request->show_slug;
+      $showSlug = $validatedData['show_slug'];
       $showEpisodeSlug = $showEpisode->slug;
 
       $title = $showEpisode->name;
@@ -211,7 +218,7 @@ class ShowEpisodeController extends Controller {
 
       dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
 
-      if ($request->video_embed_code && !$request->video_url) {
+      if ($validatedData['video_embed_code'] && !$validatedData['video_url']) {
         // Create and save the notification
         $notification = new Notification;
         $userId = auth()->user()->id;
@@ -351,7 +358,7 @@ class ShowEpisodeController extends Controller {
                 'cloud_folder'    => $show->image->cloud_folder,
                 'placeholder_url' => $show->image->placeholder_url,
             ],
-            'copyrightYear'      => $show->created_at->format('Y'),
+            'copyright_year'     => $show->created_at->format('Y'),
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
             'category'           => $show->getCachedCategory() ?? null,
@@ -443,67 +450,36 @@ class ShowEpisodeController extends Controller {
 //////////////////
 
   public function edit(Show $show, ShowEpisode $showEpisode) {
-//        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
 
-    // Currently this queries all images in the database
-    // this needs to be changed to limit the query.
-    //
     // Update user editing status securely and efficiently
-    Auth::user()->update(['isEditingShowEpisode_id' => $showEpisode->id]);
+    $user = Auth::user();
+    $user->update(['isEditingShowEpisode_id' => $showEpisode->id]);
 
     // Mark the episode as being edited by the user
-    $showEpisode->update(['isBeingEditedByUser_id' => Auth::id()]);
+    $showEpisode->update(['isBeingEditedByUser_id' => $user->id]);
 
-//      // Prepare video data
-//      $videoData = [];
-//      if ($showEpisode->video) {
-//        $videoData = [
-//            'file_name' => $showEpisode->video->file_name,
-//            'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-//            'folder' => $showEpisode->video->folder,
-//            'cloud_folder' => $showEpisode->video->cloud_folder,
-//            'upload_status' => $showEpisode->video->upload_status,
-//            'video_url' => $showEpisode->video->video_url,
-//            'type' => $showEpisode->video->type,
-//            'storage_location' => $showEpisode->video->storage_location,
-//        ];
-//      }
-//         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
     $creativeCommons = CreativeCommons::all();
 
-    // convert release dateTime to user's timezone
-    if ($showEpisode->release_dateTime) {
-      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-    }
-
-    // convert scheduled_release dateTime to user's timezone
-    if ($showEpisode->scheduled_release_dateTime) {
-      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
-    }
+//    // convert release dateTime to user's timezone
+//    if ($showEpisode->release_dateTime) {
+//      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
+//    }
+//
+//    // convert scheduled_release dateTime to user's timezone
+//    if ($showEpisode->scheduled_release_dateTime) {
+//      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+//    }
 
     // Eager load necessary relationships for the show
     $show->load('team', 'user', 'image.appSetting');
 
     // Since showEpisode is a specific episode, load related data just for this instance
-    $showEpisode->load('video', 'creativeCommons', 'image.appSetting');
+    $showEpisode->load('creativeCommons', 'image.appSetting', 'video.appSetting');
 
     $creativeCommons = $showEpisode->getCachedCreativeCommons();
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
-        'show'             => [
-            'name'               => $show->name,
-            'slug'               => $show->slug,
-            'showRunner'         => $show->user->name,
-            'image' => $show->image ? (new ImageResource($show->image))->resolve() : null,
-            'first_release_year' => $show->first_release_year,
-            'last_release_year'  => $show->last_release_year,
-            'category'           => $show->getCachedCategory()->name ?? null,
-            'subCategory'        => $show->getCachedSubCategory()->name ?? null,
-        ],
-        'team'             => [
-            'name' => $show->team->name,
-            'slug' => $show->team->slug,
-        ],
+
         'episode'          => [
             'id'                         => $showEpisode->id,
             'ulid'                       => $showEpisode->ulid,
@@ -516,10 +492,9 @@ class ShowEpisodeController extends Controller {
             'release_year'               => $showEpisode->release_year ?? null,
             'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
-            'copyrightYear'              => $showEpisode->copyrightYear ?? null,
+            'copyright_year'             => $showEpisode->copyrightYear ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'mist_stream_id'             => $showEpisode->mist_stream_id,
-            'video_id'                   => $showEpisode->video_id,
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,
             'video'                      => [
@@ -533,16 +508,29 @@ class ShowEpisodeController extends Controller {
                 'type'             => $showEpisode->video->type ?? '',
                 'storage_location' => $showEpisode->video->storage_location ?? '',
             ],
-            'image' => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
-            'show_id'                    => $showEpisode->show_id,
         ],
-        'image' => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
+        'image'                      => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
+        'show'                       => [
+            'id'                 => $show->id,
+            'name'               => $show->name,
+            'slug'               => $show->slug,
+            'showRunner'         => $show->user->name,
+            'image'              => $show->image ? (new ImageResource($show->image))->resolve() : null,
+            'first_release_year' => $show->first_release_year,
+            'last_release_year'  => $show->last_release_year,
+            'category'           => $show->getCachedCategory()->name ?? null,
+            'subCategory'        => $show->getCachedSubCategory()->name ?? null,
+        ],
+        'team'                       => [
+            'name' => $show->team->name,
+            'slug' => $show->team->slug,
+        ],
         'creative_commons' => $creativeCommons,
         'can'              => [
-            'manageShow'  => Auth::user()->can('manage', $show),
-            'editShow'    => Auth::user()->can('edit', $show),
-            'editEpisode' => Auth::user()->can('edit', $show),
-            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            'manageShow'  => $user->can('manage', $show),
+            'editShow'    => $user->can('edit', $show),
+            'editEpisode' => $user->can('edit', $show),
+            'viewCreator' => $user->can('viewCreator', User::class),
         ]
     ]);
   }
@@ -595,7 +583,7 @@ class ShowEpisodeController extends Controller {
 ////////////  UPDATE
 ////////////////////
 
-  public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode) {
+  public function update(HttpRequest $request, ShowEpisode $showEpisode) {
 
     // validate the request
     $validatedData = $request->validate([
@@ -604,23 +592,22 @@ class ShowEpisodeController extends Controller {
             Rule::excludeIf($request->name === $showEpisode->name),
             'required',
             'max:255',
-            'accepted_if:show_id,',
             'distinct:ignore_case',
-            new UniqueEpisodeName($request->show_id)
+            new UniqueEpisodeName($showEpisode->show_id)
         ],
-        'show_id'                    => 'required',
+        'show_id'                    => 'required|exists:shows,id',
         'creative_commons_id'        => 'required|integer|exists:creative_commons,id',
-        'copyrightYear'              => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
+        'copyright_year'             => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'episode_number'             => 'nullable|string|min:1|max:10',
         'description'                => 'required|string|max:5000',
-        'notes'                      => 'nullable|string',
+        'notes'                      => 'nullable|string|max:2000',
         'video_url'                  => 'nullable|active_url|ends_with:.mp4',
         'youtube_url'                => 'nullable|active_url',
-        'video_embed_code'           => 'nullable|string',
+        'video_embed_code'           => 'nullable|string|max:2000',
         'release_dateTime'           => 'nullable|date',
         'scheduled_release_dateTime' => 'nullable|date|after:now',
     ], [
-        'copyrightYear.integer'        => 'Please choose a copyright year',
+        'copyright_year.integer'       => 'Please choose a copyright year',
         'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
     ]);
 

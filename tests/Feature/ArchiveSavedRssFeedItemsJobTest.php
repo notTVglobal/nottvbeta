@@ -7,6 +7,7 @@ use App\Jobs\DownloadAndStoreImageJob;
 use App\Models\NewsRssFeedItemTemp;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
 
@@ -15,7 +16,7 @@ class ArchiveSavedRssFeedItemsJobTest extends TestCase
 
   use RefreshDatabase;
 
-  /** @test */
+  #[Test]
   public function it_correctly_archives_saved_rss_feed_items()
   {
     Queue::fake();

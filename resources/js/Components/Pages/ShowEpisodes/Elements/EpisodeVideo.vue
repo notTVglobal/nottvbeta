@@ -2,8 +2,8 @@
   <div>
     <!-- Conditional rendering for the video section -->
       <!-- Episode Video Label -->
-      <div v-if="!episode.video?.id && !episode.video?.video_url" class="mt-6 px-5 flex justify-center w-full">
-        <div class="bg-black text-white text-center uppercase font-bold text-xs p-5 mb-2 w-full">
+      <div v-if="!episode.video?.id && !episode.video?.video_url" class="mt-2 px-1 flex justify-center items-center w-full">
+        <div class="bg-black text-white text-center flex items-center justify-center uppercase font-bold text-xs p-5 mb-2 w-76 h-52">
           No Video
         </div>
       </div>
@@ -13,16 +13,16 @@
       <!-- Video Player -->
       <video id="episodeEditPlayer"
              controls
-             class="w-full h-auto"
+             class="w-auto max-h-52"
              :src="episode.video?.cdn_endpoint + episode.video?.cloud_folder + episode?.video.folder + '/' + episode.video?.file_name">
         Your browser does not support the video tag.
       </video>
     </div>
 
 
-
     <!-- Processing or external storage placeholder -->
-    <div v-if="episode.video?.storage_location === 'external' || episode.video?.upload_status === 'processing'" class="flex justify-center shadow overflow-hidden border-b border-gray-200 bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
+    <div v-if="episode.video?.storage_location === 'external' || episode.video?.upload_status === 'processing'"
+         class="flex justify-center shadow overflow-hidden border-b border-gray-200 bg-white dark:bg-black text-2xl sm:rounded-lg p-5 w-auto max-h-52">
       <div v-if="episode.video?.video_url === ''">NO VIDEO</div>
       <video v-else id="episodeEditVideoPlayer" class="video-js w-full h-auto" controls>
         <source :src="episode.video?.video_url" :type="episode.video?.type">

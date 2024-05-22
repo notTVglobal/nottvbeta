@@ -1,15 +1,24 @@
 # not.tv Changelog
 
-Last Update: May 21, 2024\
+Last Update: May 22, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.2.1
+May 22, 2024
+* Refactor the Show Create and Edit pages.
+* Refactor the ShowEpisode Create and Edit pages.
+
+## v0.9.2.0
+May 22, 2024
+* Upgrade Laravel from 10.x to 11.x.
+
 ## v0.9.1.0
-May 21, 2024
-* Upgrade Laravel from 9.x to 10.x
+May 22, 2024
+* Upgrade Laravel from 9.x to 10.x.
 
 ## v0.9.0.27
 May 21, 2024
-* Update the README.md
+* Update the README.md.
 * Fix the migrations and seeders for first run.
 
 ## v0.9.0.26
