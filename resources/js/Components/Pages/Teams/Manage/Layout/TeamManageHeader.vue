@@ -44,7 +44,7 @@
                class="mt-2 text-left text-xs font-light">
             {{ publicMessage?.length }}/440 max characters
           </div>
-          <div>
+          <div v-if="nextBroadcast && nextBroadcast.broadcastDate">
             <p>insert zoom link</p>
             <input v-model="nextBroadcastDetails.zoomLink" type="text" placeholder="Type here"
                    class="input input-bordered w-full max-w-xs bg-white dark:bg-gray-800 dark:text-white"/>

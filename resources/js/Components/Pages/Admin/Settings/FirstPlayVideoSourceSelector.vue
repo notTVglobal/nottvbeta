@@ -20,11 +20,11 @@
       </div>
 
       <!-- Custom Video Inputs -->
-      <div v-if="adminStore.firstPlaySettings.useCustomVideo" class="space-y-3">
+      <div v-if="adminStore?.firstPlaySettings?.useCustomVideo" class="space-y-3">
 
         <div class="space-y-3">
           <!-- First Play Video Source -->
-          <div class="mb-6">
+          <div class="mb-6" v-if="adminStore.firstPlaySettings">
             <label for="customVideoSource"
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               First Play Video Source
@@ -39,7 +39,7 @@
           </div>
 
           <!-- First Play Video Source Type -->
-          <div class="mb-6">
+          <div class="mb-6" v-if="adminStore.firstPlaySettings">
             <label for="customVideoSourceType"
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               First Play Video Source Type
@@ -54,7 +54,7 @@
           </div>
 
           <!-- First Play Video Name -->
-          <div class="mb-6">
+          <div class="mb-6" v-if="adminStore.firstPlaySettings">
             <label for="customVideoName"
                    class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">
               First Play Video Name
@@ -120,7 +120,7 @@
 
       <!-- Channel Dropdown -->
       <div v-else class="">
-        <div class="channel-selector">
+        <div class="channel-selector" v-if="adminStore.firstPlaySettings">
           <label for="channelId" class="label block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300">Select
             Channel</label>
           <select v-model="adminStore.firstPlaySettings.channelId" class="select select-bordered w-full bg-white dark:bg-gray-800 dark:text-white"
@@ -145,11 +145,11 @@
 </template>
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-// import { useForm } from '@inertiajs/inertia-vue3'
+// import { useForm } from '@inertiajs/vue3'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useAdminStore } from '@/Stores/AdminStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 const notificationStore = useNotificationStore()
@@ -180,13 +180,13 @@ const blurCheckbox = () => {
 const selectedChannelId = ref('')
 
 let clearFirstPlayCacheData = () => {
-  Inertia.post(route('admin.clear-first-play-data-cache'))
+  router.post(route('admin.clear-first-play-data-cache'))
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 }
 
 // Watch for changes in audio level
-watch(() => adminStore.firstPlaySettings.useCustomVideo, newCustomVideoSetting => {
+watch(() => adminStore?.firstPlaySettings?.useCustomVideo, newCustomVideoSetting => {
   if (newCustomVideoSetting) {
     adminStore.fetchActiveStreams()
     console.log('fetch active streams')

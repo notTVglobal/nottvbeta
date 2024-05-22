@@ -73,8 +73,8 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
-import { Head, useForm } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { Head, useForm } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'

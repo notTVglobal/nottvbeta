@@ -128,7 +128,7 @@
 </template>
 <script setup>
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc';
@@ -436,7 +436,7 @@ function handleShowClick(item) {
     default:
       // Handle default case or do nothing
   }
-  Inertia.visit(url) // Visit the dynamically created URL
+  router.visit(url) // Visit the dynamically created URL
 }
 
 

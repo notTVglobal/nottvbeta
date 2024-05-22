@@ -226,7 +226,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'

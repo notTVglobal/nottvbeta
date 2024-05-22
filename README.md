@@ -6,18 +6,20 @@ Next generation notTV Prototype
 # README
 
 Welcome to the notTV MVP (Minimum Viable Product).  
-[not.tv](http://not.tv)
+[not.tv](https://not.tv)
 
 Thank you for taking the time to trial, test, and/or contribute to our app. We support freedom, cooperation, creativity, and community. We also strive for world-class quality. Let's work to keep the code and product the best in the world.
 
 - Travis Michael Ernest Cross, tec21 (October 7, 2022)  
-  [@travismichaelcross](https://github.com/travismichaelcross)
+  [@tec21](https://github.com/tec21)
 
 ---
 
 ## 1. Images
 
-The following images included in the archive should be unzipped to `/storage/app/public/images`:
+Unzip the README.zip
+
+The following images included in the archive will unzip to `/storage/app/public/images`:
 
 - `logo_black_311.png`
 - `logo_white_512.png`
@@ -26,14 +28,15 @@ The following images included in the archive should be unzipped to `/storage/app
 - `logo_white.svg`
 
 ```plaintext
-   2499  2024-02-09 21:33   README.txt
-   3310  2022-10-07 22:24   storage/app/public/images/EBU_Colorbars.svg.png
-   97422  2022-10-07 23:08   storage/app/public/images/Ping.png
-   13866  2022-04-09 03:39   storage/app/public/images/logo_black_311.png
-   26851  2022-06-12 03:22   storage/app/public/images/logo_white_512.png
-   2078  2024-02-03 19:55   .env.working.example
-   4566  2024-03-27 20:31   storage/app/public/images/logo_white.svg
-
+   README.zip Contents:
+   2499   2024-02-09 21:33    README.txt
+   3310   2022-10-07 22:24    storage/app/public/images/EBU_Colorbars.svg.png
+   97422  2022-10-07 23:08    storage/app/public/images/Ping.png
+   13866  2022-04-09 03:39    storage/app/public/images/logo_black_311.png
+   26851  2022-06-12 03:22    storage/app/public/images/logo_white_512.png
+   2078   2024-02-03 19:55    .env.working.example
+   4566   2024-03-27 20:31    storage/app/public/images/logo_white.svg
+```
 **NOTE:** The images are required before you seed the database.
 
 ## 2. Setup the `.env` File
@@ -48,23 +51,27 @@ Add `client_max_body_size xxM` inside the http section in `/etc/nginx/nginx.conf
 
 ```bash
 $ php artisan storage:link
-
+```
 ## 5. Seed the Database
+#### Note: if you are using Laravel Sail you need to run commands like this: '$ sail php artisan'
 
 ```bash
 $ php artisan migrate
 $ php artisan db:seed --class=FirstRunSeeder
-
-An Administrator account will be created:
+$ php artisan slugs:update
+$ php artisan app:set-first-run-settings
+```
+## An Administrator account will be created: #
 
 - **Email:** admin@not.tv
 - **Password:** nottv123
 
 ## 6. Change CDN Endpoint and Cloud Folder
 
-Update the CDN Endpoint and Cloud Folder in the Admin Settings.
+Update the CDN Endpoint and Cloud Folder in the Admin/Settings (/admin/settings).
 
 ### Additional Seeders
+#### Note: These get installed with the FirstRunSeeder.
 
 ```bash
 $ php artisan db:seed --class=UserSeeder
@@ -75,7 +82,7 @@ $ php artisan db:seed --class=ShowSeeder
 $ php artisan db:seed --class=ShowEpisodeSeeder
 $ php artisan db:seed --class=MovieSeeder
 $ php artisan db:seed --class=MasterSeeder # sets up categories
-
+```
 ## User Accounts Created with the UserSeeder
 
 - **Email:** user@not.tv  
@@ -92,6 +99,9 @@ $ php artisan db:seed --class=MasterSeeder # sets up categories
 
 
 ## Setting up notTV from a Git Repo
+  __More detail will be found in the Admin/Settings page, login as admin@not.tv after you run the database migration.__
+
+You will need to provide your SSH key to development team (@tec21) to gain access to the repo. This is until the foundation is in place, then we will expand the project for open development.
 
 1. Unzip `README.zip` (it will add images to the `/storage/app/public/images` folder)
 2. Install PHP 8.1
@@ -104,5 +114,7 @@ $ php artisan db:seed --class=MasterSeeder # sets up categories
     - `PUSHER_LOCAL_DEV`
 7. Run Sail:
     - `sail up`
-    - `sail artisan migrate`
-    - `sail artisan db:seed`
+    - `sail php artisan migrate`
+    - `sail php artisan db:seed`
+    - `sail php artisan slugs:update`
+    - `sail php artisan app:set-first-run-settings`

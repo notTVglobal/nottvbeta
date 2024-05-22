@@ -81,8 +81,8 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import Modal from '@/Components/Global/Modals/Modal'
 import throttle from 'lodash/throttle'
-import { useForm } from '@inertiajs/inertia-vue3'
-import { Inertia } from '@inertiajs/inertia'
+import { useForm } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 
@@ -181,7 +181,7 @@ onMounted(() => {
 })
 
 // watch(search, throttle(function (value) {
-//   Inertia.get('/teams/' + teamStore.slug + '/manage', {search: value}, {
+//   router.get('/teams/' + teamStore.slug + '/manage', {search: value}, {
 //     preserveState: true,
 //     replace: true,
 //   })
@@ -243,7 +243,7 @@ async function addTeamMember(creator) {
 //     preserveScroll: true,
 //     onSuccess: () => {
 //       form.reset()
-//       Inertia.visit(route('teams.manage', [teamStore.slug]), {
+//       router.visit(route('teams.manage', [teamStore.slug]), {
 //         method: 'get',
 //         preserveScroll: true,
 //       })

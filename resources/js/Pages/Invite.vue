@@ -279,7 +279,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import Message from '@/Components/Global/Modals/Messages'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useClipboard } from '@vueuse/core'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 usePageSetup('invite')
 

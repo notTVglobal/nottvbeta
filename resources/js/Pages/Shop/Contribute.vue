@@ -341,7 +341,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
@@ -385,7 +385,7 @@ const submitDonation = () => {
     console.log(`Donating $${donationAmount.value} to ${shopStore.selectedFavouriteType}: ${shopStore.selectedFavourite.name}`)
     // Perform any further action based on the donation
     document.getElementById('favouriteShowSelect').close()
-    Inertia.visit('/contribute/one-time')
+    router.visit('/contribute/one-time')
   }
 }
 
@@ -414,7 +414,7 @@ function payNow(subscription) {
     default:
       console.error('Unsupported subscription type:', subscription)
   }
-  Inertia.get('/contribute/subscription')
+  router.get('/contribute/subscription')
 }
 
 function oneTimeDonation(type) {
@@ -422,7 +422,7 @@ function oneTimeDonation(type) {
     case 'onetime':
       console.log(`Donating $${shopStore.donationAmount}`)
         shopStore.selectedFavourite = {}
-      Inertia.visit('/contribute/one-time')
+      router.visit('/contribute/one-time')
       break
     case 'favouriteShow':
       document.getElementById('favouriteShowSelect').showModal()
@@ -449,7 +449,7 @@ function startSubscription(subscription) {
       console.log('Invalid subscription type')
       return // Early return for an invalid case
   }
-  Inertia.get('/contribute/subscription')
+  router.get('/contribute/subscription')
 }
 
 </script>

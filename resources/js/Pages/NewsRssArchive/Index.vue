@@ -98,8 +98,8 @@
 
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -124,7 +124,7 @@ let form = useForm({})
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/newsRssArchive', {search: value}, {
+  router.get('/newsRssArchive', {search: value}, {
     preserveState: true,
     replace: true,
   })

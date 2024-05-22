@@ -57,9 +57,9 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed } from 'vue'
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue'
 import JetButton from '@/Jetstream/Button.vue'

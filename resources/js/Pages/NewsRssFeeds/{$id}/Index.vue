@@ -134,9 +134,9 @@ import Message from '@/Components/Global/Modals/Messages'
 import BackButton from '@/Components/Global/Buttons/BackButton'
 import { onMounted, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import Pagination from '@/Components/Global/Paginators/Pagination.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 usePageSetup('newsFeed')
 
@@ -158,14 +158,14 @@ const form = useForm({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get(`/newsRssFeeds/${props.feed.slug}`, {search: value}, {
+  router.get(`/newsRssFeeds/${props.feed.slug}`, {search: value}, {
     preserveState: true,
     replace: true,
   })
 }, 300))
 
 const addToArchive = async (itemId) => {
-  Inertia.patch(`/newsRssFeedItemsTemp/${itemId}/save`, {
+  router.patch(`/newsRssFeedItemsTemp/${itemId}/save`, {
   }, {
     preserveState: true, // Prevents the page from fully reloading
     preserveScroll: true, // Keeps the scroll position

@@ -103,7 +103,7 @@
 <script setup>
 import { ref } from "vue"
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 import TeamLogoUpload from "@/Components/Global/FilePond/TeamLogoUpload"
 

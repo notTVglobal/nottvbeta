@@ -22,9 +22,9 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { onMounted, ref } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { Dropzone } from "dropzone"
 import { useUserStore } from "@/Stores/UserStore"
 import { useUploadStore } from "@/Stores/UploadStore"
@@ -121,7 +121,7 @@ onMounted(() => {
       myDropzone.removeFile(file);
       userStore.uploadPercentage = 0;
       isHidden = false;
-      Inertia.reload({
+      router.reload({
         only: ["videos"],
       });
     });

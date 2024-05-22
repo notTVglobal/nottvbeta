@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 // the purpose of the notificationStore is to allow the system/user
 // to clear out their notifications... instead of using only page props
@@ -114,7 +114,7 @@ export const useNotificationStore = defineStore('notificationStore', {
         },
         redirectAndClear() {
             this.active = false
-            Inertia.visit(this.redirectPageUri)
+            router.visit(this.redirectPageUri)
             this.clearNotification()
         },
         closeAndClear() {

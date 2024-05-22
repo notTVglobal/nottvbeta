@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { inject, onBeforeMount, onMounted, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -57,7 +57,7 @@ onMounted(async () => {
   // } else if (!getUserData) {
   //   await updateUserStore()
   // }
-  // Inertia.reload()
+  // router.reload()
 })
 //
 // async function updateUserStore() {

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const initialState = () => ({
     category_id: 0,
@@ -40,7 +40,7 @@ export const useMovieStore = defineStore('movieStore', {
 
         async fetchMovies(categorySlug, page = 1, searchQuery = '', subCategoryId = null) {
             const params = { page, search: searchQuery, subCategory: subCategoryId };
-            const response = await Inertia.get(`/movies/${categorySlug}`, params, { preserveState: true });
+            const response = await router.get(`/movies/${categorySlug}`, params, { preserveState: true });
 
             this.movies = response.props.movies.data;
             this.pagination = response.props.pagination;

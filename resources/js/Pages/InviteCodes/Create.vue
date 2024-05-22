@@ -67,7 +67,7 @@
 
 <script setup>
 import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
@@ -194,7 +194,7 @@ const submit = () => {
         // Handle success
         Object.keys(form).forEach(key => form[key] = null);
         formErrors = reactive({}); // Or formErrors.value = {} if formErrors is a ref
-        Inertia.visit('/invite_codes');
+        router.visit('/invite_codes');
       })
       .catch(error => {
         if (error.response && error.response.data && error.response.data.errors) {

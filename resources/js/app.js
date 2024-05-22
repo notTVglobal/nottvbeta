@@ -1,19 +1,18 @@
 import './bootstrap'
 
 import {createApp, h} from 'vue'
-import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3'
-import { Inertia } from '@inertiajs/inertia'
-import {InertiaProgress} from '@inertiajs/progress'
+import {createInertiaApp, Head, Link} from '@inertiajs/vue3'
 import AppLayout from "./Layouts/AppLayout"
 import {createPinia} from "pinia"
-import {ZiggyVue} from 'ziggy'
+import { ZiggyVue } from 'ziggy-js'
+import { Ziggy } from "./ziggy.js"
 import Vue3TouchEvents from "vue3-touch-events"
 // import helmet from "helmet";
 import "../../resources/css/theme.css" // Magic happens here
 // import the fontawesome core
-import {library} from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core'
 // import font awesome icon component
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 // import specific icons
 import {
     fa1,
@@ -114,6 +113,9 @@ const formatDate = () => ({
 })
 
 createInertiaApp({
+    progress: {
+        delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true,
+    },
     title: (title) => `${title} - ${appName}`,
     resolve: async name => {
 
@@ -126,9 +128,12 @@ createInertiaApp({
         }
         return page;
     },
-    setup({ el, app, props, plugin }) {
-        createApp({ render: () => h(app, props) })
-            .use(plugin)
+    setup({ el, App, props, plugin }) {
+        const VueApp = createApp({ render: () => h(App, props) })
+
+            VueApp.config.globalProperties.$route = route
+
+            VueApp.use(plugin)
             // .use(VueReCaptcha, { siteKey: captchaKey } )
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
@@ -146,10 +151,10 @@ createInertiaApp({
             .mount(el);
 
         // // Register Inertia navigation event listeners
-        // Inertia.on('start', (event) => {
+        // router.on('start', (event) => {
         //     console.log('Navigation started to:', event.detail.visit.url);
         // });
-        // Inertia.on('finish', (event) => {
+        // router.on('finish', (event) => {
         //     if (event.detail.visit.completed) console.log('Navigation completed to:', event.detail.visit.url);
         //     else if (event.detail.visit.interrupted) console.log('Navigation interrupted from:', event.detail.visit.url);
         //     else if (event.detail.visit.cancelled) console.log('Navigation cancelled to:', event.detail.visit.url);
@@ -162,10 +167,9 @@ library.add(fa1, fa2, fa3, fa4, fa5, fa6, fa7, fa8, fa9,faArrowRightArrowLeft, f
             faEye, faComments, faPaperPlane, faUser, faGem, faHeart, faLeaf, faFlagUsa, faList, faFilter,
             faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo, faPencil, faClipboard, faClipboardList, faCircle, faClapperboard, faLock, faVolumeMute, faVolumeUp, faWrench);
 
-InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
 
 // let lastUrl = window.location.pathname;
 //
-// Inertia.on('navigate', (event) => {
+// router.on('navigate', (event) => {
 //     lastUrl = event.detail.page.url;
 // });

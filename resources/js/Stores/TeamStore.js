@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
@@ -79,7 +79,7 @@ export const useTeamStore = defineStore('teamStore', {
             }
         },
         // getCreators() {
-        //     Inertia.reload({ only: ['creators'] })
+        //     router.reload({ only: ['creators'] })
         // },
         deleteTeamMemberCancel() {
             this.confirmDialog = false
@@ -91,7 +91,7 @@ export const useTeamStore = defineStore('teamStore', {
         //     this.members = members;
         // }
         // deleteTeamMember() {
-        //     Inertia.visit(route('teams.removeTeamMember'), {
+        //     router.visit(route('teams.removeTeamMember'), {
         //         method: 'post',
         //         data: {
         //             user_id: this.deleteMemberId,
@@ -126,7 +126,7 @@ export const useTeamStore = defineStore('teamStore', {
         },
 
         addTeamManager() {
-            Inertia.visit(route('teams.addTeamManager'), {
+            router.visit(route('teams.addTeamManager'), {
                 method: 'post',
                 data: {
                     user_id: this.selectedManagerId,
@@ -137,7 +137,7 @@ export const useTeamStore = defineStore('teamStore', {
             this.confirmManagerDialog = false
         },
         removeTeamManager() {
-            Inertia.visit(route('teams.removeTeamManager'), {
+            router.visit(route('teams.removeTeamManager'), {
                 method: 'post',
                 data: {
                     user_id: this.selectedManagerId,

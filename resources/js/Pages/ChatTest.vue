@@ -57,7 +57,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { useChatStore } from "@/Stores/ChatStore.js";
 import {onMounted} from "vue";
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm} from "@inertiajs/vue3";
 
 const videoPlayerStore = useVideoPlayerStore()
 const chat = useChatStore()

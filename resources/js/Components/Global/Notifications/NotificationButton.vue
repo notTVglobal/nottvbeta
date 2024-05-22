@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { computed, onMounted, ref } from "vue"
 import { useUserStore } from "@/Stores/UserStore"
 
@@ -55,7 +55,7 @@ onMounted(() => {
   // Echo.private(`user.${userStore.id}`).subscribed(() => {
   // }).listen('.userNotifications', (event) => {
   //     userStore.newNotifications++;
-  //     // Inertia.reload();
+  //     // router.reload();
   // })
   // const channel = Echo.private('user.1')
   // channel.subscribed(() => {
@@ -68,7 +68,7 @@ onMounted(() => {
   // channel.subscribed(() => {
   // }).listen('.userNotifications', (event) => {
   //         userStore.newNotifications++;
-  //         Inertia.reload();
+  //         router.reload();
   //         // notifications.value.push(event.notification);
   // })
 

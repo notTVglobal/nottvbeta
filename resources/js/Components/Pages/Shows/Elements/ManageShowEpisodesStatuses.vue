@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { format } from "date-fns"
 import { useTeamStore } from "@/Stores/TeamStore"
@@ -145,7 +145,7 @@ function openEpisodeStatuses() {
 //     if (newStatusId === 6 && scheduledDateTime === null) {
 //         // open a model to set scheduled dateTime
 //
-//         Inertia.reload()
+//         router.reload()
 //     }
 // }
 
@@ -228,14 +228,14 @@ async function changeEpisodeStatus(episodeId, statusId) {
     }
     // return response
     document.getElementById(dialogId).close()
-    Inertia.reload()
+    router.reload()
 }
 
 const closeModals = () => {
     document.getElementById(dialogId).close()
     document.getElementById('confirmPublishModal.'+props.episodeId).close()
     document.getElementById('adminChangeStatusModal.'+props.episodeId).close()
-    Inertia.reload()
+    router.reload()
 }
 
 const episodeStatusClass = computed(() => ({

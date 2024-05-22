@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 
 defineProps({
   can: Object,
@@ -53,7 +53,7 @@ function createShowWithNoTeamButton() {
 }
 
 const navigateToCreateTeam = () => {
-  Inertia.visit('teams/create')
+  router.visit('teams/create')
 };
 
 </script>

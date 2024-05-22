@@ -6,7 +6,7 @@ import { useChannelStore } from '@/Stores/ChannelStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useAudioStore } from '@/Stores/AudioStore'
 import videojs from 'video.js'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { nextTick } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 

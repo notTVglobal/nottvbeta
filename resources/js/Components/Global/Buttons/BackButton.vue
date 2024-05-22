@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from '@/Stores/UserStore'
 
@@ -23,17 +23,17 @@ let props = defineProps({
 function back() {
   if (appSettingStore.prevUrl) {
     if (props.url) {
-      Inertia.visit(props.url)
+      router.visit(props.url)
     } else {
-      Inertia.visit(appSettingStore.prevUrl)
+      router.visit(appSettingStore.prevUrl)
     }
   } else {
     if (props.url) {
-      Inertia.visit(props.url)
+      router.visit(props.url)
     } else {
       // Fallback if prevUrl is not available
       let prevUrl = userStore.isCreator ? '/dashboard' : '/';
-      Inertia.visit(prevUrl);
+      router.visit(prevUrl);
     }
   }
 }

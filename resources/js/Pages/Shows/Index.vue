@@ -184,7 +184,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
 import throttle from 'lodash/throttle'
@@ -231,7 +231,7 @@ let props = defineProps({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/shows', {search: value}, {
+  router.get('/shows', {search: value}, {
     preserveState: true,
     replace: true,
   })

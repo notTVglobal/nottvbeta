@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
@@ -80,7 +80,7 @@ function handleProcessedFile(error, file) {
 
   emit('poster')
 
-  Inertia.reload({
+  router.reload({
     only: ['newPoster'],
   });
 

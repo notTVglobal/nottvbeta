@@ -18,7 +18,7 @@
 import { onMounted, ref } from "vue"
 import note from "lodash/seq"
 import { useShowStore } from "@/Stores/ShowStore"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 
 const showStore = useShowStore()
 

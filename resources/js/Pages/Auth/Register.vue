@@ -191,7 +191,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { Link, useForm } from '@inertiajs/inertia-vue3'
+import { Link, useForm } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'

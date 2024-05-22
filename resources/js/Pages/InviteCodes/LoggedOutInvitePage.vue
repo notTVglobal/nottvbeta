@@ -117,7 +117,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import Footer from '@/Components/Global/Layout/Footer'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

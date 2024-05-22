@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { computed, ref } from "vue"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { useTimeAgo } from '@vueuse/core'
@@ -108,7 +108,7 @@ const deleteNotification = async (notificationId) => {
 
 const visitUrl = (url) => {
   emit('closeModal')
-  Inertia.visit(url)
+  router.visit(url)
 }
 
 

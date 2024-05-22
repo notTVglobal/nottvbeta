@@ -99,7 +99,7 @@ import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigatio
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { Head, useForm } from '@inertiajs/inertia-vue3'
+import { Head, useForm } from '@inertiajs/vue3'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import JetButton from '@/Jetstream/Button.vue'
 import JetInput from '@/Jetstream/Input.vue'

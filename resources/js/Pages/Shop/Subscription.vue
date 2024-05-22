@@ -44,7 +44,7 @@
             <button @click.prevent="shopStore.yearlyContribution()">Yearly Contribution - $250 / year</button>
           </div>
           <div class="mt-2 w-fit">
-            <button @click.prevent="Inertia.visit('/contribute')" class="">👈 Back to Contribute Page</button>
+            <button @click.prevent="router.visit('/contribute')" class="">👈 Back to Contribute Page</button>
           </div>
         </div>
         <h2 class="text-2xl font-semibold text-gray-100 dark:text-gray-100">Payment</h2>
@@ -101,8 +101,8 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useShopStore } from '@/Stores/ShopStore'
-import { useForm } from '@inertiajs/inertia-vue3'
-import { Inertia } from '@inertiajs/inertia'
+import { useForm } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 
 usePageSetup('shop/subscribe')
 

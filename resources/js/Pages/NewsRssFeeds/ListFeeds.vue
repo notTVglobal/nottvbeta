@@ -117,8 +117,8 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -144,7 +144,7 @@ let form = useForm({})
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/newsRssFeeds', {search: value}, {
+  router.get('/newsRssFeeds', {search: value}, {
     preserveState: true,
     replace: true,
   })

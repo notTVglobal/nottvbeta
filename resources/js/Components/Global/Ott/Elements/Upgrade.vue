@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
@@ -37,7 +37,7 @@ const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()
 
 function upgrade() {
-  Inertia.get('/contribute/subscription')
+  router.get('/contribute/subscription')
 
   appSettingStore.ott = 0
 }

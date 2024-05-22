@@ -64,10 +64,10 @@ FOOTER
 
 <script setup>
 import { defineAsyncComponent, ref, watch } from "vue"
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import throttle from "lodash/throttle";
 // import { Dropzone } from "dropzone"
-// import { useForm } from "@inertiajs/inertia-vue3"
+// import { useForm } from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 // import Pagination from "@/Components/Global/Paginators/Pagination"
@@ -118,7 +118,7 @@ const appSettingStore = useAppSettingStore()
 //     myDropzone.on("complete", function(file) {
 //         myDropzone.removeFile(file);
 //         userStore.uploadPercentage = 0;
-//         Inertia.reload({
+//         router.reload({
 //             only: ["videos"],
 //         });
 //     });
@@ -140,7 +140,7 @@ let props = defineProps({
 let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
-    Inertia.get('/videoupload', { search: value }, {
+    router.get('/videoupload', { search: value }, {
         preserveState: true,
         replace: true
     });

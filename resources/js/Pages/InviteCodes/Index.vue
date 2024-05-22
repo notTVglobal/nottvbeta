@@ -193,13 +193,13 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
 import { onMounted, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 usePageSetup('inviteCodes')
 const appSettingStore = useAppSettingStore()
@@ -260,7 +260,7 @@ let submit = () => {
 }
 
 let exportCodes = () => {
-  Inertia.visit(route('inviteCodes.export'))
+  router.visit(route('inviteCodes.export'))
 }
 
 let form = useForm({
@@ -270,7 +270,7 @@ let form = useForm({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/invite_codes', {search: value}, {
+  router.get('/invite_codes', {search: value}, {
     preserveState: true,
     replace: true,
   })
@@ -278,7 +278,7 @@ watch(search, throttle(function (value) {
 
 const changePage = (url) => {
   if (url) {
-    Inertia.visit(url)
+    router.visit(url)
   }
 }
 
@@ -287,7 +287,7 @@ const deleteCode = (id) => {
     return
   }
 
-  Inertia.delete(`/invite_codes/${id}`, {
+  router.delete(`/invite_codes/${id}`, {
     onSuccess: () => {
       // Optionally refresh the page or modify the local state to reflect the deletion
     },
@@ -299,7 +299,7 @@ const claimCode = (codeId) => {
     return
   }
 
-  Inertia.post(`/invite_codes/claim/${codeId}`, {
+  router.post(`/invite_codes/claim/${codeId}`, {
     onSuccess: () => {
       // Optionally refresh the page or modify the local state to reflect the deletion
     },
@@ -311,7 +311,7 @@ const claimAllCodes = () => {
     return
   }
 
-  Inertia.post('/invite_codes/claim_all', {
+  router.post('/invite_codes/claim_all', {
     onSuccess: () => {
       // Optionally refresh the page or modify the local state to reflect the deletion
     },

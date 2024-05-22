@@ -31,7 +31,7 @@
 
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import "filepond/dist/filepond.min.css"
 
 let props = defineProps({
@@ -67,7 +67,7 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 // import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
-import { Inertia } from "@inertiajs/inertia";
+import { router } from '@inertiajs/vue3';
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
@@ -111,7 +111,7 @@ export default {
       }
 
       // add the file to our images array
-      Inertia.reload({
+      router.reload({
         only: ["images"],
       });
 
@@ -129,7 +129,7 @@ export default {
   //     console.log(error);
   //     console.log(file);
   //
-  //     Inertia.reload({
+  //     router.reload({
   //         only: ["images"],
   //     });
   // };

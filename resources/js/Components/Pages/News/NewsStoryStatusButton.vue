@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { useUserStore } from '@/Stores/UserStore'
 import { useNewsStore } from '@/Stores/NewsStore'
@@ -72,7 +72,7 @@ const openNewsStoryStatuses = (newsStoryId) => {
 const changeStatus = (newsStory, statusId) => {
   console.log('Opening Change Status dialog:', dialogId)
   // document.getElementById(newsStoryStatusChangeModal).close()
-  // Inertia.patch(route('news.story.changeStatus'), {
+  // router.patch(route('news.story.changeStatus'), {
   //   newsStory_id: newsStory.id, // Assuming you have the ID available in `newsStory`
   //   new_status_id: statusId
   // }, {
@@ -85,7 +85,7 @@ const changeStatus = (newsStory, statusId) => {
 const closeModals = () => {
   document.getElementById(dialogId).close()
   document.getElementById('confirmPublishModal.' + props.newsStory.id).close()
-  Inertia.reload()
+  router.reload()
 }
 
 const newsStoryStatusClass = computed(() => ({

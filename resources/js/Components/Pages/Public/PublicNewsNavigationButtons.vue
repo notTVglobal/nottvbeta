@@ -2,32 +2,32 @@
   <div class="md:block flex py-10 px-16 justify-center">
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 py-10 px-16 justify-center max-w-7xl mx-auto">
       <PublicNavLink
-          @click="() => Inertia.visit('/news')"
-          :active="appSettingStore.currentPage === 'news'"
+          @click.prevent="router.visit('/news')"
+          :active="appSettingStore.currentPage === 'news.index'"
           class="min-w-fit">
         News Stories
       </PublicNavLink>
       <PublicNavLink
-          @click="() => Inertia.visit('/news/category')"
+          @click.prevent="router.visit('/news/categories')"
           :active="appSettingStore.currentPage.includes('news.category.index')"
           class="min-w-fit">
         Categories
       </PublicNavLink>
       <PublicNavLink
-          @click="() => Inertia.visit('/news/city')"
-          :active="appSettingStore.currentPage.includes('news.city')"
+          @click.prevent="router.visit('/news/city')"
+          :active="appSettingStore.currentPage.includes('news.city.index')"
           class="min-w-fit">
         Cities
       </PublicNavLink>
       <PublicNavLink
-          @click="() => Inertia.visit('/news-districts')"
-          :active="appSettingStore.currentPage.includes('newsDistricts')"
+          @click.prevent="router.visit('/news-districts')"
+          :active="appSettingStore.currentPage.includes('newsDistricts.index')"
           class="min-w-fit">
         Districts
       </PublicNavLink>
       <PublicNavLink
-          @click="() => Inertia.visit('/news/reporters')"
-          :active="appSettingStore.currentPage.includes('news.reporter')"
+          @click.prevent="router.visit('/news/reporters')"
+          :active="appSettingStore.currentPage.includes('news.reporters.index')"
           class="min-w-fit">
         Reporters
       </PublicNavLink>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Button from '@/Jetstream/Button.vue'
 import { computed } from 'vue'

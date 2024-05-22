@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const initialState = () => ({
     id: null,
@@ -373,7 +373,7 @@ export const useNewsStore = defineStore('newsStore', {
 
             try {
                 if (this.id) {
-                    await Inertia.patch(route('newsStory.update', this.slug), data, {
+                    await router.patch(route('newsStory.update', this.slug), data, {
                         onError: (errors) => {
                             this.errors = errors
                             this.processing = false
@@ -383,7 +383,7 @@ export const useNewsStore = defineStore('newsStore', {
                         }
                     })
                 } else {
-                    await Inertia.post(route('newsStory.store'), data, {
+                    await router.post(route('newsStory.store'), data, {
                         onError: (errors) => {
                             this.errors = errors
                             this.processing = false
@@ -400,7 +400,7 @@ export const useNewsStore = defineStore('newsStore', {
         },
         changeNewsStoryStatus(statusId) {
             document.getElementById('newsStoryStatusChangeModal').close()
-            Inertia.patch(route('news.story.changeStatus'), {
+            router.patch(route('news.story.changeStatus'), {
               newsStory_id: this.newsStoryId, // Assuming you have the ID available in `newsStory`
               new_status_id: statusId
             }, {

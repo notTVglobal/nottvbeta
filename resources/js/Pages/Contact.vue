@@ -12,7 +12,7 @@
 
         <div class="text-green-500 py-12 w-56" v-if="$page.props.flash.success && !$page.props.flash.error">Thank You for Reaching Out!<br />Your message is on its way to us. We appreciate you taking the time to get in touch and will respond as quickly as possible. Look forward to speaking with you soon!</div>
         <div class="text-orange-500 py-12" v-if="$page.props.flash.error">There was an error submitting the form. Please email hello@not.tv</div>
-        
+
         <form class="w-72" v-if="!$page.props.flash.success && !$page.props.flash.error" @submit.prevent="submit">
           <div class="mb-6">We'd love to hear from you! Send us your questions, feedback, or just say hello.</div>
           <div class="mb-4">
@@ -96,7 +96,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import Footer from '@/Components/Global/Layout/Footer'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()

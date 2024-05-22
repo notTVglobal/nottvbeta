@@ -33,9 +33,9 @@
 </template>
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
-import { usePage } from '@inertiajs/inertia-vue3'
-import { Link, useForm } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
+import { Link, useForm } from '@inertiajs/vue3'
 import JetButton from '@/Jetstream/Button.vue'
 import JetFormSection from '@/Jetstream/FormSection.vue'
 import JetInput from '@/Jetstream/Input.vue'
@@ -81,7 +81,7 @@ const profileIsPublic = computed({
 })
 
 const fetchCreatorSettings = async () => {
-  const userId = props.value.user.id // Assuming props are passed directly without 'value'
+  const userId = props.user.id // Assuming props are passed directly without 'value'
 
   try {
     console.log(`Fetching settings for user ID: ${userId}`) // Debug log
@@ -121,7 +121,7 @@ const updateCreatorSettings = () => {
     return;
   }
 
-  const userId = props.value.user.id  // Ensure userId is available
+  const userId = props.user.id  // Ensure userId is available
   form.patch(`/user/creator/update-settings/${userId}`, {
     onSuccess: (response) => {
       console.log('Settings updated successfully!', response.message)

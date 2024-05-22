@@ -265,7 +265,7 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
 
 let props = defineProps({
@@ -288,7 +288,7 @@ const searchQuery = ref('');
 const fetchData = debounce(() => {
   if (!props.shouldFetch) return; // Condition to prevent immediate fetching
 
-  Inertia.get('/admin/mist-stream/search', { search: searchQuery.value }, {
+  router.get('/admin/mist-stream/search', { search: searchQuery.value }, {
     preserveState: true,
     replace: true,
   });
@@ -297,7 +297,7 @@ const fetchData = debounce(() => {
 onMounted(fetchData);
 
 // const fetchMistStreams = throttle((value) => {
-//   Inertia.get('/admin/mist-stream/search', { search: value }, {
+//   router.get('/admin/mist-stream/search', { search: value }, {
 //     preserveState: true,
 //     replace: true,
 //     only: ['mistStreams', 'filters']
@@ -311,7 +311,7 @@ onMounted(fetchData);
 
 
 // function fetchMistStreams() {
-//   Inertia.get('/mistStream/adminSearch', { search: searchQuery.value }, {
+//   router.get('/mistStream/adminSearch', { search: searchQuery.value }, {
 //     preserveState: true,
 //     only: ['mistStreams'],
 //     onSuccess: (page) => {
@@ -322,7 +322,7 @@ onMounted(fetchData);
 //
 // // Watch for search changes and fetch data with Inertia
 // watch(searchQuery, throttle(function (value) {
-//   Inertia.get('/mistStreams', { searchQuery: value }, {
+//   router.get('/mistStreams', { searchQuery: value }, {
 //     preserveState: true,
 //     replace: true,
 //     only: ['mistStreams', 'filters']

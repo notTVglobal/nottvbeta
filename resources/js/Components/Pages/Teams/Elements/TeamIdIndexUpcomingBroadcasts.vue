@@ -54,7 +54,7 @@ import dayjs from 'dayjs'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 import { useUserStore } from '@/Stores/UserStore'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const userStore = useUserStore()
 
@@ -100,7 +100,7 @@ const goToBroadcast = (broadcast) => {
     'showEpisode': `/shows/${broadcast?.show?.slug}/episode/${broadcast.slug}/`,
   }
   const url = baseLink[broadcast.type] || '/'
-  Inertia.visit(url)
+  router.visit(url)
 }
 </script>
 

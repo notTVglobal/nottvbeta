@@ -308,7 +308,7 @@ let playEpisode = () => {
 
 
   appSettingStore.ott = 1
-  // Inertia.visit('/stream');
+  // router.visit('/stream');
 
 
 //
@@ -324,7 +324,7 @@ let playEpisode = () => {
 //   nowPlayingStore.show.categorySub = props.show.categorySubName
 //   nowPlayingStore.show.image = props.show.image
 //   videoPlayerStore.makeVideoFullPage()
-//   Inertia.visit('/stream')
+//   router.visit('/stream')
 //   // if video has a file and is !processing, play file.
 //   if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
 //     videoPlayerStore.loadNewSourceFromFile(props.episode.video)

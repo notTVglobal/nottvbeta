@@ -142,7 +142,7 @@ import {
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const scheduleStore = useScheduleStore()
 const userStore = useUserStore()
@@ -219,9 +219,9 @@ function generateDateMessage(date) {
 
 const goToContentPage = (item) => {
   if (item.type === 'show') {
-    Inertia.visit(`/shows/${item.content.show.slug}`)
+    router.visit(`/shows/${item.content.show.slug}`)
   } else if (item.type === 'movie') {
-    Inertia.visit(`/movie/${item.content.slug}`)
+    router.visit(`/movie/${item.content.slug}`)
   }
 }
 

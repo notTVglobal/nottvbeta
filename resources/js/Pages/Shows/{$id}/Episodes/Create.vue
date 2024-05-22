@@ -295,7 +295,7 @@
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
@@ -393,12 +393,12 @@ let submit = () => {
 // let showMessage = ref(true);
 
 // function back() {
-//     let urlPrev = usePage().props.value.urlPrev
+//     let urlPrev = usePage().props.urlPrev
 //     if (urlPrev !== 'empty') {
-//         Inertia.visit(urlPrev)
+//         router.visit(urlPrev)
 //     }
 //     if (urlPrev === 'empty') {
-//         Inertia.visit('/shows/'+props.show.slug+'/manage')
+//         router.visit('/shows/'+props.show.slug+'/manage')
 //     }
 // }
 

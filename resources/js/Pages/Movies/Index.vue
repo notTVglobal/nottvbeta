@@ -179,7 +179,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { watch, ref } from "vue"
 import throttle from "lodash/throttle"
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -207,7 +207,7 @@ let movie = 'test-movie-2'
 let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
-    Inertia.get('/movies', { search: value }, {
+    router.get('/movies', { search: value }, {
         preserveState: true,
         replace: true
     });

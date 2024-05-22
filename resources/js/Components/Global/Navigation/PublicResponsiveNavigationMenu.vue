@@ -4,9 +4,9 @@
       <div class="flex">
         <!-- Logo -->
         <div class="shrink-0 flex items-center">
-          <Link @click="goToWatchPage">
+          <button @click="goToWatchPage">
             <JetApplicationMark class="ml-5 block h-9 w-auto"/>
-          </Link>
+          </button>
         </div>
         <!-- Hamburger -->
         <div class="absolute top-3 right-10 hamburgerMask">
@@ -61,49 +61,49 @@
 
           <JetResponsiveNavLink
               @click="goToWatchPage"
-              :href="route('home')"
+              :href="$route('home')"
               :active="route().current('home')">
             Watch Now
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('schedule')"
+              :href="$route('schedule')"
               :active="route().current('schedule')">
             Schedule
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink hidden
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('teams.index')"
+              :href="$route('teams.index')"
               :active="route().current('teams.index')">
             Browse
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('news.index')"
+              :href="$route('news.index')"
               :active="route().current('news.index')">
             News Stories
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('news.reporters.index')"
+              :href="$route('news.reporters.index')"
               :active="route().current('news.reporters.index')">
             Reporters
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('public.newsletterSignup')"
+              :href="$route('public.newsletterSignup')"
               :active="route().current('public.newsletterSignup')">
             Get Exclusive Access!
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('public.contact')"
+              :href="$route('public.contact')"
               :active="route().current('public.contact')">
             Contact Us
           </JetResponsiveNavLink>
@@ -140,13 +140,14 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import JetApplicationMark from "@/Jetstream/ApplicationMark"
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/vue3'
 import AppVersion from '@/Components/Global/AppVersion/AppVersion.vue'
+import JetNavLink from "@/Jetstream/NavLink.vue";
 
 const appSettingStore = useAppSettingStore()
 const showingNavigationDropdown = ref(false)

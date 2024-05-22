@@ -68,8 +68,8 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { usePage } from "@inertiajs/inertia-vue3"
+import { router } from '@inertiajs/vue3'
+import { usePage } from "@inertiajs/vue3"
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 import EpisodeVideo from '@/Components/Pages/ShowEpisodes/Elements/EpisodeVideo.vue'
 

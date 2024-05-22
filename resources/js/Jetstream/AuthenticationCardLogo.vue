@@ -3,17 +3,17 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 
 const appSettingStore = useAppSettingStore()
 
-import { Link } from '@inertiajs/inertia-vue3'
-import { Inertia } from '@inertiajs/inertia'
+import { Link } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 
 appSettingStore.pageReload = false
 
 const returnToWelcomePage = () => {
   if (appSettingStore.noLayout) {
     appSettingStore.pageReload = true
-    Inertia.visit('/')
+    router.visit('/')
   } else {
-    Inertia.visit('/')
+    router.visit('/')
   }
 
 }

@@ -72,8 +72,8 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia";
-import { usePage } from "@inertiajs/inertia-vue3"
+import { router } from '@inertiajs/vue3';
+import { usePage } from "@inertiajs/vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
@@ -92,9 +92,9 @@ let showChat = chatStore.showChat;
 let isMobile = userStore.isMobile;
 
 function backToPage() {
-  let urlPrev = usePage().props.value.urlPrev
+  let urlPrev = usePage().props.urlPrev
   if (urlPrev !== 'empty') {
-    Inertia.visit(urlPrev)
+    router.visit(urlPrev)
   }
 }
 

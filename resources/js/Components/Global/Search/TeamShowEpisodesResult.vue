@@ -1,9 +1,9 @@
 <template>
   <div
       class="episode-result bg-gray-600 p-3 rounded-lg mb-2 cursor-pointer hover:bg-gray-800 transition-colors duration-300"
-      @click="Inertia.visit(`/shows/${result.show.slug}/episode/${result.slug}`)"
+      @click="router.visit(`/shows/${result.show.slug}/episode/${result.slug}`)"
   >
-    <p @click.stop="Inertia.visit(`/shows/${result.show.slug}`)" class="font-thin tracking-wider text-white hover:text-blue-400 transition-colors duration-300">{{ result.show.name }}</p>
+    <p @click.stop="router.visit(`/shows/${result.show.slug}`)" class="font-thin tracking-wider text-white hover:text-blue-400 transition-colors duration-300">{{ result.show.name }}</p>
     <div class="image-wrapper hover:opacity-75 transition-opacity duration-300">
       <SingleImage :image="result.image" :alt="`Cover image for ${result.show.name}`" />
     </div>
@@ -26,7 +26,7 @@ import { computed, defineProps } from 'vue'
 import { useUserStore } from '@/Stores/UserStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const userStore = useUserStore()
 

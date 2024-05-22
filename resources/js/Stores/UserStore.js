@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'

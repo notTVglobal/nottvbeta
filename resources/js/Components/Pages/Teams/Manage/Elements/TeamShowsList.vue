@@ -115,7 +115,7 @@ import TeamShow from "@/Components/Pages/Teams/Manage/Elements/TeamShow"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ShowNoteEdit from '@/Components/Pages/Teams/Manage/Elements/ShowNoteEdit.vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()

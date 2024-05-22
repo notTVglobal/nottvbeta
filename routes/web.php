@@ -187,6 +187,7 @@ Route::post('/email/verify', function (Request $request) {
   $request->user()->sendEmailVerificationNotification();
   // Flash a status message to the session
   session()->flash('success', 'verification-link-sent');
+
   return Inertia::render('Auth/VerifyEmail');
 })->middleware(['auth', 'update.last_login', 'throttle:6,1'])->name('custom.verification.send');
 
@@ -279,7 +280,7 @@ Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
 Route::prefix('news')->group(function () {
   Route::get('/city', [NewsController::class, 'indexCities'])->name('news.city.index');
   Route::get('/city/{newsCity}', [NewsController::class, 'showCity'])->name('news.city.show');
-  Route::get('/category', [NewsController::class, 'indexCategories'])->name('news.category.index');
+  Route::get('/categories', [NewsController::class, 'indexCategories'])->name('news.category.index');
   Route::get('/category/{newsCategory}', [NewsController::class, 'showCategory'])->name('news.category.show');
 });
 
@@ -312,7 +313,6 @@ Route::middleware([
 ])->group(function () {
 
 
-
   Route::get('/externalLink', function () {
     return Inertia::render('ExternalLink');
   })->name('externalLink');
@@ -334,7 +334,6 @@ Route::middleware([
 
   Route::resource('channelPlaylists', ChannelPlaylistController::class);
   Route::get('/admin/channel-playlist/search', [ChannelPlaylistController::class, 'adminSearchChannelPlaylists'])->can('viewAdmin', 'App\Models\User');
-
 
 
 //
@@ -566,7 +565,7 @@ Route::middleware([
 /////////////////
 
   Route::get('/news-districts/', [NewsFederalElectoralDistrictController::class, 'index'])
-    ->name('newsDistricts.index');
+      ->name('newsDistricts.index');
 
 
 // NewsPerson
@@ -607,7 +606,6 @@ Route::middleware([
 
   // Resource route for archived feed items
   Route::resource('/newsRssArchive', NewsRssArchiveController::class);
-
 
 
 // Subscriptions
@@ -701,8 +699,8 @@ Route::middleware([
       ->name('admin.clearFirstPlayDataCache');
 
   Route::post('/admin/fetch-active-streams', [AdminController::class, 'fetchActiveStreams'])
-    ->can('viewAdmin', 'App\Models\User')
-    ->name('admin.fetchActiveStreams');
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.fetchActiveStreams');
 
 
   //// ADMIN: SECURE NOTES
@@ -713,7 +711,6 @@ Route::middleware([
   Route::put('/admin/secure-notes',
       [AdminController::class, 'putSecureNotes'])
       ->can('viewAdmin', 'App\Models\User');
-
 
 
   //// ADMIN: MOVIES - INDEX
@@ -876,7 +873,7 @@ Route::middleware([
   ])->group(function () {
 
     Route::get('/user/creator/get-settings/{user}', [CreatorsController::class, 'fetchCreatorSettings'])
-      ->name('user.creator.settings');
+        ->name('user.creator.settings');
 
     Route::patch('/user/creator/update-settings/{user}', [CreatorsController::class, 'updateCreatorSettings'])
         ->name('user.creator.settings.update');
@@ -943,49 +940,47 @@ Route::middleware([
     Route::post('/teams/{team}/invite', [TeamMembersController::class, 'inviteMember']);
 
 
-
 // Creators
 ///////////
-  // Creators resource
-  Route::resource('creators', CreatorsController::class);
-  // Display creator page
-  Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
-      ->name('creators.show');
-  // Get list of creators
-  Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
-      ->name('creators.getCreators');
-  // Get all creators
-  Route::get('/api/all-creators', [CreatorsController::class, 'getAllCreators'])
-  ->name('creators.getAllCreators');
-  // Mark First Time As Seen ( The Welcome Creator Message on the Dashboard )
+    // Creators resource
+    Route::resource('creators', CreatorsController::class);
+    // Display creator page
+    Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
+        ->name('creators.show');
+    // Get list of creators
+    Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
+        ->name('creators.getCreators');
+    // Get all creators
+    Route::get('/api/all-creators', [CreatorsController::class, 'getAllCreators'])
+        ->name('creators.getAllCreators');
+    // Mark First Time As Seen ( The Welcome Creator Message on the Dashboard )
     Route::post('/api/creator/mark-as-seen', [CreatorsController::class, 'markAsSeen'])
         ->name('creators.markAsSeen');
-  // Search creators (used in TeamAddMember.vue)
+    // Search creators (used in TeamAddMember.vue)
     Route::get('/api/search-creators', [TeamsController::class, 'searchCreators']);
-
 
 
 // Training
 ///////////
-  Route::get('/training', function () {
-    return Inertia::render('Training');
-  })->can('viewCreator', 'App\Models\User')
-      ->name('training');
+    Route::get('/training', function () {
+      return Inertia::render('Training');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('training');
 
-  Route::get('/training/go-live-using-zoom', function () {
-    return Inertia::render('Training/GoLiveUsingZoom');
-  })->can('viewCreator', 'App\Models\User')
-      ->name('training.goLiveUsingZoom');
+    Route::get('/training/go-live-using-zoom', function () {
+      return Inertia::render('Training/GoLiveUsingZoom');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('training.goLiveUsingZoom');
 
-  Route::get('/training/how-to-push-to-facebook', function () {
-    return Inertia::render('Training/HowToPushToFacebook');
-  })->can('viewCreator', 'App\Models\User')
-      ->name('training.howToPushToFacebook');
+    Route::get('/training/how-to-push-to-facebook', function () {
+      return Inertia::render('Training/HowToPushToFacebook');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('training.howToPushToFacebook');
 
-  Route::get('/training/how-to-push-to-rumble', function () {
-    return Inertia::render('Training/HowToPushToRumble');
-  })->can('viewCreator', 'App\Models\User')
-      ->name('training.howToPushToRumble');
+    Route::get('/training/how-to-push-to-rumble', function () {
+      return Inertia::render('Training/HowToPushToRumble');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('training.howToPushToRumble');
 
   });
 
@@ -1022,14 +1017,12 @@ Route::middleware([
       ->scopeBindings();
 
   Route::get('/api/shows/{show}/check-live', [ShowsController::class, 'checkIsLive'])
-    ->name('shows.checkLive');
+      ->name('shows.checkLive');
 
   Route::put('/api/shows/{show}/meta', [ShowsController::class, 'updateMeta'])
-    ->name('shows.updateMeta');
+      ->name('shows.updateMeta');
 
   Route::post('/api/{show}/user-left-channel', [ShowsController::class, 'userLeftChannel']);
-
-
 
 
 // Show Episodes
@@ -1091,26 +1084,26 @@ Route::middleware([
       ->name('movies.uploadPoster');
 
   Route::post('/api/image-upload', [ImageController::class, 'upload'])
-    ->name('image.upload');
+      ->name('image.upload');
 
 // Movies
 ///////////
   // Index route
-    Route::get('movies', [MovieController::class, 'index'])->name('movies.index');
+  Route::get('movies', [MovieController::class, 'index'])->name('movies.index');
 
   // Categories index
-    Route::get('movies/categories', [MovieController::class, 'indexCategories'])->name('movies.category.index');
-    Route::get('movies/{movieCategory}', [MovieController::class, 'showCategory'])->name('movies.category.show');
+  Route::get('movies/categories', [MovieController::class, 'indexCategories'])->name('movies.category.index');
+  Route::get('movies/{movieCategory}', [MovieController::class, 'showCategory'])->name('movies.category.show');
 
   // Group other resource routes under /movie
-    Route::group(['prefix' => 'movie'], function () {
-      Route::get('create', [MovieController::class, 'create'])->name('movie.create');
-      Route::post('/', [MovieController::class, 'store'])->name('movie.store');
-      Route::get('{movie}', [MovieController::class, 'show'])->name('movie.show');
-      Route::get('{movie}/edit', [MovieController::class, 'edit'])->name('movie.edit');
-      Route::put('{movie}', [MovieController::class, 'update'])->name('movie.update');
-      Route::delete('{movie}', [MovieController::class, 'destroy'])->name('movie.destroy');
-    });
+  Route::group(['prefix' => 'movie'], function () {
+    Route::get('create', [MovieController::class, 'create'])->name('movie.create');
+    Route::post('/', [MovieController::class, 'store'])->name('movie.store');
+    Route::get('{movie}', [MovieController::class, 'show'])->name('movie.show');
+    Route::get('{movie}/edit', [MovieController::class, 'edit'])->name('movie.edit');
+    Route::put('{movie}', [MovieController::class, 'update'])->name('movie.update');
+    Route::delete('{movie}', [MovieController::class, 'destroy'])->name('movie.destroy');
+  });
 
 // Testing
 ///////////
@@ -1250,55 +1243,53 @@ Route::middleware([
   Route::get('/api/mistserver', [\App\Http\Controllers\MistStreamController::class, 'mistServer']);
 
 
-
 // Mist Streams
 ///////////////
 ///
 
-Route::resource('mistStreams', MistStreamController::class);
-Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMistStreams'])->can('viewAdmin', 'App\Models\User');
-Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.addOrUpdate');
-Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.remove');
-Route::post('/admin/mist-stream/restore-all-streams', [MistStreamController::class, 'restoreAllStreams'])->can('viewAdmin', 'App\Models\User');
-Route::post('/fetch-stream-info', [MistStreamController::class, 'fetchStreamInfo'])->can('viewCreator', 'App\Models\User');
+  Route::resource('mistStreams', MistStreamController::class);
+  Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMistStreams'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.addOrUpdate');
+  Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.remove');
+  Route::post('/admin/mist-stream/restore-all-streams', [MistStreamController::class, 'restoreAllStreams'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/fetch-stream-info', [MistStreamController::class, 'fetchStreamInfo'])->can('viewCreator', 'App\Models\User');
 
 // Mist Server
 //////////////
 ///
 
-Route::get('/mist-server/uri', [MistServerController::class, 'uri']);
-Route::post('/mist-server/check-send', [MistServerController::class, 'checkSend'])->can('viewAdmin', 'App\Models\User');
-Route::post('/mist-server/check-send/playback', [MistServerController::class, 'checkSendPlayback'])->can('viewAdmin', 'App\Models\User');
-Route::post('/mist-server/check-send/recording', [MistServerController::class, 'checkSendRecording'])->can('viewAdmin', 'App\Models\User');
-Route::post('/mist-server/check-send/vod', [MistServerController::class, 'checkSendVod'])->can('viewAdmin', 'App\Models\User');
-Route::post('/mist-server/config-backup', [MistServerController::class, 'configBackup'])->can('viewAdmin', 'App\Models\User');
-Route::post('/mist-server/config-restore', [MistServerController::class, 'configRestore'])->can('viewAdmin', 'App\Models\User');
-
+  Route::get('/mist-server/uri', [MistServerController::class, 'uri']);
+  Route::post('/mist-server/check-send', [MistServerController::class, 'checkSend'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/mist-server/check-send/playback', [MistServerController::class, 'checkSendPlayback'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/mist-server/check-send/recording', [MistServerController::class, 'checkSendRecording'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/mist-server/check-send/vod', [MistServerController::class, 'checkSendVod'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/mist-server/config-backup', [MistServerController::class, 'configBackup'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/mist-server/config-restore', [MistServerController::class, 'configRestore'])->can('viewAdmin', 'App\Models\User');
 
 
 // Mist Stream Push Destinations
 ////////////////////////////////
 ///
 
-Route::resource('mist-stream-push-destinations', MistStreamPushDestinationController::class);
-Route::post('/mist-stream/get-push-auto-list', [MistStreamPushDestinationController::class, 'getPushAutoList']);
-Route::post('/mist-stream/get-push-list', [MistStreamPushDestinationController::class, 'getPushList']);
-Route::post('/mist-stream/push-auto-add/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'pushAutoAdd']);
-Route::post('/mist-stream/remove-all-auto-pushes-for-stream', [MistStreamPushDestinationController::class, 'removeAllAutoPushesForStream']);
-Route::post('/mist-stream/push-auto-remove/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'pushAutoRemove']);
-Route::post('/mist-stream/start-push', [MistStreamPushDestinationController::class, 'startPush']);
-Route::post('/mist-stream/stop-push', [MistStreamPushDestinationController::class, 'stopPush']);
-Route::post('/mist-stream/update-stream-push-status', [MistStreamPushDestinationController::class, 'updateStreamPushStatus']);
-Route::post('/mist-stream/start-recording/{show}', [RecordingController::class, 'startRecording']);
-Route::post('/mist-stream/stop-recording/{show}', [RecordingController::class, 'stopRecording']);
+  Route::resource('mist-stream-push-destinations', MistStreamPushDestinationController::class);
+  Route::post('/mist-stream/get-push-auto-list', [MistStreamPushDestinationController::class, 'getPushAutoList']);
+  Route::post('/mist-stream/get-push-list', [MistStreamPushDestinationController::class, 'getPushList']);
+  Route::post('/mist-stream/push-auto-add/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'pushAutoAdd']);
+  Route::post('/mist-stream/remove-all-auto-pushes-for-stream', [MistStreamPushDestinationController::class, 'removeAllAutoPushesForStream']);
+  Route::post('/mist-stream/push-auto-remove/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'pushAutoRemove']);
+  Route::post('/mist-stream/start-push', [MistStreamPushDestinationController::class, 'startPush']);
+  Route::post('/mist-stream/stop-push', [MistStreamPushDestinationController::class, 'stopPush']);
+  Route::post('/mist-stream/update-stream-push-status', [MistStreamPushDestinationController::class, 'updateStreamPushStatus']);
+  Route::post('/mist-stream/start-recording/{show}', [RecordingController::class, 'startRecording']);
+  Route::post('/mist-stream/stop-recording/{show}', [RecordingController::class, 'stopRecording']);
 
 
 // External Sources
 ///////////////////
 ///
 
-Route::resource('externalSources', ChannelExternalSourceController::class);
-Route::get('/admin/external-source/search', [ChannelExternalSourceController::class, 'adminSearchExternalSources'])->can('viewAdmin', 'App\Models\User');
+  Route::resource('externalSources', ChannelExternalSourceController::class);
+  Route::get('/admin/external-source/search', [ChannelExternalSourceController::class, 'adminSearchExternalSources'])->can('viewAdmin', 'App\Models\User');
 
 
 // Schedule
@@ -1306,33 +1297,33 @@ Route::get('/admin/external-source/search', [ChannelExternalSourceController::cl
 ///
 
 
-Route::get('/api/schedule', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
-Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSchedule']);
-Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
-Route::delete('/api/schedule/removeFromSchedule', [SchedulesController::class, 'removeFromSchedule']);
-Route::get('/api/schedule/today', [SchedulesController::class, 'fetchTodaysContent']);
+  Route::get('/api/schedule', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
+  Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSchedule']);
+  Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
+  Route::delete('/api/schedule/removeFromSchedule', [SchedulesController::class, 'removeFromSchedule']);
+  Route::get('/api/schedule/today', [SchedulesController::class, 'fetchTodaysContent']);
 
-Route::post('/admin/schedule/admin-reset-cache', [SchedulesController::class, 'adminResetCache'])
-    ->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/schedule/admin-reset-cache', [SchedulesController::class, 'adminResetCache'])
+      ->can('viewAdmin', 'App\Models\User');
 
 
 // Extra Functions
 //////////////////
 ///
-Route::post('/clear-flash', [HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
+  Route::post('/clear-flash', [HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
-Route::get('/notifications', [NotificationsController::class, 'index']);
-Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
-Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
-Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
+  Route::get('/notifications', [NotificationsController::class, 'index']);
+  Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+  Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
+  Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
 
 
 // Feedback Form
 ////////////////
 ///
 
-Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
-    ->name('user.feedback');
+  Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
+      ->name('user.feedback');
 
 
 // API Routes simplified for MVP
@@ -1352,7 +1343,6 @@ Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
 ///////////////////////////
 ///
 });
-
 
 
 // Public Pages
@@ -1376,7 +1366,6 @@ Route::get('/api/schedules/range', [SchedulesController::class, 'fetchContentFor
 // Check for existing email/user account on creator registration
 Route::post('/api/creators/register-check-email', [CreatorsController::class, 'registerCheckEmail'])
     ->name('creators.registerCheckEmail');
-
 
 
 //Route::any('/{any}', function() {
@@ -1423,7 +1412,6 @@ Route::get('/stats', [AppSettingController::class, 'redirectStats']);
 // setup on April 12, 2024 by tec21
 Route::get('/bc-townhalls-2024-qr-code', function () {
   return redirect('/teams/bc-townhalls-2024');
-
 
 
 // Routes For Testing

@@ -13,12 +13,12 @@
             <div class="flex gap-2">
               <Button
                   class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.user" @click="Inertia.visit('/schedule')">
+                  v-if="!$page.props.user" @click="router.visit('/schedule')">
                 Schedule
               </Button>
               <Button
                   class="hidden h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.user" @click="Inertia.visit('/teams')">
+                  v-if="!$page.props.user" @click="router.visit('/teams')">
                 Browse
               </Button>
             </div>
@@ -37,7 +37,7 @@
               <!--            </Button>-->
               <Button v-if="!$page.props.user"
                       class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                      @click="Inertia.visit('register')">Register
+                      @click="router.visit('register')">Register
               </Button>
             </div>
           </div>
@@ -185,13 +185,13 @@ import Register from '@/Components/Pages/Welcome/Register'
 import Login from '@/Components/Pages/Welcome/Login'
 import VideoControlsWelcome from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsWelcome'
 import Footer from '@/Components/Global/Layout/Footer'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 
 const page = usePage()
-const flash = ref(page.props.value.flash || {}) // Default to an empty object if flash is undefined
+const flash = ref(page.props.flash || {}) // Default to an empty object if flash is undefined
 const errorMessage = ref('')
 
 const appSettingStore = useAppSettingStore()
@@ -220,7 +220,7 @@ const welcomeContainer = computed(() => ({
 
 const goToNewsletterSignup = () => {
   // window.open('https://not.tv/subscribe', '_blank')
-  Inertia.visit('/newsletterSignup')
+  router.visit('/newsletterSignup')
 }
 
 appSettingStore.currentPage = 'welcome'

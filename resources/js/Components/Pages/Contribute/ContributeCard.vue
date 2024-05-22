@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed } from 'vue';
 import { useShopStore } from '@/Stores/ShopStore'
 

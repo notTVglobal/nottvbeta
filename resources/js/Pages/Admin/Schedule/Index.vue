@@ -111,7 +111,7 @@
 
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -156,8 +156,8 @@ const setView = (view) => {
 
 const purgeAllCaches = () => {
   scheduleStore.resetAll()
-  Inertia.post('/admin/schedule/admin-reset-cache')
-  Inertia.reload()
+  router.post('/admin/schedule/admin-reset-cache')
+  router.reload()
 }
 
 const resetCalendar = () => {

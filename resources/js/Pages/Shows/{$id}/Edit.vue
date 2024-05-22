@@ -256,8 +256,8 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShowStore } from '@/Stores/ShowStore'
@@ -360,7 +360,7 @@ let form = useForm({
 // let showCategoryDescription = props.showCategory?.Description
 
 let reloadImage = () => {
-  Inertia.reload({
+  router.reload({
     only: ['image'],
   })
 }

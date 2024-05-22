@@ -182,7 +182,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'

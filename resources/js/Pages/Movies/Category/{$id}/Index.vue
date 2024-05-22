@@ -22,13 +22,13 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from '@inertiajs/vue3';
 import { useMovieStore } from '@/Stores/MovieStore';
 import MoviePaginator from '@/Components/Global/Paginators/MoviePaginator.vue';
 
 const { props } = usePage();
-const category = props.value.category;
-const subCategories = ref(props.value.subCategories);
+const category = props.category;
+const subCategories = ref(props.subCategories);
 
 const movieStore = useMovieStore();
 

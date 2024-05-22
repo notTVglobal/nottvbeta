@@ -54,7 +54,7 @@ import { useNewsStore } from '@/Stores/NewsStore'
 import NewsStoriesList from '@/Components/Pages/Newsroom/Layout/NewsStoriesList.vue'
 import { ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const newsStore = useNewsStore()
@@ -68,7 +68,7 @@ const props = defineProps({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/newsroom', {search: value}, {
+  router.get('/newsroom', {search: value}, {
     preserveState: true,
     replace: true,
   })

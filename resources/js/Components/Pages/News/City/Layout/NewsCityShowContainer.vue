@@ -20,7 +20,7 @@
 import { defineProps, ref, watch } from 'vue'
 // import Pagination from '@/Components/Paginators/Pagination.vue'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
   newsCity: Object,

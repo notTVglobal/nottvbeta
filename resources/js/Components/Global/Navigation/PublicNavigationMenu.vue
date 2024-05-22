@@ -104,9 +104,9 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { computed, onMounted } from 'vue'
-import { Link, usePage } from '@inertiajs/inertia-vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import JetNavLink from '@/Jetstream/NavLink'
 import JetApplicationMark from '@/Jetstream/ApplicationMark'
 import JetDropdownLink from '@/Jetstream/DropdownLink'
@@ -138,12 +138,12 @@ appSettingStore.pageReload = false
 
 // Define the computed property
 const isVerificationNoticeRoute = computed(() => {
-  return page.props.value.currentPath === '/email/verify';
+  return page.props.currentPath === '/email/verify';
 });
 
 // const returnToWelcomePage = () => {
 //   appSettingStore.pageReload = true
-//   Inertia.visit('/')
+//   router.visit('/')
 // }
 
 

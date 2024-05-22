@@ -39,7 +39,7 @@
   <footer class="bg-gray-900 text-neutral-content border-t border-base-300 space-y-4 px-10 2xl:px-96 pt-10 pb-24">
     <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
       <div class="flex flex-col items-center md:items-start text-center md:text-left">
-        <img src="/storage/images/logo_white_512.png" alt="Logo" class=" w-1/3 md:w-1/6 mb-2" @click="Inertia.visit('home')">
+        <img src="/storage/images/logo_white_512.png" alt="Logo" class=" w-1/3 md:w-1/6 mb-2" @click="router.visit('home')">
         <p>not
           <span class="text-xs -ml-1 -mr-1">
                 &#174;
@@ -134,5 +134,5 @@
 
 <script setup>
 
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 </script>

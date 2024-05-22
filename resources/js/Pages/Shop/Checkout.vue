@@ -192,7 +192,7 @@
 
 <script setup>
 import { onMounted } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { loadStripe } from "@stripe/stripe-js";
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -229,7 +229,7 @@ let form = useForm({
 </script>
 
 <script>
-import { Inertia } from "@inertiajs/inertia";
+import { router } from '@inertiajs/vue3';
 import { loadStripe } from '@stripe/stripe-js';
 import { useShopStore } from '@/Stores/ShopStore'
 
@@ -317,7 +317,7 @@ export default {
               this.order = this.cart;
               this.cart = [];
               console.log('you arrived at the second here.');
-              Inertia.post('/shop/summary', {
+              router.post('/shop/summary', {
                 order: response.data
               })
             })

@@ -58,7 +58,7 @@
                 <div class="flex flex-row">
                   <!-- Image -->
                   <div class="showOrMovieImage">
-                    <Link @click.prevent="goToPage">
+                    <Link @click.prevent="goToPage" :href="`#`">
                       <SingleImage
                           :image="nowPlayingStore.activeMedia.details?.image"
                           :alt="nowPlayingStore.activeMedia.details?.primaryName"
@@ -71,7 +71,7 @@
                   <div class="flex flex-col ml-3 -mt-2 break-words">
                     <h3 v-if="nowPlayingStore.activeMedia.details?.primaryUrl">
                       <!-- Render as a link if the URL exists -->
-                      <Link class="hover:text-blue-500 hover:cursor-pointer break-words" @click.prevent="goToPage">
+                      <Link class="hover:text-blue-500 hover:cursor-pointer break-words" @click.prevent="goToPage" :href="`#`">
                         <!-- Title (with link) -->
                         {{ nowPlayingStore.activeMedia.details.primaryName }}
                       </Link>
@@ -209,7 +209,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 const appSettingStore = useAppSettingStore()
@@ -230,7 +230,7 @@ onMounted(() => {
 });
 
 const goToPage = () => {
-  Inertia.visit(`/${nowPlayingStore.activeMedia.details?.primaryUrl}`)
+  router.visit(`/${nowPlayingStore.activeMedia.details?.primaryUrl}`)
   appSettingStore.ott = 0
 }
 

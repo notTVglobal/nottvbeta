@@ -92,7 +92,7 @@
 </template>
 <script setup>
 import { reactive, ref, watch } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { useAdminStore } from '@/Stores/AdminStore'
 

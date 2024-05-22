@@ -178,7 +178,7 @@ import { useAdminStore } from '@/Stores/AdminStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import debounce from "lodash/debounce"
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal.vue'
 
 const adminStore = useAdminStore();
@@ -253,7 +253,7 @@ onMounted(async () => {
 
 
 const removeMistStream = (name) => {
-  Inertia.post(route('mistStream.remove'), { 'name': name } )
+  router.post(route('mistStream.remove'), { 'name': name } )
   document.getElementById('dynamicModal').close();
 }
 
@@ -265,7 +265,7 @@ const refreshList = () => {
 // onMounted(adminStore.fetchItems(adminStore.type)); // Optionally fetch items when the modal mounts
 
 // const fetchItems = () => {
-//   Inertia.get(`/admin/channels/search/${props.type}`, { search: searchTerm.value }, {
+//   router.get(`/admin/channels/search/${props.type}`, { search: searchTerm.value }, {
 //     preserveState: false,
 //     onSuccess: (page) => {
 //       items.value = page.props.items; // Assume your backend sends back 'items'

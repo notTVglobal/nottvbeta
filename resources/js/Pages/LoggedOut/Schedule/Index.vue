@@ -59,7 +59,7 @@ import TodayView from '@/Components/Global/Calendar/TodayView.vue'
 import { computed, onBeforeMount, onMounted, watch } from 'vue'
 
 import dayjs from 'dayjs'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'

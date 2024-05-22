@@ -1,7 +1,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { defineStore } from 'pinia'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const initialState = () => ({
     loggedIn: false, // moved from userStore to here.
@@ -270,7 +270,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         },
         btnRedirect(newUrl) {
             this.setPrevUrl()
-            Inertia.visit(newUrl)
+            router.visit(newUrl)
         },
         back() {
             const videoPlayerStore = useVideoPlayerStore()
@@ -278,7 +278,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.setPrevUrl()
             videoPlayerStore.makeVideoTopRight()
             this.pageIsHidden = false
-            Inertia.visit(prevUrl)
+            router.visit(prevUrl)
         },
         checkScreenSize() {
             // Check initial screen size

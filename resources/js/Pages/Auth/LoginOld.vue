@@ -1,6 +1,6 @@
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
-import {Link, useForm} from '@inertiajs/inertia-vue3';
+import { router } from '@inertiajs/vue3'
+import {Link, useForm} from '@inertiajs/vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
 import JetButton from '@/Jetstream/Button.vue';

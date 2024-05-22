@@ -114,16 +114,16 @@
 <script setup>
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
-import { useForm } from '@inertiajs/inertia-vue3'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const notificationStore = useNotificationStore()
 
 const page = usePage()
-const user = computed(() => page.props.value.user)
+const user = computed(() => page.props.user)
 
 const screenshot = ref(null);
 const hover = ref(false);
@@ -145,7 +145,7 @@ function handleFileChange(event) {
 //   let formData = new FormData();
 //   // Append other form data
 //   formData.append('screenshot', form.value.screenshot);
-//   Inertia.post('/user/feedback', form)
+//   router.post('/user/feedback', form)
 //   form.message = ''
 //   closeModal()
 //   document.getElementById('feedbackConfirmationMessage').showModal()
@@ -194,7 +194,7 @@ const submit = () => {
 
 
   // formData.append('screenshot', form.value.screenshot);
-  // Inertia.post('/user/feedback', form)
+  // router.post('/user/feedback', form)
   // form.message = ''
   // closeModal()
   // document.getElementById('feedbackConfirmationMessage').showModal()

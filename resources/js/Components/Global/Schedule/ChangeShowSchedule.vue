@@ -31,7 +31,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { useShowStore } from '@/Stores/ShowStore'
 import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
 

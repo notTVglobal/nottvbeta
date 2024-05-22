@@ -210,9 +210,9 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -292,7 +292,7 @@ watch(selectedTeamLeader, (newValue) => {
 })
 
 let reloadImage = () => {
-  Inertia.reload({
+  router.reload({
     only: ['image'],
   })
 }

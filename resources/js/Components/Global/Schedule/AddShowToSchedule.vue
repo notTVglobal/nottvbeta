@@ -286,9 +286,9 @@
 
 </template>
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed, getCurrentInstance, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc' // Required for UTC support
 import timezone from 'dayjs/plugin/timezone' // Required for timezone support
@@ -918,7 +918,7 @@ function closeModal() {
   clearErrors()
   stopConfetti()
   currentStep.value = 0
-  // Inertia.visit(`/shows/${props.show.slug}/manage`)
+  // router.visit(`/shows/${props.show.slug}/manage`)
 }
 
 function closeConfirmAddShowModal() {
@@ -928,7 +928,7 @@ function closeConfirmAddShowModal() {
 const closeModalAndReset = () => {
   currentStep.value = 0
   closeModal()
-  // Inertia.visit(`/shows/${props.show.slug}/manage`)
+  // router.visit(`/shows/${props.show.slug}/manage`)
 }
 
 // Watcher for currentStep to display Confetti
@@ -954,7 +954,7 @@ const handleKeydown = (event) => {
     console.log('ESC pressed, modal is open')
     stopConfetti()
     currentStep.value = 0
-    Inertia.redirect(`/shows/${props.show.slug}/manage`)
+    router.redirect(`/shows/${props.show.slug}/manage`)
 
   }
 }

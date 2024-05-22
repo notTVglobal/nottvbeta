@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import NewsStoryItemDates from '@/Components/Pages/Newsroom/Elements/NewsStoryItemDates.vue'
@@ -80,7 +80,7 @@ const openConfirmPublishDialog = (newsStory) => {
 }
 
 function publish() {
-  Inertia.patch(route('newsroom.publish', {newsStory: selectedNewsStory.value.slug}))
+  router.patch(route('newsroom.publish', {newsStory: selectedNewsStory.value.slug}))
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
 }
