@@ -199,7 +199,7 @@
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/user/profile')"
-              :active="route().current('profile.show')">
+              :active="route().current('/user/profile')">
             Settings
           </JetResponsiveNavLink>
 

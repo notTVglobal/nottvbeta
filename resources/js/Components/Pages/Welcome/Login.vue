@@ -12,7 +12,7 @@
 
     <div v-if="welcomeStore.showLogin" :class="['modal-mask', 'overflow-auto', 'py-32', 'hide-scrollbar', 'bg-base-100', modalClass]">
       <div class="relative w-full h-full">
-        <div v-if="videoPlayerStore.mistServerUri.includes('localhost') && !creatorRegistration" class="w-full text-center text-white text-2xl font-semibold tracking-wide">LOCAL VERSION</div>
+        <div v-if="videoPlayerStore.isLocalhost && !creatorRegistration" class="w-full text-center text-white text-2xl font-semibold tracking-wide">LOCAL VERSION</div>
         <div class="div1 modal-content bg-base-200 py-4 px-4 rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white">
           <header v-if="!creatorRegistration" class="flex justify-center uppercase text-sm font-semibold pt-6 mb-2 text-center">
             <JetAuthenticationCardLogo class="max-w-[30%]"/>
@@ -186,7 +186,7 @@ const modalClass = computed(() => {
   if (props.creatorRegistration) {
     return 'modal-mask-black-to-gray';
   }
-  return videoPlayerStore.mistServerUri.includes('localhost') ? 'modal-mask-local' : 'modal-mask-default';
+  return videoPlayerStore.isLocalhost ? 'modal-mask-local' : 'modal-mask-default';
 });
 
 

@@ -1024,6 +1024,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     },
 
     getters:
-        {}
+        {
+            isLocalhost: (state) => {
+                return state.mistServerUri ? state.mistServerUri.includes('localhost') : false;
+            },
+        }
     ,
 })

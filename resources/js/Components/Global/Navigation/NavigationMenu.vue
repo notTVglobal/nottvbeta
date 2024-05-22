@@ -194,10 +194,10 @@
                       </Link>
 
                       <JetDropdownLink
-                          v-touch="()=>(router.visit('/settings'))"
-                          @click.prevent="router.visit('/settings')"
+                          v-touch="()=>(router.visit('/user/profile'))"
+                          @click.prevent="router.visit('/user/profile')"
                           :href="`#`"
-                          :active="appSettingStore.currentPage === 'settings'">
+                          :active="appSettingStore.currentPage === '/user/profile'">
                         Settings
                       </JetDropdownLink>
 

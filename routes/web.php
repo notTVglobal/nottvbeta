@@ -317,9 +317,6 @@ Route::middleware([
     return Inertia::render('ExternalLink');
   })->name('externalLink');
 
-  Route::get('/settings', function () {
-    return Inertia::render('Settings');
-  })->name('settings');
 
   Route::get('/stream', function () {
     return Inertia::render('Stream/Index');

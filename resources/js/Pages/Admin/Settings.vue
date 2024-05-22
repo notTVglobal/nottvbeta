@@ -588,7 +588,7 @@
                       <pre data-prefix="4.2"><code>source ~/.bashrc</code></pre>
 
                       <h3 class="my-3 text-left">5. Create an SSH key to access GitHub repo</h3>
-                      <pre data-prefix="5.1"><code>ssh-keygen -t rsa -b 4096 -C "your.email@example.com"</code></pre>
+                      <pre data-prefix="5.1"><code>ssh-keygen -t rsa -b 4096 -C "your.email@example.com" -f /path/to/your_custom_filename</code></pre>
                       <pre data-prefix="5.2"><code>eval "$(ssh-agent -s)"</code></pre>
                       <pre data-prefix="5.3"><code>ssh-add ~/.ssh/id_rsa</code></pre>
                       <pre data-prefix="5.4"><code>cat ~/.ssh/id_rsa.pub</code></pre>
