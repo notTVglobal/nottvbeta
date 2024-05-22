@@ -52,11 +52,11 @@
 
     <!--    <div>-->
     <!--      <button v-if="nowPlayingStore.show?.episode.name" class="text-sm uppercase"-->
-    <!--              @click="Inertia.visit(nowPlayingStore.show?.episode.url)">-->
+    <!--              @click="router.visit(nowPlayingStore.show?.episode.url)">-->
     <!--        {{ nowPlayingStore.show?.episode.name }}-->
     <!--      </button>-->
     <!--      <button v-if="nowPlayingStore.movie?.name" class="cursor-pointer"-->
-    <!--              @click.prevent="Inertia.visit(nowPlayingStore.movie?.url)">-->
+    <!--              @click.prevent="router.visit(nowPlayingStore.movie?.url)">-->
     <!--        {{ nowPlayingStore.movie?.name }}-->
     <!--      </button>-->
     <!--      <span v-if="nowPlayingStore.isFromWeb" class="ml-2 text-yellow-500">(web)</span>-->

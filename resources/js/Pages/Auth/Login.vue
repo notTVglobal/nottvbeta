@@ -103,7 +103,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 
 import Footer from '@/Components/Global/Layout/Footer.vue'
-import { Link, useForm } from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 import JetButton from '@/Jetstream/Button.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';

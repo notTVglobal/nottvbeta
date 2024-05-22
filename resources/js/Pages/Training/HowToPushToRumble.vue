@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
@@ -81,7 +81,7 @@ const { copy } = useClipboard()
 const fullUrl = ref('');
 const rtmpUri = ref('');
 const streamKey = ref('');
-const appUrl = page.props.value.appUrl
+const appUrl = page.props.appUrl
 
 const setSelectedShow = async () => {
   await goLiveStore.fetchShows().then (

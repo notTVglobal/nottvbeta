@@ -266,7 +266,7 @@
 </template>
 
 <script setup>
-import { Link, useForm } from '@inertiajs/inertia-vue3'
+import { Link, useForm } from '@inertiajs/vue3'
 import JetButton from '@/Jetstream/Button'
 import JetFormSection from '@/Jetstream/FormSection'
 import JetInput from '@/Jetstream/Input'

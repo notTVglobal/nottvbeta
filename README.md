@@ -59,6 +59,7 @@ $ php artisan storage:link
 $ php artisan migrate
 $ php artisan db:seed --class=FirstRunSeeder
 $ php artisan slugs:update
+$ php artisan app:set-first-run-settings
 ```
 ## An Administrator account will be created: #
 
@@ -116,3 +117,4 @@ You will need to provide your SSH key to development team (@tec21) to gain acces
     - `sail php artisan migrate`
     - `sail php artisan db:seed`
     - `sail php artisan slugs:update`
+    - `sail php artisan app:set-first-run-settings`

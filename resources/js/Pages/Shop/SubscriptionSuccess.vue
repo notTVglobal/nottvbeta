@@ -46,7 +46,7 @@
               <span v-if="userStore.isMobile">^^^</span>
               <span v-if="!userStore.isMobile">&gt;&gt;&gt;</span>
               </span></p>
-          <p class="flex items-center justify-start gap-2 font-semibold"><span class="text-2xl">🎬</span> MOVIES: Check out <Link @click.prevent="appSettingStore.btnRedirect('/movies')" class="underline text-blue-800 hover:text-blue-600 transition duration-300">movies</Link> from the main menu.</p>
+          <p class="flex items-center justify-start gap-2 font-semibold"><span class="text-2xl">🎬</span> MOVIES: Check out <button @click.prevent="appSettingStore.btnRedirect('/movies')" class="underline text-blue-800 hover:text-blue-600 transition duration-300">movies</button> from the main menu.</p>
           <p class="mt-4 flex items-center justify-start gap-2 font-semibold"><span class="text-2xl">🔜</span> PLAYLISTS: Our playlists feature and other features are coming soon... you'll be the first to know when they're ready!</p>
         </div>
         <img src="/storage/images/Ping.png" alt="notTV Ping" class="w-fit mt-4">
@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { onMounted, ref, getCurrentInstance } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useUserStore } from "@/Stores/UserStore"
@@ -85,7 +85,7 @@ onMounted(async () => {
   if (props.userIsSubscriber) {
     userStore.isSubscriber = true
   }
-  Inertia.reload()
+  router.reload()
 });
 
 // Access the global properties

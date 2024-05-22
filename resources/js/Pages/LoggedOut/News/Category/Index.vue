@@ -37,7 +37,7 @@ import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import Footer from '@/Components/Global/Layout/Footer.vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import NewsCategoryIndexContainer from '@/Components/Pages/News/Category/Layout/NewsCategoryIndexContainer.vue'
 

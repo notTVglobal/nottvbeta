@@ -11,7 +11,7 @@
     <td class="text-xl font-medium align-center my-auto justify-center gap-x-4 px-6 py-4 uppercase h-full">
       <!-- Example image and link setup, uncomment or adjust as needed -->
 <!--       <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
-      <div @click="Inertia.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)" class="flex flex-row break-words gap-x-2 gap-y-2 hover:cursor-pointer">
+      <div @click="router.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)" class="flex flex-row break-words gap-x-2 gap-y-2 hover:cursor-pointer">
         <SingleImage :image="episode.image" :alt="episode.name" :class="`rounded-xl min-w-16 min-h-16 max-w-16 max-h-16`" />
         <span class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200 text-left">
           {{ episode.name }}
@@ -87,8 +87,8 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { router } from '@inertiajs/vue3'
+import { useForm } from "@inertiajs/vue3"
 import { computed, ref } from "vue"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
@@ -155,33 +155,33 @@ const deleteShowEpisode = async () => {
               showStore.errorMessage = response.data.message
               // alert(response.data.message);
               // Update the UI
-              Inertia.reload()
+              router.reload()
               showStore.episodeIsBeingDeleted = 0;
               // For example, you can use Inertia's visit method to navigate to a new page:
-              // await Inertia.visit(route('some.route'));
+              // await router.visit(route('some.route'));
             } else {
               // Handle other response statuses if needed
               showStore.errorMessage = response.statusText
               console.error('Delete request failed:', response.statusText);
               showStore.episodeIsBeingDeleted = 0;
-              Inertia.reload()
+              router.reload()
             }
           })
           .catch((error) => {
             console.error('Error deleting show episode:', error);
             showStore.errorMessage = error
             showStore.episodeIsBeingDeleted = 0;
-            Inertia.reload()
+            router.reload()
           });
 
 
-      // await Inertia.delete(route('shows.showEpisodes.destroy', [props.showSlug, props.episode.slug]));
+      // await router.delete(route('shows.showEpisodes.destroy', [props.showSlug, props.episode.slug]));
       console.log("it should've been deleted");
       // Redirect to a different page or update the UI as needed
 
       console.log('inertia reload');
       // For example, you can use Inertia's visit method to navigate to a new page:
-      // await Inertia.visit(route('some.route'));
+      // await router.visit(route('some.route'));
     } catch (error) {
       console.error('Error deleting show episode:', error);
     }

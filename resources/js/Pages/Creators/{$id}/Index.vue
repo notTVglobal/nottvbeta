@@ -9,7 +9,7 @@
 
       <div class="flex justify-between mb-6">
         <h1 class="text-2xl pb-3">{{ props.creator.name }}</h1>
-        <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
+        <Link :href="`/shows`" class="text-blue-500 text-sm ml-2">Go back</Link>
       </div>
       <p>
         <img :src="props.creator.profile_photo_url"/>

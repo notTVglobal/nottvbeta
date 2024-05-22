@@ -221,7 +221,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'

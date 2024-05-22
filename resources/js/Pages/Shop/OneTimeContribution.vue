@@ -105,7 +105,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useShopStore } from '@/Stores/ShopStore'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 // import { loadStripe } from '@stripe/stripe-js'
 import FavouriteSelectedImage from '@/Components/Pages/Shop/FavouriteSelectedImage.vue'
 

@@ -1,5 +1,5 @@
 <template>
-  <Button @click.prevent="Inertia.visit(`movies/${media.slug}`)" class="bg-blue-500 hover:bg-indigo-500 hover:cursor-pointer text-white h-full flex flex-col p-2 rounded-lg shadow transition ease-in-out duration-150">
+  <Button @click.prevent="router.visit(`movies/${media.slug}`)" class="bg-blue-500 hover:bg-indigo-500 hover:cursor-pointer text-white h-full flex flex-col p-2 rounded-lg shadow transition ease-in-out duration-150">
     <div class="flex-grow w-full">
       <!-- Movie Details -->
       <div class="w-full text-orange-500 text-xs font-semibold uppercase tracking-wider">
@@ -36,7 +36,7 @@
 <script setup>
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import Button from '@/Jetstream/Button.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 defineProps({
   media: Object,

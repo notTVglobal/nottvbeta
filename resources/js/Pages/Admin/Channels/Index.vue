@@ -87,7 +87,7 @@ function hasChannelSource(channel) {
 // let search = ref(props.filters.search);
 
 // watch(search, throttle(function (value) {
-//   Inertia.get('/admin/channels', {search: value}, {
+//   router.get('/admin/channels', {search: value}, {
 //     preserveState: true,
 //     replace: true
 //   });

@@ -7,7 +7,7 @@
           <div class="flex">
             <!-- Logo -->
             <div class="shrink-0 flex items-center">
-              <Link @click.prevent="appSettingStore.btnRedirect('/stream')">
+              <Link @click.prevent="appSettingStore.btnRedirect('/stream')" :href="`#`">
                 <JetApplicationMark class="block h-9 w-auto"/>
               </Link>
             </div>
@@ -16,45 +16,45 @@
             <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-
-
-                    :href="route('stream')"
+                    v-touch="()=>(router.visit('/stream'))"
+                    @click.prevent="router.visit('/stream')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'stream'">
                   Stream
                 </JetNavLink>
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-                    v-touch="()=>(route('schedule'))"
-                    @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('schedule')"
+                    v-touch="()=>(router.visit('/schedule'))"
+                    @click.prevent="router.visit('/schedule')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'schedule'">
                   Schedule
                 </JetNavLink>
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-
-
-                    :href="route('teams.index')"
+                    v-touch="()=>(router.visit('/teams'))"
+                    @click.prevent="router.visit('/teams')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'teams.index'">
                   Browse
                 </JetNavLink>
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-                    v-touch="()=>(route('news.index'))"
-                    @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('news.index')"
+                    v-touch="()=>(router.visit('/news'))"
+                    @click.prevent="router.visit('/news')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage.startsWith('news') && appSettingStore.currentPage !== 'newsroom' && !appSettingStore.currentPage.startsWith('newsRss') && !appSettingStore.currentPage.startsWith('news-')">
                   News
                 </JetNavLink>
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-                    v-touch="()=>(route('shows.index'))"
-                    @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('shows.index')"
+                    v-touch="()=>(router.visit('/shows'))"
+                    @click.prevent="router.visit('/shows')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'shows'">
                   Shows
                 </JetNavLink>
@@ -62,18 +62,18 @@
               <h3 class="inline-flex items-center relative"
                   v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
                 <JetNavLink
-                    v-touch="()=>(route('movies.index'))"
-                    @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('movies.index')"
+                    v-touch="()=>(router.visit('/movies'))"
+                    @click.prevent="router.visit('/movies')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'movies'">
                   Movies
                 </JetNavLink>
               </h3>
-              <h3 class="hidden inline-flex items-center relative">
+              <h3 class="hidden items-center relative">
                 <JetNavLink
-                    v-touch="()=>(route('shop'))"
-                    @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('shop')"
+                    v-touch="()=>(router.visit('/shop'))"
+                    @click.prevent="router.visit('/shop')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'shop'">
                   Shop
                 </JetNavLink>
@@ -106,7 +106,9 @@
             <div class="flex-item">
               <div class="mt-2">
                 <PublicNavLink
-                    @click.prevent="() => Inertia.visit('/contribute')"
+                    v-touch="()=>(router.visit('/contribute'))"
+                    @click.prevent="router.visit('/contribute')"
+                    :href="`#`"
                     :active="appSettingStore.currentPage === 'contribute'">
                   CONTRIBUTE
                 </PublicNavLink>
@@ -161,26 +163,29 @@
 
                       <JetDropdownLink
                           v-if="userStore.isCreator"
-                          @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('dashboard')"
+                          v-touch="()=>(router.visit('/dashboard'))"
+                          @click.prevent="router.visit('/dashboard')"
+                          :href="`#`"
                           :active="appSettingStore.currentPage === 'dashboard'">
                         Dashboard
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="userStore.isNewsPerson"
-                          @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('newsroom')"
+                          v-touch="()=>(router.visit('/newsroom'))"
+                          @click.prevent="router.visit('/newsroom')"
+                          :href="`#`"
                           :active="appSettingStore.currentPage === 'newsroom'">
                         Newsroom
                       </JetDropdownLink>
 
                       <Link
                           v-if="userStore.isVip || userStore.isAdmin"
-                          @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('library')"
-                          class="bg-gray-400 text-white block w-full px-4 py-2 text-sm leading-5 text-left"
-                          :active="appSettingStore.currentPage === 'library'">
+                          v-touch="()=>(router.visit('/library'))"
+                          @click.prevent="router.visit('/library')"
+                          :href="`#`"
+                          :active="appSettingStore.currentPage === 'library'"
+                          class="bg-gray-400 text-white block w-full px-4 py-2 text-sm leading-5 text-left">
                         My Library
                         <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
                                     font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1 shadow-cyan-950 drop-shadow-lg">
@@ -189,30 +194,34 @@
                       </Link>
 
                       <JetDropdownLink
-                          @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('profile.show')"
+                          v-touch="()=>(router.visit('/settings'))"
+                          @click.prevent="router.visit('/settings')"
+                          :href="`#`"
                           :active="appSettingStore.currentPage === 'settings'">
                         Settings
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="userStore.hasAccount"
-                          @click.prevent="billingPortal">
+                          @click.prevent="billingPortal"
+                      >
                         Account
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="userStore.isCreator"
-                          @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('training')"
+                          v-touch="()=>(router.visit('/training'))"
+                          :href="`#`"
+                          @click.prevent="router.visit('/training')"
                           :active="appSettingStore.currentPage === 'training'">
                         Training
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="userStore.isCreator"
-                          @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('videoupload')"
+                          v-touch="()=>(router.visit('/videoUpload'))"
+                          :href="`#`"
+                          @click.prevent="router.visit('/videoUpload')"
                           :active="appSettingStore.currentPage === 'videoUpload'">
                         Video Upload
                       </JetDropdownLink>
@@ -238,47 +247,51 @@
                         </div>
 
                         <JetDropdownLink
-                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('admin.settings')"
+                            v-touch="()=>(router.visit('/admin/settings'))"
+                            @click.prevent="router.visit('/admin/settings')"
+                            :href="`#`"
                             :active="appSettingStore.currentPage === 'admin.settings'"
                             :dark="true">
                           Admin Settings
                         </JetDropdownLink>
 
                         <JetDropdownLink
-                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('admin.settings') + '?section=firstPlaySettings'"
+                            v-touch="()=>(router.visit('/admin/settings' + '?section=firstPlaySettings'))"
+                            @click.prevent="router.visit('/admin/settings' + '?section=firstPlaySettings')"
                             :dark="true">
                           First Play Settings
                         </JetDropdownLink>
 
                         <JetDropdownLink
-                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('admin.schedule')"
+                            v-touch="()=>(router.visit('/admin/schedule'))"
+                            @click.prevent="router.visit('/admin/schedule')"
+                            :href="`#`"
                             :active="appSettingStore.currentPage === 'admin.schedule'"
                             :dark="true">
                           Schedule
                         </JetDropdownLink>
 
                         <JetDropdownLink
-                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('admin.channels')"
+                            v-touch="()=>(router.visit('/admin/channels'))"
+                            @click.prevent="router.visit('/admin/channels')"
                             :active="appSettingStore.currentPage === 'admin.channels'"
                             :dark="true">
                           Channels
                         </JetDropdownLink>
 
                         <JetDropdownLink
-                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('calculations')"
+                            v-touch="()=>(router.visit('/calculations'))"
+                            @click.prevent="router.visit('/calculations')"
+                            :href="`#`"
                             :active="appSettingStore.currentPage === 'calculations'"
                             :dark="true">
                           Calculations
                         </JetDropdownLink>
 
                         <JetDropdownLink
-                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('mistServerApi')"
+                            v-touch="()=>(router.visit('/admin/mistServerApi'))"
+                            @click.prevent="router.visit('/admin/mistServerApi')"
+                            :href="`#`"
                             :active="appSettingStore.currentPage === 'mistServerApi'"
                             :dark="true">
                           MistServer API
@@ -309,8 +322,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link, router } from '@inertiajs/vue3'
 import JetApplicationMark from '@/Jetstream/ApplicationMark'
 import JetDropdownLink from '@/Jetstream/DropdownLink'
 import JetDropdown from '@/Jetstream/Dropdown'
@@ -343,7 +355,7 @@ let props = defineProps({
 // }
 
 const logout = () => {
-  Inertia.post(route('logout'), {}, {
+  router.post(route('logout'), {}, {
     onSuccess: () => {
       // Reset state inside onSuccess callback
       storeReset.resetAllStores()
@@ -353,17 +365,17 @@ const logout = () => {
 }
 // const navigateTest = (event) => {
 //   event.preventDefault(); // Prevent the link's default navigation action
-//   Inertia.visit('/stream');
+//   router.visit('/stream');
 //   console.log('navigate TEST 11111')
 // //   appSettingStore.btnRedirect('/stream')
 // //   setTimeout(() => {
-// //     Inertia.visit('/stream');
+// //     router.visit('/stream');
 // //   }, 1000); // Adjust timing as needed for testing
 // // }
 // // const navigateTest2 = () => {
 // // console.log('navigate TEST 22222')
 // //   setTimeout(() => {
-// //     Inertia.visit('/stream');
+// //     router.visit('/stream');
 // //   }, 1000); // Adjust timing as needed for testing
 // }
 
@@ -400,7 +412,7 @@ function billingPortal() {
 //   appSettingStore.ott = 0
 //   appSettingStore.showNavDropdown = false
 //   userStore.prevUrl = window.history.state.url
-//   Inertia.visit(`/stream`)
+//   router.visit(`/stream`)
 // }
 
 </script>

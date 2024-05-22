@@ -65,8 +65,8 @@
 
 <script setup>
 import { ref, onUnmounted, onMounted, watch } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
-import { usePage } from '@inertiajs/inertia-vue3'
+// import { router } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
 import videojs from 'video.js'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
@@ -97,7 +97,7 @@ let mouseActive = false
 onMounted(() => {
 // onMounted lifecycle hook: Initializes video player settings and fetches user-specific playback settings.
 // TODO:
-// 1. Currently, the component fetches initial video source and type from pageProps provided by Inertia.
+// 1. Currently, the component fetches initial video source and type from pageProps provided by router.
 //    This should be expanded to integrate fetching and applying user-specific video playback settings from the database.
 //    Use Axios to fetch settings like last_playback_position and additional_settings (e.g., volume, playback speed) based on the user and content ID.
 // 2. Implement logic to decide whether to use these settings directly or prompt the user with a modal (using a component like Modal.vue)
@@ -108,16 +108,16 @@ onMounted(() => {
 // 5. Consider adding event listeners to the video player to update the user's settings in real-time as they adjust their playback preferences.
 
   const pageProps = usePage().props
-  videoPlayerStore.firstPlayVideoName = pageProps.value.firstPlay.first_play_video_name
-  videoPlayerStore.firstPlayVideoSource = pageProps.value.firstPlay.first_play_video_source
-  videoPlayerStore.firstPlayVideoSourceType = pageProps.value.firstPlay.first_play_video_source_type
+  videoPlayerStore.firstPlayVideoName = pageProps.firstPlay.first_play_video_name
+  videoPlayerStore.firstPlayVideoSource = pageProps.firstPlay.first_play_video_source
+  videoPlayerStore.firstPlayVideoSourceType = pageProps.firstPlay.first_play_video_source_type
 
   const videoElementId = videoPlayerStore.videoElementId
   const videoPlayer = videojs(videoElementId)
 
   // Additional logic to fetch and apply user settings will be added here following the above TODOs.
-  videoPlayerStore.videoSource = pageProps.value.firstPlay.first_play_video_source
-  videoPlayerStore.videoSourceType = pageProps.value.firstPlay.first_play_video_source_type
+  videoPlayerStore.videoSource = pageProps.firstPlay.first_play_video_source
+  videoPlayerStore.videoSourceType = pageProps.firstPlay.first_play_video_source_type
 
   videoPlayer.ready(() => {
 

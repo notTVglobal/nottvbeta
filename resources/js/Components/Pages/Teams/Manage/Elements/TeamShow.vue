@@ -3,7 +3,7 @@
     <td class="px-6 py-4 w-20 whitespace-nowrap">
       <!--            <img :src="'/storage/images/' + show.poster" class="h-20 w-20 object-cover">-->
 
-      <div @click="Inertia.visit(`/shows/${show.slug}/manage`)" class="h-20 w-20 min-w-[2.5rem] hover:cursor-pointer">
+      <div @click="router.visit(`/shows/${show.slug}/manage`)" class="h-20 w-20 min-w-[2.5rem] hover:cursor-pointer">
         <SingleImage :image="show.image" :alt="'show cover'"
                      class="w-full h-full object-cover"/>
       </div>
@@ -11,7 +11,7 @@
 
     </td>
 
-    <td @click="Inertia.visit(`/shows/${show.slug}/manage`)"
+    <td @click="router.visit(`/shows/${show.slug}/manage`)"
         class="px-6 py-4 whitespace-nowrap uppercase text-xl font-semibold text-blue-600 hover:text-blue-900 hover:cursor-pointer">
       {{ show.name }}
     </td>
@@ -56,12 +56,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import ShowNoteEdit from '@/Components/Pages/Teams/Manage/Elements/ShowNoteEdit'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()

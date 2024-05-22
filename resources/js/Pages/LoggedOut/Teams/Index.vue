@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { onMounted, ref, watch } from 'vue'
 
 import throttle from 'lodash/throttle'

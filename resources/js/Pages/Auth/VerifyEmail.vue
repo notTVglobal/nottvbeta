@@ -59,13 +59,13 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useStoreReset } from "@/Utilities/StoreReset"
 import { computed, onMounted, ref, watch } from 'vue'
-import { Head, Link, usePage } from '@inertiajs/inertia-vue3'
+import { Head, Link, usePage } from '@inertiajs/vue3'
 import JetButton from '@/Jetstream/Button.vue'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
@@ -86,7 +86,7 @@ const submitProcessing = ref(false);
 const pageProps = usePage().props;
 
 // Now, you can directly use 'flash' as it's already reactive
-const verificationLinkSent = computed(() => pageProps.value.flash?.success === 'verification-link-sent');
+const verificationLinkSent = computed(() => pageprops.flash?.success === 'verification-link-sent');
 
 // Watch for changes on the 'verificationLinkSent'
 watch(verificationLinkSent, (newValue, oldValue) => {
@@ -100,7 +100,7 @@ watch(verificationLinkSent, (newValue, oldValue) => {
 
 const submit = () => {
   submitProcessing.value = true;
-  Inertia.post(route('custom.verification.send'), {}, {
+  router.post(route('custom.verification.send'), {}, {
     // Using onSuccess callback to reset submitProcessing in case of success
     onSuccess: () => {
       submitProcessing.value = false;
@@ -109,7 +109,7 @@ const submit = () => {
 }
 
 const logout = () => {
-  Inertia.post(route('logout'), {}, {
+  router.post(route('logout'), {}, {
     onSuccess: () => {
       // Reset state inside onSuccess callback
       storeReset.resetAllStores();

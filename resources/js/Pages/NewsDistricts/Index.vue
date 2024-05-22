@@ -109,9 +109,9 @@ import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigatio
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import SelectDistrictTypeAndProvince from '@/Components/Pages/NewsDistricts/SelectDistrictTypeAndProvince.vue'
 import FederalDistrictLayout from '@/Components/Pages/NewsDistricts/FederalDistrictLayout.vue'
 import SubnationalDistrictLayout from '@/Components/Pages/NewsDistricts/SubnationalDistrictLayout.vue'
@@ -198,7 +198,7 @@ const marginTopClass = computed(() => {
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/news-districts', {search: value}, {
+  router.get('/news-districts', {search: value}, {
     preserveState: true,
     replace: true,
   })

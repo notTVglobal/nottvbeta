@@ -486,8 +486,8 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import {useForm, usePage} from "@inertiajs/inertia-vue3"
+import { router } from '@inertiajs/vue3'
+import {useForm, usePage} from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -630,7 +630,7 @@ let submit = () => {
 }
 
 let reloadImage = () => {
-    Inertia.reload({
+    router.reload({
         only: ['image'],
     });
 };
@@ -738,9 +738,9 @@ function muteMainVideo(){
 }
 
 function back() {
-    let urlPrev = usePage().props.value.urlPrev
+    let urlPrev = usePage().props.urlPrev
     if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
+        router.visit(urlPrev)
     }
 }
 

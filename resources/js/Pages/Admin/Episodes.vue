@@ -67,7 +67,7 @@
                             class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
 
-                          <Link :href="`/shows/${episode.show.slug}/episode/${episode.slug}`" class="">
+                          <Link v-if="episode && episode.showSlug" :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="">
                             <SingleImage :image="episode.image" :alt="'show cover'"
                                          class="rounded-full h-20 w-20 object-cover"/>
                           </Link>
@@ -76,7 +76,7 @@
                             scope="row"
                             class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`"
+                          <Link v-if="episode && episode.showSlug" :href="`/shows/${episode.showSlug}/episode/${episode.slug}`"
                                 class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
                             {{ episode.name }}
                           </Link>
@@ -85,7 +85,7 @@
                             scope="row"
                             class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          <Link :href="`/shows/${episode.showSlug}`"
+                          <Link v-if="episode && episode.showSlug" :href="`/shows/${episode.showSlug}`"
                                 class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
                             {{ episode.show }}
                           </Link>
@@ -100,7 +100,7 @@
                             scope="row"
                             class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          <Link :href="`/teams/${episode.teamSlug}`"
+                          <Link v-if="episode && episode.teamSlug" :href="`/teams/${episode.teamSlug}`"
                                 class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
                             {{ episode.teamName }}
                           </Link>
@@ -131,7 +131,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { onBeforeMount, onMounted, ref, watch } from "vue"
 import throttle from "lodash/throttle"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -154,7 +154,7 @@ appSettingStore.currentPage = 'adminEpisodes'
 appSettingStore.showFlashMessage = true;
 
 watch(search, throttle(function (value) {
-  Inertia.get('/admin/episodes', {search: value}, {
+  router.get('/admin/episodes', {search: value}, {
     preserveState: true,
     replace: true
   });

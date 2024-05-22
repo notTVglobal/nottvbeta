@@ -36,10 +36,10 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { ref, watch } from "vue"
 import throttle from "lodash/throttle"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useUserStore } from "@/Stores/UserStore"
 
@@ -62,7 +62,7 @@ const isThisUser = (creator) => {
 }
 
 watch(search, throttle(function (value) {
-  Inertia.get('/teams/' + teamStore.slug + '/manage', {search: value}, {
+  router.get('/teams/' + teamStore.slug + '/manage', {search: value}, {
     preserveState: true,
     replace: true
   });

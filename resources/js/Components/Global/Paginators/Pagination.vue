@@ -1,7 +1,7 @@
 <template>
   <div v-if="data.last_page > 1" class="flex flex-wrap justify-center my-4 space-x-4 space-y-2">
     <div></div>
-    <Component
+    <Component v-if="data && data.links"
         :is="link.url ? 'Link' : 'span'"
         v-for="(link, key) in data.links"
         :key="key"

@@ -15,7 +15,7 @@
     <div class="gap-4 flex flex-row flex-wrap justify-center w-full overflow-x-none">
       <div v-for="team in teams.data"
            :key="team.id"
-           @click="Inertia.visit(`/teams/${team.slug}`)"
+           @click="router.visit(`/teams/${team.slug}`)"
            class=" bg-gray-300 shadow-md hover:bg-yellow-400 hover:cursor-pointer flex flex-col max-w-[12rem] justify-center items-center py-4 rounded-lg">
 
         <div class="flex items-center justify-center min-w-[12rem] px-6 pb-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
@@ -58,7 +58,7 @@ let props = defineProps({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/teams', {search: value}, {
+  router.get('/teams', {search: value}, {
     preserveState: true,
     replace: true,
   })

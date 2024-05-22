@@ -35,13 +35,13 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
   inviteCodeUlid: String
 })
 
 const goToCreatorRegister = () => {
-  Inertia.visit(route('creator.register.show', props.inviteCodeUlid))
+  router.visit(route('creator.register.show', props.inviteCodeUlid))
 }
 </script>

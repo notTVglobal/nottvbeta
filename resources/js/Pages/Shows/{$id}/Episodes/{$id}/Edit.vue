@@ -424,9 +424,9 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { format } from 'date-fns'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -580,7 +580,7 @@ let form = useForm({
 });
 
 let reloadImage = () => {
-  Inertia.reload({
+  router.reload({
     only: ['image'],
   });
 };

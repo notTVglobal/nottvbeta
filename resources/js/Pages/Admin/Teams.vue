@@ -141,7 +141,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { ref, watch } from "vue"
 import throttle from "lodash/throttle"
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -165,7 +165,7 @@ let props = defineProps({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/admin/teams', {search: value}, {
+  router.get('/admin/teams', {search: value}, {
     preserveState: true,
     replace: true
   });

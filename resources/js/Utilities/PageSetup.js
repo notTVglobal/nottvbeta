@@ -2,7 +2,7 @@ import { onBeforeMount, onMounted } from 'vue'
 import { useUserStore } from "@/Stores/UserStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 export function usePageSetup(pageName) {
     const userStore = useUserStore()
@@ -36,7 +36,7 @@ export function usePageSetup(pageName) {
         // if (topDiv) {
         //     topDiv.scrollIntoView()
         // }
-        Inertia.on('navigate', (event) => {
+        router.on('navigate', (event) => {
             if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
                 appSettingStore.ott = 0;
             } else {
@@ -60,6 +60,6 @@ export function usePageSetup(pageName) {
     appSettingStore.showOttButtons = true
     appSettingStore.noLayout = false
 
-    // Inertia.reload()
+    // router.reload()
 
 }

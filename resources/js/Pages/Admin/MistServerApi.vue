@@ -591,13 +591,13 @@ async function getApiLocal(request) {
 // tec21: this returns the pattern that mistServer is apparently looking for.
 // let submit = () => {
 //     console.log(form.response);
-//     Inertia.post(route('mistApi', {authorization: {challenge: videoPlayer.challenge, status: videoPlayer.status}}));
+//     router.post(route('mistApi', {authorization: {challenge: videoPlayer.challenge, status: videoPlayer.status}}));
 // }
 
 // tec21: this works... it returns $request->challenge and $request->status to Laravel
 // let submit = () => {
 //     console.log('sent to backend');
-//     Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, status: videoPlayer.status}));
+//     router.post(route('mistApi', {challenge: videoPlayer.challenge, status: videoPlayer.status}));
 // }
 
 </script>

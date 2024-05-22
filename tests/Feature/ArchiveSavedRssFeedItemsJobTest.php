@@ -24,7 +24,7 @@ class ArchiveSavedRssFeedItemsJobTest extends TestCase
     $tempItem = NewsRssFeedItemTemp::factory()->create(['is_saved' => true]);
 
     // Act: Dispatch the job
-    ArchiveSavedRssFeedItemsJob::dispatchNow();
+    ArchiveSavedRssFeedItemsJob::dispatchSync();
 
     // Assert: Check if the item is archived
     $this->assertDatabaseHas('news_rss_feed_item_archives', [

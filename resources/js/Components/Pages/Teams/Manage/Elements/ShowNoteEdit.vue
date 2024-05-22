@@ -16,7 +16,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { useTeamStore } from "@/Stores/TeamStore"
 
 const teamStore = useTeamStore()

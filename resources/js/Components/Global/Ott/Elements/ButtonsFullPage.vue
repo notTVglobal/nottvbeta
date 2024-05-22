@@ -51,9 +51,9 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { ref, onMounted, computed } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 
@@ -65,7 +65,7 @@ const videoPlayerStore = useVideoPlayerStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
-const urlPrev = usePage().props.value.urlPrev
+const urlPrev = usePage().props.urlPrev
 
 const previousURL = ref(null)
 

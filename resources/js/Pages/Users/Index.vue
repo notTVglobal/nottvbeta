@@ -123,10 +123,10 @@
 
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { ref, watch } from "vue"
 
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -153,7 +153,7 @@ const form = useForm({
 })
 
 watch(search, throttle(function (value) {
-    Inertia.get('/users', { search: value }, {
+    router.get('/users', { search: value }, {
         preserveState: true,
         replace: true
     });
@@ -162,7 +162,7 @@ watch(search, throttle(function (value) {
 function deleteUser($user) {
     if(confirm('Are you sure you want to delete ' + $user.name +'? This action is not reversible and may have' +
         ' devastating effects on the database.')) {
-        Inertia.post('/admin/user/delete', {'userId': $user.id});
+        router.post('/admin/user/delete', {'userId': $user.id});
     }
 }
 

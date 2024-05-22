@@ -13,7 +13,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 
 usePageSetup('payment2')

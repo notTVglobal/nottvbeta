@@ -64,7 +64,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'

@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'

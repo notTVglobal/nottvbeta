@@ -7,10 +7,10 @@ import { useShowStore } from '@/Stores/ShowStore'
 import { useAudioStore } from '@/Stores/AudioStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import videojs from 'video.js'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { nextTick } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const initialState = () => ({
     mistServerUri: 'https://mist.not.tv/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
@@ -1016,7 +1016,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     }
                 }
             } else if (!appSettingStore.pipChatMode) {
-                Inertia.visit('/stream')
+                router.visit('/stream')
             }
         },
 

@@ -31,7 +31,7 @@
 
 <script setup>
 import { computed, onMounted, provide, ref } from 'vue'
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
@@ -62,7 +62,7 @@ channelStore.reloadChannels()
 //   // videoPlayerStore.toggleChannels()
 //   // videoPlayerStore.toggleOttChannels()
 //   // appSettingStore.ott = 0
-//   // Inertia.reload()
+//   // router.reload()
 // }
 
 const channelClass = computed(() => ({

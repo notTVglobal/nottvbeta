@@ -5,7 +5,7 @@
         <div class="pt-6 pb-10">
             <div class="flex flex-col items-center">
                 <div class="mb-4">
-                    <Link @click="returnToWelcomePage"><img :src="`/storage/images/logo_black_311.png`" alt="image" class=""></Link>
+                    <button @click="returnToWelcomePage"><img :src="`/storage/images/logo_black_311.png`" alt="image" class=""></button>
                 </div>
 
                 <div class="w-full sm:max-w-2xl px-6 py-8 bg-white shadow-lg rounded-lg">
@@ -20,11 +20,11 @@
 </template>
 
 <script setup>
-import {Head} from '@inertiajs/inertia-vue3';
+import {Head} from '@inertiajs/vue3';
 import JetApplicationLogo from '@/Jetstream/ApplicationLogo'
 import { ref, nextTick } from 'vue'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 // import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 
 const appSettingStore = useAppSettingStore()
@@ -35,7 +35,7 @@ defineProps({
 
 const returnToWelcomePage = () => {
   appSettingStore.pageReload = true
-  Inertia.visit('/')
+  router.visit('/')
 }
 
 </script>

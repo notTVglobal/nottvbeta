@@ -115,7 +115,7 @@ class DashboardController extends Controller {
       // the others will use Axios to get the data
       // and save it in the UserStore.
         'id'                    => auth()->user()->id,
-        'firstTimeCreator'      => $creator ? $creator->first_time : false,
+        'firstTimeCreator'      => $creator && (bool)$creator->first_time,
         'welcomeMessage'        => $welcomeMessage,
         'isAdmin'               => $isAdmin,
         'isCreator'             => $isCreator,

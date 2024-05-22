@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { computed } from "vue"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 
@@ -62,7 +62,7 @@ const messageType = computed(() => ({
 }))
 
 const clearFlashMessage = async () => {
-  await Inertia.post(route('flash.clear'));
-  Inertia.reload();
+  await router.post(route('flash.clear'));
+  router.reload();
 };
 </script>

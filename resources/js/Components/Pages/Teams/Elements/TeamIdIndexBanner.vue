@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { useUserStore } from '@/Stores/UserStore'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
@@ -184,7 +184,7 @@ const goToBroadcast = (broadcast) => {
     'showEpisode': `/shows/${broadcast?.show?.slug}/episode/${broadcast.slug}/`
   }
   const url = baseLink[broadcast.type] || '/';
-  Inertia.visit(url)
+  router.visit(url)
 }
 </script>
 <style scoped>

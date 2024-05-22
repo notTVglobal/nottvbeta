@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -180,7 +180,7 @@ const playVideo = (video) => {
 
     userStore.showNavDropdown = false
     userStore.prevUrl = window.history.state.url
-    // Inertia.visit('/stream')
+    // router.visit('/stream')
 
   }
 
@@ -188,14 +188,14 @@ const playVideo = (video) => {
 
 
 function reload() {
-  Inertia.reload({
+  router.reload({
     only: ['videos'],
   });
 }
 
 function deleteVideo($video) {
   if (confirm('Are you sure you want to delete this video? This action is not reversible.')) {
-    Inertia.post('/video/delete', {'videoId': $video.id});
+    router.post('/video/delete', {'videoId': $video.id});
   }
 }
 

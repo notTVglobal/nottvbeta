@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
@@ -69,7 +69,7 @@ function handleProcessedFile(error, file) {
 
   // add the file to our images array
 
-  Inertia.reload({
+  router.reload({
     only: ['images'],
   });
 

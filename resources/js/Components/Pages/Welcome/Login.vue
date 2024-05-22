@@ -106,7 +106,7 @@
 import { useWelcomeStore } from '@/Stores/WelcomeStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useUserStore } from '@/Stores/UserStore'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
 import JetButton from '@/Jetstream/Button'

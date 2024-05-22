@@ -243,7 +243,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
@@ -296,7 +296,7 @@ let source = {
 //     videoPlayerStore.loadNewSourceFromFile(props.video)
 //     videoPlayerStore.videoName = props.movie.name + ' (file)'
 //     videoPlayerStore.currentChannelName = 'On Demand (' + props.movie.name + ') from file'
-//     Inertia.visit('/stream')
+//     router.visit('/stream')
 //   } else if
 //       // else if url exists, play url
 //   (props.movie.file_url) {
@@ -308,7 +308,7 @@ let source = {
 //     videoPlayerStore.loadNewSourceFromUrl(source)
 //     // videoPlayerStore.videoName = props.movie.name+' (web)'
 //     // videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
-//     Inertia.visit('/stream')
+//     router.visit('/stream')
 //   }
 //
 // }
@@ -410,7 +410,7 @@ let playMovie = () => {
 
 
   appSettingStore.ott = 1
-  // Inertia.visit('/stream');
+  // router.visit('/stream');
 };
 
 

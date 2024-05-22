@@ -24,12 +24,12 @@
 
     <div class="flex justify-center items-center space-x-4 mt-4 mb-6">
       <button
-          @click="Inertia.visit('/invite')"
+          @click="router.visit('/invite')"
           class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
         Invite Creator
       </button>
       <button
-          @click="Inertia.visit('/invite')"
+          @click="router.visit('/invite')"
           class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
         View My Invite Codes
       </button>
@@ -38,6 +38,6 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 </script>

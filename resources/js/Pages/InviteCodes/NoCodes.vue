@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
@@ -56,7 +56,7 @@ const props = defineProps({
 
 const changePage = (url) => {
   if (url) {
-    Inertia.visit(url)
+    router.visit(url)
   }
 }
 

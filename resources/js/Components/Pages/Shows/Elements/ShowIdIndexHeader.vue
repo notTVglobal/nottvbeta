@@ -45,7 +45,7 @@
 <script setup>
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import ShowIdIndexHeaderContents from '@/Components/Pages/Shows/Elements/ShowIdIndexHeaderContents.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 

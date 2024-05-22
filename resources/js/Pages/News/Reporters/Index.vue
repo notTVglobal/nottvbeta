@@ -15,7 +15,7 @@
           <div v-if="newsPeople.length === 0" class="w-full">
             <div class="flex flex-col gap-y-2">
               <p>We are in the process of building our news team.</p>
-              <p>If you are an independent journalist please <Link @click.prevent="appSettingStore.btnRedirect('/contact')" class="underline text-blue-800 hover:text-blue-600 transition duration-300">contact us</Link>.</p>
+              <p>If you are an independent journalist please <button @click.prevent="appSettingStore.btnRedirect('/contact')" class="underline text-blue-800 hover:text-blue-600 transition duration-300">contact us</button>.</p>
             </div>
           </div>
           <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full px-6">
@@ -23,12 +23,12 @@
             <div v-for="person in newsPeople" :key="person.id" class="text-center px-8 py-3">
               <div class="hover:bg-gray-300 rounded-lg cursor-pointer pb-8">
                 <header class="pt-8 pb-6">
-                  <Link :href="`/news/reporter/${person.id}`">
+                  <Link v-if="person && person.id" :href="`/news/reporter/${person.id}`">
                     <h3>{{ person.name }}</h3>
                   </Link>
                 </header>
                 <main class="flex justify-center">
-                  <Link :href="`/news/reporter/${person.id}`">
+                  <Link v-if="person && person.id" :href="`/news/reporter/${person.id}`">
                     <img :src="person.profile_photo_url" alt="Profile Photo" class="w-32 h-32 rounded-full object-cover">
                   </Link>
                 </main>
@@ -52,8 +52,8 @@
 <script setup>
 import { computed, nextTick, onMounted, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { usePage } from '@inertiajs/inertia-vue3'
-import { Link } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'

@@ -19,7 +19,11 @@ const initialState = () => ({
         source: null,
         sourceType: null
     },
-    firstPlaySettings: {},
+    firstPlaySettings: {
+        useCustomVideo: false,
+        customVideoSource: '',
+        customVideoSourceType: '',
+    },
     validationErrors: {},
     checkSendProcessing: false,
     activeStreams: [],
@@ -320,17 +324,18 @@ export const useAdminStore = defineStore('adminStore', {
             try {
                 const response = await axios.patch('/admin/update-first-play-settings', this.firstPlaySettings);
 
-                if (!response.data.success) {
+                if (response.data.success) {
+                    // Operation was a success
+                    this.firstPlaySettings = response.data.firstPlaySettings;
+                    this.validationErrors = {}; // Clear any existing validation errors
+                    notificationStore.setToastNotification(response.data.message, 'success', 1500);
+                }
+                else if (!response.data.success) {
                     // This block might not be necessary if your server correctly uses HTTP status codes for errors
                     this.validationErrors = response.data.errors || {};
                     notificationStore.setToastNotification(response.data.message, 'error');
-                    return; // Exit early since we've handled the error case
+                     // Exit early since we've handled the error case
                 }
-
-                // Operation was a success
-                this.firstPlaySettings = response.data.firstPlaySettings;
-                this.validationErrors = {}; // Clear any existing validation errors
-                notificationStore.setToastNotification(response.data.message, 'success', 1500);
             } catch (error) {
                 // Properly handle the error response
                 if (error.response && error.response.data) {

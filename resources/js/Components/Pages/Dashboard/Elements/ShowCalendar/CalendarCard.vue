@@ -46,7 +46,7 @@
 
 <script setup>
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import Button from '@/Jetstream/Button.vue'
 import { computed, ref } from 'vue'
 
@@ -72,9 +72,9 @@ const props = defineProps({
 
 const buttonSlug = () => {
   if( props.type === 'movie') {
-    Inertia.visit('movies/' + props.content?.slug)
+    router.visit('movies/' + props.content?.slug)
   } else if (props.type === 'show') {
-    Inertia.visit('shows/' + props.content?.show?.slug + '/episode/' + props.content?.slug)
+    router.visit('shows/' + props.content?.show?.slug + '/episode/' + props.content?.slug)
   }
 }
 

@@ -158,7 +158,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia";
+import { router } from '@inertiajs/vue3';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { ref } from 'vue'

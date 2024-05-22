@@ -14,7 +14,7 @@
 
         </div>
         <div class="flex flex-col xl:ml-12 xl:mr-0 w-full justify-center items-center xl:items-start xl:justify-start">
-          <div @click="Inertia.visit(`/teams/${team.slug}`)"
+          <div @click="router.visit(`/teams/${team.slug}`)"
                class="text-center xl:text-left text-blue-500 hover:text-blue-400 transition hover:cursor-pointer tracking-wide">
             {{ team.name }}
           </div>
@@ -78,7 +78,7 @@
   </div>
 </template>
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { useUserStore } from '@/Stores/UserStore'
 import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'

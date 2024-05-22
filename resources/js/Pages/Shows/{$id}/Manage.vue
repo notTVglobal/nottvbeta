@@ -186,7 +186,7 @@
 
 <script setup>
 import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
-import { usePage } from '@inertiajs/inertia-vue3'
+import { usePage } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShowStore } from '@/Stores/ShowStore'
@@ -232,7 +232,7 @@ const currentUsers = ref([]);
 // let search = ref(props.filters.search);
 //
 // watch(search, throttle(function (value) {
-//     Inertia.get('/shows', { search: value }, {
+//     router.get('/shows', { search: value }, {
 //         preserveState: true,
 //         replace: true
 //     });

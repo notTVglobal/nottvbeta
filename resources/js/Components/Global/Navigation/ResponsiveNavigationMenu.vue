@@ -4,7 +4,7 @@
       <div class="flex">
         <!-- Logo -->
         <div class="shrink-0 flex items-center">
-          <Link @click="navigateToStream">
+          <Link @click="navigateToStream" :href="`#`">
             <JetApplicationMark class="ml-5 block h-9 w-auto"/>
           </Link>
         </div>
@@ -70,8 +70,9 @@
             <div class="flex justify-start pb-3">
               <div v-if="$page.props.jetstream.managesProfilePhotos" class="mt-2 min-w-[2.5rem]">
                 <Link @click="appSettingStore.closeNavDropdown()"
-                      :href="route('profile.show')"
-                      :active="route().current('profile.show')">
+                      @click.prevent="router.visit('/user/profile')"
+                      :active="route().current('profile.show')"
+                      :href="`#`">
                   <img class="min-h-12 min-w-12 max-h-12 max-w-12 mr-2 rounded-full object-cover border-1 border-gray-300"
                        :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                 </Link>
@@ -79,15 +80,17 @@
               <div class="mt-1 ml-3 w-full">
                 <div class="font-medium text-base text-gray-100 w-full">
                   <Link @click="appSettingStore.closeNavDropdown()"
-                        :href="route('profile.show')"
-                        :active="route().current('profile.show')">
+                        @click.prevent="router.visit('/user/profile')"
+                        :active="route().current('profile.show')"
+                        :href="`#`">
                     {{ $page.props.user.name }}
                   </Link>
                 </div>
                 <div class="font-medium text-sm text-gray-100 w-full">
                   <Link @click="appSettingStore.closeNavDropdown()"
-                        :href="route('profile.show')"
-                        :active="route().current('profile.show')">
+                        @click.prevent="router.visit('/user/profile')"
+                        :active="route().current('profile.show')"
+                        :href="`#`">
                     {{ $page.props.user.email }}
                   </Link>
                 </div>
@@ -136,14 +139,14 @@
           <JetResponsiveNavLink
               v-if="userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('dashboard')"
+              @click.prevent="router.visit('/dashboard')"
               :active="appSettingStore.currentPage === 'dashboard'">
             Dashboard
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('stream')"
+              @click.prevent="router.visit('/stream')"
               :active="appSettingStore.currentPage === 'stream'">
             Stream
           </JetResponsiveNavLink>
@@ -151,28 +154,28 @@
           <JetResponsiveNavLink
               v-if="userStore.isVip"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('library')"
+              @click.prevent="router.visit('/library')"
               :active="appSettingStore.currentPage === 'library'">
             My Library
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('schedule')"
+              @click.prevent="router.visit('/schedule')"
               :active="appSettingStore.currentPage === 'schedule'">
             Schedule
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('news.index')"
+              @click.prevent="router.visit('/newsroom')"
               :active="appSettingStore.currentPage.startsWith('news') && appSettingStore.currentPage !== 'newsroom'">
             News
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('shows.index')"
+              @click.prevent="router.visit('/shows')"
               :active="appSettingStore.currentPage === 'shows'">
             Shows
           </JetResponsiveNavLink>
@@ -180,14 +183,14 @@
           <JetResponsiveNavLink
               v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('movies.index')"
+              @click.prevent="router.visit('/movies')"
               :active="appSettingStore.currentPage === 'movies'">
             Movies
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('shop')"
+              @click.prevent="router.visit('/shop')"
               :active="appSettingStore.currentPage === 'shop'"
               hidden>
             Shop
@@ -195,7 +198,7 @@
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('profile.show')"
+              @click.prevent="router.visit('/user/profile')"
               :active="route().current('profile.show')">
             Settings
           </JetResponsiveNavLink>
@@ -209,7 +212,7 @@
           <JetResponsiveNavLink
               v-if="userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('training')"
+              @click.prevent="router.visit('/training')"
               :active="appSettingStore.currentPage === 'training'">
             Training
           </JetResponsiveNavLink>
@@ -217,7 +220,7 @@
           <JetResponsiveNavLink
               v-if="userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('videoupload')"
+              @click.prevent="router.visit('/videoupload')"
               :active="appSettingStore.currentPage === 'videoUpload'">
             Video Upload
           </JetResponsiveNavLink>
@@ -245,41 +248,42 @@
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                :href="route('admin.settings')"
+                @click.prevent="router.visit('/admin/settings')"
                 :active="route().current('admin.settings')">
               Admin Settings
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                :href="route('admin.settings') + '?section=firstPlaySettings'">
+                @click.prevent="router.visit('/admin/settings' + '?section=firstPlaySettings')"
+            >
               First Play Settings
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                :href="route('admin.schedule')"
+                @click.prevent="router.visit('/admin/schedule')"
                 :active="route().current('admin.schedule')">
               Schedule
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                :href="route('admin.channels')"
+                @click.prevent="router.visit('/admin/channels')"
                 :active="route().current('admin.channels')">
               Channels
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                :href="route('calculations')"
+                @click.prevent="router.visit('/calculations')"
                 :active="route().current('calculations')">
               Calculations
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                :href="route('mistServerApi')"
+                @click.prevent="router.visit('/admin/mistServerApi')"
                 :active="route().current('mistServerApi')">
               MistServer API
             </JetResponsiveNavLink>
@@ -298,8 +302,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { Link } from "@inertiajs/inertia-vue3"
+import { router, Link, usePage } from '@inertiajs/vue3'
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -311,6 +314,10 @@ import JetApplicationMark from "@/Jetstream/ApplicationMark"
 import AppVersion from "@/Components/Global/AppVersion/AppVersion"
 import NotificationButton from "@/Components/Global/Notifications/NotificationButton"
 import PublicNavLink from '@/Components/Global/Buttons/PublicNavLink.vue'
+import { route } from "ziggy-js";
+import JetNavLink from "@/Jetstream/NavLink.vue";
+
+const page = usePage();
 
 const showingNavigationDropdown = ref(false)
 
@@ -379,7 +386,7 @@ onUnmounted(() => {
 });
 
 const logout = () => {
-  Inertia.post(route('logout'), {}, {
+  router.post(route('logout'), {}, {
     onSuccess: () => {
       // Reset state inside onSuccess callback
       storeReset.resetAllStores();
@@ -409,11 +416,11 @@ function navigateToStream() {
   if (!videoPlayerStore.currentPageIsStream) {
     userStore.prevUrl = window.history.state.url
   }
-  Inertia.visit(`/stream`)
+  router.visit(`/stream`)
 }
 
 const contribute = (() => {
-  Inertia.visit('/contribute')
+  router.visit('/contribute')
   appSettingStore.closeNavDropdown()
 })
 

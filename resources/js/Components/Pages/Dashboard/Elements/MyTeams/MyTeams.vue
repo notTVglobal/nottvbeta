@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import MyTeamsHeader from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeamsHeader.vue"
 import MyTeamsFooter from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeamsFooter.vue"
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
@@ -40,6 +40,6 @@ defineProps({
 })
 
 function visitTeamManagePage(teamSlug) {
-  Inertia.visit(`/teams/${teamSlug}/manage`)
+  router.visit(`/teams/${teamSlug}/manage`)
 }
 </script>

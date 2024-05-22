@@ -127,8 +127,8 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import {useForm, usePage} from "@inertiajs/inertia-vue3"
+import { router } from '@inertiajs/vue3'
+import {useForm, usePage} from "@inertiajs/vue3"
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
@@ -203,7 +203,7 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
-    Inertia.reload({
+    router.reload({
         only: ['poster'],
     });
 }

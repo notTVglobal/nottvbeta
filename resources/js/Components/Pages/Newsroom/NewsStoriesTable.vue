@@ -137,7 +137,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import Pagination from '@/Components/Global/Paginators/Pagination.vue'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
@@ -155,7 +155,7 @@ const sort = (field) => {
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/news', {search: value}, {
+  router.get('/news', {search: value}, {
     preserveState: true,
     replace: true,
   })

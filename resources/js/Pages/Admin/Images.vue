@@ -45,8 +45,8 @@
 
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { Head } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
@@ -66,7 +66,7 @@ let props = defineProps({
 });
 
 function reloadImage() {
-  Inertia.reload({
+  router.reload({
     only: ['images'],
   });
 }
@@ -75,7 +75,7 @@ function reloadImage() {
 // let search = ref(props.filters.search);
 //
 // watch(search, throttle(function (value) {
-//     Inertia.get('image', { search: value }, {
+//     router.get('image', { search: value }, {
 //         preserveState: true,
 //         replace: true
 //     });

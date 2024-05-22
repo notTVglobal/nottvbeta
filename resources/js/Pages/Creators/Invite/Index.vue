@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { onMounted, ref } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useInviteStore } from '@/Stores/InviteStore'
@@ -80,7 +80,7 @@ const checkInviteCodeFailedModalHeader = ref('')
 const checkInviteCodeFailedModalMain = ref('')
 
 const checkInviteCode = () => {
-  Inertia.post(`/invite/${props.inviteCodeUlid}/check-invite-code`, {inviteCodeInput: inviteCodeInput.value}, {
+  router.post(`/invite/${props.inviteCodeUlid}/check-invite-code`, {inviteCodeInput: inviteCodeInput.value}, {
     onSuccess: () => {
       currentState.value = 'welcome'
       inviteStore.inviteCode = inviteCodeInput.value
@@ -96,7 +96,7 @@ const checkInviteCode = () => {
 
 
 //
-//   Inertia.post(`/invite/${props.inviteCodeUri}/check-invite-code`, inviteCodeInput.value).onSuccess({
+//   router.post(`/invite/${props.inviteCodeUri}/check-invite-code`, inviteCodeInput.value).onSuccess({
 //     if(inviteCodeInput.value === actualInviteCode)
 //   {
 //     currentState.value = 'welcome';

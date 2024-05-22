@@ -34,9 +34,9 @@ import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNav
 // import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 // import Footer from '@/Components/Global/Layout/Footer.vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { useForm, usePage } from '@inertiajs/vue3'
 import throttle from 'lodash/throttle'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import NewsStoriesTable from '@/Components/Pages/Newsroom/NewsStoriesTable.vue'
 // import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
@@ -51,7 +51,7 @@ usePageSetup('news');
 appSettingStore.currentPage = 'news'
 appSettingStore.setPrevUrl()
 //
-// console.log('user name???? ' + props.value.user?.name)
+// console.log('user name???? ' + props.user?.name)
 //
 // if (userStore.loggedIn) {
 //
@@ -99,12 +99,12 @@ defineProps({
   can: Object,
 })
 
-let search = ref(props.value.filters.search)
+let search = ref(props.filters.search)
 
 // let form = useForm({})
 
 watch(search, throttle(function (value) {
-  Inertia.get('/news', {search: value}, {
+  router.get('/news', {search: value}, {
     preserveState: true,
     replace: true,
   })

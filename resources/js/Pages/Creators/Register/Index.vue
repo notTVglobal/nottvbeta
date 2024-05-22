@@ -284,13 +284,13 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useInviteStore } from '@/Stores/InviteStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useWelcomeStore } from '@/Stores/WelcomeStore'
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { useForm, usePage } from '@inertiajs/vue3'
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useStoreReset } from "@/Utilities/StoreReset"
 import Login from '@/Components/Pages/Welcome/Login.vue'
@@ -392,7 +392,7 @@ const toggleVideoModal = () => {
 
 
 const checkEmail = async () => {
-  if (pageProps.value.user && pageProps.value.user.email === form.email) {
+  if (pageprops.user && pageprops.user.email === form.email) {
     emailExists.value = false;
     return;
   }
@@ -473,11 +473,11 @@ watch(() => form.email, () => {
 });
 // const logout = () => {
 //   // Implement logout logic here
-//   Inertia.post('/logout');
+//   router.post('/logout');
 // };
 
 const logout = () => {
-  Inertia.post(route('logout'), {}, {
+  router.post(route('logout'), {}, {
     onSuccess: () => {
       // Reset state inside onSuccess callback
       storeReset.resetAllStores()
@@ -493,7 +493,7 @@ const redirectToLogin = () => {
   // window.location.href = '/login';
 };
 
-Inertia.on('navigate', (event) => {
+router.on('navigate', (event) => {
   requestAnimationFrame(() => {
     const topDiv = document.getElementById("topDiv");
     if (topDiv) {

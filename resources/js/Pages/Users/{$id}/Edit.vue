@@ -303,8 +303,8 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
+import { useForm, usePage } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
@@ -381,7 +381,7 @@ async function fetchRoles() {
 }
 
 function addUserToNewsroom() {
-  Inertia.visit('/newsroom/newsPerson', {
+  router.visit('/newsroom/newsPerson', {
     method: 'post',
     data: {
       id: props.userEdit.id,
@@ -392,7 +392,7 @@ function addUserToNewsroom() {
 }
 
 function updateUserNewsRoles() {
-  Inertia.post('/newsroom/newsPerson/updateRoles', {
+  router.post('/newsroom/newsPerson/updateRoles', {
     id: props.userEdit.id,
     role_ids: selectedRoles.value, // Send an array of selected role IDs
   })
@@ -422,14 +422,14 @@ function getUserSubscriptionFromStripe() {
   } else if (!props.userEdit.stripe_id && form.stripe_id) {
     alert('Please save the Stripe ID before getting the subscription.')
   } else if (confirm('Are you sure you want to retrieve the subscription from Stripe? This will take a minute.')) {
-    Inertia.post(route('getUserSubscriptionsFromStripe', {'id': form.id}))
+    router.post(route('getUserSubscriptionsFromStripe', {'id': form.id}))
   }
 }
 
 function back() {
-  let urlPrev = usePage().props.value.urlPrev
+  let urlPrev = usePage().props.urlPrev
   if (urlPrev !== 'empty') {
-    Inertia.visit(urlPrev)
+    router.visit(urlPrev)
   }
 }
 

@@ -626,9 +626,11 @@
                       <pre data-prefix="12."><code>Run: composer install</code></pre>
                       <pre data-prefix="13."><code>Run: composer update</code></pre>
                       <pre data-prefix="14."><code>Run: npm install</code></pre>
-                      <pre data-prefix="15."><code>Run: sail php artisan migrate</code></pre>
-                      <pre data-prefix="16."><code>Run: sail php artisan db:seed (for testing)</code></pre>
-                      <pre data-prefix="16."><code>Run: php artisan slugs:update</code></pre>
+                      <pre data-prefix="15."><code>Run: sail up</code></pre>
+                      <pre data-prefix="16."><code>Run: sail php artisan migrate</code></pre>
+                      <pre data-prefix="17."><code>Run: sail php artisan db:seed (for testing)</code></pre>
+                      <pre data-prefix="18."><code>Run: sail php artisan slugs:update</code></pre>
+                      <pre data-prefix="19."><code>Run: sail php artisan app:set-first-run-settings</code></pre>
 
                       <h2 class="pt-8 pb-2">If you have Composer, PHP 8.1, and Node.js installed:</h2>
                       <pre data-prefix="$"><code>composer update</code></pre>
@@ -680,9 +682,9 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/vue3'
 import { useClipboard } from '@vueuse/core'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -859,7 +861,7 @@ let submit = () => {
 let getAllEpisodesButtonActive = ref(false)
 
 function getEpisodesFromEmbedCodes() {
-  Inertia.post('getVideosFromEmbedCodes')
+  router.post('getVideosFromEmbedCodes')
   getAllEpisodesButtonActive = false
 }
 

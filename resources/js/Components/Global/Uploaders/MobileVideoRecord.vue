@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { router } from '@inertiajs/vue3'
 import { onMounted, ref } from "vue"
 import { Dropzone } from "dropzone"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from "@inertiajs/vue3"
 import { useUserStore } from "@/Stores/UserStore"
 
 const userStore = useUserStore()
@@ -59,7 +59,7 @@ onMounted(() => {
   myDropzoneMobile.on("complete", function (file) {
     myDropzoneMobile.removeFile(file);
     userStore.uploadPercentage = 0;
-    // Inertia.reload({
+    // router.reload({
     //     only: ["videos"],
     // });
   });

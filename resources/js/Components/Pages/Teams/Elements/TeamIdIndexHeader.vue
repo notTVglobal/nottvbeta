@@ -37,7 +37,7 @@
 
       <div class="flex flex-row flex-wrap justify-between gap-2">
         <div class="flex flex-row w-full justify-center lg:justify-end pb-6 lg:pb-0">
-          <button @click="Inertia.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
+          <button @click="router.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
         </div>
 
         <div class="flex flex-row flex-wrap gap-2 justify-center mb-4">
@@ -54,7 +54,7 @@
   </div>
 </template>
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
+import { router } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
