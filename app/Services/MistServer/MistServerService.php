@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class MistServerService {
   protected string $internal_ip;
@@ -23,9 +24,23 @@ class MistServerService {
   public function __construct(string $serverType = 'push') {
     $config = config("services.mistserver.{$serverType}");
 
-    if (is_null($config) || !isset($config['host'], $config['username'], $config['password'])) {
-      throw new \InvalidArgumentException("Invalid or missing configuration for MistServer type: {$serverType}");
+    if (is_null($config)) {
+      throw new InvalidArgumentException(
+          "Configuration for MistServer type: {$serverType} is missing. Please ensure that the configuration is set up in the .env file and config/services.php."
+      );
     }
+
+    if (!isset($config['host'], $config['username'], $config['password'], $config['internal_ip'])) {
+      $upperServerType = strtoupper($serverType);
+      throw new InvalidArgumentException(
+          "Invalid configuration for MistServer type: {$serverType}. Please ensure the following configuration keys are set in the .env file and config/services.php: " .
+          "MISTSERVER_{$upperServerType}_HOST, MISTSERVER_{$upperServerType}_USERNAME, MISTSERVER_{$upperServerType}_PASSWORD, MISTSERVER_{$upperServerType}_INTERNAL_IP."
+      );
+    }
+
+    // Log the configuration for debugging purposes
+//    Log::debug("MistServer configuration loaded for {$serverType}: ", $config);
+
 
 //    $this->host = $config['host'];
     $this->internal_ip = $config['internal_ip'];
@@ -687,7 +702,7 @@ class MistServerService {
 
   public function fetchStreamInfo(string $streamName = ''): \Illuminate\Http\JsonResponse {
     $encodedStreamName = urlencode($streamName);
-    $url = "http://{$this->internal_ip}:8080/json_${encodedStreamName}.js";
+    $url = "http://{$this->internal_ip}:8080/json_{$encodedStreamName}.js";
 
     try {
       $response = Http::get($url);

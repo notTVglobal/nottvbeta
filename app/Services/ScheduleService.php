@@ -192,7 +192,10 @@ class ScheduleService {
       $content = Cache::get($key);
       if ($content) {
         $cacheTime = Carbon::parse($content['timestamp']);
-        if (Carbon::now()->diffInHours($cacheTime) > $hours) {
+        $diffInHours = Carbon::now()->diffInHours($cacheTime);
+
+        // Check if the difference is greater than the given hours and is positive
+        if ($diffInHours > $hours) {
           Cache::forget($key);
         }
       }

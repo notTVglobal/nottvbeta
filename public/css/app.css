@@ -7527,6 +7527,14 @@ hr {
   top: 14rem;
 }
 
+.end-0 {
+  inset-inline-end: 0px;
+}
+
+.start-0 {
+  inset-inline-start: 0px;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -7978,6 +7986,50 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.-me-0 {
+  margin-inline-end: -0px;
+}
+
+.-me-0\.5 {
+  margin-inline-end: -0.125rem;
+}
+
+.-me-1 {
+  margin-inline-end: -0.25rem;
+}
+
+.-me-2 {
+  margin-inline-end: -0.5rem;
+}
+
+.me-2 {
+  margin-inline-end: 0.5rem;
+}
+
+.me-3 {
+  margin-inline-end: 0.75rem;
+}
+
+.ms-1 {
+  margin-inline-start: 0.25rem;
+}
+
+.ms-2 {
+  margin-inline-start: 0.5rem;
+}
+
+.ms-3 {
+  margin-inline-start: 0.75rem;
+}
+
+.ms-4 {
+  margin-inline-start: 1rem;
+}
+
+.ms-6 {
+  margin-inline-start: 1.5rem;
 }
 
 .line-clamp-2 {
@@ -10604,6 +10656,14 @@ hr {
   padding-top: 2rem;
 }
 
+.pe-4 {
+  padding-inline-end: 1rem;
+}
+
+.ps-3 {
+  padding-inline-start: 0.75rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -10618,6 +10678,14 @@ hr {
 
 .text-justify {
   text-align: justify;
+}
+
+.text-start {
+  text-align: start;
+}
+
+.text-end {
+  text-align: end;
 }
 
 .align-baseline {
@@ -11969,6 +12037,11 @@ hr {
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 
+.focus\:bg-yellow-600:focus {
+  --tw-bg-opacity: 1;
+  background-color: rgb(202 138 4 / var(--tw-bg-opacity));
+}
+
 .focus\:text-gray-500:focus {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -12710,6 +12783,26 @@ hr {
     margin-top: 0px;
   }
 
+  .sm\:-me-2 {
+    margin-inline-end: -0.5rem;
+  }
+
+  .sm\:ms-10 {
+    margin-inline-start: 2.5rem;
+  }
+
+  .sm\:ms-3 {
+    margin-inline-start: 0.75rem;
+  }
+
+  .sm\:ms-4 {
+    margin-inline-start: 1rem;
+  }
+
+  .sm\:ms-6 {
+    margin-inline-start: 1.5rem;
+  }
+
   .sm\:block {
     display: block;
   }
@@ -12864,6 +12957,10 @@ hr {
 
   .sm\:text-left {
     text-align: left;
+  }
+
+  .sm\:text-start {
+    text-align: start;
   }
 }
 
@@ -13604,6 +13701,22 @@ hr {
   .\32xl\:pt-0 {
     padding-top: 0px;
   }
+}
+
+.ltr\:origin-top-left:where([dir="ltr"], [dir="ltr"] *) {
+  transform-origin: top left;
+}
+
+.ltr\:origin-top-right:where([dir="ltr"], [dir="ltr"] *) {
+  transform-origin: top right;
+}
+
+.rtl\:origin-top-left:where([dir="rtl"], [dir="rtl"] *) {
+  transform-origin: top left;
+}
+
+.rtl\:origin-top-right:where([dir="rtl"], [dir="rtl"] *) {
+  transform-origin: top right;
 }
 
 .rtl\:flex-row-reverse:where([dir="rtl"], [dir="rtl"] *) {
