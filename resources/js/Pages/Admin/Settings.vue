@@ -225,7 +225,7 @@
                      id="mist_server_uri"
               >
             </div>
-            <div class="text-xs mb-2">e.g., https://mist.nottv.io/</div>
+            <div class="text-xs mb-2">e.g., https://mist.nottv.io/ or http://localhost:8080/</div>
 
             <div v-if="form.errors.mist_server_uri" v-text="form.errors.mist_server_uri"
                  class="text-xs text-red-600 mt-1"></div>

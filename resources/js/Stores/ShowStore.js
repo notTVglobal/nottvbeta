@@ -13,6 +13,8 @@ const initialState = () => ({
     name: '',
     slug: '',
     url: '',
+    show_status_id: 0,
+    episode_play_order: '',
     scheduleDetails: {},
     episodeName: '',
     episodeUrl: '',
@@ -29,7 +31,7 @@ const initialState = () => ({
     team_id: 'team id',
     episodePoster: '',
     noteEdit: 0,
-    note: '',
+    notes: '',
     saveNoteProcessing: Boolean,
     errorMessage: '',
     episodeIsBeingDeleted: 0, // put episode id here if being deleted (used on the Show Manage page, Show Episode component)
@@ -42,7 +44,7 @@ const initialState = () => ({
     updatedBy: null,
     isSaving: null,
     loadingUpdatingStatus: false, // to show a loader
-    leader: null // for handling functions on the Echo broadcast channel
+    leader: null, // for handling functions on the Echo broadcast channel
 })
 
 export const useShowStore = defineStore('showStore', {
@@ -109,7 +111,6 @@ export const useShowStore = defineStore('showStore', {
         setEpisodeUrl(episodeUrl) {
             this.episodeUrl = episodeUrl
         },
-        // },
         initializeDescriptions(categoryId, subCategoryId) {
             this.category_id = categoryId
             const category = this.categories.find(cat => cat.id === categoryId)

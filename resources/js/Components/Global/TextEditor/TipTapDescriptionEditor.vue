@@ -35,6 +35,10 @@ const emits = defineEmits(['updateContent'])
 const props = defineProps({
   description: String,
   placeholder: String,
+  isFocused: {
+    type: Boolean,
+    default: true
+  },
 })
 
 const initialContent = props.description
@@ -42,7 +46,6 @@ const initialContent = props.description
     : (props.placeholder ? props.placeholder : '<p>Start typing the description...</p>')
 
 const editor = useEditor({
-  autofocus: true, // Setting autofocus to true
   extensions: [
     StarterKit,
     Document,
@@ -63,7 +66,6 @@ const editor = useEditor({
     emits('updateContent', htmlOutput)
   },
 })
-
 
 const hasFocused = ref(false) // State to track if the editor has been focused
 

@@ -1,6 +1,6 @@
 <template>
-
-  <div class="flex justify-between my-6">
+<div>
+  <div class="flex justify-between my-6 px-6">
     <div>
       <div class="font-bold mb-4 text-red-700">EDIT EPISODE</div>
       <h1 class="text-3xl">
@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap w-full justify-between">
+  <div class="flex flex-wrap w-full justify-between px-6">
     <div class="space-y-1 text-black dark:text-white">
       <div class="mb-6"><span class="text-xs uppercase font-semibold">Episode #: </span>
         <span v-if="episode.episode_number" class="font-bold uppercase">{{ episode.episode_number }}</span>
@@ -52,8 +52,8 @@
     </div>
 
 
-    <div class="flex flex-col rounded justify-end w-fit bg-white dark:bg-black my-6 p-3">
-      <div class="block mb-2 uppercase font-bold text-xs text-black dark:text-white"
+    <div class="flex flex-col rounded justify-end w-fit bg-white dark:bg-black my-6">
+      <div class="block uppercase font-bold text-xs text-black dark:text-white"
            for="name"
       >
         Episode Video
@@ -64,14 +64,15 @@
     </div>
   </div>
 
-
+</div>
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'
-import { usePage } from "@inertiajs/vue3"
+import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 import EpisodeVideo from '@/Components/Pages/ShowEpisodes/Elements/EpisodeVideo.vue'
+
+const showEpisodeStore = useShowEpisodeStore()
 
 defineProps({
   show: Object,

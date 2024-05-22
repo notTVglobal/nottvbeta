@@ -402,7 +402,7 @@ class ShowsController extends Controller {
     try {
       $show = Show::create([
           'name'                   => $validatedData['name'],
-          'description'            => $validatedData['description'],
+          'description'            => $sanitizedDescription,
           'user_id'                => $validatedData['user_id'],
           'team_id'                => $validatedData['team_id'],
           'show_category_id'       => $validatedData['category'],

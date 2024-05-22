@@ -43,7 +43,7 @@
 
                   <div>
 
-                    <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                    <label class="block mb-2 uppercase text-sm font-bold dark:text-gray-200"
                            for="name"
                     >
                       Change Team Logo
@@ -75,10 +75,10 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                      <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                              for="name"
                       >
-                        Team Name
+                        Team Name <span :class="form.errors.name ? 'text-red-500' : 'text-indigo-500'">* REQUIRED</span>
                       </label>
 
                       <input v-model="form.name"
@@ -94,10 +94,10 @@
 
                     <div class="mb-6">
                       <label
-                          class="block mb-2 uppercase font-bold text-xs text-light text-red-700 bg-white dark:bg-gray-800 dark:text-red-200"
+                          class="block mb-2 uppercase font-bold dark:text-gray-200"
                           for="description"
                       >
-                        Description
+                        Description <span :class="form.errors.description ? 'text-red-500' : 'text-indigo-500'">* REQUIRED</span>
                       </label>
                       <!--                      <TabbableTextarea v-model="form.description"-->
                       <!--                                        class="border border-gray-400 p-2 w-full rounded-lg text-black bg-white dark:bg-gray-800 dark:text-white text-black bg-white dark:bg-gray-800 dark:text-white"-->
@@ -130,13 +130,13 @@
                     <!--                                        </div>-->
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                      <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                              for="teamLeader"
                       >
-                        Team Leader
+                        Team Leader <span :class="form.errors.teamLeader ? 'text-red-500' : 'text-indigo-500'">* REQUIRED</span>
                       </label>
                       <select
-                          class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
+                          class="border border-gray-400 p-2 w-full rounded-lg block mb-2 font-semibold text-gray-800"
                           v-model="selectedTeamLeader"
                       >
                         <option
@@ -165,10 +165,10 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                      <label class="block mb-2 uppercase font-bold dark:text-gray-200"
                              for="description"
                       >
-                        Maximum # of Team Members
+                        Maximum # of Team Members <span :class="form.errors.totalSpots ? 'text-red-500' : 'text-indigo-500'">* REQUIRED</span>
                       </label>
                       <input v-model="form.totalSpots"
                              class="border border-gray-400 p-2 w-full rounded-lg text-black"

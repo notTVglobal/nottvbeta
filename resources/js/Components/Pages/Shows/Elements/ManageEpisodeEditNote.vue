@@ -61,7 +61,7 @@ function saveNote() {
 // getting a response.
 //
   showStore.saveNoteProcessing = true;
-  showStore.note = form.note;
+  showStore.notes = form.note;
   emit('saveNoteProcessing');
   axios.post('/shows/episode/notes', {
     notes: form.note,
