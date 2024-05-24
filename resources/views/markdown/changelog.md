@@ -6,6 +6,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.9.2.3
 May 23, 2024
 * Fix the schedule, not updating correctly (in progress).
+* Changed automated schedule update to every thirty minutes.
 
 ## v0.9.2.2
 May 23, 2024

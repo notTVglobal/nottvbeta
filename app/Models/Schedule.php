@@ -28,8 +28,8 @@ class Schedule extends Model {
   ];
 
   protected $casts = [
-      'start_dateTime'      => 'datetime',
-      'end_dateTime'        => 'datetime',
+      'start_dateTime'  => 'datetime',
+      'end_dateTime'    => 'datetime',
       'broadcast_dates' => 'json',
       'extra_metadata'  => 'json',
     // other casts

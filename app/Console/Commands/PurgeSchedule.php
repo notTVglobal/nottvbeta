@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SchedulePurgeExpiredSchedules;
+use App\Jobs\PurgeExpiredSchedules;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -40,7 +40,7 @@ class PurgeSchedule extends Command
     public function handle()
     {
       // Dispatch the job
-      dispatch(new SchedulePurgeExpiredSchedules());
+      dispatch(new PurgeExpiredSchedules());
       $this->info('The purge job has been dispatched.');
       Log::info('Dispatch purge schedule job.');
 

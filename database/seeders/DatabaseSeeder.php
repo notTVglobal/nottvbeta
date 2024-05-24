@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
           // Testing schedule and schedule recurrence.
 //            ScheduleSeeder::class, // Seeds the schedule.
-//            ScheduleRecurrenceDetailsSeeder::class, // Seeds the schedule with recurring items.
+            ScheduleRecurrenceDetailsSeeder::class, // Seeds the schedule with recurring items.
 
         ]);
     }

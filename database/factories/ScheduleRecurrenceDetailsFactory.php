@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Helpers\ScheduleHelpers;
 use App\Models\Schedule;
 use App\Models\ScheduleRecurrenceDetails;
 use Carbon\Carbon;
@@ -21,12 +22,9 @@ class ScheduleRecurrenceDetailsFactory extends Factory
    */
   public function definition(): array
   {
-    // Randomly select days of the week
-    $daysOfWeek = collect(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])->random(rand(1, 7))->values()->toArray();
-
     return [
         'frequency' => 'weekly',
-        'days_of_week' => json_encode($daysOfWeek),
+        'days_of_week' => [], // Placeholder for `days_of_week`
         'duration_minutes' => $this->faker->numberBetween(30, 180),
         'start_dateTime' => Carbon::now(),
         'end_dateTime' => Carbon::now()->addMinutes($this->faker->numberBetween(30, 180)),
@@ -40,7 +38,8 @@ class ScheduleRecurrenceDetailsFactory extends Factory
    * @param Schedule $schedule
    * @return $this
    */
-  public function forSchedule(Schedule $schedule): static {
+  public function forSchedule(Schedule $schedule): static
+  {
     return $this->state(function (array $attributes) use ($schedule) {
       return [
           'duration_minutes' => $schedule->duration_minutes,
@@ -50,4 +49,23 @@ class ScheduleRecurrenceDetailsFactory extends Factory
       ];
     });
   }
+
+//
+//  /**
+//   * Get a valid datetime that falls on one of the specified days of the week.
+//   *
+//   * @param array $daysOfWeek
+//   * @param Carbon|null $baseDate
+//   * @return Carbon
+//   */
+//  private function getValidDateTime(array $daysOfWeek, Carbon $baseDate = null): Carbon
+//  {
+//    $date = $baseDate ?? Carbon::now();
+//
+//    while (!in_array($date->format('l'), $daysOfWeek)) {
+//      $date->addDay();
+//    }
+//
+//    return ScheduleHelpers::roundToNearestHalfHour($date);
+//  }
 }

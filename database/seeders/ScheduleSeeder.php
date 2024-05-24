@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Helpers\ScheduleHelpers;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,7 +20,7 @@ class ScheduleSeeder extends Seeder
   {
 
     $startDate = Carbon::now()->subHours(6);
-    $currentStartTime = $this->roundToNearestHalfHour($startDate);
+    $currentStartTime = ScheduleHelpers::roundToNearestHalfHour($startDate);
 
     for ($i = 0; $i < 144; $i++) {
       $schedule = Schedule::factory()->make();
@@ -34,30 +35,8 @@ class ScheduleSeeder extends Seeder
       $schedule->save();
 
       // Update the current start time for the next schedule item
-      $currentStartTime = $this->roundToNearestHalfHour($schedule->end_dateTime);
+      $currentStartTime = ScheduleHelpers::roundToNearestHalfHour($schedule->end_dateTime);
     }
   }
 
-  /**
-   * Round the given Carbon instance to the nearest hour or half-hour.
-   *
-   * @param Carbon $dateTime
-   * @return Carbon
-   */
-  protected function roundToNearestHalfHour(Carbon $dateTime): Carbon {
-    $minutes = $dateTime->minute;
-    $seconds = 0; // Ensure seconds are set to zero
-    $roundedMinutes = 0;
-
-    if ($minutes < 15) {
-      $roundedMinutes = 0;
-    } elseif ($minutes < 45) {
-      $roundedMinutes = 30;
-    } else {
-      $roundedMinutes = 0;
-      $dateTime->addHour();
-    }
-
-    return $dateTime->copy()->minute($roundedMinutes)->second($seconds);
-  }
 }

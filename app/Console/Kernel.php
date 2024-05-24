@@ -4,7 +4,7 @@ namespace App\Console;
 
 use App\Jobs\CheckSubscriptionStatuses;
 use App\Jobs\FetchRssFeedItemsJob;
-use App\Jobs\SchedulePurgeExpiredSchedules;
+use App\Jobs\PurgeExpiredSchedules;
 use App\Jobs\UpdateAllScheduleBroadcastDates;
 use App\Jobs\ScheduleUpdateSchedulesIndexesDELETEME;
 use App\Models\NewsRssFeed;
@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel {
     $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('archive:rssFeeds')->hourly();
-    $schedule->command('schedule:update')->hourly();
+    $schedule->command('schedule:update')->everyThirtyMinutes();
 
     // Purge cache files older than 1 hour every hour
     $schedule->call(function () {

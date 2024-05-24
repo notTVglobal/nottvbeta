@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Events\ShowScheduleDetailsUpdated;
 use App\Models\Schedule;
 use App\Models\SchedulesIndex;
 use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -16,7 +16,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 class UpdateBroadcastDates implements ShouldQueue {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
   // TODO: This runs every time an object gets added to the schedule.
   //  This creates a Json Array on schedules called broadcast_dates.
@@ -34,56 +34,74 @@ class UpdateBroadcastDates implements ShouldQueue {
    * @throws Exception
    */
 
-  public function handle(): void {
+  public function handle() {
 
-    // Reload the schedule and ensure it's not null before proceeding
-    $reloadedSchedule = Schedule::with('content')->find($this->schedule->id);
-    //    Log::debug($reloadedSchedule);
+    if ($this->batch()->cancelled()) {
+      // Determine if the batch has been cancelled...
 
-    if (!$reloadedSchedule || is_null($reloadedSchedule->content)) {
-//      Log::debug('Failed to load schedule with content or content is null', ['scheduleId' => $this->schedule->id]);
       return;
     }
 
-    // First, update broadcast dates and find the closest broadcast date
-    $broadcastDates = $this->updateBroadcastDates();
-    $closestBroadcastDate = $this->findClosestBroadcastDate($broadcastDates);
+    try {
 
-    // Now update the schedules index with the closest broadcast date
-    if ($closestBroadcastDate) {
-      $this->updateSchedulesIndex($closestBroadcastDate);
-    } else {
-      // Log or handle the scenario where no future broadcast dates are found
-//      Log::debug('No upcoming broadcast dates found for schedule.', ['scheduleId' => $reloadedSchedule->id]);
+        // Reload the schedule and ensure it's not null before proceeding
+        $schedule = Schedule::with('content')->find($this->schedule->id);
+
+        if (!$schedule || is_null($schedule->content)) {
+          Log::debug('Failed to load schedule with content or content is null', ['scheduleId' => $schedule->id]);
+
+          return;
+        }
+
+        // First, update broadcast dates and find the closest broadcast date
+        $broadcastDates = $this->updateBroadcastDates($schedule);
+        $closestBroadcastDate = $this->findClosestBroadcastDate($broadcastDates);
+
+        // Now update the schedules index with the closest broadcast date
+        if ($closestBroadcastDate) {
+          $this->updateScheduleIndex($closestBroadcastDate, $schedule);
+        } else {
+          // Log or handle the scenario where no future broadcast dates are found
+          Log::debug('No upcoming broadcast dates found for schedule.', ['scheduleId' => $schedule->id]);
+        }
+
+        // Clear the broadcast_dates before updating
+//        $schedule->broadcast_dates = json_encode([]);
+//        $schedule->save();
+
+        // Format for storage
+        $broadcastDatesData = [
+            'modelType'       => $schedule->content_type,
+            'modelId'         => $schedule->content_id,
+            'priority'        => $schedule->priority, // Assuming the same priority for all schedules for simplicity
+            'timezone'        => 'UTC',
+            'durationMinutes' => $schedule->duration_minutes,
+            'broadcastDates'  => $broadcastDates
+        ];
+
+        // Update the compiled dates into the database
+        $schedule->broadcast_dates = json_encode($broadcastDatesData);
+        $schedule->save();
+
+        Log::debug('Updated broadcast dates', ['scheduleId' => $schedule->id, 'dates' => $broadcastDatesData]);
+
+    } catch (Exception $e) {
+      Log::error('Failed to update schedule with transaction', [
+          'scheduleId' => $this->schedule->id,
+          'error'      => $e->getMessage(),
+          'trace'      => $e->getTraceAsString()
+      ]);
     }
-
-    // Format for storage
-    $broadcastDates = [
-        'modelType'       => $reloadedSchedule->content_type,
-        'modelId'         => $reloadedSchedule->content_id,
-        'priority'        => $reloadedSchedule->priority, // Assuming the same priority for all schedules for simplicity
-        'timezone'        => 'UTC',
-        'durationMinutes' => $reloadedSchedule->duration_minutes,
-        'broadcastDates'  => $broadcastDates
-    ];
-
-    // Update the compiled dates into the database
-    $reloadedSchedule->broadcast_dates = json_encode($broadcastDates);
-    $reloadedSchedule->save();
-
-//    Log::debug('Updated broadcast dates', ['scheduleId' => $reloadedSchedule->id, 'dates' => $broadcastDates]);
   }
 
 
   /**
    * @throws Exception
    */
-  protected function updateBroadcastDates(): array {
-    $schedule = $this->schedule;
+  protected function updateBroadcastDates($schedule): array {
 
-    // Initialize arrays for storing calculated dates
-    $oneTimeDates = [];
-    $recurrentDates = [];
+    // Initialize array for storing calculated dates
+    $broadcastDates = [];
 
 //    Log::debug('Test Conversion to UTC', [
 //        'localTime' => $testTime,
@@ -92,10 +110,6 @@ class UpdateBroadcastDates implements ShouldQueue {
 //    ]);
 //
 //    Log::debug('this is the $schedule->start_dateTime: ' . $schedule->start_dateTime);
-
-    // Convert schedule times from local to UTC
-    $startDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_dateTime, new DateTimeZone($schedule->timezone))
-        ->setTimezone('UTC');
 
 //    Log::debug('Converted time to UTC', [
 //        'localTime' => $schedule->start_dateTime,
@@ -107,11 +121,14 @@ class UpdateBroadcastDates implements ShouldQueue {
 
     try {
       if (!$schedule->recurrence_flag) {
+        // Convert schedule times from local to UTC
+        $startDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_dateTime, new DateTimeZone($schedule->timezone))
+            ->setTimezone('UTC');
         // Handle non-recurring schedules
-        $oneTimeDates[] = $startDateTimeUTC->toDateTimeString();
+        $broadcastDates[] = $startDateTimeUTC->toDateTimeString();
       } else {
         // Handle recurring schedules
-        $recurrentDates = $this->processRecurrentSchedule($schedule);
+        $broadcastDates = $this->processRecurrentSchedule($schedule);
       }
     } catch (Exception $e) {
       Log::error('Error processing schedule', [
@@ -124,30 +141,18 @@ class UpdateBroadcastDates implements ShouldQueue {
       // Or handle gracefully, maybe set an error state or return a default value
       return []; // Return an empty array or another appropriate value indicating failure
     }
-    // Merge and sort all dates
-//    $allDates = array_merge($oneTimeDates, $recurrentDates);
-//    usort($allDates, function ($a, $b) {
-//      return strtotime($a) - strtotime($b);
-//    });
-//    $allDates = array_map(function($date) { return strtotime($date); }, $allDates);
-//    sort($allDates); // Sorts the timestamps directly
-//    $allDates = array_map(function($timestamp) { return date('Y-m-d H:i:s', $timestamp); }, $allDates); // Convert back to string if necessary
-//
-
-    // Merging one-time and recurrent dates into a single array
-    $allDates = array_merge($oneTimeDates, $recurrentDates);
 
     try {
       // Convert all date strings to timestamps for sorting
       $allTimestamps = array_map(function ($date) {
         return strtotime($date);
-      }, $allDates);
+      }, $broadcastDates);
 
       // Sort timestamps directly
       sort($allTimestamps);
 
       // Convert the sorted timestamps back to date strings
-      $allDates = array_map(function ($timestamp) {
+      $broadcastDates = array_map(function ($timestamp) {
         return date('Y-m-d H:i:s', $timestamp);
       }, $allTimestamps);
 
@@ -162,10 +167,10 @@ class UpdateBroadcastDates implements ShouldQueue {
     }
 
     // Optionally, log the sorted dates for debugging
-//    Log::debug('All sorted broadcast dates', ['dates' => $allDates]);
+//    Log::debug('All sorted broadcast dates', ['dates' => $broadcastDates]);
 
     // Return the array of all broadcast dates
-    return $allDates;
+    return $broadcastDates;
   }
 
   protected function findClosestBroadcastDate($broadcastDates): ?Carbon {
@@ -186,9 +191,7 @@ class UpdateBroadcastDates implements ShouldQueue {
   }
 
 
-  protected function updateSchedulesIndex($closestBroadcastDate): void {
-
-    $schedule = $this->schedule;
+  protected function updateScheduleIndex($closestBroadcastDate, $schedule): void {
 
     if (!$closestBroadcastDate) {
       Log::warning('No valid closest broadcast date found', ['scheduleId' => $schedule->id]);
@@ -207,6 +210,9 @@ class UpdateBroadcastDates implements ShouldQueue {
     };
 
     try {
+      // Clear the next_broadcast field if the entry already exists
+      SchedulesIndex::where('schedule_id', $schedule->id)->update(['next_broadcast' => null]);
+
       SchedulesIndex::updateOrCreate(
           ['schedule_id' => $schedule->id],
           [
@@ -225,9 +231,9 @@ class UpdateBroadcastDates implements ShouldQueue {
 //      ]);
     } catch (Exception $e) {
       Log::error('Failed to update schedule index', [
-          'scheduleId' => $schedule->id,
-          'error'      => $e->getMessage(),
-          'team_id'    => $teamId
+          'schedule_id' => $schedule->id,
+          'error'       => $e->getMessage(),
+          'team_id'     => $teamId
       ]);
     }
   }
@@ -240,10 +246,10 @@ class UpdateBroadcastDates implements ShouldQueue {
     try {
       $details = $schedule->scheduleRecurrenceDetails;
       $timezone = new DateTimeZone($details->timezone); // Explicitly setting the timezone
-      $currentDateLocal = Carbon::now($timezone); // Current date in user's timezone
+      $currentDateTimeLocal = Carbon::now($timezone); // Current date in schedule's timezone
 
-      $startDateLocal = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_date, $timezone);
-      $endDateLocal = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_date, $timezone);
+      $startDateTimeLocal = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime, $timezone);
+      $endDateTimeLocal = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime, $timezone);
 
       // Log initial values
 //      Log::debug('Initial values', [
@@ -269,26 +275,26 @@ class UpdateBroadcastDates implements ShouldQueue {
       $recurrentDates = [];
 
       // Adjust the start date if it's in the past
-      $effectiveStartDateLocal = $startDateLocal->copy()->second(0);
+      $effectiveStartDateTimeLocal = $startDateTimeLocal->copy()->second(0);
 //      Log::debug('Adjusted effectiveStartDateLocal', [
 //          'effectiveStartDateLocal' => $effectiveStartDateLocal->toDateTimeString()
 //      ]);
 
       // Iterate over the dates until the endDateLocal
-      while ($effectiveStartDateLocal->lte($endDateLocal)) {
+      while ($effectiveStartDateTimeLocal->lte($endDateTimeLocal)) {
         // Log current date being processed
 //        Log::debug('Processing date', [
 //            'effectiveStartDateLocal' => $effectiveStartDateLocal->toDateTimeString()
 //        ]);
 
         // Check if the current date matches any of the specified days of the week
-        if (in_array(strtolower($effectiveStartDateLocal->format('l')), $daysOfWeek)) {
-          $recurrentDates[] = $effectiveStartDateLocal->copy()->second(0); // Store a copy with zeroed seconds
+        if (in_array(strtolower($effectiveStartDateTimeLocal->format('l')), $daysOfWeek)) {
+          $recurrentDates[] = $effectiveStartDateTimeLocal->copy()->second(0); // Store a copy with zeroed seconds
 //          Log::debug('Added recurrent date', [
 //              'recurrentDate' => $effectiveStartDateLocal->toDateTimeString()
 //          ]);
         }
-        $effectiveStartDateLocal->addDay(); // Move to the next day
+        $effectiveStartDateTimeLocal->addDay(); // Move to the next day
       }
 
       // Convert all local dates in the array to UTC
