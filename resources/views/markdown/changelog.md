@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: May 22, 2024\
+Last Update: May 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.2.2
+May 23, 2024
+* Fix 2FA not working correctly in user settings.
+* Layout adjustments to ShowEpisode Create and Edit pages.
+* Update payment process to use latest version of Cashier.
 
 ## v0.9.2.1
 May 22, 2024
