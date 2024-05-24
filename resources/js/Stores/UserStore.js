@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -12,8 +12,9 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 // const appSettingStore = useAppSettingStore()
-
+const page = usePage()
 const initialState = () => ({
+    user: page.props.user || {},
     currentTimeUtc: dayjs().toISOString(),
     isMobile: Boolean,
     showNavDropdown: Boolean,
@@ -27,12 +28,16 @@ const initialState = () => ({
     id: null,
     roleId: null,
     getUserDataCompleted: false,
-    hasAccount: null,
+
     isAdmin: false,
     isCreator: false,
     isNewsPerson: false,
     isVip: false,
-    isSubscriber: false,
+    // isSubscriber: false,
+    // subscription: null,
+    // isSubscriptionActive: null,
+    // hasAccount: null,
+
     oldLoggedOutId: null,
     uploadPercentage: 0,
     scrollToTopCounter: 0,
@@ -58,7 +63,9 @@ const initialState = () => ({
         'America/Halifax',   // AT
         'America/St_Johns',   // NT
     ],
-    videoSettings: {},
+    videoSettings: {
+        firstPlay: false,
+    },
     hasConsentedToCookies: false,
 })
 
@@ -71,28 +78,29 @@ export const useUserStore = defineStore('userStore', {
         },
         async fetchUserData() {
             try {
-                const response = await axios.post('/getUserStoreData');
-                this.id = response.data.id;
+                const response = await axios.post('/getUserStoreData')
+                this.id = response.data.id
                 this.loggedIn = true
                 this.isAdmin = response.data.isAdmin
                 this.isCreator = response.data.isCreator
                 this.isNewsPerson = response.data.isNewsPerson
                 this.isVip = response.data.isVip
-                this.isSubscriber = response.data.isSubscriber
-                this.hasActiveSubscription = response.data.hasActiveSubscription ?? null
-                this.hasAccount = response.data.hasAccount
-                this.hasConsentedToCookies = response.data.hasConsentedToCookies ?? null
+                // this.isSubscriber = response.data.isSubscriber
+                // this.subscription = response.data.subscription
+                // this.isSubscriptionActive = response.data.isSubscriptionActive
+                // this.hasAccount = response.data.hasAccount
+                this.hasConsentedToCookies = response.data.hasConsentedToCookies
                 this.getUserDataCompleted = true
                 // console.log('get user data in User Store')
                 await this.subscribeToUserNotifications(response.data.id)
-                await this.updateUserTimezone;
+                await this.updateUserTimezone
                 if (this.isCreator) {
-                    this.prevUrl = '/dashboard';
+                    this.prevUrl = '/dashboard'
                 } else {
-                    this.prevUrl = '/stream';
+                    this.prevUrl = '/stream'
                 }
             } catch (error) {
-                console.error('Failed to fetch user data:', error);
+                console.error('Failed to fetch user data:', error)
             }
         },
         async updateUserTimezone() {
@@ -105,15 +113,15 @@ export const useUserStore = defineStore('userStore', {
         },
         loadVideoSettings(settingsJson) {
             // Assuming settingsJson is a JSON string from the database
-            this.videoSettings = JSON.parse(settingsJson);
+            this.videoSettings = JSON.parse(settingsJson)
         },
         updateVideoSettings(newSettings) {
             // Merge new settings into the existing settings
-            this.videoSettings = { ...this.videoSettings, ...newSettings };
+            this.videoSettings = {...this.videoSettings, ...newSettings}
         },
         resetVideoSettings() {
             // Reset to default or empty settings
-            this.videoSettings = {};
+            this.videoSettings = {}
         },
         setFirstPlayFalse() {
             this.videoSettings.firstPlay = false
@@ -153,6 +161,9 @@ export const useUserStore = defineStore('userStore', {
             this.isNewsPerson = null
             this.isVip = null
             this.isSubscriber = null
+            this.subscription = null
+            this.isSubscriptionActive = null
+            this.hasAccount = null
             this.oldLoggedOutId = null
             this.uploadPercentage = 0
             this.scrollToTopCounter = 0
@@ -174,6 +185,12 @@ export const useUserStore = defineStore('userStore', {
                 this.newNotifications++
                 this.notifications.push(event.notification)
             })
+                .listen('.userSubscribed', (event) => {
+                    this.user.isSubscriber = event.isSubscriber
+                    this.user.hasAccount = event.hasAccount
+                    this.user.subscription = event.subscription
+                    this.user.isSubscriptionActive = event.isSubscriptionActive
+                })
             this.userSubscribedToNotifications = true
         },
         async fetchNotifications() {
@@ -248,7 +265,7 @@ export const useUserStore = defineStore('userStore', {
                 return dateTime // Or handle this case as appropriate for your app
             }
             if (!dateTime) {
-                return ''; // Return an empty string for invalid or null dates
+                return '' // Return an empty string for invalid or null dates
             }
             return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
         },
@@ -258,7 +275,7 @@ export const useUserStore = defineStore('userStore', {
                 return dateTime // Or handle this case as appropriate for your app
             }
             if (!dateTime) {
-                return ''; // Return an empty string for invalid or null dates
+                return '' // Return an empty string for invalid or null dates
             }
             return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
         },
@@ -268,7 +285,7 @@ export const useUserStore = defineStore('userStore', {
                 return dateTime // Or handle this case as appropriate for your app
             }
             if (!dateTime) {
-                return ''; // Return an empty string for invalid or null dates
+                return '' // Return an empty string for invalid or null dates
             }
             return dayjs.utc(dateTime).tz(this.timezone).format('YYYY-MM-DD')
         },
@@ -277,20 +294,28 @@ export const useUserStore = defineStore('userStore', {
             await axios.post('/users/update-timezone', {'timezone': this.timezone})
         },
         updateTime() {
-            this.currentTimeUtc = dayjs().toISOString();
+            this.currentTimeUtc = dayjs().toISOString()
         },
         startTimer() {
             this.timer = setInterval(() => {
-                this.updateTime();
-            }, 1000); // Update every second
+                this.updateTime()
+            }, 1000) // Update every second
         },
         stopTimer() {
-            clearInterval(this.timer);
+            clearInterval(this.timer)
         },
     },
 
     getters: {
         userCurrentTime: (state) => dayjs(state.currentTimeUtc).tz(state.timezone).format(),
+        isSubscriber: (state) => state.user.isSubscriber,
+        subscription: (state) => state.user.subscription,
+        isSubscriptionActive: (state) => state.user.isSubscriptionActive,
+        hasAccount: (state) => state.user.hasAccount,
+        // isSubscriber: false,
+        // subscription: null,
+        // isSubscriptionActive: null,
+        // hasAccount: null,
         uploadPercentageRounded(state) {
             if (this.uploadPercentage !== 0) {
                 return Math.round(state.uploadPercentage * 10) / 10

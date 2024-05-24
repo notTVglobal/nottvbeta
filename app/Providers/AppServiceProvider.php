@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Cashier;
+use Stripe\Stripe;
 
 class AppServiceProvider extends ServiceProvider
 {

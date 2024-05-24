@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SubscriptionHelper;
+use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Stripe\Customer;
+use Stripe\Exception\InvalidRequestException;
 use Stripe\Stripe;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
@@ -18,8 +21,13 @@ use Throwable;
 
 class StripeController extends Controller {
 
+  public function __construct() {
+    // Set the Stripe API key from the environment variable
+    Stripe::setApiKey(config('services.stripe.secret'));
+  }
+
   public function purchase(Request $request) {
-//        dd($request);
+
     // make a purchase
 
     // get the user
@@ -70,22 +78,58 @@ class StripeController extends Controller {
   }
 
   public function subscription() {
-    if (auth()->user()->subscribed('default')) {
-      return redirect('/stream');
+
+    $user = auth()->user();
+
+    if ($user->subscribed('default')) {
+      return back()->with('message', 'You are already subscribed. To check your subscription go to your \'account\' from the top right menu.');
     }
+
+    // Check if the user has a Stripe customer ID
+    if ($user->stripe_id) {
+      try {
+        // Attempt to retrieve the customer to see if they still exist
+        $stripeCustomer = Customer::retrieve($user->stripe_id);
+      } catch (InvalidRequestException $e) {
+        // If the customer does not exist, clear the stripe_id and create a new customer
+        if ($e->getStripeCode() === 'resource_missing') {
+          $user->stripe_id = null;
+          $user->save();
+        } else {
+          throw $e; // Rethrow any other exceptions
+        }
+      }
+    }
+
+    // If the user does not have a Stripe customer ID, create a new customer
+    if (!$user->stripe_id) {
+      $user->createAsStripeCustomer();
+    }
+
+    // Create a setup intent
+    $intent = $user->createSetupIntent();
+
+    $settings = AppSetting::first(); // Adjust the query as needed
+
+    // Process subscription settings to convert prices from cents to dollars
+    $subscriptionSettings = SubscriptionHelper::processSubscriptionSettings($settings->subscription_settings);
 
     return Inertia::render('Shop/Subscription', [
       // TODO: list customer's payment methods:
-        'payment_method' => auth()->user()->defaultPaymentMethod(),
-        'intent'         => auth()->user()->createSetupIntent(),
+        'payment_method'       => $user->defaultPaymentMethod(),
+        'intent'               => $intent,
+        'subscriptionSettings' => $subscriptionSettings,
     ]);
   }
 
   public function oneTimeContribution() {
+
+    $user = auth()->user();
+
     return Inertia::render('Shop/OneTimeContribution', [
       // TODO: list customer's payment methods:
-        'payment_method' => auth()->user()->defaultPaymentMethod(),
-        'intent'         => auth()->user()->createSetupIntent(),
+        'payment_method' => $user->defaultPaymentMethod(),
+        'intent'         => $user->createSetupIntent(),
     ]);
   }
 
@@ -99,7 +143,7 @@ class StripeController extends Controller {
       // Create a new customer if not found
       $customer = Customer::create([
           'email' => $user->email,
-          'name' => $user->name,
+          'name'  => $user->name,
       ]);
 
       // Save the customer ID in the user's record for future use
@@ -122,11 +166,11 @@ class StripeController extends Controller {
     }
 
     $paymentIntent = PaymentIntent::create([
-        'amount'   => $request->amount,
-        'currency' => 'cad',
-        'customer' => $user->stripe_id ?? null,
+        'amount'      => $request->amount,
+        'currency'    => 'cad',
+        'customer'    => $user->stripe_id ?? null,
         'description' => $description,
-        'metadata' => [
+        'metadata'    => [
             'favourite_item_id'   => $request->favourite_item_id,
             'favourite_item_type' => $request->favourite_item_type,
             'favourite_item_name' => $request->favourite_item_name,
@@ -149,6 +193,28 @@ class StripeController extends Controller {
     }
 
     return to_route('subscriptionSuccess');
+  }
+
+  public function subscriptionSuccessReturnUrl() {
+    {
+      $user = auth()->user();
+
+      // 1. Check if the user is indeed subscribed.
+      if ($user->subscribed('default')) {
+
+        // 2. Broadcast to the Echo channel the user is subscribed to and update the userStore isSubscriber to true
+        broadcast(new UserSubscribed($user));
+
+        // 3. Return the user to the subscription success page.
+        return Inertia::render('Shop/SubscriptionSuccess', [
+            'userIsSubscriber' => true,
+          // TODO: list customer's payment methods:
+            'paymentMethods'   => $user->paymentMethods(), // Adjust this line based on how you retrieve payment methods
+        ]);
+      }
+
+      return redirect()->route('stream');
+    }
   }
 
   public function subscriptionSuccess() {

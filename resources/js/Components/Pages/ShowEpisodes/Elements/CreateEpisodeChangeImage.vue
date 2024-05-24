@@ -1,16 +1,16 @@
 <template>
   <div class="mt-6">
-    <label class="block my-2 uppercase font-bold text-xs text-red-700"
+    <label class="block mb-2 uppercase font-bold dark:text-gray-200"
            for="name"
     >
-
+      Change Poster
     </label>
     <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6">
 
       <ImageUpload :image="image"
                    :modelType="'showEpisode'"
                    :modelId="showEpisodeStore.episode.id"
-                   :name="'Upload Episode Poster'"
+                   :name="'Upload Image'"
                    :maxSize="'20MB'"
                    :fileTypes="'image/jpg, image/jpeg, image/png'"
                    @reloadImage="handleReloadImage"

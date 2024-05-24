@@ -8,38 +8,41 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
 
-class ShowEpisodeFactory extends Factory
-{
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = ShowEpisode::class;
+class ShowEpisodeFactory extends Factory {
+  /**
+   * The name of the factory's corresponding model.
+   *
+   * @var string
+   */
+  protected $model = ShowEpisode::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {
+  /**
+   * Define the model's default state.
+   *
+   * @return array
+   */
+  public function definition() {
 
-      $userIds = \App\Models\User::pluck('id')->all();
-      $showIds = \App\Models\Show::pluck('id')->all();
-      $statusIds = \App\Models\ShowEpisodeStatus::pluck('id')->all();
+    $userIds = \App\Models\User::pluck('id')->all();
+    $showIds = \App\Models\Show::pluck('id')->all();
+    $statusIds = \App\Models\ShowEpisodeStatus::pluck('id')->all();
+    $creativeCommonsIds = \App\Models\CreativeCommons::pluck('id')->all();
 
-        return [
-            'name' => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
-            'description' => $this->faker->sentence(5),
-            'image_id' => function () { return Image::factory()->create()->id; },
-            'user_id' => $this->faker->randomElement($userIds),
-            'show_id' => $this->faker->randomElement($showIds),
-            'notes' => $this->faker->sentence(5),
-            'video_url' => null,
-            'video_embed_code' => null,
-            'isPublished' => '0',
-            'slug' => \Str::slug($name),
-            'show_episode_status_id' => $this->faker->randomElement($statusIds),        ];
-    }
+    return [
+        'name'                   => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
+        'description'            => $this->faker->sentence(5),
+        'image_id'               => function () {
+          return Image::factory()->create()->id;
+        },
+        'user_id'                => $this->faker->randomElement($userIds),
+        'show_id'                => $this->faker->randomElement($showIds),
+        'notes'                  => $this->faker->sentence(5),
+        'video_url'              => null,
+        'video_embed_code'       => null,
+        'isPublished'            => '0',
+        'slug'                   => \Str::slug($name),
+        'show_episode_status_id' => $this->faker->randomElement($statusIds),
+        'creative_commons_id'    => $this->faker->randomElement($creativeCommonsIds),
+    ];
+  }
 }

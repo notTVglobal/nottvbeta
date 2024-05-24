@@ -26,6 +26,7 @@ class ShowFactory extends Factory
     {
       $userIds = \App\Models\User::pluck('id')->all();
       $teamIds = \App\Models\Team::pluck('id')->all();
+      $creatorIds = \App\Models\Creator::pluck('id')->all();
 
         return [
             'name' => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
@@ -34,7 +35,8 @@ class ShowFactory extends Factory
             'user_id' => $this->faker->randomElement($userIds),
             'team_id' => $this->faker->randomElement($teamIds),
             'show_status_id' => \App\Models\ShowStatus::all()->random()->id,
-            'slug' => \Str::slug($name)
+            'slug' => \Str::slug($name),
+            'show_runner' => $this->faker->randomElement($creatorIds),
         ];
     }
 

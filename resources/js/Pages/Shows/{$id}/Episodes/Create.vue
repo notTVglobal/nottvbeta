@@ -194,39 +194,13 @@
               <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_id"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <LicensingExplained class="my-2"/>
-            </div>
-            <div>
-              <div class="license-info">
-                <h2 class="font-semibold mb-6">About The License Options:</h2>
-                <h3 class="font-semibold">Creative Commons Licenses</h3>
-                <ul>
-                  <li v-for="license in licenses.filter(l => l.type === 'Creative Commons')" :key="license.id">
-                    <strong>{{ license.name }}:</strong> {{ license.description }}
-                  </li>
-                </ul>
-
-                <h3 class="font-semibold">Legacy Copyright</h3>
-                <ul>
-                  <li v-for="license in licenses.filter(l => l.type === 'Legacy Copyright')" :key="license.id">
-                    <strong>{{ license.name }}:</strong> {{ license.description }}
-                  </li>
-                </ul>
-
-                <h3 class="font-semibold">Public Domain</h3>
-                <ul>
-                  <li v-for="license in licenses.filter(l => l.type === 'Public Domain')" :key="license.id">
-                    <strong>{{ license.name }}:</strong> {{ license.description }}
-                  </li>
-                </ul>
-              </div>
-
             </div>
 
-            <div v-if="selectedCreativeCommons" class="mb-6 w-64">
+
+            <div v-if="selectedCreativeCommons" class="w-64">
 
               <div v-if="selectedCreativeCommons === 8">
-                <input class="hidden border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                <input class="hidden border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg mb-6"
                        type="hidden"
                        v-model="selectedCopyrightYear"
                        value="null">
@@ -237,7 +211,7 @@
                 >
                   Copyright Year
                 </label>
-                <input class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                <input class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg mb-6"
                        type="number"
                        minlength="4"
                        maxlength="4"
@@ -245,8 +219,13 @@
               </div>
 
               <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
-                   class="text-xs text-red-600 mt-1"></div>
+                   class="text-xs text-red-600 mt-1 mb-6"></div>
             </div>
+
+            <LicensingExplained class="my-2"/>
+
+            <CreativeCommonsAboutTheLicenses />
+
           </div>
         </div>
 
@@ -272,6 +251,8 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 import LicensingExplained from '@/Components/Global/CreativeCommonsLicensing/LicensingExplained.vue'
 import CreateEpisodeSetDescription from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeSetDescription.vue'
+import CreativeCommonsAboutTheLicenses
+  from '@/Components/Pages/ShowEpisodes/Elements/CreativeCommonsAboutTheLicenses.vue'
 
 usePageSetup('shows/slug/episodes/create')
 
@@ -339,16 +320,7 @@ const selectedCreativeCommonsDescription = computed(() => {
 });
 
 
-const licenses = ref([
-  { id: 1, type: 'Creative Commons', name: 'CC BY (Attribution)', description: 'Allows others to distribute, remix, adapt, and build upon your work, even commercially, as long as they credit you for the original creation.' },
-  { id: 2, type: 'Creative Commons', name: 'CC BY-SA (Attribution-ShareAlike)', description: 'Similar to CC BY but requires derivatives to be licensed under identical terms.' },
-  { id: 3, type: 'Creative Commons', name: 'CC BY-ND (Attribution-NoDerivs)', description: 'Allows for redistribution, commercial and non-commercial, as long as the content is passed along unchanged and in whole, with credit to you.' },
-  { id: 4, type: 'Creative Commons', name: 'CC BY-NC (Attribution-NonCommercial)', description: 'Allows others to remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.' },
-  { id: 5, type: 'Creative Commons', name: 'CC BY-NC-SA (Attribution-NonCommercial-ShareAlike)', description: 'Lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.' },
-  { id: 6, type: 'Creative Commons', name: 'CC BY-NC-ND (Attribution-NonCommercial-NoDerivs)', description: 'Allows others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.' },
-  { id: 7, type: 'Legacy Copyright', name: 'All Rights Reserved', description: 'The creator retains all the privileges provided by copyright law, such as the right to reproduce, distribute, and display the work publicly.' },
-  { id: 8, type: 'Public Domain', name: 'No Copyright', description: 'The work is free for public use; anyone can use, modify, or share it without asking for permission or providing attribution.' }
-]);
+
 
 let submit = () => {
   if (form.video_embed_code && form.video_url) {

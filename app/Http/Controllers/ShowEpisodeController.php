@@ -81,8 +81,8 @@ class ShowEpisodeController extends Controller {
     $validatedData = Validator::make($request->all(), [
         'name'                => [
             'required',
+            'string',
             'max:255',
-          // Assuming 'accepted_if:show_id,' is a placeholder for a specific rule
             'distinct:ignore_case',
             new UniqueEpisodeName($request->show_id)
         ],
@@ -509,8 +509,8 @@ class ShowEpisodeController extends Controller {
                 'storage_location' => $showEpisode->video->storage_location ?? '',
             ],
         ],
-        'image'                      => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
-        'show'                       => [
+        'image'            => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
+        'show'             => [
             'id'                 => $show->id,
             'name'               => $show->name,
             'slug'               => $show->slug,
@@ -521,7 +521,7 @@ class ShowEpisodeController extends Controller {
             'category'           => $show->getCachedCategory()->name ?? null,
             'subCategory'        => $show->getCachedSubCategory()->name ?? null,
         ],
-        'team'                       => [
+        'team'             => [
             'name' => $show->team->name,
             'slug' => $show->team->slug,
         ],
@@ -587,15 +587,13 @@ class ShowEpisodeController extends Controller {
 
     // validate the request
     $validatedData = $request->validate([
-//            'name' => ['required', 'string', 'max:255'],
         'name'                       => [
-            Rule::excludeIf($request->name === $showEpisode->name),
             'required',
+            'string',
             'max:255',
             'distinct:ignore_case',
-            new UniqueEpisodeName($showEpisode->show_id)
+            new UniqueEpisodeName($showEpisode),
         ],
-        'show_id'                    => 'required|exists:shows,id',
         'creative_commons_id'        => 'required|integer|exists:creative_commons,id',
         'copyright_year'             => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'episode_number'             => 'nullable|string|min:1|max:10',
@@ -611,16 +609,21 @@ class ShowEpisodeController extends Controller {
         'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
     ]);
 
+    // Sanitize the name field
+    $validatedData['name'] = e($validatedData['name']);
+    // Sanitize the episode_number field
+    // Sanitize the episode_number field if it exists
+    if (array_key_exists('episode_number', $validatedData)) {
+      $validatedData['episode_number'] = e($validatedData['episode_number']);
+    }
+
     // Sanitize description
     $sanitizedDescription = Purifier::clean($validatedData['description']);
 
-    // Sanitize notes
-    $sanitizedNotes = Purifier::clean($validatedData['notes']);
-
     // Check if the video_url is not empty and is different from the existing one.
-    if (!empty($request->video_url)) {
+    if (!empty($validatedData['video_url'])) {
       // Attempt to find an existing video with the same URL for any episode
-      $existingVideo = Video::where('video_url', $request->video_url)->first();
+      $existingVideo = Video::where('video_url', $validatedData['video_url'])->first();
 
       if ($existingVideo) {
         // If a video with the same URL already exists, associate its ID with the show episode
@@ -632,7 +635,7 @@ class ShowEpisodeController extends Controller {
             'name'             => 'External video',
             'file_name'        => 'external_video_' . Str::uuid(),
             'type'             => 'video/mp4', // Assuming a default type for external videos
-            'video_url'        => $request->video_url,
+            'video_url'        => $validatedData['video_url'],
             'storage_location' => 'external',
           // 'show_episodes_id' might not be needed if you're associating via $showEpisode->video_id below
           // 'show_episodes_id' => $showEpisode->id,
@@ -645,7 +648,6 @@ class ShowEpisodeController extends Controller {
 
         // After saving the new video, set its ID as the video_id for the show episode
         $showEpisode->video_id = $video->id;
-
       }
     }
 
@@ -685,32 +687,27 @@ class ShowEpisodeController extends Controller {
 //            return $formattedDateTime;
 //        }
 
-    if ($request->release_dateTime) {
-
+    if ($validatedData['release_dateTime']) {
       // Create a Carbon instance from the DateTime string
-      $releaseDateTime = Carbon::parse($request->release_dateTime);
+      $releaseDateTime = Carbon::parse($validatedData['release_dateTime']);
 
       // Get the year from the Carbon instance
       $releaseYear = $releaseDateTime->year;
 
       // Format $utcDatetime as a string in ISO 8601 format:
-      $formattedReleaseUtcDatetime = $this->convertToUtcTime($request->release_dateTime);
-
+      $formattedReleaseUtcDatetime = $this->convertToUtcTime($validatedData['release_dateTime']);
     }
 
-    if ($request->scheduled_release_dateTime) {
-//            $formattedScheduledReleaseDate = formatDateForMySQL($request->scheduled_release_dateTime);
+    if ($validatedData['scheduled_release_dateTime']) {
       $showEpisode->show_episode_status_id = 6;
       $releaseYear = null;
 
-      $formattedScheduledUtcDatetime = $this->convertToUtcTime($request->scheduled_release_dateTime);
-
+      $formattedScheduledUtcDatetime = $this->convertToUtcTime($validatedData['scheduled_release_dateTime']);
     }
 
-    if ($showEpisode->scheduled_release_dateTime && !$request->scheduled_release_dateTime) {
+    if ($showEpisode->scheduled_release_dateTime && !$validatedData['scheduled_release_dateTime']) {
       $showEpisode->show_episode_status_id = 5;
     }
-
 
     $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
     $oldEmbedCode = $showEpisode->video_embed_code;
@@ -727,32 +724,31 @@ class ShowEpisodeController extends Controller {
 //        } else $videoUrl = $request->video_url;
 
     // update the show
-    $showEpisode->name = $request->name;
+    $showEpisode->name = $validatedData['name'];
     $showEpisode->description = $sanitizedDescription;
-    $showEpisode->episode_number = $request->episode_number;
-    $showEpisode->slug = \Str::slug($request->name);
-    $showEpisode->notes = $sanitizedNotes;
-    $showEpisode->youtube_url = $request->youtube_url;
-    $showEpisode->video_embed_code = $request->video_embed_code;
+    $showEpisode->episode_number = $validatedData['episode_number'] ?? null;
+    $showEpisode->slug = \Str::slug($validatedData['name']);
+    $showEpisode->notes = e($validatedData['notes']);
+    $showEpisode->youtube_url = $validatedData['youtube_url'];
+    $showEpisode->video_embed_code = $validatedData['video_embed_code'];
     $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
     $showEpisode->release_year = $releaseYear ?? null;
     $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
-    $showEpisode->copyrightYear = $request->copyrightYear;
-    $showEpisode->creative_commons_id = $request->creative_commons_id;
+    $showEpisode->copyrightYear = $validatedData['copyright_year'] ?? null;
+    $showEpisode->creative_commons_id = $validatedData['creative_commons_id'];
     $showEpisode->save();
 
-    if ($request->video_embed_code !== $oldEmbedCode && !$request->video_url) {
-
+    if ($validatedData['video_embed_code'] !== $oldEmbedCode && !$validatedData['video_url']) {
       // Create and save the notification
       $notification = new Notification;
       $userId = auth()->user()->id;
       $notification->user_id = $userId;
 
-      // make the image the show_episode_poster
+      // Make the image the show_episode_poster
       $notification->image_id = $showEpisode->image_id;
       $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug . '/manage';
       $notification->title = $showEpisode->name;
-      $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+      $notification->message = 'The video URL is being generated from the embed code. You will be notified when it is done.';
       $notification->save();
 
       // Trigger the event to broadcast the new notification

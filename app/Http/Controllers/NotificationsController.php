@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class NotificationsController extends Controller
 {
@@ -17,28 +19,31 @@ class NotificationsController extends Controller
     }
 
 
-    public function index()
-    {
-        try {
-            // In your code, fetch and process notifications
-            $user = auth()->user();
-            if (!$user) {
-                return response()->json(['error' => 'User not authenticated'], 401);
-            }
+  public function index()
+  {
+    try {
+      // Fetch and process notifications
+      $user = auth()->user();
+      if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+      }
 
-            $notifications = Notification::where('user_id', $user->id)
-                ->with(['image.appSetting'])
-                ->get();
+      $notifications = Notification::where('user_id', $user->id)
+          ->with(['image.appSetting'])
+          ->get();
 
-            if ($notifications->isEmpty()) {
-                return response()->json(['message' => 'No notifications found for this user.'], 200);
-            }
+      if ($notifications->isEmpty()) {
+        return response()->json(['message' => 'No notifications found for this user.'], 200);
+      }
 
-            return response()->json(['notifications' => $notifications]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while fetching notifications'], 500);
-        }
+      $notificationResource = NotificationResource::collection($notifications);
+
+      return response()->json(['notifications' => $notificationResource]);
+    } catch (\Exception $e) {
+      Log::error('Error fetching notifications: ' . $e->getMessage());
+      return response()->json(['error' => 'An error occurred while fetching notifications'], 500);
     }
+  }
 
 
     public function markAsRead($id)

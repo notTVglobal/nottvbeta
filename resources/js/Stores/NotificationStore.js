@@ -51,7 +51,7 @@ export const useNotificationStore = defineStore('notificationStore', {
             this.errorMessage = null
         },
         setGeneralServiceNotification(title, body) {
-            console.log('open modal')
+            // console.log('open modal')
             this.generalServiceNotification = {
                 'title': title,
                 'body': body,

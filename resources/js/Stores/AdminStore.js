@@ -28,6 +28,18 @@ const initialState = () => ({
     checkSendProcessing: false,
     activeStreams: [],
     fetchingActiveStreams: false,
+    settingsForm: {
+        subscriptionSettings: {
+            monthly: {
+                price: '',
+                api_id: ''
+            },
+            yearly: {
+                price: '',
+                api_id: ''
+            }
+        },
+    }
 })
 
 export const useAdminStore = defineStore('adminStore', {

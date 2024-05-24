@@ -11,7 +11,8 @@
     <td class="text-xl font-medium align-center my-auto justify-center gap-x-4 px-6 py-4 uppercase h-full">
       <!-- Example image and link setup, uncomment or adjust as needed -->
 <!--       <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
-      <div @click="router.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)" class="flex flex-row break-words gap-x-2 gap-y-2 hover:cursor-pointer">
+      <div @click="router.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)"
+           class="flex flex-row items-center break-words gap-x-2 gap-y-2 hover:cursor-pointer">
         <SingleImage :image="episode.image" :alt="episode.name" :class="`rounded-xl min-w-16 min-h-16 max-w-16 max-h-16`" />
         <span class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200 text-left">
           {{ episode.name }}
@@ -38,7 +39,7 @@
     <td class="px-6 py-4 text-right">
       <div class="dropdown dropdown-left">
         <!--                <button tabindex="0" :class="episodeStatus" @click="openEpisodeStatuses">{{ episode.episodeStatus }}</button>-->
-        <ShowEpisodeStatuses :episodeStatus="props.episode.episodeStatus"
+        <ManageShowEpisodeStatuses :episodeStatus="props.episode.episodeStatus"
                              :episodeStatusId="props.episode.episodeStatusId"
                              :episodeStatuses="props.episodeStatuses"
                              :episodeId="props.episode.id"
@@ -95,7 +96,7 @@ import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import ShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses"
+import ManageShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses"
 import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEditNote"
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 

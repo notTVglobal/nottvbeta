@@ -21,9 +21,9 @@
 
           <div v-if="userStore.isSubscriber"
                class="max-w-4xl p-4 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 text-white">
-            🌟 A huge thank you for being a vibrant part of our journey! Dive into your unique content journey and
+            🌟 A huge thank you for being a vibrant part of our adventure! Dive into your unique content journey and
             explore your payment plan and history anytime - just navigate to the top menu and select 'Account'.
-            Together, we're redefining the way the world communicates. 🌈
+            Together, we're redefining the way communities broadcast. 🌈
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl items-start">
@@ -37,7 +37,7 @@
               <template #main>Join our monthly plan to continuously support independent journalism, content creators,
                 and various funds essential for community enrichment.
               </template>
-              <template #button>Select Plan - $25</template>
+              <template #button>Select Plan - ${{ shopStore.formattedMonthlySubscriptionPrice  }}</template>
             </ContributeCard>
 
             <!-- Annual Contribution Card -->
@@ -50,7 +50,9 @@
               <template #main>Opt for an annual contribution to make a lasting impact on our mission towards a
                 decentralized and democratic media platform.
               </template>
-              <template #button>Select Plan - $250</template>
+              <template #button>
+                Select Plan - ${{ shopStore.formattedYearlySubscriptionPrice }}
+              </template>
             </ContributeCard>
 
             <!-- One-Time Contribution Card -->
@@ -348,7 +350,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import Message from '@/Components/Global/Modals/Messages'
 import ContributeCard from '@/Components/Pages/Contribute/ContributeCard.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import FavouriteSearchSelect from '@/Components/Pages/Contribute/FavouriteSearchSelect.vue'
 
 usePageSetup('upgrade')
@@ -359,7 +361,7 @@ const shopStore = useShopStore()
 
 let props = defineProps({
   user: Object,
-  selectedSubscription: null,
+  subscriptionSettings: null,
   hoverMonthly: false,
   hoverYearly: false,
   hoverForever: false,
@@ -395,6 +397,18 @@ const resetModal = () => {
   shopStore.selectedFavouriteOptions = []
   donationAmount.value = 25
 }
+
+// const formattedPrice = (price) => {
+//   return price.endsWith('.00') ? price.slice(0, -3) : price;
+// };
+//
+// const formattedMonthlyPrice = computed(() => {
+//   return formattedPrice(props.subscriptionSettings.monthly.price);
+// });
+//
+// const formattedYearlyPrice = computed(() => {
+//   return formattedPrice(props.subscriptionSettings.yearly.price);
+// });
 
 const backToSelectFavourite = () => {
   shopStore.errorMessage = ''
@@ -451,6 +465,10 @@ function startSubscription(subscription) {
   }
   router.get('/contribute/subscription')
 }
+
+onMounted(() => {
+  shopStore.loadSubscriptionSettings(props.subscriptionSettings)
+})
 
 </script>
 

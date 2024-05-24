@@ -98,7 +98,7 @@
             </div>
             <div v-if="showStore.openComponent === 'showEpisodes'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
-                <ShowEpisodesList :episodes="props.episodes" :show="props.show"
+                <ManageShowEpisodesList :episodes="props.episodes" :show="props.show"
                                   :episodeStatuses="props.episodeStatuses"/>
               </div>
             </div>
@@ -194,7 +194,7 @@ import { useTeamStore } from '@/Stores/TeamStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import ShowManageHeader from '@/Components/Pages/Shows/Layout/ShowManageHeader'
 import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
-import ShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShowEpisodesList'
+import ManageShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShowEpisodesList'
 import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCreditsList'
 import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'

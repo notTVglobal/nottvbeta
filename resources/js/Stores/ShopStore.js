@@ -14,14 +14,21 @@ const initialState = () => ({
     selectedSubscriptionPrice: null,
     donationAmount: 5, // Default or initial value
     showPaymentForm: false,
-    premiumMonthlyStripeId: 'price_1NoiAOKahp38LUVYPWtzQ8f1',
-    premiumYearlyStripeId: 'price_1NhgZTKahp38LUVY8n9Skgwf',
-    premiumForeverStripeId: 'price_1NoiBDKahp38LUVY5OGjIrCM',
     selectedFavouriteType: '',
     selectedFavourite: {},
     selectedFavouriteOptions: [],
     focusedIndex: null,
     errorMessage: '',
+    subscriptionSettings: {
+        monthly: {
+            price: '0.00',
+            api_id: ''
+        },
+        yearly: {
+            price: '0.00',
+            api_id: ''
+        }
+    },
 })
 
 export const useShopStore = defineStore('shopStore', {
@@ -75,14 +82,14 @@ export const useShopStore = defineStore('shopStore', {
         },
         monthlyContribution() {
             this.upgradeSelection = 'monthlyContribution'
-            this.upgradeStripeId = this.premiumMonthlyStripeId
-            this.selectedSubscriptionPrice = 2500
+            this.upgradeStripeId = this.subscriptionSettings.monthly.api_id
+            this.selectedSubscriptionPrice = this.subscriptionSettings.monthly.price * 100
 
         },
         yearlyContribution() {
             this.upgradeSelection = 'yearlyContribution'
-            this.upgradeStripeId = this.premiumYearlyStripeId
-            this.selectedSubscriptionPrice = 25000
+            this.upgradeStripeId = this.subscriptionSettings.yearly.api_id
+            this.selectedSubscriptionPrice = this.subscriptionSettings.yearly.price * 100
         },
         oneTimeDonation() {
             this.upgradeSelection = 'oneTimeDonation'
@@ -97,6 +104,7 @@ export const useShopStore = defineStore('shopStore', {
         changeUpgradeSelection() {
             this.upgradeSelection = ''
             this.upgradeStripeId = ''
+            this.selectedSubscriptionPrice = null
         },
         updateDonationAmount(amount) {
             const minAmount = 5;
@@ -120,6 +128,11 @@ export const useShopStore = defineStore('shopStore', {
                 console.error(`Failed to fetch options for ${type}:`, error);
             }
         },
+        loadSubscriptionSettings(subscriptionSettings) {
+            if(subscriptionSettings != null) {
+                this.subscriptionSettings = subscriptionSettings
+            }
+        }
 
     },
 
@@ -142,6 +155,15 @@ export const useShopStore = defineStore('shopStore', {
             price = (price / 100)
             return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'})
         },
+        formattedPrice: () => (price) => {
+            return price.endsWith('.00') ? price.slice(0, -3) : price;
+        },
+        formattedMonthlySubscriptionPrice() {
+            return this.formattedPrice(this.subscriptionSettings.monthly.price);
+        },
+        formattedYearlySubscriptionPrice() {
+            return this.formattedPrice(this.subscriptionSettings.yearly.price);
+        }
 
         // updateQuantity(state) {
         //     let productInCartIndex = item.findIndex(item => item.slug === state.products.slug);

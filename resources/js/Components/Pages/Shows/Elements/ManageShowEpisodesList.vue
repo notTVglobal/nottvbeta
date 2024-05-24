@@ -20,17 +20,17 @@
         <div class="flex items-start">
           <div class="text-sm font-medium">
             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-            Episode Name
+            Name
           </div>
         </div>
       </td>
 
       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        Episode Notes
+        Notes
       </td>
 
       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        Episode Notes
+        Status
       </td>
 
       <td>
@@ -41,7 +41,7 @@
 
     <tbody class="divide-y divide-gray-200">
 
-    <ShowEpisode v-for="episode in props.episodes.data"
+    <ManageShowEpisode v-for="episode in props.episodes.data"
                  :episode="episode"
                  :showSlug="props.show.slug"
                  :showName="props.show.name"
@@ -58,7 +58,7 @@
 <script setup>
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import ShowEpisode from "@/Components/Pages/Shows/Elements/ManageShowEpisode"
+import ManageShowEpisode from "@/Components/Pages/Shows/Elements/ManageShowEpisode"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
 const appSettingStore = useAppSettingStore()

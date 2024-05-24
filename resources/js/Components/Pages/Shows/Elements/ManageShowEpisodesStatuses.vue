@@ -5,7 +5,7 @@
             <div v-if="!teamStore.can.editShow || props.episodeStatusId === 9 || props.episodeStatusId === 10" class="cursor-not-allowed" :class="episodeStatusClass">{{ episodeStatus }}</div>
         </div>
         <div v-else>
-            <button :class="episodeStatusClass" @click="openEpisodeStatuses()">{{ episodeStatus }}</button>
+            <button class="h-fit py-1" :class="episodeStatusClass" @click="openEpisodeStatuses()">{{ episodeStatus }}</button>
         </div>
 
         <dialog :id="dialogId" class="modal">
