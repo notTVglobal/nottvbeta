@@ -118,12 +118,12 @@ class AddContentToSchedule implements ShouldQueue {
     // Check if 'priority' is provided, otherwise use a default value
     $priority = $data['priority'] ?? 5; // Use provided priority or default to 5
     $timezone = $data['timezone'] ?? 'UTC'; // Default to UTC if not provided
-    $startDate = $data['startDate'];
-    $endDate = $data['endDate'];
+    $startDateTime = $data['startDateTime'];
+    $endDateTime = $data['endDateTime'];
 
     // Need to keep dateTimes in the provided timezone
-    $formattedStartDate = Carbon::parse($startDate, $timezone)->toDateTimeString();
-    $formattedEndDate = Carbon::parse($endDate, $timezone)->toDateTimeString();
+    $formattedStartDateTime = Carbon::parse($startDateTime, $timezone)->toDateTimeString();
+    $formattedEndDateTime = Carbon::parse($endDateTime, $timezone)->toDateTimeString();
 
     // Log the attempt to find overlapping schedules
 //    Log::debug('Checking for overlapping schedules', [
@@ -132,9 +132,9 @@ class AddContentToSchedule implements ShouldQueue {
 //    ]);
 
     // Query for overlapping schedules
-    $overlappingSchedules = Schedule::where(function ($query) use ($formattedStartDate, $formattedEndDate) {
-      $query->whereBetween('start_time', [$formattedStartDate, $formattedEndDate])
-          ->orWhereBetween('end_time', [$formattedStartDate, $formattedEndDate]);
+    $overlappingSchedules = Schedule::where(function ($query) use ($formattedStartDateTime, $formattedEndDateTime) {
+      $query->whereBetween('start_dateTime', [$formattedStartDateTime, $formattedEndDateTime])
+          ->orWhereBetween('end_dateTime', [$formattedStartDateTime, $formattedEndDateTime]);
     })->get();
 
     // Log the results of the overlap check
@@ -164,8 +164,8 @@ class AddContentToSchedule implements ShouldQueue {
         'status'           => 'scheduled',
         'priority'         => $priority,
         'duration_minutes' => $data['duration'],
-        'start_time'       => $formattedStartDate,
-        'end_time'         => $formattedEndDate,
+        'start_dateTime'   => $formattedStartDateTime,
+        'end_dateTime'     => $formattedEndDateTime,
         'timezone'         => $timezone,
         'extra_metadata'   => json_encode([])  // Initialize as empty JSON
     ];
@@ -187,10 +187,11 @@ class AddContentToSchedule implements ShouldQueue {
         $daysOfWeekJson = array_values(array_intersect($weekDaysOrdered, $inputDaysOfWeek));
 
         // Assuming $startDateTime holds the value "2024-04-18T00:00:00-07:00"
-        $startDateTime = Carbon::parse($data['startDate']);
+        $startDateTime = Carbon::parse($data['startDateTime']);
 
-        // Extract only the time part without converting the timezone
-        $startTime = $startDateTime->format('H:i:s');
+        // Assuming $endDateTime holds the value "2024-04-18T00:00:00-07:00"
+        $endDateTime = Carbon::parse($data['endDateTime']);
+
         // Now $startTime contains only the time in "HH:mm:ss" format
 
         $recurrenceDetailsData = [
@@ -198,18 +199,9 @@ class AddContentToSchedule implements ShouldQueue {
             'frequency'             => 'weekly',
             'days_of_week'          => json_encode($daysOfWeekJson),
             'duration_minutes'      => $data['duration'],
-            'start_time'            => $startTime,  // Here, only the time part is set
-            'start_date'            => $data['startDate'],
-            'end_date'              => $data['endDate'],
+            'start_dateTime'        => $startDateTime,
+            'end_dateTime'          => $endDateTime,
             'timezone'              => $data['timezone'],
-          // Boolean values for each day based on input
-            'sunday'                => in_array('Sunday', $inputDaysOfWeek),
-            'monday'                => in_array('Monday', $inputDaysOfWeek),
-            'tuesday'               => in_array('Tuesday', $inputDaysOfWeek),
-            'wednesday'             => in_array('Wednesday', $inputDaysOfWeek),
-            'thursday'              => in_array('Thursday', $inputDaysOfWeek),
-            'friday'                => in_array('Friday', $inputDaysOfWeek),
-            'saturday'              => in_array('Saturday', $inputDaysOfWeek),
         ];
 
         // Create ScheduleRecurrenceDetails within the transaction
@@ -242,11 +234,11 @@ class AddContentToSchedule implements ShouldQueue {
 
       // Prepare the data for SchedulesIndex
       $schedulesIndexData = [
-          'team_id'        => $teamId,
+          'team_id'        => $teamId ?? null,
           'content_id'     => $content->id,
           'content_type'   => get_class($content),
           'schedule_id'    => $schedule->id,
-          'next_broadcast' => $schedule->start_date,  // Assuming start_date is the next broadcast
+          'next_broadcast' => $schedule->start_dateTime,  // Assuming start_dateTime is the next broadcast
       ];
 
       // Create the SchedulesIndex entry
@@ -257,7 +249,7 @@ class AddContentToSchedule implements ShouldQueue {
       DB::commit();
 
       // Dispatch the job to update broadcast dates for this schedule
-      ScheduleUpdateShowBroadcastDates::dispatch($schedule);
+      UpdateBroadcastDates::dispatch($schedule);
 
       $meta = [
           'isSaving'           => false,
@@ -289,7 +281,7 @@ class AddContentToSchedule implements ShouldQueue {
 
       $scheduleDetails = $this->constructScheduleDetails($shortContentType, $content->id, (object) $scheduleData);
       Log::debug('tec21: after construct details');
-      Log::debug('tec21: broadcast Show Schedule Details Updated from ScheduleUpdateShowBroadcastDates Job', $scheduleData);
+      Log::debug('tec21: broadcast Show Schedule Details Updated from UpdateBroadcastDates Job', $scheduleData);
 
       broadcast(new ShowScheduleDetailsUpdated(
           $scheduleDetails['contentType'],
@@ -319,8 +311,7 @@ class AddContentToSchedule implements ShouldQueue {
    * @param object $scheduleData
    * @return array
    */
-  private function constructScheduleDetails($contentType, $contentId, object $scheduleData): array
-  {
+  private function constructScheduleDetails($contentType, $contentId, object $scheduleData): array {
     $extraMetadata = $scheduleData->extra_metadata;
 
     // Decode the JSON string into a PHP object
@@ -333,12 +324,12 @@ class AddContentToSchedule implements ShouldQueue {
       $daysOfWeek = []; // Default to an empty array if not found
     }
 
-    $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $scheduleData->start_time, $scheduleData->timezone)
+    $startDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $scheduleData->start_dateTime, $scheduleData->timezone)
         ->setTimezone('UTC')
         ->toDateTimeString();
 
-    // Convert end_time to UTC
-    $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $scheduleData->end_time, $scheduleData->timezone)
+    // Convert end_dateTime to UTC
+    $endDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $scheduleData->end_dateTime, $scheduleData->timezone)
         ->setTimezone('UTC')
         ->toDateTimeString();
 
@@ -346,8 +337,8 @@ class AddContentToSchedule implements ShouldQueue {
     return [
         'contentType'     => $contentType,
         'contentId'       => $contentId,
-        'startTime'       => $startTimeUTC,
-        'endTime'         => $endTimeUTC,
+        'startDateTime'   => $startDateTimeUTC,
+        'endDateTime'     => $endDateTimeUTC,
         'timezone'        => 'UTC', // Since we're converting to UTC
 //        'broadcastDates'  => $scheduleData->broadcast_dates, // we don't have this yet, the job just got dispatched.
         'durationMinutes' => $scheduleData->duration_minutes,
@@ -356,8 +347,6 @@ class AddContentToSchedule implements ShouldQueue {
         'type'            => $scheduleData->recurrence_details_id ? 'recurring' : 'one-time',
     ];
   }
-
-
 
 
   // Function to generate a user-friendly string of days
@@ -390,7 +379,7 @@ class AddContentToSchedule implements ShouldQueue {
   protected function generateScheduleDetailsString($recurrenceDetailsData): string {
     $formattedDaysOfWeek = implode(', ', json_decode($recurrenceDetailsData['days_of_week'], true));
 
-    return "Recurring schedule starting from " . $recurrenceDetailsData['start_time'] . $recurrenceDetailsData['timezone'] .
+    return "Recurring schedule starting from " . $recurrenceDetailsData['start_dateTime'] . $recurrenceDetailsData['timezone'] .
         " on " . $formattedDaysOfWeek . " for a duration of " . $recurrenceDetailsData['duration_minutes'] . " minutes each session.";
   }
 

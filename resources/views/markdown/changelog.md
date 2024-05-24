@@ -3,6 +3,10 @@
 Last Update: May 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.2.3
+May 23, 2024
+* Fix the schedule, not updating correctly (in progress).
+
 ## v0.9.2.2
 May 23, 2024
 * Fix 2FA not working correctly in user settings.

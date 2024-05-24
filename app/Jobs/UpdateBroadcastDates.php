@@ -15,7 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
+class UpdateBroadcastDates implements ShouldQueue {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
   // TODO: This runs every time an object gets added to the schedule.
@@ -91,24 +91,24 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
 //        'timezone' => 'America/Vancouver'
 //    ]);
 //
-//    Log::debug('this is the $schedule->start_time: ' . $schedule->start_time);
+//    Log::debug('this is the $schedule->start_dateTime: ' . $schedule->start_dateTime);
 
     // Convert schedule times from local to UTC
-    $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, new DateTimeZone($schedule->timezone))
+    $startDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_dateTime, new DateTimeZone($schedule->timezone))
         ->setTimezone('UTC');
 
 //    Log::debug('Converted time to UTC', [
-//        'localTime' => $schedule->start_time,
+//        'localTime' => $schedule->start_dateTime,
 //        'UTCTime'   => $startTimeUTC->toDateTimeString(),  // Should log '2024-05-09 02:30:00'
 //        'timezone'  => $schedule->timezone
 //    ]);
 
-//    Log::debug('Converted time to UTC', ['localTime' => $schedule->start_time, 'UTCTime' => $startTimeUTC->toDateTimeString(), 'timezone' => $schedule->timezone]);
+//    Log::debug('Converted time to UTC', ['localTime' => $schedule->start_dateTime, 'UTCTime' => $startTimeUTC->toDateTimeString(), 'timezone' => $schedule->timezone]);
 
     try {
       if (!$schedule->recurrence_flag) {
         // Handle non-recurring schedules
-        $oneTimeDates[] = $startTimeUTC->toDateTimeString();
+        $oneTimeDates[] = $startDateTimeUTC->toDateTimeString();
       } else {
         // Handle recurring schedules
         $recurrentDates = $this->processRecurrentSchedule($schedule);
@@ -196,28 +196,15 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
       return;
     }
 
-    // Extract content_type and content_id from the schedule
+// Extract content_type and content_id from the schedule
     $contentType = $schedule->content_type;
     $contentId = $schedule->content_id;
 
-    $teamId = null;
-    if ($contentType === 'App\Models\Show') {
-      // Assuming Show model has direct access to a team_id or its team relationship
-      $teamId = $schedule->content->team_id;  // Ensure this is correct based on your Show model's relationships
-    } elseif ($contentType === 'App\Models\ShowEpisode') {
-      // Make sure to access 'show' relationship only if the content is ShowEpisode
-      if (isset($schedule->content->show)) {
-        $teamId = $schedule->content->show->team_id;
-      } else {
-        Log::error('Show relationship not loaded for ShowEpisode', ['contentId' => $contentId]);
-      }
-    }
-
-    if (!$teamId) {
-      Log::error('Failed to find team ID for schedule', ['scheduleId' => $schedule->id, 'contentType' => $contentType]);
-
-      return;
-    }
+    $teamId = match ($contentType) {
+      'App\Models\Show', 'App\Models\Movie' => $schedule->content->team_id ?? null,
+      'App\Models\ShowEpisode' => $schedule->content->show->team_id ?? null,
+      default => null,
+    };
 
     try {
       SchedulesIndex::updateOrCreate(
@@ -226,7 +213,7 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
               'next_broadcast' => $closestBroadcastDate->toDateTimeString(),
               'content_type'   => $contentType,
               'content_id'     => $contentId,
-              'team_id'        => $teamId
+              'team_id'        => $teamId ?? null
           ]
       );
 //      Log::debug('Schedule index updated with next broadcast date', [
@@ -321,14 +308,13 @@ class ScheduleUpdateShowBroadcastDates implements ShouldQueue {
     } catch (Exception $e) {
       Log::error('Failed to process recurrent schedule', [
           'scheduleId' => $schedule->id,
-          'error' => $e->getMessage(),
-          'trace' => $e->getTraceAsString()
+          'error'      => $e->getMessage(),
+          'trace'      => $e->getTraceAsString()
       ]);
       // Rethrow or handle the exception as needed
       throw new Exception("Failed to process schedule: " . $e->getMessage());
     }
   }
-
 
 
 }

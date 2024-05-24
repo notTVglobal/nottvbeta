@@ -6,14 +6,14 @@ use App\Jobs\UpdateImageReferencesJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
-class ImagesUpdateReferencesCommand extends Command
+class UpdateImagesReferences extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'images:update-references';
+    protected $signature = 'update:image-references';
 
     /**
      * The console command description.

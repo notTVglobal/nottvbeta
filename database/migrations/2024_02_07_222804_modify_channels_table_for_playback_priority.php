@@ -52,10 +52,10 @@ return new class extends Migration
 
         // Re-add the dropped columns
         $table->tinyInteger('isLive')->after('id'); // Adjust placement as necessary
-        $table->unsignedBigInteger('current_video_id')->nullable()->after('some_column'); // Adjust 'some_column' to correctly place it
-        $table->foreign('current_video_id', 'channels_current_video_id_foreign') // Ensure the foreign key constraint name matches
-        ->references('id')->on('some_table'); // Replace 'some_table' with the correct table name
-        $table->string('stream', 255)->nullable()->after('current_video_id');
+        $table->unsignedBigInteger('current_video_id')->nullable();
+        $table->foreign('current_video_id', 'channels_current_video_id_foreign')
+        ->references('id')->on('videos');
+        $table->string('stream', 255)->nullable();
       });
     }
 };

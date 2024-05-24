@@ -7,7 +7,7 @@ use App\Models\NewsRssFeed;
 use App\Jobs\FetchRssFeedItemsJob;
 use Illuminate\Support\Facades\Log;
 
-class RssFeedsFetchCommand extends Command
+class FetchRssFeeds extends Command
 {
 
     /**
@@ -15,7 +15,7 @@ class RssFeedsFetchCommand extends Command
      *
      * @var string
      */
-  protected $signature = 'fetch:rssFeeds';
+  protected $signature = 'fetch:rss-feeds';
 
     /**
      * The console command description.

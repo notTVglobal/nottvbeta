@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 use App\Services\ImageService;
 
-class RssFeedsPurgeCommand extends Command
+class PurgeRssFeeds extends Command
 {
-    protected $signature = 'purge:rssFeed';
+    protected $signature = 'purge:rss-feeds';
     protected $description = 'Purge RSS feed items from the temp table that are older than 30 days';
 
     public function handle()

@@ -427,7 +427,7 @@ class SchedulesController extends Controller {
 
     // Eager load schedules but limit the initially fetched set
     $schedules = Schedule::with(['content.image.appSetting'])
-        ->whereBetween('start_time', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])
+        ->whereBetween('start_dateTime', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])
         ->get(); // Adjust the range as necessary
 
     Log::info('Fetched schedules:', $schedules->toArray());
@@ -437,18 +437,18 @@ class SchedulesController extends Controller {
       $localStart = $userRequestedStartOfWeekUTC->copy()->setTimezone($schedule->timezone);
       $localEnd = $userRequestedEndOfWeekUTC->copy()->setTimezone($schedule->timezone);
 
-      $result = $schedule->start_time <= $localEnd && $schedule->end_time >= $localStart;
+      $result = $schedule->start_dateTime <= $localEnd && $schedule->end_dateTime >= $localStart;
       Log::info('Filtering schedule', [
           'schedule_id' => $schedule->id,
-          'start_time'  => $schedule->start_time,
-          'end_time'    => $schedule->end_time,
+          'start_dateTime'  => $schedule->start_dateTime,
+          'end_dateTime'    => $schedule->end_dateTime,
           'local_start' => $localStart,
           'local_end'   => $localEnd,
           'result'      => $result
       ]);
 
       return $result;
-    })->sortBy('start_time');
+    })->sortBy('start_dateTime');
 
     Log::info('Filtered schedules:', $filteredSchedules->toArray());
 
@@ -484,8 +484,8 @@ class SchedulesController extends Controller {
 //
 //          Log::info('Mapped broadcast date', [
 //              'schedule_id' => $schedule->id,
-//              'start_time'  => $startTime->format('c'),
-//              'end_time'    => $endTime->format('c'),
+//              'start_dateTime'  => $startTime->format('c'),
+//              'end_dateTime'    => $endTime->format('c'),
 //              'duration'    => $schedule->duration_minutes
 //          ]);
 //
@@ -560,8 +560,8 @@ class SchedulesController extends Controller {
 //
 //    // Fetch all schedules in one go within the specified range
 //    $allSchedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-//        ->whereBetween('start_time', [$now, $endPeriod])
-//        ->orderBy('start_time')
+//        ->whereBetween('start_dateTime', [$now, $endPeriod])
+//        ->orderBy('start_dateTime')
 //        ->get();
 //
 //    // Iterate over the next 6 days
@@ -571,8 +571,8 @@ class SchedulesController extends Controller {
 //      $dayEnd = $dayStart->copy()->addHours(6);
 //
 //      $daySchedules = $allSchedules->filter(function ($schedule) use ($dayStart, $dayEnd) {
-//        // Convert schedule's start_time to UTC for accurate comparison
-//        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone)
+//        // Convert schedule's start_dateTime to UTC for accurate comparison
+//        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_dateTime, $schedule->timezone)
 //            ->setTimezone('UTC');
 //
 //        return $scheduleStartUtc->between($dayStart, $dayEnd);
@@ -600,12 +600,12 @@ class SchedulesController extends Controller {
 //        return [
 ////            'content' => $content?->toArray(),
 ////          // Include additional schedule attributes as needed
-////            'start_time' => $schedule->start_time->toDateTimeString(),
-////            'end_time' => $schedule->end_time->toDateTimeString(),
+////            'start_dateTime' => $schedule->start_dateTime->toDateTimeString(),
+////            'end_dateTime' => $schedule->end_dateTime->toDateTimeString(),
 //            'content'            => $content,
 //            'type'               => $schedule->type ?? null, // varchar(255) Discriminator: show, movie, trailer, live stream
-//            'start_time'         => $schedule->start_time ?? null, // datetime
-//            'end_time'           => $schedule->end_time ?? null, // datetime
+//            'start_dateTime'         => $schedule->start_dateTime ?? null, // datetime
+//            'end_dateTime'           => $schedule->end_dateTime ?? null, // datetime
 //            'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
 //            'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
 //            'recurrence_flag'    => $schedule->recurence_flag ?? null,
@@ -633,8 +633,8 @@ class SchedulesController extends Controller {
 //
 //      // Fetch schedules within the current segment.
 //      $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-//          ->whereBetween('start_time', [$segmentStart, $segmentEnd])
-//          ->orderBy('start_time')
+//          ->whereBetween('start_dateTime', [$segmentStart, $segmentEnd])
+//          ->orderBy('start_dateTime')
 //          ->get()
 //          ->map(function ($schedule) {
 //            // Preload the 'show' relationship for ShowEpisode content
@@ -669,8 +669,8 @@ class SchedulesController extends Controller {
 //            return [
 //                'content'            => $content,
 //                'type'               => $schedule->type ?? null, // varchar(255) Discriminator: show, movie, trailer, live stream
-//                'start_time'         => $schedule->start_time ?? null, // datetime
-//                'end_time'           => $schedule->end_time ?? null, // datetime
+//                'start_dateTime'         => $schedule->start_dateTime ?? null, // datetime
+//                'end_dateTime'           => $schedule->end_dateTime ?? null, // datetime
 //                'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
 //                'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
 //                'recurrence_flag'    => $schedule->recurence_flag ?? null,
@@ -773,11 +773,11 @@ class SchedulesController extends Controller {
 //  private function fetchSchedules(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
 //
 //    return Schedule::where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
-//      $query->whereBetween('start_time', [$userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC])
+//      $query->whereBetween('start_dateTime', [$userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC])
 //          ->with('scheduleRecurrenceDetails')
 //          ->orWhere('recurrence_flag', true); // Include recurring schedules
 //    })
-//        ->orderBy('start_time')
+//        ->orderBy('start_dateTime')
 //        ->get()
 //        ->flatMap(function ($schedule) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
 //          // If the schedule is recurring, generate instances for each recurrence within the week
@@ -800,10 +800,10 @@ class SchedulesController extends Controller {
     // Eagerly load scheduleRecurrenceDetails for all Schedule instances
     $schedules = Schedule::with('scheduleRecurrenceDetails')
         ->where(function ($query) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
-          $query->whereBetween('start_time', [$userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC])
+          $query->whereBetween('start_dateTime', [$userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC])
               ->orWhere('recurrence_flag', true); // Include recurring schedules
         })
-        ->orderBy('start_time')
+        ->orderBy('start_dateTime')
         ->get();
 
     // TODO: Optimize the conditional eager loading for polymorphic `content` relationships.
@@ -887,7 +887,7 @@ class SchedulesController extends Controller {
 
     for ($date = $localStartOfWeek; $date->lte($localEndOfWeek); $date->addDay()) {
       // Ensure the date's time is set to the recurrence start time before comparing
-      $dateTimeWithStartTime = $date->copy()->setTimeFromTimeString($recurrenceDetails->start_time);
+      $dateTimeWithStartTime = $date->copy()->setTimeFromTimeString($recurrenceDetails->start_dateTime);
 
       // Skip the iteration if the dateTimeWithStartTime is outside the recurrence period
       if (($recurrenceStartDate && $dateTimeWithStartTime < $recurrenceStartDate) ||
@@ -915,7 +915,7 @@ class SchedulesController extends Controller {
           $instances[] = [
               'id'              => $uniqueId, // Use the generated unique ID
               'type'            => 'show',
-              'start_time'      => $dateTimeUTC->toIso8601String(),
+              'start_dateTime'      => $dateTimeUTC->toIso8601String(),
               'content'         => [
                   'show' => $showResource->resolve(), // Resolve to get an array
               ],
@@ -926,7 +926,7 @@ class SchedulesController extends Controller {
           // Handle other content types or absence of content
           $instances[] = [
               'id'              => $uniqueId, // Use the generated unique ID
-              'start_time'      => $dateTimeUTC->toIso8601String(),
+              'start_dateTime'      => $dateTimeUTC->toIso8601String(),
               'durationMinutes' => $recurrenceDetails->duration_minutes,
             // Include minimal details or indicate absence of detailed content
               'content'         => [], // Placeholder for non-Show content
@@ -953,7 +953,7 @@ class SchedulesController extends Controller {
 //      // Check if this day is one of the recurrence days
 //      if (in_array($date->englishDayOfWeek, $daysOfWeek)) {
 //        // Schedule's start time in local timezone
-//        $instanceDateTime = $date->copy()->setTimeFromTimeString($recurrenceDetails->start_time);
+//        $instanceDateTime = $date->copy()->setTimeFromTimeString($recurrenceDetails->start_dateTime);
 //        // Convert the instance back to UTC
 //        $instances[] = $instanceDateTime->tz('UTC');
 //      }
@@ -1033,8 +1033,8 @@ class SchedulesController extends Controller {
 //
 //        $instance = clone $schedule;
 //        // Adjust the date of the cloned instance to match the recurrence date
-//        $instance->start_time = $date->setTime($schedule->start_time->hour, $schedule->start_time->minute);
-//        $instance->end_time = $date->setTime($schedule->end_time->hour, $schedule->end_time->minute);
+//        $instance->start_dateTime = $date->setTime($schedule->start_dateTime->hour, $schedule->start_dateTime->minute);
+//        $instance->end_dateTime = $date->setTime($schedule->end_dateTime->hour, $schedule->end_dateTime->minute);
 //
 //        $instances[] = $this->transformSchedule($instance);
 //      }
@@ -1064,8 +1064,8 @@ class SchedulesController extends Controller {
 //
 //          Log::info('Mapped broadcast date', [
 //              'schedule_id' => $schedule->id,
-//              'start_time' => $startTime->format('c'),
-//              'end_time' => $endTime->format('c'),
+//              'start_dateTime' => $startTime->format('c'),
+//              'end_dateTime' => $endTime->format('c'),
 //              'duration' => $schedule->duration_minutes
 //          ]);
 //
@@ -1114,8 +1114,8 @@ class SchedulesController extends Controller {
 //    return [
 //        'id'                 => $schedule->id,
 //        'type'               => $schedule->type ?? null,
-//        'start_time'         => $schedule->start_time->toDateTimeString() ?? null,
-//        'end_time'           => $schedule->end_time->toDateTimeString() ?? null,
+//        'start_dateTime'         => $schedule->start_dateTime->toDateTimeString() ?? null,
+//        'end_dateTime'           => $schedule->end_dateTime->toDateTimeString() ?? null,
 //        'durationMinutes'    => $schedule->duration_minutes,
 //        'status'             => $schedule->status ?? null,
 //        'priority'           => $schedule->priority ?? null,

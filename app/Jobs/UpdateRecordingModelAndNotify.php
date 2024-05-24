@@ -64,7 +64,7 @@ class UpdateRecordingModelAndNotify  implements ShouldQueue {
           'model_type' => $modelType,
           'model_id' => $model->id,
       ]);
-      Log::info('Recording model updated', ['modelType' => $modelType, 'modelId' => $model->id]);
+//      Log::debug('Recording model updated', ['modelType' => $modelType, 'modelId' => $model->id]);
 
       // Assuming $model has been determined as either a Show or ShowEpisode
       $title = "New Recording Available";
@@ -89,7 +89,7 @@ class UpdateRecordingModelAndNotify  implements ShouldQueue {
       if (!empty($message) && !empty($url) && isset($team)) {
         // Dispatch the notification job
         SendTeamMembersNotificationJob::dispatch($team, $title, $message, $url);
-        Log::info('Notification job dispatched', ['teamId' => $team->id, 'message' => $message]);
+//        Log::debug('Notification job dispatched', ['teamId' => $team->id, 'message' => $message]);
       }
     } else {
       Log::warning('Model not found for recording linkage', ['streamName' => $streamName]);

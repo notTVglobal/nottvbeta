@@ -6,14 +6,14 @@ use App\Jobs\SchedulePurgeExpiredSchedules;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class SchedulePurge extends Command
+class PurgeSchedule extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'schedule:purge';
+    protected $signature = 'purge:schedule';
 
     /**
      * The console command description.

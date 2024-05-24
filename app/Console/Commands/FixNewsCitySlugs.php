@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\NewsCity;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class FixNewsCitySlugs extends Command
 {
@@ -29,7 +30,7 @@ class FixNewsCitySlugs extends Command
       $newSlug = $baseSlug;
       if (!empty($slugCounts[$baseSlug])) {
         $slugCounts[$baseSlug]++;
-        $newSlug = $baseSlug . '-' . $newsCity->province->abbreviation;
+        $newSlug = $baseSlug . '-' . strtolower($newsCity->province->abbreviation);
       } else {
         $slugCounts[$baseSlug] = 1;
       }

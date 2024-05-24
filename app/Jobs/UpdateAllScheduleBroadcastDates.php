@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class ScheduleUpdateAllScheduleBroadcastDates implements ShouldQueue {
+class UpdateAllScheduleBroadcastDates implements ShouldQueue {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
@@ -39,11 +39,11 @@ class ScheduleUpdateAllScheduleBroadcastDates implements ShouldQueue {
   public function handle() {
     // Fetch schedules in chunks to manage memory usage and eager load related models
     Schedule::with(['content', 'scheduleRecurrenceDetails', 'scheduleIndexes'])
-//        ->where('end_time', '>=', now())  // Assuming you want to update only active/future schedules
+//        ->where('end_dateTime', '>=', now())  // Assuming you want to update only active/future schedules
         ->chunk(100, function ($schedules) {
           foreach ($schedules as $schedule) {
             // Directly dispatch the job for each schedule
-            ScheduleUpdateShowBroadcastDates::dispatch($schedule);
+            UpdateBroadcastDates::dispatch($schedule);
           }
         });
   }

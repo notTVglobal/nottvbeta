@@ -9,6 +9,9 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const initialState = () => ({
+    show: {}, // new as of 2024-05-23
+    episodes: {}, // 2024-05-23 (changed from Array to Object)
+    episodeStatuses: [], // new as of 2024-05-23
     id: null,
     name: '',
     slug: '',
@@ -27,7 +30,6 @@ const initialState = () => ({
     description: '',
     posterName: [],
     posterId: [0],
-    episodes: [],
     team_id: 'team id',
     episodePoster: '',
     noteEdit: 0,
@@ -54,7 +56,7 @@ export const useShowStore = defineStore('showStore', {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
         },
-        initializeShow(show) {
+        initializeShow(show, episodes, episodeStatuses) {
             // console.log('initializeShow')
 
             let meta = {};
@@ -67,6 +69,9 @@ export const useShowStore = defineStore('showStore', {
             }
 
             this.$patch({
+                show: show, // new as of 2024-05-23
+                episodes: episodes, // new as of 2024-05-23
+                episodeStatuses: episodeStatuses, // new as of 2024-05-23
                 id: show.id,
                 name: show.name,
                 slug: show.slug,

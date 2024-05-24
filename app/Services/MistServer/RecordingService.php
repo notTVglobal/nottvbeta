@@ -35,7 +35,7 @@ class RecordingService extends MistServerService {
       $recording->path = $fullPushUri;
       $recording->file_extension = 'mkv';
       $recording->comment = 'Recorded by ' . Auth::user()->name; // Ensure authenticated user is available
-      $recording->start_time = Carbon::now(); // Set the start_time to the current time
+      $recording->start_dateTime = Carbon::now(); // Set the start_dateTime to the current time
       $recording->save();
 
 //      Log::debug('2d recording started in RecordingService');

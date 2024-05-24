@@ -58,6 +58,7 @@ $ php artisan storage:link
 ```bash
 $ php artisan migrate
 $ php artisan db:seed --class=FirstRunSeeder
+NOTE: __ $ php artisan db:seed __ includes the FirstRunSeeder and TestDataSeeder (only run this if you want the test data)
 $ php artisan slugs:update
 $ php artisan app:set-first-run-settings
 ```

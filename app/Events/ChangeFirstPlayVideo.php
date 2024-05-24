@@ -25,7 +25,7 @@ class ChangeFirstPlayVideo implements ShouldBroadcastNow {
    */
   public function __construct($videoData) {
     $this->videoData = $videoData;
-    Log::debug('ChangeFirstPlayVideo constructed', ['videoData' => $videoData]);
+//    Log::debug('ChangeFirstPlayVideo constructed', ['videoData' => $videoData]);
   }
 
   /**
@@ -51,7 +51,7 @@ class ChangeFirstPlayVideo implements ShouldBroadcastNow {
             'name' => $this->videoData->name ?? null,
         ]
     ];
-    Log::debug('Broadcasting video data', $broadcastData);
+//    Log::debug('Broadcasting video data', $broadcastData);
     return $broadcastData;
   }
 }

@@ -12,7 +12,7 @@ class UpdateSlugs extends Command
      *
      * @var string
      */
-    protected $signature = 'slugs:update';
+    protected $signature = 'update:slugs';
 
     /**
      * The console command description.

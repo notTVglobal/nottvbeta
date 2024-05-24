@@ -21,15 +21,15 @@ class Schedule extends Model {
       'status', // scheduled, live, completed, cancelled
       'priority', // defaults to 0
       'duration_minutes',
-      'start_time',
-      'end_time',
+      'start_dateTime',
+      'end_dateTime',
       'timezone',
       'extra_metadata',
   ];
 
   protected $casts = [
-      'start_time'      => 'datetime',
-      'end_time'        => 'datetime',
+      'start_dateTime'      => 'datetime',
+      'end_dateTime'        => 'datetime',
       'broadcast_dates' => 'json',
       'extra_metadata'  => 'json',
     // other casts

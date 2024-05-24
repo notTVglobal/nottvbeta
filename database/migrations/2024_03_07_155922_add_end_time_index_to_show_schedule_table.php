@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
       Schema::table('show_schedule', function (Blueprint $table) {
-        // Add an index to the 'end_time' column
+        // Add an index to the 'end_dateTime' column
         $table->index('end_time', 'show_schedule_end_time_index');
       });
     }
@@ -27,7 +27,7 @@ return new class extends Migration
     public function down()
     {
       Schema::table('show_schedule', function (Blueprint $table) {
-        // Remove the index from the 'end_time' column
+        // Remove the index from the 'end_dateTime' column
         $table->dropIndex('show_schedule_end_time_index');
       });
     }

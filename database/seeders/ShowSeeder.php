@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Show;
@@ -24,6 +25,10 @@ class ShowSeeder extends Seeder
 //            'image_id' => '4'
 //        ]);
 
-        \App\Models\Show::factory(5)->create();
+      $teams = Team::all();
+
+      foreach ($teams as $team) {
+        Show::factory(5)->forTeam($team->id)->create();
+      }
     }
 }

@@ -42,7 +42,7 @@ class SchedulePurgeExpiredSchedules implements ShouldQueue
     public function handle(): void {
       try {
         // Use chunkById to efficiently process large sets of expired schedules
-        Schedule::where('end_time', '<', now())
+        Schedule::where('end_dateTime', '<', now())
             ->chunkById(100, function ($schedules) {
               foreach ($schedules as $schedule) {
                 DB::beginTransaction();

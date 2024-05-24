@@ -15,8 +15,8 @@ class Recording extends Model {
       'path',
       'file_extension',
       'mime_type',
-      'start_time',
-      'end_time',
+      'start_dateTime',
+      'end_dateTime',
       'bytes_recorded',
       'seconds_spent_recording',
       'total_milliseconds_recorded',
@@ -31,8 +31,8 @@ class Recording extends Model {
   ];
 
   protected $dates = [
-      'start_time',
-      'end_time',
+      'start_dateTime',
+      'end_dateTime',
   ];
 
   // Cast attributes to appropriate data types (optional)

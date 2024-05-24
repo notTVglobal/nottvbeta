@@ -21,9 +21,9 @@ class TestDataSeeder extends Seeder
             TeamMemberSeeder::class, // Seeds members of teams, linking users to specific teams.
             ShowSeeder::class, // Seeds data for shows.
             ShowEpisodeSeeder::class, // Seeds individual episodes for each show.
-            ScheduleSeeder::class, // Seeds the schedule.
             ShopSeeder::class, // Seeds product categories and product data.
             NewsStorySeeder::class, // Seeds news stories.
+            MovieSeeder::class, // Seeds movies.
             PlaylistWithItemsSeeder::class, // Seeds channel playlists with playlist items and movies, movie trailers, show episodes, other content and news stories.
         ]);
     }

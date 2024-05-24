@@ -98,8 +98,7 @@
             </div>
             <div v-if="showStore.openComponent === 'showEpisodes'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
-                <ManageShowEpisodesList :episodes="props.episodes" :show="props.show"
-                                  :episodeStatuses="props.episodeStatuses"/>
+                <ManageShowEpisodesList />
               </div>
             </div>
             <!--              </div>-->
@@ -245,7 +244,7 @@ const goLive = () => {
 }
 
 onMounted(() => {
-  showStore.initializeShow(props.show)
+  showStore.initializeShow(props.show, props.episodes, props.episodeStatuses)
   console.log(`Subscribing to channel creator.show.${props.show.id}`)
 
   // Echo.private(`creator.show.${props.show.id}`)

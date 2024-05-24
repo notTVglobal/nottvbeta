@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AppSetting;
 use Illuminate\Console\Command;
 
-class SetFirstRunAppSettings extends Command
+class AppSetFirstRunSettings extends Command
 {
   /**
    * The name and signature of the console command.

@@ -630,7 +630,8 @@
                       <pre data-prefix="14."><code>Run: npm install</code></pre>
                       <pre data-prefix="15."><code>Run: sail up</code></pre>
                       <pre data-prefix="16."><code>Run: sail php artisan migrate</code></pre>
-                      <pre data-prefix="17."><code>Run: sail php artisan db:seed (for testing)</code></pre>
+                      <pre data-prefix="17.1"><code>Run This: sail php artisan db:seed (for testing)</code></pre>
+                      <pre data-prefix="17.2"><code>Or Run That: sail php artisan db:seed --class=FirstRunSeeder (seed the database without test data)</code></pre>
                       <pre data-prefix="18."><code>Run: sail php artisan slugs:update</code></pre>
                       <pre data-prefix="19."><code>Run: sail php artisan app:set-first-run-settings</code></pre>
 

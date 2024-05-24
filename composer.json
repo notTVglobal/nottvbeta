@@ -31,7 +31,8 @@
         "pion/laravel-chunk-upload": "^1.5",
         "predis/predis": "^2.1",
         "pusher/pusher-php-server": "^7.0",
-        "tightenco/ziggy": "^2.2"
+        "tightenco/ziggy": "^2.2",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

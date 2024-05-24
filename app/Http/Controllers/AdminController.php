@@ -60,13 +60,13 @@ class AdminController extends Controller {
       $activeStreams = $this->playbackService->activeStreams();
 
       // Log the raw data received from the playback service
-      Log::debug('Raw active streams data received from service.', ['activeStreams' => $activeStreams]);
+//      Log::debug('Raw active streams data received from service.', ['activeStreams' => $activeStreams]);
 
       // Extract the 'active_streams' part from the fetched data
       $activeStreamData = $activeStreams['active_streams'] ?? []; // Ensure correct key access based on your structure
 
       // Log the extracted active stream names
-      Log::debug('Extracted active stream names.', ['activeStreamNames' => $activeStreamData]);
+//      Log::debug('Extracted active stream names.', ['activeStreamNames' => $activeStreamData]);
 
       // Prepare to collect stream data with show details
       $activeStreamsWithShowData = [];
@@ -75,7 +75,7 @@ class AdminController extends Controller {
       foreach ($activeStreamData as $streamName) {
 
         // Log current stream name being processed
-        Log::debug('Processing stream name.', ['streamName' => $streamName]);
+//        Log::debug('Processing stream name.', ['streamName' => $streamName]);
 
         // Find the stream with its related show and the show's image
         $stream = MistStreamWildcard::where('name', $streamName)
@@ -83,7 +83,7 @@ class AdminController extends Controller {
             ->first();
 
         // Log the fetched stream details
-        Log::debug('Fetched stream details from database.', ['streamDetails' => $stream]);
+//        Log::debug('Fetched stream details from database.', ['streamDetails' => $stream]);
 
         if ($stream && $stream->show && $stream->show->image) {
           $imageResource = new ImageResource($stream->show->image);
@@ -99,7 +99,7 @@ class AdminController extends Controller {
       }
 
       // Log the final processed data
-      Log::debug('Final processed active streams with show data.', ['activeStreamsWithShowData' => $activeStreamsWithShowData]);
+//      Log::debug('Final processed active streams with show data.', ['activeStreamsWithShowData' => $activeStreamsWithShowData]);
 
       // Return a JSON response with the detailed stream data
       return response()->json([
@@ -210,14 +210,6 @@ class AdminController extends Controller {
     $settings->public_stats_url = $validatedData['public_stats_url'];
 
     $settings->save();
-
-    $db = DB::table('app_settings')
-        ->where('id', 1)
-        ->update(['cdn_endpoint' => $validatedData['cdn_endpoint']]);
-
-    $db = DB::table('app_settings')
-        ->where('id', 1)
-        ->update(['cloud_folder' => '/' . $validatedData['cloud_folder']]);
 
     return redirect(route('admin.settings'))->with('success', 'Settings Saved Successfully');
 
@@ -347,7 +339,7 @@ class AdminController extends Controller {
     }
 
 // Log the video details before dispatching
-    Log::debug('Video data before dispatch', ['videoData' => $videoDetails]);
+//    Log::debug('Video data before dispatch', ['videoData' => $videoDetails]);
 
 // Broadcast the updated firstPlay
     event(new ChangeFirstPlayVideo($videoDetails));

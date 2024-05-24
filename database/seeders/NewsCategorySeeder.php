@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\NewsCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +14,7 @@ class NewsCategorySeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run() {
       $categories = [
           ['name' => 'World News', 'description' => 'Covering international events, global politics, and significant developments across various countries.'],
           ['name' => 'National News', 'description' => 'Focused on news and events specific to Canada, including national politics, policies, and major national occurrences.'],
@@ -38,7 +38,10 @@ class NewsCategorySeeder extends Seeder
       ];
 
       $this->addTimestamps($categories);
-      DB::table('news_categories')->insert($categories);
+
+      foreach ($categories as $category) {
+        NewsCategory::create($category); // Use Eloquent model to insert records
+      }
     }
 
   private function addTimestamps(array &$items)

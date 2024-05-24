@@ -5,7 +5,7 @@ namespace App\Console;
 use App\Jobs\CheckSubscriptionStatuses;
 use App\Jobs\FetchRssFeedItemsJob;
 use App\Jobs\SchedulePurgeExpiredSchedules;
-use App\Jobs\ScheduleUpdateAllScheduleBroadcastDates;
+use App\Jobs\UpdateAllScheduleBroadcastDates;
 use App\Jobs\ScheduleUpdateSchedulesIndexesDELETEME;
 use App\Models\NewsRssFeed;
 use App\Services\ScheduleService;

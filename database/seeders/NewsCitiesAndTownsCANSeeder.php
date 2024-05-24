@@ -63,16 +63,20 @@ class NewsCitiesAndTownsCANSeeder extends Seeder
           ];
 
           if (count($batchData) >= $batchSize) {
-            NewsCity::insert($batchData);
+            foreach ($batchData as $data) {
+              NewsCity::create($data);
+            }
             $batchData = [];
           }
         }
       }
     }
 
-    if (!empty($insertData)) {
-      NewsCity::insert($insertData);
+    // Insert any remaining data
+    if (!empty($batchData)) {
+      foreach ($batchData as $data) {
+        NewsCity::create($data);
+      }
     }
-
   }
 }

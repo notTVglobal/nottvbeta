@@ -18,7 +18,7 @@ return new class extends Migration
 //        $table->dropIndex('show_schedule_recurrence_details_friday_index');
 //        $table->dropIndex('show_schedule_recurrence_details_monday_index');
 //        $table->dropIndex('show_schedule_recurrence_details_saturday_index');
-//        $table->dropIndex('show_schedule_recurrence_details_start_time_index');
+//        $table->dropIndex('show_schedule_recurrence_details_start_dateTime_index');
 //        $table->dropIndex('show_schedule_recurrence_details_sunday_index');
 //        $table->dropIndex('show_schedule_recurrence_details_thursday_index');
 //        $table->dropIndex('show_schedule_recurrence_details_timezone_index');
@@ -34,7 +34,7 @@ return new class extends Migration
 //        $table->index('friday', 'schedules_recurrence_details_friday_index');
 //        $table->index('monday', 'schedules_recurrence_details_monday_index');
 //        $table->index('saturday', 'schedules_recurrence_details_saturday_index');
-//        $table->index('start_time', 'schedules_recurrence_details_start_time_index');
+//        $table->index('start_dateTime', 'schedules_recurrence_details_start_dateTime_index');
 //        $table->index('sunday', 'schedules_recurrence_details_sunday_index');
 //        $table->index('thursday', 'schedules_recurrence_details_thursday_index');
 //        $table->index('timezone', 'schedules_recurrence_details_timezone_index');
@@ -59,7 +59,7 @@ return new class extends Migration
 //      $table->dropIndex('schedules_recurrence_details_friday_index');
 //      $table->dropIndex('schedules_recurrence_details_monday_index');
 //      $table->dropIndex('schedules_recurrence_details_saturday_index');
-//      $table->dropIndex('schedules_recurrence_details_start_time_index');
+//      $table->dropIndex('schedules_recurrence_details_start_dateTime_index');
 //      $table->dropIndex('schedules_recurrence_details_sunday_index');
 //      $table->dropIndex('schedules_recurrence_details_thursday_index');
 //      $table->dropIndex('schedules_recurrence_details_timezone_index');
@@ -70,7 +70,7 @@ return new class extends Migration
 //      $table->index('friday', 'show_schedule_recurrence_details_friday_index');
 //      $table->index('monday', 'show_schedule_recurrence_details_monday_index');
 //      $table->index('saturday', 'show_schedule_recurrence_details_saturday_index');
-//      $table->index('start_time', 'show_schedule_recurrence_details_start_time_index');
+//      $table->index('start_dateTime', 'show_schedule_recurrence_details_start_dateTime_index');
 //      $table->index('sunday', 'show_schedule_recurrence_details_sunday_index');
 //      $table->index('thursday', 'show_schedule_recurrence_details_thursday_index');
 //      $table->index('timezone', 'show_schedule_recurrence_details_timezone_index');
