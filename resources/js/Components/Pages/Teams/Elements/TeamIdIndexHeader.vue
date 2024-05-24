@@ -36,20 +36,25 @@
     <div class="flex flex-col justify-between pt-2 lg:pt-6 px-5">
 
       <div class="flex flex-row flex-wrap justify-between gap-2">
-        <div class="flex flex-row w-full justify-center lg:justify-end pb-6 lg:pb-0">
+        <div class="flex flex-row w-full justify-center lg:justify-end mb-6 lg:mb-0">
           <button @click="router.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
         </div>
 
         <div class="flex flex-row flex-wrap gap-2 justify-center mb-4">
 <!--          <SingleImage :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-h-40 mr-4'"/>-->
           <SingleImageWithModal :image="image" :alt="'team logo'" :class="'min-w-40 min-h-40 max-h-40 mr-4'" class="transition-transform duration-300 ease-in-out transform hover:scale-105"/>
-          <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
-            {{ team.name }}
-          </h3>
+          <div class="flex flex-col items-start ">
+            <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
+              {{ team.name }}
+            </h3>
+            <SocialMediaBadgeLinks :socialMediaLinks="team.socialMediaLinks"/>
+            <ShareButton />
+          </div>
+
         </div>
 
       </div>
-      <SocialMediaBadgeLinks :socialMediaLinks="team.socialMediaLinks"/>
+
     </div>
   </div>
 </template>
@@ -59,6 +64,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import SocialMediaBadgeLinks from '@/Components/Global/Badges/SocialMediaBadgeLinks.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
+import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 
 const appSettingStore = useAppSettingStore()
 

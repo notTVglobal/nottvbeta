@@ -105,13 +105,7 @@ class TeamsController extends Controller {
                 'id'          => $team->id,
                 'name'        => $team->name,
                 'logo'        => $team->image->name,
-                'image'       => [
-                    'id'           => $team->image->id,
-                    'name'         => $team->image->name,
-                    'folder'       => $team->image->folder,
-                    'cdn_endpoint' => $team->image->appSetting->cdn_endpoint,
-                    'cloud_folder' => $team->image->cloud_folder,
-                ],
+                'image'       => $team->image ? (new ImageResource($team->image))->resolve() : null,
                 'teamCreator' => $team->user->name,
                 'status'      => $team->teamStatus,
                 'slug'        => $team->slug,
@@ -407,15 +401,16 @@ class TeamsController extends Controller {
 
   protected function getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember): array {
     $user = Auth::user();
+
     return [
-        'editTeam'      => $user->can('update', $team),
-        'manageTeam'    => $user->can('manage', $team),
-        'transferTeam'  => $user->can('transfer', $team),
-        'isTeamOwner'   => $isTeamOwner,
-        'isTeamLeader'  => $isTeamLeader,
-        'isTeamManager' => $isTeamManager,
-        'isTeamMember'  => $isTeamMember,
-        'isAdmin'       => $user->isAdmin,
+        'editTeam'             => $user->can('update', $team),
+        'manageTeam'           => $user->can('manage', $team),
+        'transferTeam'         => $user->can('transfer', $team),
+        'isTeamOwner'          => $isTeamOwner,
+        'isTeamLeader'         => $isTeamLeader,
+        'isTeamManager'        => $isTeamManager,
+        'isTeamMember'         => $isTeamMember,
+        'isAdmin'              => $user->isAdmin,
         'hasSpecialPermission' => $isTeamOwner || $isTeamLeader || $isTeamManager || $user->isAdmin,
     ];
   }

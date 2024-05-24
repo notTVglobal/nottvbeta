@@ -28,6 +28,10 @@ class TeamFactory extends Factory
             'image_id' => function () { return Image::factory()->create()->id; },
             'slug' => Str::slug($name),
             'totalSpots' => $this->faker->numberBetween(21, 50),
+            'www_url' => $this->faker->url,
+            'instagram_name' => $this->faker->userName,
+            'telegram_url' => $this->faker->url,
+            'twitter_handle' => $this->faker->userName,
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\VideoResource;
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Jobs\ProcessVideoInfo;
@@ -343,6 +344,10 @@ class ShowEpisodeController extends Controller {
       $mediaType = 'bitchute';
     } else {
       $mediaType = 'show';
+
+    }
+    if (!$showEpisode->relationLoaded('video')) {
+      return response()->json(['error' => 'Video not loaded'], 500);
     }
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
@@ -350,14 +355,7 @@ class ShowEpisodeController extends Controller {
             'name'               => $show->name,
             'slug'               => $show->slug,
             'showRunner'         => $show->user->name,
-            'image'              => [
-                'id'              => $show->image->id,
-                'name'            => $show->image->name,
-                'folder'          => $show->image->folder,
-                'cdn_endpoint'    => $show->appSetting->cdn_endpoint,
-                'cloud_folder'    => $show->image->cloud_folder,
-                'placeholder_url' => $show->image->placeholder_url,
-            ],
+            'image'              => $show->image ? (new ImageResource($show->image))->resolve() : null,
             'copyright_year'     => $show->created_at->format('Y'),
             'first_release_year' => $show->first_release_year,
             'last_release_year'  => $show->last_release_year,
@@ -383,21 +381,22 @@ class ShowEpisodeController extends Controller {
             'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime ?? null,
             'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
             'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
-            'video'                      => [
-                'ulid'                 => $showEpisode->video->ulid ?? '',
-                'isAvailable'          => $videoIsAvailable,
-                'mediaType'            => $mediaType, // New attribute for NowPlayingStore
-                'file_name'            => $showEpisode->video->file_name ?? '',
-                'cdn_endpoint'         => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-                'folder'               => $showEpisode->video->folder ?? '',
-                'cloud_folder'         => $showEpisode->video->cloud_folder ?? '',
-                'upload_status'        => $showEpisode->video->upload_status ?? '',
-                'video_url'            => $showEpisode->video->video_url ?? '',
-                'type'                 => $showEpisode->video->type ?? '',
-                'storage_location'     => $showEpisode->video->storage_location ?? '',
-                'mist_stream'          => $showEpisode->video->mistStream ?? null,
-                'mist_stream_wildcard' => $showEpisode->video->mistStreamWildcard ?? null,
-            ],
+            'video'                      => (new VideoResource($showEpisode->video))->resolve(),
+//            'video'                      => [
+//                'ulid'                 => $showEpisode->video->ulid ?? '',
+//                'isAvailable'          => $videoIsAvailable,
+//                'mediaType'            => $mediaType, // New attribute for NowPlayingStore
+//                'file_name'            => $showEpisode->video->file_name ?? '',
+//                'cdn_endpoint'         => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+//                'folder'               => $showEpisode->video->folder ?? '',
+//                'cloud_folder'         => $showEpisode->video->cloud_folder ?? '',
+//                'upload_status'        => $showEpisode->video->upload_status ?? '',
+//                'video_url'            => $showEpisode->video->video_url ?? '',
+//                'type'                 => $showEpisode->video->type ?? '',
+//                'storage_location'     => $showEpisode->video->storage_location ?? '',
+//                'mist_stream'          => $showEpisode->video->mistStream ?? null,
+//                'mist_stream_wildcard' => $showEpisode->video->mistStreamWildcard ?? null,
+//            ],
             'youtube_url'                => $showEpisode->youtube_url ?? '',
             'video_embed_code'           => $showEpisode->video_embed_code,
         ],
@@ -408,13 +407,7 @@ class ShowEpisodeController extends Controller {
 //            'cloud_folder'  => $showEpisode->video->cloud_folder ?? '',
 //            'upload_status' => $showEpisode->video->upload_status ?? '',
 //        ],
-        'image'    => [
-            'id'           => $showEpisode->image->id,
-            'name'         => $showEpisode->image->name,
-            'folder'       => $showEpisode->image->folder,
-            'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-            'cloud_folder' => $showEpisode->image->cloud_folder,
-        ],
+        'image'    => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
         'creators' => TeamMember::where('team_id', $teamId)
             ->join('users', 'team_members.user_id', '=', 'users.id')
             ->select('users.*', 'team_members.user_id')
@@ -497,17 +490,18 @@ class ShowEpisodeController extends Controller {
             'mist_stream_id'             => $showEpisode->mist_stream_id,
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,
-            'video'                      => [
-                'id'               => $showEpisode->video->id ?? null,
-                'file_name'        => $showEpisode->video->file_name ?? '',
-                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-                'folder'           => $showEpisode->video->folder ?? '',
-                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
-                'upload_status'    => $showEpisode->video->upload_status ?? '',
-                'video_url'        => $showEpisode->video->video_url ?? '',
-                'type'             => $showEpisode->video->type ?? '',
-                'storage_location' => $showEpisode->video->storage_location ?? '',
-            ],
+            'video'                      => $showEpisode->video ? (new VideoResource($showEpisode->video))->resolve() : null,
+//            'video'                      => [
+//                'id'               => $showEpisode->video->id ?? null,
+//                'file_name'        => $showEpisode->video->file_name ?? '',
+//                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+//                'folder'           => $showEpisode->video->folder ?? '',
+//                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
+//                'upload_status'    => $showEpisode->video->upload_status ?? '',
+//                'video_url'        => $showEpisode->video->video_url ?? '',
+//                'type'             => $showEpisode->video->type ?? '',
+//                'storage_location' => $showEpisode->video->storage_location ?? '',
+//            ],
         ],
         'image'            => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
         'show'             => [

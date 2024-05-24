@@ -51,6 +51,10 @@ class ShowFactory extends Factory
         'show_category_id' => $showCategoryId,
         'show_category_sub_id' => !empty($showCategorySubIds) ? $this->faker->randomElement($showCategorySubIds) : null,
         'show_runner' => null, // This will be set in the state method
+        'www_url' => $this->faker->url,
+        'instagram_name' => $this->faker->userName,
+        'telegram_url' => $this->faker->url,
+        'twitter_handle' => $this->faker->userName,
     ];
   }
 

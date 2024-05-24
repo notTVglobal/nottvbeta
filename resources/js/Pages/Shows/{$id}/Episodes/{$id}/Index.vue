@@ -130,7 +130,8 @@
             class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
           <!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
           <div class="max-w-[50%] ml-5 py-0">
-            <SingleImage :image="image" :key="image"/>
+
+            <SingleImageWithModal :image="image" :key="image"/>
 
           </div>
 
@@ -211,6 +212,7 @@ import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTi
 import { onMounted } from 'vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 
 usePageSetup('showEpisodesShow')
 
