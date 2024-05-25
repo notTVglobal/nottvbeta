@@ -15,7 +15,6 @@
       </header>
 
 
-
       <section id="security-assurance">
         <div style="text-align: center; margin-bottom: 20px;">
           <!-- Font Awesome Padlock Icon -->
@@ -23,7 +22,9 @@
         </div>
         <div style="text-align: center; max-width: 600px; margin: auto;">
           <h2>Your Security, Our Priority</h2>
-          <p>We take your security seriously. All transactions are encrypted and processed through secure payment gateways. Your payment information is never stored on our servers, ensuring your data remains private and protected.</p>
+          <p>We take your security seriously. All transactions are encrypted and processed through secure payment
+            gateways. Your payment information is never stored on our servers, ensuring your data remains private and
+            protected.</p>
         </div>
       </section>
 
@@ -35,13 +36,16 @@
       <div class="flex flex-col justify-center items-center w-full mx-auto mt-8">
 
 
-        <div v-if="shopStore.upgradeSelection===''" class="mt-6 mb-12 flex flex-col items-center justify-center text-center">
+        <div v-if="shopStore.upgradeSelection===''"
+             class="mt-6 mb-12 flex flex-col items-center justify-center text-center">
           <div class="text-xl">Choose a subscription:</div>
           <div class="mt-2 w-fit">
-            <button @click.prevent="shopStore.monthlyContribution()">Monthly Contribution - $25 / month</button>
+            <button @click.prevent="shopStore.monthlyContribution()">
+              Monthly Contribution - ${{ shopStore.formattedMonthlySubscriptionPrice  }} / month</button>
           </div>
           <div class="mt-2 w-fit">
-            <button @click.prevent="shopStore.yearlyContribution()">Yearly Contribution - $250 / year</button>
+            <button @click.prevent="shopStore.yearlyContribution()">
+              Yearly Contribution - ${{ shopStore.formattedYearlySubscriptionPrice }} / year</button>
           </div>
           <div class="mt-2 w-fit">
             <button @click.prevent="router.visit('/contribute')" class="">👈 Back to Contribute Page</button>
@@ -71,7 +75,9 @@
           <div id="payment-element" class="w-full">
             <!--Stripe.js injects the Payment Element-->
           </div>
-          <div class="mb-2 text-xs text-gray-300">By clicking ‘Complete Payment’, you agree to our Terms and Conditions and acknowledge our Privacy Policy.</div>
+          <div class="mb-2 text-xs text-gray-300">By clicking ‘Complete Payment’, you agree to our Terms and Conditions
+            and acknowledge our Privacy Policy.
+          </div>
           <button id="submit"
                   class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                   @click.prevent="submit()">
@@ -95,7 +101,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue'
+import { onBeforeUnmount, onMounted, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -114,8 +120,10 @@ const shopStore = useShopStore()
 let props = defineProps({
   user: Object,
   error: String,
+  payment_method: Object, // not being used on this page yet.
   intent: Object,
-  elements: {},
+  subscriptionSettings: Object,
+  // elements: {},
 })
 
 const options = {
@@ -134,45 +142,49 @@ StripeAPIKey = process.env.MIX_STRIPE_KEY
 watch(
     () => userStore.hasConsentedToCookies,
     (newVal) => {
-      appSettingStore.showCookieBanner = !newVal;
+      appSettingStore.showCookieBanner = !newVal
       showPaymentForm()
     },
-    { immediate: true } // Execute immediately on load
-);
+    {immediate: true}, // Execute immediately on load
+)
 
 watch(
     () => userStore.hasConsentedToCookies,
     async (newVal) => {
-      appSettingStore.showCookieBanner = !newVal;
+      appSettingStore.showCookieBanner = !newVal
       if (newVal) {
         // Dynamically import Stripe library only after consent is given
-        const { loadStripe } = await import('@stripe/stripe-js');
+        const {loadStripe} = await import('@stripe/stripe-js')
         stripe = await loadStripe(StripeAPIKey)
-        initialize();
+        initialize()
         shopStore.showPaymentForm = true
         document
             .querySelector('#payment-form')
       }
     },
-    { immediate: false } // Do not execute immediately on load
-);
-
+    {immediate: false}, // Do not execute immediately on load
+)
 
 
 onMounted(async () => {
+      shopStore.loadSubscriptionSettings(props.subscriptionSettings)
       if (!userStore.hasConsentedToCookies) {
         appSettingStore.showCookieBanner = true
       } else {
         // Dynamically import Stripe library if user has already consented
-        const { loadStripe } = await import('@stripe/stripe-js');
-        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
-        stripe = await stripePromise;
-        initialize();
-        shopStore.showPaymentForm = true;
+        const {loadStripe} = await import('@stripe/stripe-js')
+        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY)
+        stripe = await stripePromise
+        initialize()
+        shopStore.showPaymentForm = true
       }
       shopStore.customer = props.user
     },
 )
+
+onBeforeUnmount(() => {
+  shopStore.reset()
+})
 
 // onMounted(async () => {
 //   // shopStore.customer = props.user
@@ -246,8 +258,7 @@ async function submit() {
     elements,
     confirmParams: {
       // Make sure to change this to your payment completion page
-      return_url: 'https://not.tv/subscription_success',
-      // receipt_email: emailAddress,
+      return_url: 'http://localhost/contribute/subscription_success/stripe_return_url',
     },
     redirect: 'if_required',
 
@@ -264,6 +275,7 @@ async function submit() {
     if (error.type === 'card_error' || error.type === 'validation_error') {
       notificationStore.setGeneralServiceNotification(error.code, error.message)
       showMessage(error.message)
+      setLoading(false)
     } else {
       showMessage('An unexpected error occurred.')
       setLoading(false)
@@ -274,7 +286,6 @@ async function submit() {
       paymentMethod: setupIntent.payment_method,
       plan: shopStore.upgradeStripeId,
     })
-
     //Submit the form
     form.post('/contribute/subscription')
 

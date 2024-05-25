@@ -83,7 +83,7 @@ let props = defineProps({
 
 onMounted(async () => {
   if (props.userIsSubscriber) {
-    userStore.isSubscriber = true
+    userStore.user.isSubscriber = true
   }
   router.reload()
 });

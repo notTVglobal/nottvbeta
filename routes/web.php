@@ -464,11 +464,13 @@ Route::middleware([
   // can the setup intent happen on the payment page?
   // the user still has a choice here about doing a
   // subscription or a donation (one-time payment).
-  Route::get('/contribute', function () {
-    return Inertia::render('Shop/Contribute', [
-        'intent' => auth()->user()->createSetupIntent(),
-    ]);
-  })->name('contribute');
+//  Route::get('/contribute', function () {
+//    return Inertia::render('Shop/Contribute', [
+//        'intent' => auth()->user()->createSetupIntent(),
+//    ]);
+//  })->name('contribute');
+
+  Route::get('/contribute', [ShopController::class, 'contributeIndex'])->name('contribute.index');
 
   Route::get('/shop/get-favourite-options', [ShopController::class, 'getFavouriteOptions']);
   //////////////////////////////////////////////////
@@ -490,6 +492,9 @@ Route::middleware([
 
   Route::get('/contribute/subscription_success', [StripeController::class, 'subscriptionSuccess'])
       ->name('subscriptionSuccess');
+
+  Route::get('/contribute/subscription_success/stripe_return_url', [StripeController::class, 'subscriptionSuccessReturnUrl'])
+  ->name('contribute.subscription_success.return_url');
 
   Route::get('/contribute/donation_success', [StripeController::class, 'donationSuccess'])
       ->name('donationSuccess');
@@ -1156,6 +1161,11 @@ Route::middleware([
   Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
       ->can('edit', 'App\Models\User')
       ->name('users.edit');
+
+  Route::get('/user/contact', [UsersController::class, 'getContactInformation'])->name('user.contact');
+
+  // User settings redirect
+  Route::get('/settings', [UsersController::class, 'settingsRedirect'])->name('user.settings.redirect');
 
   // Update user
   Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');

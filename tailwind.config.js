@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
     darkMode: 'class',
@@ -24,23 +24,32 @@ module.exports = {
             colors: {
                 tan: {
                     600: '#d2b48c', // A light brown tan color
-                    800: '#a67b5b'  // A darker brown tan color
-                }
-            },
-            maxHeight: {
-                '1/2screen': '50vh',
-                '80vh': '80vh',
-                '50': '12.5rem', // Assuming 1 unit in Tailwind is 0.25rem, adjust accordingly.
-            },
-            maxWidth: {
-                '80vw': '80vw',
-            },
-        },
-        listStyleType: {
-            disc: 'disc',
-            // ... other styles
-        }
-    },
+                    800: '#a67b5b',  // A darker brown tan color
+                },
+                darkgray: {
+                    light: '#3a3a3a',  // Light gray variation
+                    medium: '#2a2a2a', // Medium gray variation
+                    dark: '#1e1e1e', // Dark gray variation
+                },
 
-    plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require("daisyui")],
-};
+        },
+        maxHeight: {
+            '1/2screen': '50vh',
+            '80vh': '80vh',
+            '50': '12.5rem', // Assuming 1 unit in Tailwind is 0.25rem, adjust accordingly.
+        },
+        maxWidth: {
+            '80vw': '80vw',
+        },
+    },
+    listStyleType: {
+        disc: 'disc',
+        // ... other styles
+    },
+},
+
+    plugins
+:
+[require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('daisyui')],
+}
+

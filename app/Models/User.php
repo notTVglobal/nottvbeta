@@ -109,6 +109,18 @@ class User extends Authenticatable implements MustVerifyEmail {
       'isEditingShowEpisode_id' => null,
   ];
 
+  protected static function booted(): void {
+    static::created(function ($user) {
+      \App\Models\UserVideoSetting::create([
+          'user_id' => $user->id,
+          'last_playback_position' => 0,
+          'volume_setting' => 1.0,
+          'playback_speed' => 1.0,
+          'additional_settings' => json_encode([]),
+      ]);
+    });
+  }
+
 
   /**
    * Determine if the user has an active subscription.
@@ -127,6 +139,10 @@ class User extends Authenticatable implements MustVerifyEmail {
    */
   public function hasAccount(): bool {
     return !is_null($this->stripe_id);
+  }
+
+  public function activeSubscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->subscriptions()->where('stripe_status', 'active');
   }
 
   public function isAdmin(): bool {

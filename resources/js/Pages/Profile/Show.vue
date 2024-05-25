@@ -31,7 +31,7 @@
             </div>
 
             <div>
-              <UpdateContactInformationForm :user="$page.props.user" class="pt-10"/>
+              <UpdateContactInformationForm class="pt-10"/>
 
               <JetSectionBorder/>
             </div>

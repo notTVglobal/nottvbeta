@@ -181,6 +181,11 @@ let form = useForm({
   transition: 0.3s ease all;
 }
 
+.dropzone:hover {
+  background-color: #d1e7ff; /* Light baby blue background */
+  border-color: #7aa8ff; /* Soft blue border */
+}
+
 label {
   padding: 8px 12px;
   color: #fff;

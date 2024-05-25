@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+    <label class="block mb-2 uppercase font-bold dark:text-gray-200"
            for="episodeVideo"
     >
       Upload Episode

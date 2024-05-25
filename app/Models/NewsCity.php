@@ -4,10 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class NewsCity extends Model
 {
     use HasFactory;
+
+
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saving(function ($model) {
+      $originalSlug = Str::slug($model->name);
+      $slug = $originalSlug;
+      $counter = 1;
+
+      // Check if the slug already exists
+      while (self::where('slug', $slug)->exists()) {
+        // Append a numeric suffix to make the slug unique
+        $slug = $originalSlug . '-' . $counter++;
+      }
+
+      $model->slug = $slug;
+    });
+  }
 
   protected $fillable = [
       'name', // Name of the city

@@ -47,6 +47,8 @@
                   <!-- Start Left Column -->
                   <div class="xl:col-span-2">
 
+                    <EditEpisodeShowInfo />
+
                     <CreateEpisodeSetName :errors="form.errors"/>
 
                     <CreateEpisodeSetNotes :errors="form.errors"/>
@@ -67,7 +69,11 @@
                   <!-- Start Right Column-->
                   <div>
 
+                    <EditEpisodeVideoContainer />
+
                     <CreateEpisodeAttachRecording :errors="form.errors"/>
+
+                    <CreateEpisodeUploadVideo />
 
 
                     <CreateEpisodeChangeImage :image="image" @reloadImage="reloadImageHandler" :errors="form.errors"/>
@@ -125,7 +131,6 @@ import Message from '@/Components/Global/Modals/Messages'
 
 
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter.vue'
-import TipTapDescriptionEditor from '@/Components/Global/TextEditor/TipTapDescriptionEditor.vue'
 import CreateEpisodeErrorsContainer from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeErrorsContainer.vue'
 import CreateEpisodeSetNotes from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeSetNotes.vue'
 import CreateEpisodeSetCreativeCommons
@@ -136,6 +141,9 @@ import CreateEpisodeSetDescription from '@/Components/Pages/ShowEpisodes/Element
 import CreateEpisodeSetVideoEmbed from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeSetVideoEmbed.vue'
 import CreateEpisodeAttachRecording from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeAttachRecording.vue'
 import CreateEpisodeChangeImage from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeChangeImage.vue'
+import EditEpisodeShowInfo from '@/Components/Pages/ShowEpisodes/Elements/EditEpisodeShowInfo.vue'
+import EditEpisodeVideoContainer from '@/Components/Pages/ShowEpisodes/Elements/EditEpisodeVideoContainer.vue'
+import CreateEpisodeUploadVideo from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeUploadVideo.vue'
 
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
@@ -146,7 +154,6 @@ const appSettingStore = useAppSettingStore()
 const showEpisodeStore = useShowEpisodeStore()
 const teamStore = useTeamStore()
 const showStore = useShowStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,
@@ -186,7 +193,7 @@ let form = useForm({
   release_dateTime: props.episode.release_dateTime,
   scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
   copyright_year: props.episode.copyright_year,
-  creative_commons_id: props.episode.creative_commons.id,
+  creative_commons_id: '',
   video_url: props.episode.video.video_url,
   youtube_url: props.episode.youtube_url,
   video_embed_code: props.episode.video_embed_code,
@@ -205,7 +212,7 @@ let submit = () => {
     form.release_dateTime = showEpisodeStore.episode.release_dateTime
     form.scheduled_release_dateTime = showEpisodeStore.episode.scheduled_release_dateTime
     form.copyright_year = showEpisodeStore.episode.copyrightYear
-    form.creative_commons_id = showEpisodeStore.episode.creativeCommons.id
+    form.creative_commons_id = showEpisodeStore.episode.creative_commons.id
     form.video_url = showEpisodeStore.episode.video.video_url
     form.youtube_url = showEpisodeStore.episode.youtube_url
     form.video_embed_code = showEpisodeStore.episode.video_embed_code

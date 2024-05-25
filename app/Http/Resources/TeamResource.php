@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ImageResource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TeamResource extends JsonResource {
   /**
@@ -13,15 +13,20 @@ class TeamResource extends JsonResource {
    * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
    */
   public function toArray($request) {
+
+    // Resolve the image if it's loaded
+    $resolvedImage = $this->whenLoaded('image', function () {
+      return $this->image ? (new ImageResource($this->image))->resolve() : null;
+    });
+
     return [
         'id'               => $this->id,
         'name'             => $this->name,
         'description'      => $this->description,
         'public_message'   => $this->public_message ?? null,
         'slug'             => $this->slug,
-        'image'            => $this->whenLoaded('image', function () {
-          return new ImageResource($this->image);
-        }),
+        'image'            => $resolvedImage,
+        'status_id'        => $this->status_id,
         'nextBroadcast'    => $this->nextBroadcast ?? [],
         'socialMediaLinks' => [
             'www_url'        => $this->www_url ?? null,

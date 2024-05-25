@@ -15,8 +15,8 @@ class ChannelPlaylist extends Model {
       'url',
       'type',
       'status',
-      'start_time',
-      'end_time',
+      'start_dateTime',
+      'end_dateTime',
       'priority',
       'repeat_mode'
   ];

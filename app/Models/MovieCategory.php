@@ -11,8 +11,26 @@ class MovieCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+  protected static function boot() {
+    parent::boot();
+
+    static::saving(function ($model) {
+      $model->slug = Str::slug($model->name);
+    });
+
+    static::updated(function ($category) {
+      Cache::forget('movie_category_' . $category->id);
+    });
+
+    static::deleted(function ($category) {
+      Cache::forget('movie_category_' . $category->id);
+    });
+  }
+
+
+  protected $fillable = [
         'name',
+        'slug',
         'description'
     ];
 
@@ -30,19 +48,4 @@ class MovieCategory extends Model
         return $this->hasMany(MovieCategorySub::class, 'movie_categories_id');
     }
 
-  protected static function boot() {
-    parent::boot();
-
-    static::saving(function ($model) {
-      $model->slug = Str::slug($model->name);
-    });
-
-    static::updated(function ($category) {
-      Cache::forget('movie_category_' . $category->id);
-    });
-
-    static::deleted(function ($category) {
-      Cache::forget('movie_category_' . $category->id);
-    });
-  }
 }

@@ -49,7 +49,7 @@
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-      <TeamMember v-for="member in teamStore.members" :member="member" :team="team" :key="member.id" :can="can"/>
+      <TeamMember v-for="member in team.members" :member="member" :team="team" :key="member.id" :can="can"/>
       </tbody>
     </table>
   </div>
@@ -59,26 +59,28 @@
   </div>
 
   <Teleport to="body">
-    <TeamAddMember :creatorFilters="props.creatorFilters" :creators="props.creators"/>
+    <TeamAddMember />
   </Teleport>
 
 
 </template>
 
 <script setup>
-import { onBeforeMount } from "vue"
+import { computed, onBeforeMount } from 'vue'
 import { useTeamStore } from "@/Stores/TeamStore"
 import TeamMember from "@/Components/Pages/Teams/Manage/Elements/TeamMember"
 import TeamAddMember from "@/Components/Pages/Teams/Manage/Elements/TeamAddMember"
 
 const teamStore = useTeamStore()
 
-let props = defineProps({
-  team: Object,
-  creators: Object,
-  creatorFilters: Object,
-  can: Object,
-})
+// Map store state to local computed properties
+const team = computed(() => teamStore.team || {});
+const can = computed(() => teamStore.can || {});
+
+// let props = defineProps({
+//   creators: Object,
+//   creatorFilters: Object,
+// })
 
 onBeforeMount(async () => {
   teamStore.showModal = false;

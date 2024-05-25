@@ -52,7 +52,7 @@ class TeamManagersController extends Controller
         $notification->user_id = $user->id;
         // make the image the team_poster
         $notification->image_id = $team->image_id;
-        $notification->url = '/teams/'.$team->slug;
+        $notification->url = '/teams/'.$team->slug.'/manage';
         $notification->title = $team->name;
         $notification->message = '<span class="text-yellow-500">You are now a team manager.</span>';
         $notification->save();

@@ -40,7 +40,7 @@ let props = defineProps({
   metadataKey: String,
   metadataValue: String,
   modelType: String,
-  modelId: String,
+  type: [Number, String],
   maxSize: String,
   fileTypes: String,
 })

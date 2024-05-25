@@ -48,8 +48,6 @@ const initialContent = props.description
 const editor = useEditor({
   extensions: [
     StarterKit,
-    Document,
-    Text,
     TextStyle,
     FontFamily,
     Color,

@@ -51,7 +51,7 @@ class ScheduleUpdateSchedulesIndexesDELETEME implements ShouldQueue {
     // Include 'shows.scheduleIndexes' in the with() method to load related SchedulesIndex entries
     // Only fetch teams that have shows which currently have schedules
     $teams = Team::whereHas('shows.schedules', function ($query) {
-      $query->where('end_time', '>=', now());
+      $query->where('end_dateTime', '>=', now());
     })->with([
         'shows.schedules.scheduleRecurrenceDetails',
         'shows.scheduleIndexes',
@@ -96,7 +96,7 @@ class ScheduleUpdateSchedulesIndexesDELETEME implements ShouldQueue {
           ]);
         }
 
-        $schedule = $show->schedules()->where('start_time', '>=', now())->orderBy('start_time')->first();
+        $schedule = $show->schedules()->where('start_dateTime', '>=', now())->orderBy('start_dateTime')->first();
 
         if ($schedule) {
           try {
@@ -137,18 +137,18 @@ class ScheduleUpdateSchedulesIndexesDELETEME implements ShouldQueue {
     foreach ($show->schedules as $schedule) {
       // Log the current state of the schedule
       Log::info('Processing schedule', [
-          'startTime'      => $schedule->start_time ? $schedule->start_time->toDateTimeString() : 'null',
-          'endTime'        => $schedule->end_time ? $schedule->end_time->toDateTimeString() : 'null',
+          'startTime'      => $schedule->start_dateTime ? $schedule->start_dateTime->toDateTimeString() : 'null',
+          'endTime'        => $schedule->end_dateTime ? $schedule->end_dateTime->toDateTimeString() : 'null',
           'recurrenceFlag' => $schedule->recurrenceFlag
       ]);
 
       $currentDateTime = null;
 
       // Ensure $schedule->startTime is not null before checking if it's in the future
-      if ($schedule->start_time instanceof Carbon & $schedule->start_time->isFuture()) {
+      if ($schedule->start_dateTime instanceof Carbon & $schedule->start_dateTime->isFuture()) {
         // If startTime is later than now, this is a candidate
-        $currentDateTime  = $schedule->start_time;
-      } elseif ($schedule->start_time instanceof Carbon && $schedule->start_time->isPast() && $schedule->end_time instanceof Carbon && $schedule->end_time->isFuture()) {
+        $currentDateTime  = $schedule->start_dateTime;
+      } elseif ($schedule->start_dateTime instanceof Carbon && $schedule->start_dateTime->isPast() && $schedule->end_dateTime instanceof Carbon && $schedule->end_dateTime->isFuture()) {
         if (!$schedule->recurrenceFlag) {
           // Calculate next recurrence if the schedule is recurring
           $currentDateTime = $this->calculateNextRecurrence($schedule);
@@ -191,16 +191,16 @@ class ScheduleUpdateSchedulesIndexesDELETEME implements ShouldQueue {
       $nextDay = Carbon::parse("next $day");
 
       // If today is the day but the time has already passed, calculate for next week
-      if ($nextDay->isToday() && $currentDateTime->format('H:i:s') >= explode(' ', $schedule->start_time)[1]) {
+      if ($nextDay->isToday() && $currentDateTime->format('H:i:s') >= explode(' ', $schedule->start_dateTime)[1]) {
         $nextDay->addWeek();
       }
 
       // Set the time from the schedule's start time
-      if ($this->isValidTime($schedule->start_time)) {
-        $timeParts = explode(' ', $schedule->start_time);
-        $nextDay->setTimeFromTimeString($timeParts[1]); // Assuming start_time format is 'YYYY-MM-DD HH:MM:SS'
+      if ($this->isValidTime($schedule->start_dateTime)) {
+        $timeParts = explode(' ', $schedule->start_dateTime);
+        $nextDay->setTimeFromTimeString($timeParts[1]); // Assuming start_dateTime format is 'YYYY-MM-DD HH:MM:SS'
       } else {
-        Log::warning('Invalid time format', ['time' => $schedule->start_time]);
+        Log::warning('Invalid time format', ['time' => $schedule->start_dateTime]);
         continue; // Skip this iteration if time format is invalid
       }
 

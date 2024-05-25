@@ -32,8 +32,8 @@ class ScheduleService {
     $endPeriod = $now->copy()->addDays(6)->addHours(6);
 
     $allSchedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-        ->whereBetween('start_time', [$now, $endPeriod])
-        ->orderBy('start_time')
+        ->whereBetween('start_dateTime', [$now, $endPeriod])
+        ->orderBy('start_dateTime')
         ->get();
 
     for ($i = 0; $i <= 6; $i++) {
@@ -41,7 +41,7 @@ class ScheduleService {
       $dayEnd = $dayStart->copy()->addHours(6);
 
       $daySchedules = $allSchedules->filter(function ($schedule) use ($dayStart, $dayEnd) {
-        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone)
+        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_dateTime, $schedule->timezone)
             ->setTimezone('UTC');
 
         return $scheduleStartUtc->between($dayStart, $dayEnd);
@@ -153,8 +153,8 @@ class ScheduleService {
   {
     $dataToCache = [
         'timestamp' => Carbon::now()->toDateTimeString(),
-        'start_time' => $start->toDateTimeString(),
-        'end_time' => $end->toDateTimeString(),
+        'start_dateTime' => $start->toDateTimeString(),
+        'end_dateTime' => $end->toDateTimeString(),
         'data' => $data,
     ];
 
@@ -162,8 +162,8 @@ class ScheduleService {
   }
 
   private function isRequestedRangeWithinCache(Carbon $start, Carbon $end, array $cachedData): bool {
-    $cachedStart = Carbon::parse($cachedData['start_time']);
-    $cachedEnd = Carbon::parse($cachedData['end_time']);
+    $cachedStart = Carbon::parse($cachedData['start_dateTime']);
+    $cachedEnd = Carbon::parse($cachedData['end_dateTime']);
 
     return $start->greaterThanOrEqualTo($cachedStart) && $end->lessThanOrEqualTo($cachedEnd);
   }
@@ -272,8 +272,8 @@ class ScheduleService {
 
     // 1. Fetch schedules for the expanded range
     $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-        ->whereBetween('start_time', [$expandedStart, $expandedEnd])
-        ->orderBy('start_time')
+        ->whereBetween('start_dateTime', [$expandedStart, $expandedEnd])
+        ->orderBy('start_dateTime')
         ->get();
 
 //    Log::info('Fetched schedules:', $schedules->toArray());
@@ -341,8 +341,8 @@ class ScheduleService {
 
 //          Log::debug('Mapped broadcast date after timecode conversion', [
 //              'schedule_id' => $schedule->id,
-//              'start_time'  => $startTime->format('c'),
-//              'end_time'    => $endTime->format('c'),
+//              'start_dateTime'  => $startTime->format('c'),
+//              'end_dateTime'    => $endTime->format('c'),
 //              'duration'    => $schedule->duration_minutes
 //          ]);
 

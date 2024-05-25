@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DatePicker v-model="date" mode="dateTime" :minute-increment="30"/>
+    <DatePicker v-model="date" mode="dateTime" :attributes='attrs' :rules="rules"/>
 
   </div>
 </template>
@@ -36,6 +36,18 @@ const timePickerOptions = {
   start: '00:00', // Start time
   end: '23:30', // End time
 };
+
+const attrs = ref([
+  {
+    key: 'today',
+    highlight: true,
+    dates: new Date(),
+  },
+])
+
+const rules = ref({
+  minutes: {interval: 30},
+})
 
 // Watch for changes in selected dateTime emit it
 watch(date, (newDate) => {

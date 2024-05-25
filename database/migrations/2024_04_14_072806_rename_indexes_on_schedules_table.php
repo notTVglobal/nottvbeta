@@ -44,7 +44,7 @@ return new class extends Migration
       Schema::table('schedules', function (Blueprint $table) {
         // Reverse the changes: drop new indexes and re-add old ones
         $table->dropIndex('schedules_content_type_content_id_index');
-        $table->dropIndex('schedules_end_time_index');
+        $table->dropIndex('schedules_end_dateTime_index');
         $table->dropIndex('schedules_priority_index');
         $table->dropIndex('schedules_recurrence_flag_index');
         $table->dropIndex('schedules_start_time_index');

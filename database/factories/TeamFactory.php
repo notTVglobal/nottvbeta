@@ -22,11 +22,16 @@ class TeamFactory extends Factory
       $userIds = \App\Models\User::pluck('id')->all();
 
       return [
-            'name' => $name = $this->faker->sentence($nbWords = 2, $variableNbWords = true),
+            'name' => $name = $this->faker->unique()->sentence($nbWords = 2, $variableNbWords = true),
             'description' => $this->faker->paragraph,
             'user_id' => $this->faker->randomElement($userIds),
             'image_id' => function () { return Image::factory()->create()->id; },
-            'slug' => Str::slug($name)
+            'slug' => Str::slug($name),
+            'totalSpots' => $this->faker->numberBetween(21, 50),
+            'www_url' => $this->faker->url,
+            'instagram_name' => $this->faker->userName,
+            'telegram_url' => $this->faker->url,
+            'twitter_handle' => $this->faker->userName,
         ];
     }
 }

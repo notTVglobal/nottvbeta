@@ -42,6 +42,7 @@
       <OrangeFeedbackBox
           v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage"/>
       <ToastNotification/>
+      <SocialSharingModal />
 
     </div>
   </div>
@@ -78,6 +79,7 @@ import DialogNotification from '@/Components/Global/Modals/DialogNotification'
 import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 import CookieBanner from '@/Components/Global/Banners/CookieBanner.vue'
 import ConfirmNotificationModal from '@/Components/Global/Modals/ConfirmNotificationModal.vue'
+import SocialSharingModal from '@/Components/Global/Modals/SocialSharingModal.vue'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()

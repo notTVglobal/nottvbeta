@@ -322,7 +322,7 @@ class MistServerService {
 //    Logging: Logging has been included for both successful operations and
 // errors, ensuring you have visibility into the function's outcomes.
 
-    Log::info("Adding or updating a stream on MistServer", ['streamName' => $streamName]);
+//    Log::debug("Adding or updating a stream on MistServer", ['streamName' => $streamName]);
 
     // Directly use $streamDetails without filtering out null values
     // Assuming null values are intentionally set for unsetting parameters

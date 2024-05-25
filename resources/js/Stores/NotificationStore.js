@@ -35,6 +35,7 @@ const initialState = () => ({
     toastNotificationTimeout: 5000, // default timeout to 5 seconds
     timeoutId: null, // Add this line
     errorMessage: null,
+
 })
 
 export const useNotificationStore = defineStore('notificationStore', {
@@ -51,7 +52,7 @@ export const useNotificationStore = defineStore('notificationStore', {
             this.errorMessage = null
         },
         setGeneralServiceNotification(title, body) {
-            console.log('open modal')
+            // console.log('open modal')
             this.generalServiceNotification = {
                 'title': title,
                 'body': body,
@@ -150,6 +151,7 @@ export const useNotificationStore = defineStore('notificationStore', {
         closeModal() {
             this.showModal = false
         },
+
     },
     getters: {
         formattedErrorMessage: (state) => {

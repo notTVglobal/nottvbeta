@@ -114,17 +114,17 @@ class HandleInertiaRequests extends Middleware {
     $firstPlayData = Cache::remember($cacheKey, now()->addHours(24), $loadData);
 
     return array_merge(parent::share($request), [
-        'flash'     => [
+        'flash'       => [
             'message'  => fn() => $request->session()->get('message'),
             'success'  => fn() => $request->session()->get('success'),
             'warning'  => fn() => $request->session()->get('warning'),
             'error'    => fn() => $request->session()->get('error'),
             'feedback' => fn() => $request->session()->get('feedback'),
         ],
-        'firstPlay' => fn() => $firstPlayData,
-        'appUrl'    => fn() => config('app.url'),
+        'firstPlay'   => fn() => $firstPlayData,
+        'appUrl'      => fn() => config('app.url'),
         'currentPath' => fn() => '/' . $request->path(),
-        'user' => function () use ($request) {
+        'user'        => function () use ($request) {
           $user = $request->user();
           if ($user) {
             // Eager load the video settings relationship
@@ -138,14 +138,18 @@ class HandleInertiaRequests extends Middleware {
                 'country',
                 'isVip',
                 'profile_photo_url',
-                'profile_photo_path'
+                'profile_photo_path',
+                'two_factor_enabled',
             ), [
-                'isCreator' => !empty($user->creator), // Assuming $user->creator is a property or method that returns a truthy or falsy value
-                'videoSettings' => $user->videoSettings ? $user->videoSettings->toArray() : null,
-                'isSubscriber'       => $user->subscribed('default'),
-                'subscriptionStatus' => $user->subscription('default'),
+                'isCreator'            => !empty($user->creator), // Assuming $user->creator is a property or method that returns a truthy or falsy value
+                'videoSettings'        => $user->videoSettings ? $user->videoSettings->toArray() : null,
+                'isSubscriber'         => $user->subscribed('default'),
+                'hasAccount'           => $user->hasAccount(),
+                'subscription'         => $user->subscription('default'),
+                'isSubscriptionActive' => (bool) optional($user->subscription('default'))->active(),
             ]) : null;
           }
+
           return null;
         },
       // Other shared data...

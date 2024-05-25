@@ -199,8 +199,8 @@ class MistTriggerController extends Controller {
 //        'path'                           => $filePath,
 //        'file_extension'                 => $fileExtension,
 //        'mime_type'                      => $fileType,
-//        'start_time'                     => $startTime,
-//        'end_time'                       => $endTime,
+//        'start_dateTime'                     => $startTime,
+//        'end_dateTime'                       => $endTime,
 //        'bytes_recorded'                 => $bytesRecorded,
 //        'seconds_spent_recording'        => $secondsSpentRecording,
 //        'total_milliseconds_recorded'    => $totalMillisecondsRecorded,
@@ -416,8 +416,8 @@ class MistTriggerController extends Controller {
             'path'                           => $parsedContent['filePath'],
             'file_extension'                 => $parsedContent['fileExtension'],
             'mime_type'                      => $parsedContent['fileType'],
-            'start_time'                     => $parsedContent['startTime'],
-            'end_time'                       => $parsedContent['endTime'],
+            'start_dateTime'                     => $parsedContent['startTime'],
+            'end_dateTime'                       => $parsedContent['endTime'],
             'bytes_recorded'                 => $parsedContent['bytesRecorded'],
             'seconds_spent_recording'        => $parsedContent['secondsSpentRecording'],
             'total_milliseconds_recorded'    => $parsedContent['totalMillisecondsRecorded'],
@@ -439,8 +439,8 @@ class MistTriggerController extends Controller {
         'path'                           => $parsedContent['filePath'],
         'file_extension'                 => $parsedContent['fileExtension'],
         'mime_type'                      => $parsedContent['fileType'],
-        'start_time'                     => $parsedContent['startTime'],
-        'end_time'                       => $parsedContent['endTime'],
+        'start_dateTime'                     => $parsedContent['startTime'],
+        'end_dateTime'                       => $parsedContent['endTime'],
         'bytes_recorded'                 => $parsedContent['bytesRecorded'],
         'seconds_spent_recording'        => $parsedContent['secondsSpentRecording'],
         'total_milliseconds_recorded'    => $parsedContent['totalMillisecondsRecorded'],
@@ -461,7 +461,7 @@ class MistTriggerController extends Controller {
       $mistStreamWildcard->metadata = $currentMetadata;
       $mistStreamWildcard->is_recording = false;
       $mistStreamWildcard->save();
-      Log::info("Cleared recording metadata for stream: {$streamName}");
+//      Log::debug("Cleared recording metadata for stream: {$streamName}");
       // TODO: Broadcast New Recoding to Team
       broadcast(new MistTriggerRecordingStop($mistStreamWildcard->id, 'stopped'));
     }

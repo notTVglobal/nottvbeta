@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\ChangeFirstPlayVideo;
 use App\Factories\MistServerServiceFactory;
+use App\Helpers\SubscriptionHelper;
 use App\Http\Resources\ImageResource;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
@@ -59,13 +60,13 @@ class AdminController extends Controller {
       $activeStreams = $this->playbackService->activeStreams();
 
       // Log the raw data received from the playback service
-      Log::debug('Raw active streams data received from service.', ['activeStreams' => $activeStreams]);
+//      Log::debug('Raw active streams data received from service.', ['activeStreams' => $activeStreams]);
 
       // Extract the 'active_streams' part from the fetched data
       $activeStreamData = $activeStreams['active_streams'] ?? []; // Ensure correct key access based on your structure
 
       // Log the extracted active stream names
-      Log::debug('Extracted active stream names.', ['activeStreamNames' => $activeStreamData]);
+//      Log::debug('Extracted active stream names.', ['activeStreamNames' => $activeStreamData]);
 
       // Prepare to collect stream data with show details
       $activeStreamsWithShowData = [];
@@ -74,7 +75,7 @@ class AdminController extends Controller {
       foreach ($activeStreamData as $streamName) {
 
         // Log current stream name being processed
-        Log::debug('Processing stream name.', ['streamName' => $streamName]);
+//        Log::debug('Processing stream name.', ['streamName' => $streamName]);
 
         // Find the stream with its related show and the show's image
         $stream = MistStreamWildcard::where('name', $streamName)
@@ -82,7 +83,7 @@ class AdminController extends Controller {
             ->first();
 
         // Log the fetched stream details
-        Log::debug('Fetched stream details from database.', ['streamDetails' => $stream]);
+//        Log::debug('Fetched stream details from database.', ['streamDetails' => $stream]);
 
         if ($stream && $stream->show && $stream->show->image) {
           $imageResource = new ImageResource($stream->show->image);
@@ -98,7 +99,7 @@ class AdminController extends Controller {
       }
 
       // Log the final processed data
-      Log::debug('Final processed active streams with show data.', ['activeStreamsWithShowData' => $activeStreamsWithShowData]);
+//      Log::debug('Final processed active streams with show data.', ['activeStreamsWithShowData' => $activeStreamsWithShowData]);
 
       // Return a JSON response with the detailed stream data
       return response()->json([
@@ -140,6 +141,11 @@ class AdminController extends Controller {
     $automatedRecordingFolder = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
     $userRecordingFolder = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
 
+    // Process subscription settings to convert prices from cents to dollars
+    $subscriptionSettings = $settings->subscription_settings;
+    if ($subscriptionSettings) {
+      $subscriptionSettings = SubscriptionHelper::processSubscriptionSettings($subscriptionSettings);
+    }
 
     return Inertia::render('Admin/Settings', [
         'id'                                     => $settings->id,
@@ -157,6 +163,7 @@ class AdminController extends Controller {
         'mist_server_rtmp_uri'                   => $settings->mist_server_rtmp_uri,
         'mist_server_automated_recording_folder' => ltrim($automatedRecordingFolder, '/'),
         'mist_server_user_recording_folder'      => ltrim($userRecordingFolder, '/'),
+        'subscription_settings'                  => $subscriptionSettings,
         'public_stats_url'                       => $settings->public_stats_url,
         'currentSection'                         => $queryParam,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
@@ -167,7 +174,9 @@ class AdminController extends Controller {
   }
 
   public function saveSettings(HttpRequest $request) {
-    $request->validate([
+
+    $validatedData = $request->validate([
+        'id'                                     => 'required|integer',
         'default_country'                        => 'nullable|integer',
         'cdn_endpoint'                           => 'nullable|string',
         'cloud_folder'                           => 'nullable|string',
@@ -176,36 +185,36 @@ class AdminController extends Controller {
         'mist_server_rtmp_uri'                   => 'nullable|string',
         'mist_server_user_recording_folder'      => 'nullable|string',
         'mist_server_automated_recording_folder' => 'nullable|string',
+        'subscription_settings'                  => 'nullable|array',
         'public_stats_url'                       => 'nullable|url',
     ]);
 
-    $settings = AppSetting::find($request->id);
-    $settings->country_id = $request->default_country;
-    $settings->cdn_endpoint = $request->cdn_endpoint;
-    $settings->cloud_folder = '/' . $request->cloud_folder;
-    $settings->cloud_private_folder = '/' . $request->cloud_private_folder;
-    $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
-    $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
+    $settings = AppSetting::find($validatedData['id']);
+    $settings->country_id = $validatedData['default_country'];
+    $settings->cdn_endpoint = $validatedData['cdn_endpoint'];
+    $settings->cloud_folder = '/' . $validatedData['cloud_folder'];
+    $settings->cloud_private_folder = '/' . $validatedData['cloud_private_folder'];
+    $settings->mist_server_uri = rtrim($validatedData['mist_server_uri'], '/') . '/';
+    $settings->mist_server_rtmp_uri = rtrim($validatedData['mist_server_rtmp_uri'], '/') . '/';
     $settings->mist_server_settings = [
-        'mist_server_automated_recording_folder' => '/' . trim($request->mist_server_automated_recording_folder, '/') . '/',
-        'mist_server_user_recording_folder'      => '/' . trim($request->mist_server_user_recording_folder, '/') . '/',
+        'mist_server_automated_recording_folder' => '/' . trim($validatedData['mist_server_automated_recording_folder'], '/') . '/',
+        'mist_server_user_recording_folder'      => '/' . trim($validatedData['mist_server_user_recording_folder'], '/') . '/',
     ];
 
-    $settings->public_stats_url = $request->public_stats_url;
+    // Process subscription settings if they exist
+    if ($request->has('subscription_settings')) {
+      $subscriptionSettings = SubscriptionHelper::processSubscriptionSettings($validatedData['subscription_settings'], false);
+      $settings->subscription_settings = $subscriptionSettings;
+    }
+
+    $settings->public_stats_url = $validatedData['public_stats_url'];
 
     $settings->save();
-
-    $db = DB::table('app_settings')
-        ->where('id', 1)
-        ->update(['cdn_endpoint' => $request->cdn_endpoint]);
-
-    $db = DB::table('app_settings')
-        ->where('id', 1)
-        ->update(['cloud_folder' => '/' . $request->cloud_folder]);
 
     return redirect(route('admin.settings'))->with('success', 'Settings Saved Successfully');
 
   }
+
 
 ////////////  FIRST PLAY SETTINGS
 /////////////////////////////////
@@ -313,24 +322,24 @@ class AdminController extends Controller {
 
     // Check if custom video should be used
     if ($cacheDataToUpdate['use_custom_video']) {
-      $videoDetails = (object)[
-          'source' => $cacheDataToUpdate['custom_video_source'],
+      $videoDetails = (object) [
+          'source'    => $cacheDataToUpdate['custom_video_source'],
           'mediaType' => $cacheDataToUpdate['custom_media_type'],
-          'type' => $cacheDataToUpdate['custom_video_source_type'],
-          'name' => $cacheDataToUpdate['custom_video_name'],
+          'type'      => $cacheDataToUpdate['custom_video_source_type'],
+          'name'      => $cacheDataToUpdate['custom_video_name'],
       ];
     } else {
       // Fallback to default video data if custom video is not used
-      $videoDetails = (object)[
-          'source' => $cacheDataToUpdate['first_play_video_source'],
+      $videoDetails = (object) [
+          'source'    => $cacheDataToUpdate['first_play_video_source'],
           'mediaType' => 'default_media_type', // Assuming a default, adjust as necessary
-          'type' => $cacheDataToUpdate['first_play_video_source_type'],
-          'name' => $cacheDataToUpdate['first_play_video_name'],
+          'type'      => $cacheDataToUpdate['first_play_video_source_type'],
+          'name'      => $cacheDataToUpdate['first_play_video_name'],
       ];
     }
 
 // Log the video details before dispatching
-    Log::debug('Video data before dispatch', ['videoData' => $videoDetails]);
+//    Log::debug('Video data before dispatch', ['videoData' => $videoDetails]);
 
 // Broadcast the updated firstPlay
     event(new ChangeFirstPlayVideo($videoDetails));
@@ -629,7 +638,6 @@ class AdminController extends Controller {
     }
 
 
-
     return Inertia::render('Admin/Teams', [
         'teams'   => Team::with('user', 'image', 'shows', 'teamStatus')
             ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
@@ -737,12 +745,11 @@ class AdminController extends Controller {
   }
 
   //// ADMIN: UPLOAD JSON DATA FOR NEWS
-  public function uploadNewsData(Request $request)
-  {
+  public function uploadNewsData(Request $request) {
     $request->validate([
         'dataFile' => 'required|file|mimes:csv,txt',
-        'model' => 'required|string|in:NewsCity,NewsProvince,NewsFederalElectoralDistrict,NewsSubnationalElectoralDistrict',
-        'columns' => 'required|string',
+        'model'    => 'required|string|in:NewsCity,NewsProvince,NewsFederalElectoralDistrict,NewsSubnationalElectoralDistrict',
+        'columns'  => 'required|string',
     ]);
 
     $file = $request->file('dataFile');
@@ -760,8 +767,7 @@ class AdminController extends Controller {
     return response()->json(['message' => 'Data updated successfully']);
   }
 
-  private function updateModelData($modelName, $record, $columns)
-  {
+  private function updateModelData($modelName, $record, $columns) {
     switch ($modelName) {
       case 'NewsCity':
         $this->updateNewsCity($record, $columns);
@@ -780,8 +786,7 @@ class AdminController extends Controller {
     }
   }
 
-  private function updateNewsCity($record, $columns)
-  {
+  private function updateNewsCity($record, $columns) {
     $latitude = $record['latitude'];
     $longitude = $record['longitude'];
 

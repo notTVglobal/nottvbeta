@@ -1,8 +1,33 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
     <head>
+        @inertiaHead
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- App Card Properties -->
+{{--        TODO: Create the Apps --}}
+{{--        <meta name="twitter:app:country" content="US">--}}
+{{--        <meta name="twitter:app:name:iphone" content="Your iPhone App Name">--}}
+{{--        <meta name="twitter:app:id:iphone" content="your_app_id">--}}
+{{--        <meta name="twitter:app:url:iphone" content="yourapp://page">--}}
+{{--        <meta name="twitter:app:name:googleplay" content="Your Android App Name">--}}
+{{--        <meta name="twitter:app:id:googleplay" content="your_app_id">--}}
+{{--        <meta name="twitter:app:url:googleplay" content="yourapp://page">--}}
+
+        <!-- Player Card Properties -->
+{{--        TODO: Create our Bonus Content as shareable videos and Shareable pages. --}}
+{{--        <meta name="twitter:player" content="https://example.com/iframe_player">--}}
+{{--        <meta name="twitter:player:width" content="1280">--}}
+{{--        <meta name="twitter:player:height" content="720">--}}
+{{--        <meta name="twitter:player:stream" content="https://example.com/video.mp4">--}}
+{{--        <meta name="twitter:player:stream:content_type" content="video/mp4">--}}
+
+
+
+
+
+
 {{--        <meta property="csp-nonce" content="{{ csp_nonce() }}">--}}
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
@@ -77,7 +102,7 @@
 
 
 {{--        <script type="text/javascript" src="js/emojionearea.min.js"></script>--}}
-        @inertiaHead
+
     </head>
     <body class="h-full font-sans antialiased bg-black">
 

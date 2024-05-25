@@ -17,7 +17,6 @@ return new class extends Migration
         // Change content_type and content_id to be nullable
         $table->string('content_type')->nullable()->change();
         $table->unsignedBigInteger('content_id')->nullable()->change();
-        $table->unsignedBigInteger('content_id')->nullable()->change();
       });
     }
 
@@ -30,8 +29,8 @@ return new class extends Migration
     {
       // Change back content_type and content_id to not nullable (assuming they were not nullable before)
       Schema::table('user_video_settings', function (Blueprint $table) {
-        $table->string('content_type')->nullable(false)->change();
-        $table->unsignedBigInteger('content_id')->nullable(false)->change();
+//        $table->string('content_type')->nullable(false)->change();
+//        $table->unsignedBigInteger('content_id')->nullable(false)->change();
       });
     }
 };

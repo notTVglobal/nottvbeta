@@ -212,6 +212,10 @@ class UsersController extends Controller {
     ]);
   }
 
+  public function settingsRedirect() {
+    return redirect()->route('profile.show');
+  }
+
   /**
    * Update the specified resource in storage.
    *
@@ -230,7 +234,7 @@ class UsersController extends Controller {
   public function update(Request $request, User $user) {
 
     // validate the request
-    $attributes = Request::validate([
+    $validatedData = Request::validate([
         'name'       => ['required', 'string', 'max:255'],
         'email'      => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
         'address1'   => ['nullable', 'string', 'max:255'],
@@ -244,13 +248,19 @@ class UsersController extends Controller {
         'stripe_id'  => ['nullable', 'string', 'max:255'],
     ]);
 
+    // Sanitize data using e()
+    $sanitizedData = [];
+    foreach ($validatedData as $key => $value) {
+      $sanitizedData[$key] = e($value);
+    }
+
     // update the user
-    $user->update($attributes);
+    $user->update($sanitizedData);
 
     $userId = $user->id;
     $checkCreator = Creator::where('user_id', $userId)->first();
     // Check if the user is already on the creator table
-    if (!$checkCreator && $attributes['role_id'] == 4) {
+    if (!$checkCreator && $sanitizedData['role_id'] == 4) {
       // if no, and the new role_id IS a creator
       // add the user to the Creator table.
       Creator::create([
@@ -258,7 +268,7 @@ class UsersController extends Controller {
       ]);
 
     } // Check if the user is already on the creator table
-    elseif ($checkCreator == !null && $attributes['role_id'] != 4) {
+    elseif ($checkCreator == !null && $sanitizedData['role_id'] != 4) {
       // if yes, and new role_id is NOT a creator, remove the user
       // from the creator table
       Creator::destroy($checkCreator->id);
@@ -270,17 +280,6 @@ class UsersController extends Controller {
 
       return $role->role;
     }
-
-//        return Inertia::render('Users/{$id}/Index', [
-//            'userSelected' => $user,
-//            'role' => role($user->role_id),
-//            'teams' => $user->teams,
-//            'can' => [
-//                'viewAnyUser' => Auth::user()->can('viewAny', User::class),
-//                'createUser' => Auth::user()->can('create', User::class),
-//                'editUser' => Auth::user()->can('edit', User::class)
-//            ]
-//        ])->with('message', 'User Updated Successfully');
 
     return Redirect::route('users.index', [
         'userSelected' => $user,
@@ -294,13 +293,26 @@ class UsersController extends Controller {
     ])->with('message', $user->name . ' updated successfully.');
   }
 
+  public function getContactInformation(): \Illuminate\Http\JsonResponse {
+    $user = Auth::user();
 
+    return response()->json([
+        'address1' => $user->address1,
+        'address2' => $user->address2,
+        'city' => $user->city,
+        'province' => $user->province,
+        'country' => $user->country,
+        'postalCode' => $user->postalCode,
+        'phone' => $user->phone,
+    ]);
+  }
 
 
   // This is the user update contact information method
   // for the user's settings page.
   //
-  public function updateContact(HttpRequest $request, User $user) {
+  public function updateContact(HttpRequest $request) {
+
     // Validate the request
     $validatedData = $request->validate([
         'address1'   => ['nullable', 'string', 'max:255'],
@@ -312,57 +324,35 @@ class UsersController extends Controller {
         'phone'      => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
     ]);
 
-    // Find the user
-    $user = User::find($request->id);
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
-    }
+    // Get the authenticated user
+    $user = Auth::user();
 
-    // Sanitize data
+    // Sanitize data using e()
     $sanitizedData = [];
     foreach ($validatedData as $key => $value) {
-      $sanitizedData[$key] = Purifier::clean($value);
+      $sanitizedData[$key] = e($value);
     }
 
     // Update the user with sanitized data
-    $user->fill($sanitizedData);
-    $user->save();
+    $user->update($sanitizedData);
 
     // Redirect with success message
     return redirect(route('profile.show'))->with('message', 'Contact Info Updated Successfully');
-
-//        return Inertia::render('Settings')->with('message', 'Contact Info Updated Successfully');
-
-
-//        // validate the request
-//        $attributes = Request::validate([
-//            'address1' => ['nullable', 'string', 'max:255'],
-//            'address2' => ['nullable', 'string', 'max:255'],
-//            'city' => ['nullable', 'string', 'max:255'],
-//            'province' => ['nullable', 'string', 'max:255'],
-//            'country' => ['nullable', 'string', 'max:255'],
-//            'postalCode' => ['nullable', 'string', 'max:255'],
-//            'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
-//        ]);
-
-//        // update the user
-//        $user->update($attributes);
-//        sleep(1);
   }
 
 
-  public function getUserStoreData(): bool|string {
-    $user = auth()->user();
-
+  public function getUserStoreData() {
+    $user = Auth::user();
     return json_encode([
         'id'                    => $user->id,
         'isAdmin'               => $user->isAdmin(),
         'isCreator'             => $user->isCreator(),
         'isNewsPerson'          => $user->isNewsPerson(),
         'isVip'                 => $user->isVip(),
-        'isSubscriber'          => $user->subscribed('default'),
-        'subscriptionActive'    => optional($user->subscription('default'))->active(),
-        'hasAccount'            => $user->hasAccount(),
+//        'isSubscriber'          => $user->subscribed('default'),
+//        'subscription'          => $user->subscription('default'),
+//        'isSubscriptionActive'  => (bool) optional($user->subscription('default'))->active(),
+//        'hasAccount'            => $user->hasAccount(),
         'hasConsentedToCookies' => $user->hasConsentedToCookies(),
     ]);
   }
@@ -372,9 +362,9 @@ class UsersController extends Controller {
 
     if ($user) {
       return response()->json([
-          'name' => $user->name,
-          'email' => $user->email,
-          'country' => $user->country,
+          'name'       => $user->name,
+          'email'      => $user->email,
+          'country'    => $user->country,
           'postalCode' => $user->postalCode,
       ]);
     }
@@ -553,8 +543,7 @@ class UsersController extends Controller {
     return response()->json(['message' => 'Cookie consent recorded.'], 200);
   }
 
-  public function checkCookieConsent(HttpRequest $request): \Illuminate\Http\JsonResponse
-  {
+  public function checkCookieConsent(HttpRequest $request): \Illuminate\Http\JsonResponse {
     $user = Auth::user();
     if (!$user) {
       return response()->json(['message' => 'User not authenticated.'], 401);
@@ -564,7 +553,6 @@ class UsersController extends Controller {
 
     return response()->json(['hasConsented' => $hasConsented], 200);
   }
-
 
 
 }

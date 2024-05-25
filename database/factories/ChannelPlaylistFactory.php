@@ -22,8 +22,8 @@ class ChannelPlaylistFactory extends Factory
         'url' => $this->faker->url,
         'type' => $this->faker->randomElement(['Regular', 'Event', 'Special']), // Adjust as per your actual types
         'status' => $this->faker->boolean,
-        'start_time' => $this->faker->dateTime,
-        'end_time' => $this->faker->dateTime,
+        'start_dateTime' => $this->faker->dateTime,
+        'end_dateTime' => $this->faker->dateTime,
         'priority' => $this->faker->numberBetween(1, 10),
         'repeat_mode' => $this->faker->boolean,
     ];

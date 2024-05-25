@@ -25,6 +25,7 @@ class AppSetting extends Model {
       'mist_server_uri',
       'mist_server_rtmp_uri',
       'mist_server_settings',
+      'subscription_settings',
       'welcome_message',
   ];
 
@@ -32,6 +33,7 @@ class AppSetting extends Model {
       'first_play_settings'  => 'json',
       'invite_code_settings' => 'json',
       'mist_server_settings' => 'json',
+      'subscription_settings' => 'json',
   ];
 
 

@@ -4,9 +4,13 @@
   </div>
 </template>
 <script setup>
+import { useTeamStore } from '@/Stores/TeamStore'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import { computed } from 'vue'
 
-const props = defineProps({
-  team: Object
-})
+const teamStore = useTeamStore()
+
+// Map store state to local computed properties
+const team = computed(() => teamStore.team || {});
+
 </script>

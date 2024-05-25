@@ -1,6 +1,11 @@
 <template>
-
-  <Head :title="`${show.name}: ${episode.name}`"/>
+  <Head :title="pageTitle">
+    <meta property="og:url" :content="ogUrl" />
+    <meta property="og:type" :content="ogType" />
+    <meta property="og:title" :content="ogTitle" />
+    <meta property="og:description" :content="ogDescription" />
+    <meta property="og:image" :content="ogImage" />
+  </Head>
 
 
   <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
@@ -130,7 +135,8 @@
             class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
           <!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
           <div class="max-w-[50%] ml-5 py-0">
-            <SingleImage :image="image" :key="image"/>
+
+            <SingleImageWithModal :image="image" :key="image"/>
 
           </div>
 
@@ -198,6 +204,8 @@
 
 
 <script setup>
+import { usePage } from '@inertiajs/vue3'
+import { computed, onMounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
@@ -205,12 +213,11 @@ import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
-import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
-import { onMounted } from 'vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
+import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 
 usePageSetup('showEpisodesShow')
 
@@ -219,6 +226,7 @@ const nowPlayingStore = useNowPlayingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const teamStore = useTeamStore()
 const userStore = useUserStore()
+const page  = usePage().props
 
 let props = defineProps({
   show: Object,
@@ -368,6 +376,33 @@ function scrollTo(selector) {
 // }
 //
 // checkForVideo()
+
+const pageTitle = computed(() => {
+  const showName = props.show?.name ?? '';
+  const episodeName = props.episode?.name ?? '';
+  return showName && episodeName ? `${episodeName}: ${showName}` : episodeName || showName;
+});
+const ogUrl = computed(() => `${page.appUrl}${page.currentPath}`);
+const ogType = computed(() => 'video.episode');
+const ogTitle = computed(() => props.episode.name);
+// Truncate the description if it exceeds 300 characters
+const ogDescription = computed(() => {
+  const description = props.episode.description;
+  const maxLength = 300;
+  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description;
+});
+const ogImage = computed(() => {
+  const image = props.episode.image;
+  if (image) {
+    const { cdn_endpoint, cloud_folder, name, placeholder_url } = image;
+    if (cdn_endpoint && cloud_folder && name) {
+      return `${cdn_endpoint}${cloud_folder}${name}`;
+    } else if (placeholder_url) {
+      return placeholder_url;
+    }
+  }
+  return null;
+});
 
 </script>
 

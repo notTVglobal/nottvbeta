@@ -34,13 +34,12 @@ class NewNotificationEvent implements ShouldBroadcastNow
         return 'userNotifications';
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
+  /**
+   * Get the channels the event should broadcast on.
+   *
+   * @return PrivateChannel
+   */
+    public function broadcastOn(): PrivateChannel {
         return new PrivateChannel('user.'.$this->notification->user_id);
     }
 

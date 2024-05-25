@@ -34,8 +34,8 @@
       </div>
     </div>
 
-    <!-- Paginator -->
-<!--    <Pagination :data="episodes" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>-->
+<!--     Paginator -->
+    <Pagination :data="episodes" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>
 
     </div>
 
@@ -44,8 +44,6 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
-import { useTimeAgo } from '@vueuse/core'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"

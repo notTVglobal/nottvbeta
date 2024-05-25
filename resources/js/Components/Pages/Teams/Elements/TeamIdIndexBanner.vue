@@ -1,8 +1,8 @@
 <template>
-    <div v-if="nextBroadcast || team.public_message" class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
+    <div v-if="teamStore.nextBroadcast || team.public_message" class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
       <div class="flex flex-col md:flex-row bg-yellow-300 dark:bg-gray-700 w-full py-6 text-center align-middle rounded-lg shadow-lg">
         <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
-          <div v-if="nextBroadcast" class="px-4">
+          <div v-if="teamStore.nextBroadcast" class="px-4">
             <p class="uppercase font-bold tracking-wider text-gray-800 dark:text-gray-200">
               Next Broadcast
             </p>
@@ -13,28 +13,28 @@
               {{ formattedTime }} {{ userStore.timezoneAbbreviation }}
             </p>
             <!-- Enhanced broadcast name display -->
-            <a @click="goToBroadcast(nextBroadcast)" class="block mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
-              {{ nextBroadcast.name }}
+            <a @click="goToBroadcast(teamStore.nextBroadcast)" class="block mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
+              {{ teamStore.nextBroadcast.name }}
             </a>
           </div>
           <div v-else class="px-4 text-gray-800 dark:text-gray-200">
             No broadcasts are currently scheduled.
           </div>
         </div>
-        <div v-if="nextBroadcast" class="flex flex-col md:w-2/3 justify-center items-center font-semibold px-4">
+        <div v-if="teamStore.nextBroadcast" class="flex flex-col md:w-2/3 justify-center items-center font-semibold px-4">
           <div v-if="team.public_message" class="text-lg md:text-xl leading-relaxed font-medium text-gray-800 dark:text-gray-200 p-3 mb-4 rounded">
             <span v-html="team.public_message" />
           </div>
 
-          <div v-if="nextBroadcast && nextBroadcast?.broadcastDetails?.zoomLink" class="w-20 md:border-t border-gray-400 dark:border-gray-600">
+          <div v-if="teamStore.nextBroadcast && teamStore.nextBroadcast?.broadcastDetails?.zoomLink" class="w-20 md:border-t border-gray-400 dark:border-gray-600">
           </div>
-          <div v-if="nextBroadcast && nextBroadcast?.broadcastDetails?.zoomLink">
-            <ZoomLinkButton :nextBroadcast="nextBroadcast"/>
+          <div>
+            <ZoomLinkButton />
           </div>
         </div>
       </div>
     </div>
-  <TeamIdIndexUpcomingBroadcasts :broadcasts="sortedBroadcasts" />
+  <TeamIdIndexUpcomingBroadcasts />
 <!--  <div v-if="sortedBroadcasts.length" class="accordion bg-gray-800 text-gray-50 p-5 rounded-lg shadow">-->
 <!--    &lt;!&ndash; Header for the Accordion &ndash;&gt;-->
 <!--    <h2 class="text-xl font-semibold mb-4">More Upcoming Broadcasts</h2>-->
@@ -74,6 +74,7 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
+import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
@@ -81,77 +82,15 @@ import utc from 'dayjs/plugin/utc'
 import { computed, ref } from 'vue'
 import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
 import TeamIdIndexUpcomingBroadcasts from '@/Components/Pages/Teams/Elements/TeamIdIndexUpcomingBroadcasts.vue'
-import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
-import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
-import TipTapRender from '@/Components/Global/TextEditor/TipTapRender.vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
+const teamStore = useTeamStore()
 const userStore = useUserStore()
 
-const props = defineProps({
-  team: Object,
-})
-
-
-
-// Computes the closest broadcast to today
-const nextBroadcast = computed(() => {
-  if (!props.team.nextBroadcast || props.team.nextBroadcast.length === 0) {
-    return null;
-  }
-  // Get current date and time
-  const now = dayjs();
-
-  // Filter broadcasts to only include future ones
-  const futureBroadcasts = props.team.nextBroadcast.filter(broadcast =>
-      dayjs(broadcast.broadcastDate).isAfter(now)
-  );
-
-  if (futureBroadcasts.length === 0) {
-    return null;
-  }
-
-  // Sort broadcasts by closeness to now
-  const sortedBroadcasts = futureBroadcasts.sort((a, b) =>
-      dayjs(a.broadcastDate).diff(now) - dayjs(b.broadcastDate).diff(now)
-  );
-
-  return sortedBroadcasts[0]; // Return the closest future broadcast
-});
-
-
-
-// Computes the sorted list of remaining broadcasts excluding the closest
-const sortedBroadcasts = computed(() => {
-  if (!props.team.nextBroadcast || props.team.nextBroadcast.length === 0) {
-    return [];
-  }
-  // Get current date and time
-  const now = dayjs();
-
-  // Filter broadcasts to only include future ones
-  const futureBroadcasts = props.team.nextBroadcast.filter(broadcast =>
-      dayjs(broadcast.broadcastDate).isAfter(now)
-  );
-
-  if (futureBroadcasts.length === 0) {
-    return [];
-  }
-
-  // Sort broadcasts by actual broadcast date
-  const sortedBroadcasts = futureBroadcasts.sort((a, b) =>
-      dayjs(a.broadcastDate).diff(dayjs(b.broadcastDate))
-  );
-
-  // Skip the first sorted item, which should be the closest future broadcast
-  if (nextBroadcast.value && sortedBroadcasts[0].id === nextBroadcast.value.id) {
-    return sortedBroadcasts.slice(1); // Skip the first one
-  }
-
-  return sortedBroadcasts;
-});
+// Map store state to local computed properties
+const team = computed(() => teamStore.team || {});
 
 const activeIndex = ref(null);
 
@@ -163,21 +102,18 @@ const toggle = (index) => {
   }
 };
 
-
-
-
 const formattedDate = computed(() => {
-  if (!nextBroadcast.value) return null;
-  return dayjs(nextBroadcast.value.broadcastDate).tz(userStore.timezone).format('MMMM D, YYYY');
-})
+  if (!teamStore.nextBroadcast) return null;
+  return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('dddd MMMM D, YYYY');
+});
 
 const formattedTime = computed(() => {
-  if (!nextBroadcast.value) return null;
-  return dayjs(nextBroadcast.value.broadcastDate).tz(userStore.timezone).format('h:mm a');
-})
+  if (!teamStore.nextBroadcast.value) return null;
+  return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('h:mm a');
+});
 
 const goToBroadcast = (broadcast) => {
-  if (!nextBroadcast.value) return;
+  if (!teamStore.nextBroadcast) return;
   const baseLink = {
     'show': `/shows/${broadcast.slug}/`,
     'movie': `/movie/${broadcast.slug}/`,

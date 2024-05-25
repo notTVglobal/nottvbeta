@@ -12,11 +12,11 @@
       <!-- Display the Zoom link or other broadcast-related elements here -->
       <h2>The broadcast is currently open.</h2>
     </div>
-<div class="mt-2 space-x-2">
+<div class="mt-2 space-x-2 space-y-2">
   <button v-if="isBroadcastOpen" @click="joinZoom" class="w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded">
     Click to Join
   </button>
-  <button @click="shareBroadcast" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+  <button @click.prevent="socialShareStore.showSocialSharing" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
     Click to Share This
   </button>
   <button v-if="!isBroadcastOpen" @click="getEmailReminder" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
@@ -28,38 +28,37 @@
 
 </template>
 <script setup>
+import { computed, ref, watch, watchEffect } from 'vue'
+import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
-import ZoomLogo from '@/Components/Global/SvgLogos/ZoomLogo.vue'
-import { computed, ref, watchEffect } from 'vue'
+import { useSocialShareStore } from '@/Stores/SocialShareStore'
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
-const userStore = useUserStore()
-const notificationStore = useNotificationStore()
+import ZoomLogo from '@/Components/Global/SvgLogos/ZoomLogo.vue'
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const props = defineProps({
-  nextBroadcast: Object,
-})
+const teamStore = useTeamStore()
+const userStore = useUserStore()
+const notificationStore = useNotificationStore()
+const socialShareStore = useSocialShareStore()
+
+// Map store state to local computed properties
+const team = computed(() => teamStore.team || {});
+
+const showShareModal = ref(false);
 
 const isBroadcastOpen = computed(() => {
   // Ensure nextBroadcast and broadcastDate are available
-  if (!props.nextBroadcast || !props.nextBroadcast.broadcastDate) {
+  if (!team.value.nextBroadcast || !team.value.nextBroadcast.broadcastDate) {
     return false;
   }
 
-  // Convert the broadcastDate from UTC to user's local time
-  const broadcastDateUserTime = userStore.convertUtcToUserTimezone(props.nextBroadcast.broadcastDate);
-
-  // Get the current time in user's local time
-  const nowUserTime = dayjs().tz(userStore.timezone);
-
   // Calculate the time difference
-  const diffInMinutes = nowUserTime.diff(broadcastDateUserTime, 'minute');
+  const diffInMinutes = userStore.userCurrentTime.diff(teamStore.nextBroadcast.broadcastDate, 'minute');
 
   // Check if the broadcast is within the allowed range
   return diffInMinutes >= -30 && diffInMinutes <= 60; // 30 minutes in the future to 60 minutes in the past
@@ -75,16 +74,21 @@ watchEffect(() => {
   return () => clearInterval(interval);
 });
 
-function joinZoom() {
-  window.open(props.nextBroadcast.broadcastDetails.zoomLink, '_blank');
-}
+const zoomLink = computed(() => {
+  const nextBroadcast = teamStore.nextBroadcast;
+  // console.log('nextBroadcast:', nextBroadcast);  // Debugging
+  if (nextBroadcast && Array.isArray(nextBroadcast.broadcastDetails)) {
+    // console.log('broadcastDetails:', nextBroadcast.broadcastDetails);  // Debugging
+    const zoomLinkObj = nextBroadcast.broadcastDetails.find(detail => detail.zoomLink);
+    return zoomLinkObj ? zoomLinkObj.zoomLink : '';
+  }
+  return '';
+});
 
-function shareBroadcast() {
-  navigator.clipboard.writeText(props.nextBroadcast.broadcastDetails.zoomLink).then(() => {
-    notificationStore.setGeneralServiceNotification('Success!', 'The Zoom link has been copied to your clipboard. Join the live broadcast and have fun!');
-  }, () => {
-    notificationStore.setGeneralServiceNotification('Oops!', 'Failed to copy the Zoom link. Please try again.');
-  });
+
+function joinZoom() {
+  // console.log('zoomLink value:', zoomLink.value);  // Accessing the value of the computed property
+  window.open(zoomLink.value, '_blank');
 }
 
 function getEmailReminder() {

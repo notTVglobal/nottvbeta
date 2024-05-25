@@ -51,4 +51,8 @@ return [
             'internal_ip' => env('MISTSERVER_VOD_INTERNAL_IP', 'default-vod-internal-ip'),
         ],
     ],
+
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+    ],
 ];

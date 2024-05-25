@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('recordings', function (Blueprint $table) {
-          $table->string('comment')->nullable()->after('id');
+          $table->dropColumn('comment');
         });
     }
 };

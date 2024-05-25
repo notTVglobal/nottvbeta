@@ -12,10 +12,14 @@
   </div>
 </template>
 <script setup>
+import { useTeamStore } from '@/Stores/TeamStore'
 import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
+import { computed } from 'vue'
 
-const props = defineProps({
-  shows: Object,
-  team: Object,
-})
+const teamStore = useTeamStore()
+
+// Map store state to local computed properties
+const team = computed(() => teamStore.team || {});
+const shows = computed(() => teamStore.shows || {});
+
 </script>

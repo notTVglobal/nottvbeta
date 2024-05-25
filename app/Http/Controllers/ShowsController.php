@@ -380,7 +380,7 @@ class ShowsController extends Controller {
     $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
 
     // Sanitize description
-    $sanitizedDescription = Purifier::clean($validatedData['description']);
+    $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
     // Retrieve the team with the team_id and check its status
     $team = Team::find($teamId);
@@ -871,7 +871,7 @@ class ShowsController extends Controller {
 //    $autoRecordingsPath = config('paths.auto_recordings_path');
 
     // Paginate recordings directly
-    $paginatedRecordings = $show->recordings()->orderBy('start_time', 'asc')->paginate(10);
+    $paginatedRecordings = $show->recordings()->orderBy('start_dateTime', 'asc')->paginate(10);
 
     $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
     $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
@@ -936,7 +936,7 @@ class ShowsController extends Controller {
 //      $encodedPath = rawurlencode(trim($path, '/ '));
 //      $streamName = $streamPrefix . $encodedPath . '.mp4';
 
-      $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
+      $formattedStartTime = optional($recording->start_dateTime)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
       $downloadFileName = rawurlencode($show->name . $formattedStartTime . '.mp4');
       $downloadUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '?dl=1&filename=' . $downloadFileName;
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $streamPrefix . $encodedFilename . '.html';
@@ -944,8 +944,8 @@ class ShowsController extends Controller {
       return [
           'id'                          => $recording->id,
           'comment'                     => $recording->comment,
-          'start_time'                  => $recording->start_time,
-          'end_time'                    => $recording->end_time,
+          'start_dateTime'                  => $recording->start_dateTime,
+          'end_dateTime'                    => $recording->end_dateTime,
           'total_milliseconds_recorded' => $recording->total_milliseconds_recorded,
           'streamName'                  => $playableStreamName,
           'shareUrl'                    => $shareUrl,
@@ -977,8 +977,8 @@ class ShowsController extends Controller {
 //      $encodedPath = rawurlencode($path);
 //      $streamName = $streamPrefix . $encodedPath . '.mp4'; // Prepare stream name
 //
-//      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
-//      $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
+//      // Format the start time as a string suitable for a filename, assuming $recording->start_dateTime is a Carbon instance
+//      $formattedStartTime = optional($recording->start_dateTime)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
 //
 //      // Construct the file name and encode it for URL usage
 //      $downloadFileName = $show->name . $formattedStartTime . '.mp4';
@@ -994,7 +994,7 @@ class ShowsController extends Controller {
 //
 //      // Return the modified recording with additional download details
 //      return collect($recording->only([
-//          'id', 'file_extension', 'start_time', 'end_time',
+//          'id', 'file_extension', 'start_dateTime', 'end_dateTime',
 //          'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url', 'path', 'comment'
 //      ]))
 //          ->put('streamName', $streamName)
@@ -1007,13 +1007,13 @@ class ShowsController extends Controller {
 
     $mostRecentSchedule = $show->schedules()->latest()->first();
     if ($mostRecentSchedule) {
-      // Convert start_time to UTC
-      $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $mostRecentSchedule->start_time, $mostRecentSchedule->timezone)
+      // Convert start_dateTime to UTC
+      $startTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $mostRecentSchedule->start_dateTime, $mostRecentSchedule->timezone)
           ->setTimezone('UTC')
           ->toDateTimeString();
 
-      // Convert end_time to UTC
-      $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $mostRecentSchedule->end_time, $mostRecentSchedule->timezone)
+      // Convert end_dateTime to UTC
+      $endTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $mostRecentSchedule->end_dateTime, $mostRecentSchedule->timezone)
           ->setTimezone('UTC')
           ->toDateTimeString();
 
@@ -1077,7 +1077,7 @@ class ShowsController extends Controller {
                 'id'   => $show->showRunner->id ?? null,
                 'name' => $show->showRunner->user->name ?? null,
             ],
-//            'recordings'      => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
+//            'recordings'      => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_dateTime', 'end_dateTime', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
             'recordings'      => $paginatedRecordings,
         ],
         'team'            => [
@@ -1252,7 +1252,7 @@ class ShowsController extends Controller {
 //    $sanitizedNotes = Purifier::clean($validatedData['notes']);
 
     // Sanitize description
-    $sanitizedDescription = Purifier::clean($validatedData['description']);
+    $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
     // update the show >>> THE OLD WAY!!
 //    $show->name = $request->name;
@@ -1273,7 +1273,7 @@ class ShowsController extends Controller {
 
     $show->update([
         'name'                 => $validatedData['name'],
-        'description'          => $validatedData['description'],
+        'description'          => $sanitizedDescription,
         'slug'                 => \Str::slug($validatedData['name']),
         'release_date'         => $validatedData['release_date'] ?? null,
         'show_category_id'     => $validatedData['category'],

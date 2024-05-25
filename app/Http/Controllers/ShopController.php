@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SubscriptionHelper;
 use App\Http\Resources\ImageResource;
+use App\Models\AppSetting;
 use App\Models\Creator;
 use App\Models\NewsPerson;
 use App\Models\Shop;
 use App\Models\Show;
-use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Inertia\Response;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Exception\InvalidRequestException;
 
 // A note for testing the shop locally. Use https://expose.dev
 
@@ -65,6 +67,47 @@ class ShopController extends Controller {
     }
 
     return response()->json($options);
+  }
+
+  /**
+   * @throws ApiErrorException
+   * @throws InvalidRequestException
+   */
+  public function contributeIndex(): Response {
+
+//    $user = auth()->user();
+//
+//    // Check if the user has a Stripe customer ID
+//    if ($user->stripe_id) {
+//      try {
+//        // Attempt to retrieve the customer to see if they still exist
+//        $stripeCustomer = Customer::retrieve($user->stripe_id);
+//      } catch (InvalidRequestException $e) {
+//        // If the customer does not exist, clear the stripe_id and create a new customer
+//        if ($e->getStripeCode() === 'resource_missing') {
+//          $user->stripe_id = null;
+//          $user->save();
+//        } else {
+//          throw $e; // Rethrow any other exceptions
+//        }
+//      }
+//    }
+//
+//    // If the user does not have a Stripe customer ID, create a new customer
+//    if (!$user->stripe_id) {
+//      $user->createAsStripeCustomer();
+//    }
+//
+//    // Create a setup intent
+//    $intent = $user->createSetupIntent();
+
+    $settings = AppSetting::first(); // Adjust the query as needed
+
+    // Process subscription settings to convert prices from cents to dollars
+    $subscriptionSettings = SubscriptionHelper::processSubscriptionSettings($settings->subscription_settings);
+    return Inertia::render('Shop/Contribute', [
+        'subscriptionSettings' => $subscriptionSettings,
+    ]);
   }
 
   /**

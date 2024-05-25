@@ -326,6 +326,8 @@
                  class="text-xs text-red-600 mt-1"></div>
           </div>
 
+          <SubscriptionSettings :errors="form.errors"/>
+
           <div class="mb-6 border-t-2 pt-4">
 
 
@@ -628,7 +630,8 @@
                       <pre data-prefix="14."><code>Run: npm install</code></pre>
                       <pre data-prefix="15."><code>Run: sail up</code></pre>
                       <pre data-prefix="16."><code>Run: sail php artisan migrate</code></pre>
-                      <pre data-prefix="17."><code>Run: sail php artisan db:seed (for testing)</code></pre>
+                      <pre data-prefix="17.1"><code>Run This: sail php artisan db:seed (for testing)</code></pre>
+                      <pre data-prefix="17.2"><code>Or Run That: sail php artisan db:seed --class=FirstRunSeeder (seed the database without test data)</code></pre>
                       <pre data-prefix="18."><code>Run: sail php artisan slugs:update</code></pre>
                       <pre data-prefix="19."><code>Run: sail php artisan app:set-first-run-settings</code></pre>
 
@@ -697,6 +700,7 @@ import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea.vu
 import FirstPlayVideoSourceSelector from '@/Components/Pages/Admin/Settings/FirstPlayVideoSourceSelector.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import UploadNewsData from '@/Pages/Admin/Settings/Elements/UploadNewsData.vue'
+import SubscriptionSettings from '@/Components/Pages/Admin/Settings/SubscriptionSettings.vue'
 
 usePageSetup('admin.settings')
 
@@ -742,6 +746,7 @@ let props = defineProps({
   mist_server_automated_recording_folder: String,
   mist_server_user_recording_folder: String,
   public_stats_url: String,
+  subscription_settings: Object,
   // mist_server_api_url: String,
   // mist_server_username: String,
   // mist_server_password: String,
@@ -766,6 +771,7 @@ let form = useForm({
   mist_server_automated_recording_folder: props.mist_server_automated_recording_folder,
   mist_server_user_recording_folder: props.mist_server_user_recording_folder,
   public_stats_url: props.public_stats_url,
+  subscription_settings: props.subscription_settings,
   // mist_server_api_url: props.mist_server_api_url,
   // mist_server_username: props.mist_server_username,
   // mist_server_password: props.mist_server_password,
@@ -782,6 +788,9 @@ const popUpModalMessage = ref('')
 onMounted(() => {
   countries.value = props.countries
   secureNotes.value = ''
+  if (props.subscription_settings) {
+    adminStore.settingsForm.subscriptionSettings = props.subscription_settings
+  }
   if(props.currentSection === 'firstPlaySettings'){
     openFirstPlaySettings()
   }
@@ -853,6 +862,7 @@ const saveSecureNotes = async () => {
 }
 
 let submit = () => {
+  form.subscription_settings = adminStore.settingsForm.subscriptionSettings
   form.patch(route('admin.settings'))
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()

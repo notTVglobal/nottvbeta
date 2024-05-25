@@ -2,6 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Movie;
+use App\Models\MovieTrailer;
+use App\Models\NewsStory;
+use App\Models\OtherContent;
+use App\Models\Show;
+use App\Models\ShowEpisode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\ChannelPlaylistItem;
 
@@ -9,15 +15,21 @@ use App\Models\ChannelPlaylistItem;
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ChannelPlaylistItem>
  */
 class ChannelPlaylistItemFactory extends Factory {
+
   protected $model = ChannelPlaylistItem::class;
 
   public function definition() {
     // Dynamically choose a content type
-    $contentTypes = ['ShowEpisode', 'Movie', 'MovieTrailer', 'NewsStory', 'OtherContent'];
+    $contentTypes = ['Show', 'ShowEpisode', 'Movie', 'MovieTrailer', 'NewsStory', 'OtherContent'];
     $selectedType = $this->faker->randomElement($contentTypes);
 
     // Assuming you have a method to fetch or create a record for the chosen content type
     $content = $this->getContentRecord($selectedType);
+
+    // If no existing content record is found, return an empty array to skip creation
+    if (!$content) {
+      return [];
+    }
 
     return [
         'playlist_id'             => \App\Models\ChannelPlaylist::factory(),
@@ -30,22 +42,15 @@ class ChannelPlaylistItemFactory extends Factory {
   }
 
   private function getContentRecord($type) {
-    // Example logic to fetch or create a content record
-    switch ($type) {
-      case 'ShowEpisode':
-        return \App\Models\ShowEpisode::factory()->create();
-      case 'Movie':
-        return \App\Models\Movie::factory()->create();
-      case 'MovieTrailer':
-        return \App\Models\MovieTrailer::factory()->create();
-      case 'NewsStory':
-        return \App\Models\NewsStory::factory()->create();
-      case 'OtherContent':
-        return \App\Models\OtherContent::factory()->create();
-      // Add cases for other types
-      default:
-        // Handle unexpected types if necessary
-        return ['id' => null];
-    }
+    // Fetch an existing content record or return null if none exist
+    return match ($type) {
+      'Show' => Show::inRandomOrder()->first(),
+      'ShowEpisode' => ShowEpisode::inRandomOrder()->first(),
+      'Movie' => Movie::inRandomOrder()->first(),
+      'MovieTrailer' => MovieTrailer::inRandomOrder()->first(),
+      'NewsStory' => NewsStory::inRandomOrder()->first(),
+      'OtherContent' => OtherContent::inRandomOrder()->first(),
+      default => null,
+    };
   }
 }

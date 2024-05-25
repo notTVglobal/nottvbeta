@@ -19,18 +19,19 @@ class UpdateStatusInNewsStories extends Migration
           ->whereNull('status')
           ->update(['status' => 1]);
 
-      // Modify the status column
+      // Remove the foreign key constraint
       Schema::table('news_stories', function (Blueprint $table) {
-        // Drop the existing foreign key if it exists
-        $foreignKeys = \DB::getDoctrineSchemaManager()->listTableForeignKeys('news_stories');
-        foreach ($foreignKeys as $key) {
-          if ($key->getName() == 'news_stories_status_foreign') {
-            $table->dropForeign('news_stories_status_foreign');
-          }
-        }
+        $table->dropForeign(['status']);
+      });
 
+      // Modify the status column to be NOT NULL with a default value
+      Schema::table('news_stories', function (Blueprint $table) {
         $table->unsignedBigInteger('status')->default(1)->change();
-        $table->foreign('status', 'news_stories_status_foreign')->references('id')->on('news_statuses');
+      });
+
+      // Re-add the foreign key constraint with RESTRICT
+      Schema::table('news_stories', function (Blueprint $table) {
+        $table->foreign('status')->references('id')->on('news_statuses')->onDelete('restrict');
       });
 
       // IF THE ABOVE FAILS, IT'S BECAUSE THE DBAL/DOCTRINE PACKAGE WAS REMOVED IN LARAVEL 11.
