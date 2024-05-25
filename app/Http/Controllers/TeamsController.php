@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
 use App\Http\Resources\ShowResource;
+use App\Http\Resources\TeamDetailedResource;
 use App\Http\Resources\TeamMemberResource;
 use App\Http\Resources\TeamResource;
 use App\Models\Notification;
@@ -19,6 +20,7 @@ use App\Models\Image;
 use App\Models\Show;
 use App\Http\Resources\ImageResource;
 use App\Rules\ZoomUrl;
+use App\Traits\GetTeamUserData;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -35,6 +37,9 @@ use Mews\Purifier\Facades\Purifier;
 
 
 class TeamsController extends Controller {
+
+  use GetTeamUserData;
+
   public function __construct() {
     //tec21: this authorization works... but I'm having trouble
     // with the other ones below. So they are in web.php
@@ -190,23 +195,21 @@ class TeamsController extends Controller {
 
   public function show(Team $team) {
     // Eagerly load the image with its appSetting relationship
-    $team->load('image.appSetting', 'scheduleIndexes');
+    $team->load('image.appSetting', 'scheduleIndexes', 'members',);
 
     $user = Auth::user();
 
     $component = $user ? 'Teams/{$id}/Index' : 'LoggedOut/Teams/{$id}/Index';
 
-    $team->socialMediaLinks = [
-        'www_url'        => $team->www_url,
-        'instagram_name' => $team->instagram_name,
-        'telegram_url'   => $team->telegram_url,
-        'twitter_handle' => $team->twitter_handle,
-    ];
+//    $team->socialMediaLinks = [
+//        'www_url'        => $team->www_url,
+//        'instagram_name' => $team->instagram_name,
+//        'telegram_url'   => $team->telegram_url,
+//        'twitter_handle' => $team->twitter_handle,
+//    ];
 
     return Inertia::render($component, [
         'team'          => (new TeamResource($team))->resolve(),
-        'image'         => $team->image ? (new ImageResource($team->image))->resolve() : null,
-        'nextBroadcast' => $team->nextBroadcast,
         'shows'         => Show::with('team', 'image.appSetting')
             ->where('team_id', $team->id)
             ->where(function ($query) {
@@ -221,10 +224,10 @@ class TeamsController extends Controller {
                     });
               } else {
                 // For all other users, filter for shows that are new or active and have episodes with a specific status
-                $query->whereIn('show_status_id', [1, 2]);
-//                    ->whereHas('showEpisodes', function ($q) {
-//                      $q->where('show_episode_status_id', 7);
-//                    });
+                $query->whereIn('show_status_id', [1, 2])
+                    ->whereHas('showEpisodes', function ($q) {
+                      $q->where('show_episode_status_id', 7);
+                    });
               }
             })
             ->latest()
@@ -242,7 +245,7 @@ class TeamsController extends Controller {
                 'categorySubName' => $show->getCachedSubCategory()->name ?? null,
                 'statusId'        => $show->status->id,
             ]),
-        'creators'      => TeamMember::where('team_id', $team->id)
+        'contributors'      => TeamMember::where('team_id', $team->id)
             ->join('users', 'team_members.user_id', '=', 'users.id')
             ->join('creators', 'creators.user_id', '=', 'users.id') // Assuming there's a creators table linked to users
             ->whereJsonContains('creators.settings->profile_is_public', true)
@@ -257,11 +260,12 @@ class TeamsController extends Controller {
                 'profile_photo_url'  => $user->profile_photo_url,
             ]),
         'filters'       => Request::only(['team_id']),
-        'can'           => [
-            'viewTeam'   => optional($user)->can('view', $team),
-            'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
-            'editTeam'   => optional($user)->can('update', $team),
-        ]
+        'can'     => $this->getUserPermissions($team),
+//        'can'           => [
+//            'viewTeam'   => optional($user)->can('view', $team),
+//            'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
+//            'editTeam'   => optional($user)->can('update', $team),
+//        ]
     ]);
 
 
@@ -335,7 +339,7 @@ class TeamsController extends Controller {
 ////////////  MANAGE
 ////////////////////
 
-  public function manage(Team $team) {
+  public function manage(Team $team): \Inertia\Response {
     // Load necessary relationships
     $team->load([
         'user',
@@ -345,75 +349,19 @@ class TeamsController extends Controller {
         'image.appSetting'
     ]);
 
-    // Retrieve team data
-    $teamCreatorData = $this->getTeamUserData($team->user);
-    $teamLeaderData = $team->teamLeader ? $this->getTeamUserData($team->teamLeader->user) : $this->getEmptyTeamUserData();
-    $managers = $team->managers->map->only(['id', 'name']);
-    $userId = Auth::id();
-
-    // Format image data using ImageResource
-    $imageData = $team->image ? (new ImageResource($team->image))->resolve() : null;
-
-    // Check user roles and permissions
-    $isTeamManager = $team->managers->contains('id', $userId);
-    $isTeamLeader = optional($team->teamLeader)->user_id === $userId;
-    $isTeamOwner = $team->user_id === $userId;
-    $isTeamMember = $team->members->contains('id', $userId);
-
     // Retrieve shows
     $shows = $this->getShows($team->id);
 
-    // Prepare the response data
+
+    // Prepare the response data using TeamDetailedResource
     return Inertia::render('Teams/{$id}/Manage', [
-        'team'        => $team,
-        'image'       => $imageData,
-        'teamCreator' => $teamCreatorData,
-        'teamLeader'  => $teamLeaderData,
-//        'members'        => TeamMemberResource::collection($team->members), // this isn't working.
-        'managers'    => $managers,
-        'shows'       => $shows,
-        'filters'     => Request::only(['team_id']),
-        'can'         => $this->getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember),
+        'team'    => (new TeamDetailedResource($team))->resolve(),
+        'shows'   => $shows,
+        'filters' => Request::only(['team_id']),
+        'can'     => $this->getUserPermissions($team),
     ]);
   }
 
-  protected function getTeamUserData($user) {
-    if (!$user) {
-      return $this->getEmptyTeamUserData();
-    }
-
-    return [
-        'id'                  => $user->id,
-        'name'                => $user->name,
-        'creator_status_id'   => $user->creator?->status->id,
-        'creator_status_name' => $user->creator?->status->status,
-    ];
-  }
-
-  protected function getEmptyTeamUserData() {
-    return [
-        'id'                  => null,
-        'name'                => null,
-        'creator_status_id'   => null,
-        'creator_status_name' => null,
-    ];
-  }
-
-  protected function getUserPermissions($team, $isTeamOwner, $isTeamLeader, $isTeamManager, $isTeamMember): array {
-    $user = Auth::user();
-
-    return [
-        'editTeam'             => $user->can('update', $team),
-        'manageTeam'           => $user->can('manage', $team),
-        'transferTeam'         => $user->can('transfer', $team),
-        'isTeamOwner'          => $isTeamOwner,
-        'isTeamLeader'         => $isTeamLeader,
-        'isTeamManager'        => $isTeamManager,
-        'isTeamMember'         => $isTeamMember,
-        'isAdmin'              => $user->isAdmin,
-        'hasSpecialPermission' => $isTeamOwner || $isTeamLeader || $isTeamManager || $user->isAdmin,
-    ];
-  }
 
   // tec21: I am querying the database here because there is currently no
   // pivot table between creators and teams.
@@ -422,7 +370,7 @@ class TeamsController extends Controller {
   }
 
   // tec21: 2024-05-17 we are replacing this with searchCreators
-  protected function getCreators() {
+  protected function getContributors() {
 
     // Assuming Creator model is related to User and has a 'status' relationship
     // Adjust the logic as per your actual model relationships and requirements
@@ -908,52 +856,72 @@ class TeamsController extends Controller {
 
   }
 
-  public function savePublicMessage(HttpRequest $request, Team $team) {
+  public function savePublicMessage(HttpRequest $request, Team $team): \Illuminate\Http\JsonResponse {
+
+    // Log the incoming request data
+    Log::debug('Incoming request data', $request->all());
+
     // Validate the input
     $validatedData = $request->validate([
         'public_message'         => 'nullable|string|max:440',  // Validate against the requirements
         'next_broadcast_details' => 'nullable|json',    // Validate that it is a valid JSON object
-        'schedule_index_id'      => 'required_with:next_broadcast_details|exists:schedules_indexes,id', // Validate that the schedule_index_id exists    ]);
+        'schedule_index_id'      => 'required_with:next_broadcast_details|exists:schedules_indexes,id', // Validate that the schedule_index_id exists
     ]);
 
-    // Decode JSON from the request
-    $nextBroadcastDetails = json_decode($request->input('next_broadcast_details'), true) ?: [];
+    if (isset($validatedData['schedule_index_id'])) {
+      $scheduleIndex = SchedulesIndex::find($validatedData['schedule_index_id']);
+      if ($scheduleIndex) {
+        // Decode the next_broadcast_details JSON string to an array
+        $nextBroadcastDetails = json_decode($validatedData['next_broadcast_details'], true);
 
-    // Validate the 'zoomLink' inside the JSON if it's provided
-    if (array_key_exists('zoomLink', $nextBroadcastDetails)) {
-      $validationResults = Validator::make($nextBroadcastDetails, [
-          'zoomLink' => ['nullable', 'url', new ZoomUrl()] // Custom validation for Zoom URL
-      ]);
-
-      // Check if the nested validation passes
-      if ($validationResults->fails()) {
-        return response()->json(['errors' => $validationResults->errors()], 422);
-      }
-
-      if (isset($validatedData['schedule_index_id'])) {
-        // Retrieve the specific scheduleIndex using the provided schedule_index_id
-        $scheduleIndex = SchedulesIndex::find($validatedData['schedule_index_id']);
-
-        if ($scheduleIndex) {
-          // Retrieve current details and merge with new details
-          $currentDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : [];
-
-          // Update the 'zoomLink' explicitly
-          $currentDetails['zoomLink'] = $nextBroadcastDetails['zoomLink'];
-
-          // Save the updated JSON details
-          $scheduleIndex->next_broadcast_details = json_encode($currentDetails);
-          $scheduleIndex->save();
+        // Ensure next_broadcast_details is decoded properly
+        if (json_last_error() !== JSON_ERROR_NONE) {
+          return response()->json(['errors' => ['next_broadcast_details' => 'Invalid JSON format']], 422);
         }
+
+        // Ensure next_broadcast_details is an array
+        if (!is_array($nextBroadcastDetails)) {
+          $nextBroadcastDetails = [];
+        }
+
+        // Validate each detail in the next_broadcast_details
+        foreach ($nextBroadcastDetails as $detail) {
+          if (is_array($detail) && array_key_exists('zoomLink', $detail)) {
+            $validationResults = Validator::make($detail, [
+                'zoomLink' => ['nullable', 'url']  // Standard URL validation
+            ]);
+
+            // Check if the nested validation passes
+            if ($validationResults->fails()) {
+              return response()->json(['errors' => $validationResults->errors()], 422);
+            }
+          }
+        }
+
+        $currentDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : [];
+
+        // Ensure currentDetails is an array
+        if (!is_array($currentDetails)) {
+          $currentDetails = [];
+        }
+
+        // Merge new details with current details
+        foreach ($nextBroadcastDetails as $detail) {
+          if (is_array($detail) && isset($detail['zoomLink'])) {
+            // Remove any existing zoomLink entry
+            $currentDetails = array_filter($currentDetails, fn($d) => !isset($d['zoomLink']));
+            // Add the new zoomLink entry
+            $currentDetails[] = $detail;
+          }
+        }
+
+        // Save the updated JSON details
+        $scheduleIndex->next_broadcast_details = json_encode($currentDetails);
+        $scheduleIndex->save();
+
+        // Log the saved state
+        Log::info('Saved next_broadcast_details', ['next_broadcast_details' => $scheduleIndex->next_broadcast_details]);
       }
-    }
-
-
-    if (!empty($validatedData['public_message'])) {
-      // Sanitize the public message
-      $sanitizedMessage = Purifier::clean($validatedData['public_message']);
-      $team->public_message = $sanitizedMessage;
-      $team->save();
     }
 
     // Return a successful response back to the client
@@ -962,6 +930,8 @@ class TeamsController extends Controller {
         'public_message' => $team->public_message
     ]);
   }
+
+
 
 
 ////////////  DESTROY

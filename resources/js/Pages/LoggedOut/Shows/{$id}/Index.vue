@@ -1,6 +1,11 @@
 <template>
-
-  <Head :title="show.name"/>
+  <Head :title="pageTitle">
+    <meta property="og:url" :content="ogUrl" />
+    <meta property="og:type" :content="ogType" />
+    <meta property="og:title" :content="ogTitle" />
+    <meta property="og:description" :content="ogDescription" />
+    <meta property="og:image" :content="ogImage" />
+  </Head>
 
   <div id="topDiv" class="place-self-center flex flex-col h-screen">
     <div class="min-h-screen w-full bg-gray-900 text-gray-50 pt-6 mt-16 overflow-y-scroll">
@@ -20,7 +25,8 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { usePage } from '@inertiajs/vue3'
+import { computed, onMounted } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
@@ -29,6 +35,7 @@ import ShowIdIndexHeader from '@/Components/Pages/Shows/Elements/ShowIdIndexHead
 import ShowIdIndexMain from '@/Components/Pages/Shows/Elements/ShowIdIndexMain.vue'
 
 const appSettingStore = useAppSettingStore()
+const page  = usePage().props
 
 let props = defineProps({
   show: Object,
@@ -59,6 +66,30 @@ onMounted(() => {
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 })
+
+const pageTitle = computed(() => props.show.name)
+const ogUrl = computed(() => `${page.appUrl}${page.currentPath}`);
+const ogType = computed(() => 'video.tv_show');
+const ogTitle = computed(() => props.show.name);
+// Truncate the description if it exceeds 300 characters
+const ogDescription = computed(() => {
+  const description = props.show.description;
+  const maxLength = 300;
+  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description;
+});
+const ogImage = computed(() => {
+  const image = props.show.image;
+  if (image) {
+    const { cdn_endpoint, cloud_folder, name, placeholder_url } = image;
+    if (cdn_endpoint && cloud_folder && name) {
+      return `${cdn_endpoint}${cloud_folder}${name}`;
+    } else if (placeholder_url) {
+      return placeholder_url;
+    }
+  }
+  return null;
+});
+
 
 </script>
 <script>

@@ -5,7 +5,7 @@
       <!-- Paginator -->
       <!--                    <Pagination :data="teams" class=""/>-->
 
-      <h1 class="text-3xl font-semibold pb-3 text-white">Browse Teams</h1>
+      <h1 class="text-3xl font-semibold pb-3 text-white my-8">Creator Teams</h1>
       <div class="gap-x-4 mb-4">
         <input v-model="search" type="search" placeholder="Search Teams..."
                class="border px-2 rounded-lg text-gray-900 bg-white dark:bg-white dark:text-gray-900"/>

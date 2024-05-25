@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="shows.data.length !== 0"
+  <div v-if="shows?.data?.length !== 0"
        class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">
     SEARCH
     EPISODES

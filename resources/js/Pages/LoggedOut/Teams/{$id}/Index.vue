@@ -1,6 +1,11 @@
 <template>
-
-  <Head :title="props.team.name"/>
+  <Head :title="pageTitle">
+    <meta property="og:url" :content="ogUrl" />
+    <meta property="og:type" :content="ogType" />
+    <meta property="og:title" :content="ogTitle" />
+    <meta property="og:description" :content="ogDescription" />
+    <meta property="og:image" :content="ogImage" />
+  </Head>
 
   <div id="topDiv" class="place-self-center h-screen flex flex-col">
 
@@ -9,20 +14,20 @@
     <div
         class="min-h-screen w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow pt-6 mt-16 overflow-y-scroll">
 
-      <TeamIdIndexHeader :team="team" :image="image"/>
-      <TeamIdIndexBanner :team="team"/>
+      <TeamIdIndexHeader />
+      <TeamIdIndexBanner />
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Description and Creators section -->
         <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
-          <TeamIdIndexDescription :team="team"/>
-          <TeamIdIndexCreators :creators="creators"/>
+          <TeamIdIndexDescription />
+          <TeamIdIndexCreators />
         </div>
 
         <!-- Search and list section with minimum height -->
         <div class="px-5 bg-gray-800 p-4 rounded-lg shadow-lg min-h-64">
-          <TeamIdIndexSearchShowEpisodes :shows="shows" :team="team"/>
-          <TeamShowsList :shows="shows"/>
+          <TeamIdIndexSearchShowEpisodes />
+          <TeamShowsList />
         </div>
       </div>
 
@@ -35,35 +40,29 @@
 
 
 <script setup>
+import { usePage } from '@inertiajs/vue3'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { useUserStore } from '@/Stores/UserStore'
-import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
-import SearchShowEpisodesComponent from '@/Components/Global/Search/SearchShowEpisodesComponent.vue'
-import { onMounted } from 'vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
-
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import TeamIdIndexHeader from '@/Components/Pages/Teams/Elements/TeamIdIndexHeader.vue'
 import TeamIdIndexBanner from '@/Components/Pages/Teams/Elements/TeamIdIndexBanner.vue'
 import TeamIdIndexCreators from '@/Components/Pages/Teams/Elements/TeamIdIndexCreators.vue'
-import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
-import ShowCreatorsList from '@/Components/Pages/Shows/Elements/ShowCreatorsList.vue'
 import TeamIdIndexDescription from '@/Components/Pages/Teams/Elements/TeamIdIndexDescription.vue'
 import TeamIdIndexSearchShowEpisodes from '@/Components/Pages/Teams/Elements/TeamIdIndexSearchShowEpisodes.vue'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
+const page  = usePage().props
 
 const props = defineProps({
   user: Object,
   team: Object,
-  logo: String,
-  image: Object,
   shows: Object,
-  creators: Object,
+  contributors: Object,
   filters: Object,
 })
 
@@ -71,7 +70,7 @@ appSettingStore.currentPage = `teams.${props.team.slug}`
 appSettingStore.setPrevUrl()
 
 teamStore.setActiveTeam(props.team)
-teamStore.can = props.can
+
 
 
 // Function to handle scrolling
@@ -94,8 +93,41 @@ scrollToTop() // Optionally scroll to top when the component mounts
 
 
 onMounted(() => {
+  teamStore.initializeShows({ ...props.shows })
+  teamStore.initializeTeam({ ...props.team })
+  teamStore.initializeContributors({ ...props.contributors })
+  teamStore.setCan({ ...props.can })
 
 })
+
+onBeforeUnmount(() => {
+  teamStore.reset()
+})
+
+
+
+const pageTitle = computed(() => props.team.name)
+const ogUrl = computed(() => `${page.appUrl}${page.currentPath}`);
+const ogType = computed(() => 'website');
+const ogTitle = computed(() => props.team.name);
+// Truncate the description if it exceeds 300 characters
+const ogDescription = computed(() => {
+  const description = props.team.description;
+  const maxLength = 300;
+  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description;
+});
+const ogImage = computed(() => {
+  const image = props.team.image;
+  if (image) {
+    const { cdn_endpoint, cloud_folder, name, placeholder_url } = image;
+    if (cdn_endpoint && cloud_folder && name) {
+      return `${cdn_endpoint}${cloud_folder}${name}`;
+    } else if (placeholder_url) {
+      return placeholder_url;
+    }
+  }
+  return null;
+});
 
 </script>
 <script>

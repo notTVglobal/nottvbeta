@@ -32,7 +32,9 @@ class UpdateCreatorSettings extends Command {
     Creator::chunk(100, function ($creators) {
       foreach ($creators as $creator) {
         $settings = $creator->settings ?? [];
+        // Set profile_is_public to true if it is not already set
         $settings['profile_is_public'] = $settings['profile_is_public'] ?? false;
+//        $settings['profile_is_public'] = true;
         $creator->settings = $settings;
         $creator->save();
       }

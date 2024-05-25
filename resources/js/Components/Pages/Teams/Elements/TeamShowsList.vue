@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-80">
-    <div v-if="shows.data.length !== 0"
+    <div v-if="shows.data && shows.data.length !== 0"
          class="w-full bg-gray-900 text-white text-center tracking-wider text-2xl p-4 mb-4">SHOWS
     </div>
     <!-- Paginator -->
@@ -32,13 +32,15 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { router } from '@inertiajs/vue3'
+import { useTeamStore } from '@/Stores/TeamStore'
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-defineProps({
-  shows: Object,
-})
+const teamStore = useTeamStore()
+
+const shows = computed(() => teamStore.shows || {});
 
 
 </script>

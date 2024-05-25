@@ -1,7 +1,20 @@
 # not.tv Changelog
 
-Last Update: May 23, 2024\
+Last Update: May 25, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.2.4
+May 23, 2024
+* Layout and Logic fixes.
+* Added a Share button, needs testing.
+* Fixes to the schedule complete, needs testing.
+  * Schedule needs to be automatically cached.
+  * Schedule now updates every 30 minutes on its own queue.
+* Fixed the display Next Broadcast and Upcoming Broadcasts on Team.show() page.
+* Fixed the Zoom Link and Public Message on the Team Page.
+* Refactored the Seeders and Factories for new developers.
+* Created an Error Code legend, in the Scrum Documentation.
+* Upgrade the database from MySQL to MariaDB
 
 ## v0.9.2.3
 May 23, 2024

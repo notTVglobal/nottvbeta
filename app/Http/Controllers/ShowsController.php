@@ -380,7 +380,7 @@ class ShowsController extends Controller {
     $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
 
     // Sanitize description
-    $sanitizedDescription = Purifier::clean($validatedData['description']);
+    $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
     // Retrieve the team with the team_id and check its status
     $team = Team::find($teamId);
@@ -1252,7 +1252,7 @@ class ShowsController extends Controller {
 //    $sanitizedNotes = Purifier::clean($validatedData['notes']);
 
     // Sanitize description
-    $sanitizedDescription = Purifier::clean($validatedData['description']);
+    $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
     // update the show >>> THE OLD WAY!!
 //    $show->name = $request->name;
@@ -1273,7 +1273,7 @@ class ShowsController extends Controller {
 
     $show->update([
         'name'                 => $validatedData['name'],
-        'description'          => $validatedData['description'],
+        'description'          => $sanitizedDescription,
         'slug'                 => \Str::slug($validatedData['name']),
         'release_date'         => $validatedData['release_date'] ?? null,
         'show_category_id'     => $validatedData['category'],

@@ -1,21 +1,31 @@
 import { defineStore } from 'pinia'
 import { router } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
+import utc from 'dayjs-plugin-utc'
+import timezone from 'dayjs/plugin/timezone'
+import { useUserStore } from '@/Stores/UserStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
 const initialState = () => ({
+    team: {},
+    shows: {},
+    contributors: {},
+    members: {},
+    managers: {},
+    teamOwner: [],
+    teamLeader: [],
+    can: {},
     id: 0,
     name: '',
     description: '',
     slug: '',
     totalSpots: '',
     memberSpots: '',
-    teamCreator: [],
-    teamLeader: [],
-    members: [],
-    managers: [],
     activeShow: [],
     activeEpisode: [],
-    creators: [],
     showModal: Boolean,
     confirmDialog: false,
     confirmManagerDialog: false,
@@ -31,7 +41,6 @@ const initialState = () => ({
     // on the show episode manage page
     // turn on the go live div
     goLiveDisplay: false,
-    can: [],
     openComponent: 'teamShows',
 })
 
@@ -46,6 +55,27 @@ export const useTeamStore = defineStore('teamStore', {
         //     let r = await import('@/Json/team.json');
         //     this.$state = r.default;
         // },
+        initializeTeam(team) {
+            const userStore = useUserStore()
+
+            if (team.nextBroadcast) {
+                team.nextBroadcast = team.nextBroadcast.map(broadcast => ({
+                    ...broadcast,
+                    broadcastDate: userStore.convertUtcToUserTimezone(broadcast.broadcastDate),
+                }))
+            }
+
+            this.team = team || {};
+        },
+        initializeShows(shows) {
+            this.shows = shows || {};
+        },
+        initializeContributors(contributors) {
+            this.contributors = contributors || {};
+        },
+        setCan(can) {
+            this.can = can || {};
+        },
         setActiveTeam(team) {
             this.id = team.id
             this.name = team.name
@@ -66,15 +96,15 @@ export const useTeamStore = defineStore('teamStore', {
             this.members.push(member)
         },
         removeMember(memberId) {
-            this.members = this.members.filter(member => member.id !== memberId);
+            this.members = this.members.filter(member => member.id !== memberId)
         },
         updateCreatorTeams(creatorId, teamId, remove = false) {
-            const creator = this.creators.find(c => c.id === creatorId);
+            const creator = this.creators.find(c => c.id === creatorId)
             if (creator) {
                 if (remove) {
-                    creator.teams = creator.teams.filter(team => team.id !== teamId);
+                    creator.teams = creator.teams.filter(team => team.id !== teamId)
                 } else {
-                    creator.teams.push({ id: teamId, is_manager: false }); // Add the new team to the creator's teams
+                    creator.teams.push({id: teamId, is_manager: false}) // Add the new team to the creator's teams
                 }
             }
         },
@@ -105,22 +135,22 @@ export const useTeamStore = defineStore('teamStore', {
             const payload = {
                 user_id: this.deleteMemberId,
                 team_id: this.id,
-            };
+            }
 
             try {
-                const response = await axios.post(route('teams.removeTeamMember'), payload);
+                const response = await axios.post(route('teams.removeTeamMember'), payload)
                 if (response.status === 200) {
-                    this.removeMember(this.deleteMemberId);
-                    this.updateCreatorTeams(this.deleteMemberId, this.id, true); // Remove the team from the creator's teams
-                    this.confirmDialog = false;
+                    this.removeMember(this.deleteMemberId)
+                    this.updateCreatorTeams(this.deleteMemberId, this.id, true) // Remove the team from the creator's teams
+                    this.confirmDialog = false
                     notificationStore.setToastNotification(response.data.message, 'success')
                 } else {
-                    this.confirmDialog = false;
+                    this.confirmDialog = false
                     notificationStore.setToastNotification('Failed to remove member from the team.', 'warning')
                 }
             } catch (error) {
-                console.error(error);
-                this.confirmDialog = false;
+                console.error(error)
+                this.confirmDialog = false
                 notificationStore.setToastNotification('An error occurred while removing the member from the team.', 'error')
             }
         },
@@ -156,20 +186,83 @@ export const useTeamStore = defineStore('teamStore', {
         setCreators(creators) {
             this.creators = creators
         },
+        updatePublicMessage(html) {
+            this.team.public_message = html;
+        },
     },
 
     getters: {
         spotsRemaining(state) {
-            if (!state.members) {
-                return state.totalSpots; // Assume no members if state.members is not defined
+            if (!state.team.members) {
+                return state.team.totalSpots // Assume no members if state.members is not defined
+            } else if (state.team.members) {
+                return Math.max(state.team.totalSpots - state.team.members.length, 0)
             }
-            return Math.max(state.totalSpots - state.members.length, 0);
         },
         membersCount(state) {
-            if (!state.members) {
-                return 0; // Assume no members if state.members is not defined
+            if (!state.team.members) {
+                return 0 // Assume no members if state.members is not defined
+            } else if (state.team.members) {
+                return state.team.members.length
             }
-            return state.members.length;
+        },
+        membersCountDisplay(state) {
+            if (state.team.members) {
+                return state.team.members.length > 99 ? '99+' : state.team.members.length
+            }
+        },
+        nextBroadcast(state) {
+            const { team } = state;
+            if (!team.nextBroadcast || team.nextBroadcast.length === 0) {
+                return null;
+            }
+
+            const userStore = useUserStore();
+            const today = dayjs().tz(userStore.timezone);
+
+            return team.nextBroadcast.reduce((closest, broadcast) => {
+                const broadcastDate = dayjs(broadcast.broadcastDate).tz(userStore.timezone);
+                if (!closest || Math.abs(broadcastDate - today) < Math.abs(dayjs(closest.broadcastDate).tz(userStore.timezone) - today)) {
+                    return broadcast;
+                }
+                return closest;
+            }, null);
+        },
+        sortedBroadcasts(state) {
+            if (!state.team.nextBroadcast || state.team.nextBroadcast.length === 0) {
+                return [];
+            }
+
+            const userStore = useUserStore();
+            const today = dayjs().tz(userStore.timezone);
+
+            return state.team.nextBroadcast
+                .filter(broadcast => dayjs(broadcast.broadcastDate).tz(userStore.timezone).isAfter(today))
+                .sort((a, b) => dayjs(a.broadcastDate).tz(userStore.timezone).diff(dayjs(b.broadcastDate).tz(userStore.timezone)))
+                .map(broadcast => ({
+                    ...broadcast,
+                    localDate: dayjs(broadcast.broadcastDate).tz(userStore.timezone).format(),
+                }));
+        },
+        futureBroadcasts(state) {
+            const nextBroadcast = this.nextBroadcast;
+            if (!state.team.nextBroadcast || state.team.nextBroadcast.length === 0) {
+                return [];
+            }
+
+            const userStore = useUserStore();
+            const today = dayjs().tz(userStore.timezone);
+
+            return state.team.nextBroadcast
+                .filter(broadcast =>
+                    dayjs(broadcast.broadcastDate).tz(userStore.timezone).isAfter(today) &&
+                    (!nextBroadcast || broadcast.broadcastDate !== nextBroadcast.broadcastDate)
+                )
+                .sort((a, b) => dayjs(a.broadcastDate).tz(userStore.timezone).diff(dayjs(b.broadcastDate).tz(userStore.timezone)))
+                .map(broadcast => ({
+                    ...broadcast,
+                    localDate: dayjs(broadcast.broadcastDate).tz(userStore.timezone).format(),
+                }));
         },
     },
 })

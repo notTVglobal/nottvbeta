@@ -1,20 +1,14 @@
 <template>
-
-  <Head :title="`Manage Team: ${props.team.name}`"/>
+  <Head :title="`Manage Team: ${team.name}`"/>
 
   <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
     <div id="topDiv" class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 pb-36">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
-
       <header
           class="mb-3 bg-gradient-to-r from-orange-200 via-orange-100 to-transparent p-4 text-black font-bold rounded-lg">
         <!--            <header class="pulsing-background mb-3 p-4 text-white font-bold rounded-lg">-->
-
-
-
 
         <div class="flex justify-between mb-3 pt-6">
           <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE TEAM</div>
@@ -27,40 +21,14 @@
             >Edit Team
             </button>
 
-            <DashboardButton />
+            <DashboardButton/>
 
           </div>
-
         </div>
 
-
-
-
-
-        <div class="flex justify-end mb-2">
-
-          <div class="flex flex-wrap-reverse justify-end gap-2">
-
-
-          </div>
-
-        </div>
-
-        <TeamManageHeader
-            :team="team"
-            :teamLeader="teamLeader"
-            :logo="logo"
-            :can="can"
-            :image="image"
-        />
-
+        <TeamManageHeader/>
 
       </header>
-
-      <!--            <p class="mb-6 p-5 w-3/4">-->
-      <!--                {{ teamStore.description }}-->
-      <!--            </p>-->
-
 
       <div class="flex flex-col max-w-calc[100%-96rem]">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -86,7 +54,7 @@
             </div>
             <div v-if="teamStore.openComponent === 'teamMembers'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-hidden sm:rounded-lg">
-                <TeamMembersList :creatorFilters="creatorFilters" :creators="creators" :team="team" :can="can"/>
+                <TeamMembersList/>
               </div>
             </div>
 
@@ -111,8 +79,7 @@
               </div>
               <div v-if="teamStore.openComponent === 'teamTransfer'">
                 <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                  <TeamTransferProcess :can="can" :teamStatusId="team.team_status_id" :creators="creators"
-                                       :creatorFilters="creatorFilters"/>
+                  <TeamTransferProcess :can="can" :teamStatusId="team.team_status_id"/>
                 </div>
               </div>
             </div>
@@ -124,14 +91,14 @@
 
     </div>
   </div>
-
 </template>
 
-
 <script setup>
+import { onBeforeUnmount, onMounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import TeamManageHeader from '@/Components/Pages/Teams/Manage/Layout/TeamManageHeader'
 import TeamMembersList from '@/Components/Pages/Teams/Manage/Elements/TeamMembersList'
 import TeamShowsList from '@/Components/Pages/Teams/Manage/Elements/TeamShowsList'
@@ -139,12 +106,15 @@ import TeamAssignmentsList from '@/Components/Pages/Teams/Manage/Elements/TeamAs
 import Message from '@/Components/Global/Modals/Messages'
 import TeamTransferProcess from '@/Components/Pages/Teams/Manage/Elements/TeamTransferProcess'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 usePageSetup('teams/slug/manage')
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
+
+// Map store state to local computed properties
+// const team = computed(() => teamStore.team || {})
+// const can = computed(() => teamStore.can)
 
 const toggleComponent = (componentName) => {
   teamStore.openComponent = teamStore.openComponent === componentName ? null : componentName
@@ -158,29 +128,24 @@ if (savedPosition) {
 
 let props = defineProps({
   team: Object,
-  logo: String,
-  image: Object,
-  teamCreator: Object,
-  teamLeader: Object,
-  members: Object,
-  managers: Object,
   shows: Object,
-  creators: Object,
+  contributors: Object,
   filters: Object,
-  creatorFilters: Object,
   can: Object,
 })
 
-teamStore.setActiveTeam(props.team)
-props.teamCreator && (teamStore.teamCreator = props.teamCreator)
-props.teamLeader && (teamStore.teamLeader = props.teamLeader)
-// teamStore.teamLeader.name = props.teamLeader ? props.teamLeader.name : 'No team leader assigned';
-// if (props.teamLeader) {
-//     teamStore.teamLeader = props.teamLeader
+// teamStore.setActiveTeam(props.team)
 
-// }
-teamStore.can = props.can
+onMounted(() => {
+  teamStore.initializeTeam({...props.team})
+  teamStore.initializeShows({...props.shows})
+  teamStore.initializeContributors({...props.contributors})
+  teamStore.setCan({...props.can})
+})
 
+onBeforeUnmount(() => {
+  teamStore.reset()
+})
 
 </script>
 

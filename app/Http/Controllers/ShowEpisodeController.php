@@ -134,7 +134,7 @@ class ShowEpisodeController extends Controller {
 //        } else $videoUrl = $request->video_url;
 
     // Sanitize description
-    $sanitizedDescription = Purifier::clean($validatedData['description']);
+    $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
     DB::beginTransaction();
 
@@ -612,7 +612,7 @@ class ShowEpisodeController extends Controller {
     }
 
     // Sanitize description
-    $sanitizedDescription = Purifier::clean($validatedData['description']);
+    $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
     // Check if the video_url is not empty and is different from the existing one.
     if (!empty($validatedData['video_url'])) {
