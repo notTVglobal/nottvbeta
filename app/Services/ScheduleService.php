@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Traits\PreloadScheduleContentRelationships;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Models\Schedule;
@@ -18,6 +19,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ScheduleService {
+
+  use PreloadScheduleContentRelationships;
 
   private int $cacheExpiryMinutes = 60; // Cache expiry time in minutes
 
@@ -59,41 +62,6 @@ class ScheduleService {
 //    Log::debug('Schedules by day:', $schedulesByDay);
 
     return $schedulesByDay;
-  }
-
-  /**
-   * Preload additional relationships based on content type.
-   *
-   * @param Schedule $schedule
-   */
-  private function preloadContentRelationships(Schedule $schedule): void {
-    if (is_null($schedule->content)) {
-      return; // Exit if content is null
-    }
-
-    switch ($schedule->content_type) {
-      case 'App\Models\Show':
-        $schedule->content->loadMissing([
-            'image.appSetting', 'team'
-        ]);
-        break;
-
-      case 'App\Models\ShowEpisode':
-        $schedule->content->loadMissing([
-            'show.image.appSetting', 'image.appSetting',
-        ]);
-        break;
-
-      case 'App\Models\Movie':
-        $schedule->content->loadMissing([
-            'trailers', 'image.appSetting'
-        ]);
-        break;
-
-      default:
-        // Handle other content types or log an error if necessary
-        break;
-    }
   }
 
   /**
@@ -227,6 +195,7 @@ class ScheduleService {
    * @return array
    */
   public function fetchContentForRange(string $startDate, string $endDate): array {
+
     $validationError = $this->validateDate($startDate) ?: $this->validateDate($endDate);
     if ($validationError) {
       return ['error' => 'Invalid date provided', 'details' => $validationError];
@@ -250,17 +219,6 @@ class ScheduleService {
     } catch (\Exception $e) {
       return ['error' => 'Invalid date provided', 'details' => $e->getMessage()];
     }
-
-    // Cache path based on the requested date range
-//    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
-
-//    $cacheKey = ('all_schedules');
-//    if ($this->isCacheValid($cacheKey)) {
-//      $content = Cache::get($cacheKey);
-//      if ($content && $this->isRequestedRangeWithinCache($start, $end, $content)) {
-//        return $content['data'];
-//      }
-//    }
 
     // Expand the fetch range by one day on each side
     $expandedStart = $start->copy()->subDay();
@@ -299,20 +257,17 @@ class ScheduleService {
 //    Log::debug("Sorted schedules:", $sortedSchedules);
 
     // 4. Resolve schedule conflicts
-    $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
+    return $this->resolveScheduleConflicts($sortedSchedules);
 //    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
-
-    // Cache the final schedules with expanded start and end times
-    $this->cacheData($cacheKey, $finalSchedules, $expandedStart, $expandedEnd);
-
-    return $finalSchedules;
 
   }
 
-  protected function filterSchedulesByDateRange($schedules, $start, $end)
-  {
+  protected function filterSchedulesByDateRange($schedules, $start, $end) {
+    // Ensure $schedules is a collection
+    $schedulesCollection = collect($schedules);
+
     // Filter schedules by the requested date range
-    return $schedules->filter(function ($schedule) use ($start, $end) {
+    return $schedulesCollection->filter(function ($schedule) use ($start, $end) {
       return $schedule->start_dateTime >= $start && $schedule->end_dateTime <= $end;
     })->values()->toArray();
   }

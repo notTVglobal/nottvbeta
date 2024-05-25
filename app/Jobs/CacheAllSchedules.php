@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Schedule;
+use App\Traits\PreloadScheduleContentRelationships;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class CacheAllSchedules implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, PreloadScheduleContentRelationships;
 
     /**
      * Create a new job instance.
@@ -31,6 +32,11 @@ class CacheAllSchedules implements ShouldQueue
     $schedules = Schedule::with(['content.image.appSetting', 'scheduleRecurrenceDetails', 'scheduleIndexes'])
         ->orderBy('start_dateTime')
         ->get();
+
+    // Preload additional relationships for each schedule
+    foreach ($schedules as $schedule) {
+      $this->preloadContentRelationships($schedule);
+    }
 
     // Cache the schedules
     $cacheKey = $this->getCacheKey('all_schedules');

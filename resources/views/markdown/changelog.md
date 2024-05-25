@@ -6,6 +6,8 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.9.2.5
 May 25, 2024
 * Fix the logic around storing the nextBroadcast and broadcastDetails for Teams and ScheduleIndex.
+* Added schedule caching.
+  * Note, the schedule is still slow to load in development with a lot of records. We will need to find another way to prepare the data.
 
 ## v0.9.2.4
 May 24, 2024
