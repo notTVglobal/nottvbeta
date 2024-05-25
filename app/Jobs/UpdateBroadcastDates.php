@@ -83,7 +83,7 @@ class UpdateBroadcastDates implements ShouldQueue {
         $schedule->broadcast_dates = json_encode($broadcastDatesData);
         $schedule->save();
 
-        Log::debug('Updated broadcast dates', ['scheduleId' => $schedule->id, 'dates' => $broadcastDatesData]);
+//        Log::debug('Updated broadcast dates', ['scheduleId' => $schedule->id, 'dates' => $broadcastDatesData]);
 
     } catch (Exception $e) {
       Log::error('Failed to update schedule with transaction', [

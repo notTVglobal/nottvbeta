@@ -66,8 +66,7 @@ class ScheduleService {
    *
    * @param Schedule $schedule
    */
-  private function preloadContentRelationships(Schedule $schedule): void
-  {
+  private function preloadContentRelationships(Schedule $schedule): void {
     if (is_null($schedule->content)) {
       return; // Exit if content is null
     }
@@ -118,8 +117,7 @@ class ScheduleService {
   }
 
   // Cache paths
-  private function getCacheKey($type, $start = null, $end = null): string
-  {
+  private function getCacheKey($type, $start = null, $end = null): string {
     return match ($type) {
       'scheduleToday' => 'scheduleToday',
       'scheduleRange' => 'scheduleRange_' . $start . '_' . $end,
@@ -136,8 +134,7 @@ class ScheduleService {
    * @param string $cacheKey
    * @return bool
    */
-  private function isCacheValid(string $cacheKey): bool
-  {
+  private function isCacheValid(string $cacheKey): bool {
     return Cache::has($cacheKey);
   }
 
@@ -149,13 +146,12 @@ class ScheduleService {
    * @param Carbon $start
    * @param Carbon $end
    */
-  private function cacheData(string $cacheKey, array $data, Carbon $start, Carbon $end): void
-  {
+  private function cacheData(string $cacheKey, array $data, Carbon $start, Carbon $end): void {
     $dataToCache = [
-        'timestamp' => Carbon::now()->toDateTimeString(),
+        'timestamp'      => Carbon::now()->toDateTimeString(),
         'start_dateTime' => $start->toDateTimeString(),
-        'end_dateTime' => $end->toDateTimeString(),
-        'data' => $data,
+        'end_dateTime'   => $end->toDateTimeString(),
+        'data'           => $data,
     ];
 
     Cache::put($cacheKey, $dataToCache, $this->cacheExpiryMinutes * 60); // Cache for expiry time in seconds
@@ -171,8 +167,7 @@ class ScheduleService {
   /**
    * Invalidate caches.
    */
-  public function invalidateCaches(): void
-  {
+  public function invalidateCaches(): void {
     $keys = ['scheduleToday', 'scheduleWeek', 'scheduleFiveDaySixHour'];
 
     // Invalidate keys with patterns
@@ -185,8 +180,7 @@ class ScheduleService {
   }
 
 
-  public function purgeOldCacheFiles(int $hours = 1): void
-  {
+  public function purgeOldCacheFiles(int $hours = 1): void {
     $patternKeys = Redis::connection()->keys('scheduleRange_*');
     foreach ($patternKeys as $key) {
       $content = Cache::get($key);
@@ -213,10 +207,12 @@ class ScheduleService {
     if ($this->isCacheValid($cachePath)) {
       $content = Storage::disk('local')->get("json/{$cachePath}.json");
       $cache = json_decode($content, true);
+
       return $cache['data'];
     }
 
     $data = $this->fetchContentForRange(today(), today()->endOfDay());
+
 //    $this->cacheData($cachePath, (array) $data);
 
     return $data;
@@ -258,30 +254,41 @@ class ScheduleService {
     // Cache path based on the requested date range
 //    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
 
-    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
-    if ($this->isCacheValid($cacheKey)) {
-      $content = Cache::get($cacheKey);
-      if ($content && $this->isRequestedRangeWithinCache($start, $end, $content)) {
-        return $content['data'];
-      }
-    }
+//    $cacheKey = ('all_schedules');
+//    if ($this->isCacheValid($cacheKey)) {
+//      $content = Cache::get($cacheKey);
+//      if ($content && $this->isRequestedRangeWithinCache($start, $end, $content)) {
+//        return $content['data'];
+//      }
+//    }
 
     // Expand the fetch range by one day on each side
     $expandedStart = $start->copy()->subDay();
     $expandedEnd = $end->copy()->addDay();
 
-    // 1. Fetch schedules for the expanded range
-    $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-        ->whereBetween('start_dateTime', [$expandedStart, $expandedEnd])
-        ->orderBy('start_dateTime')
-        ->get();
+    // 1. Fetch schedules from cache for the expanded range
+    $cacheKey = $this->getCacheKey('all_schedules');
+    $cachedSchedules = Cache::get($cacheKey);
 
-//    Log::info('Fetched schedules:', $schedules->toArray());
+    if ($cachedSchedules) {
+      $schedules = $this->filterSchedulesByDateRange($cachedSchedules, $expandedStart, $expandedEnd);
+    } else {
+      // If cache is empty or invalid, fetch from the database
+      $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
+          ->whereBetween('start_dateTime', [$expandedStart, $expandedEnd])
+          ->orderBy('start_dateTime')
+          ->get();
 
-    // Preload additional relationships
-    foreach ($schedules as $schedule) {
-      $this->preloadContentRelationships($schedule);
+      // Preload additional relationships
+      foreach ($schedules as $schedule) {
+        $this->preloadContentRelationships($schedule);
+      }
+
+      // Cache the schedules for future use
+      Cache::put($cacheKey, $schedules, now()->addMinutes(30));
     }
+
+//    Log::debug('Fetched schedules:', $schedules->toArray());
 
     // 2. Transform schedules
     $transformedSchedules = $this->transformFetchedSchedules($schedules);
@@ -300,6 +307,14 @@ class ScheduleService {
 
     return $finalSchedules;
 
+  }
+
+  protected function filterSchedulesByDateRange($schedules, $start, $end)
+  {
+    // Filter schedules by the requested date range
+    return $schedules->filter(function ($schedule) use ($start, $end) {
+      return $schedule->start_dateTime >= $start && $schedule->end_dateTime <= $end;
+    })->values()->toArray();
   }
 
   /**
@@ -350,8 +365,8 @@ class ScheduleService {
               'id'              => $schedule->content_id,
               'createdAt'       => $schedule->created_at,
               'type'            => $schedule->type,
-              'startTime'      => $startTime->format('c'),
-              'endTime'        => $endTime->format('c'),
+              'startTime'       => $startTime->format('c'),
+              'endTime'         => $endTime->format('c'),
               'priority'        => $schedule->priority,
               'durationMinutes' => $schedule->duration_minutes,
               'timezone'        => $timezone,
@@ -376,8 +391,7 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  private function sortSchedules(array $schedules): array
-  {
+  private function sortSchedules(array $schedules): array {
     usort($schedules, function ($a, $b) {
       $startComparison = $a['startTime'] <=> $b['startTime'];
       if ($startComparison !== 0) return $startComparison;
@@ -400,8 +414,7 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  private function resolveScheduleConflicts(array $schedules): array
-  {
+  private function resolveScheduleConflicts(array $schedules): array {
     // Initialize an array to track occupied rows and times for each row
     $rowOccupancy = [];
 
@@ -442,8 +455,7 @@ class ScheduleService {
    * @param string $formattedDateTimeUtc
    * @return JsonResponse|null
    */
-  public function validateDate(string $formattedDateTimeUtc): ?JsonResponse
-  {
+  public function validateDate(string $formattedDateTimeUtc): ?JsonResponse {
     $validator = Validator::make(['formattedDateTimeUtc' => $formattedDateTimeUtc], [
         'formattedDateTimeUtc' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
     ]);

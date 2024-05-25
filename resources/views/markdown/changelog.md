@@ -3,8 +3,12 @@
 Last Update: May 25, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.2.5
+May 25, 2024
+* Fix the logic around storing the nextBroadcast and broadcastDetails for Teams and ScheduleIndex.
+
 ## v0.9.2.4
-May 23, 2024
+May 24, 2024
 * Layout and Logic fixes.
 * Added a Share button, needs testing.
 * Fixes to the schedule complete, needs testing.

@@ -589,7 +589,7 @@ class ShowsController extends Controller {
       // Check if mistStreamWildcard is set and has a name
       $mistStreamWildcard = $show->mistStreamWildcard;
       if (!$mistStreamWildcard || !isset($mistStreamWildcard->name)) {
-        Log::error('Mist stream wildcard is missing or does not have a name:', ['show_id' => $show->id]);
+//        Log::debug('Mist stream wildcard is missing or does not have a name:', ['show_id' => $show->id]);
         return response()->json(['isLive' => false, 'liveScheduledStartTime' => null, 'mistStreamName' => null]);
       }
 

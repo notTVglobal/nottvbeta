@@ -35,7 +35,7 @@ class UpdateSchedule extends Command
     try {
       dispatch(new UpdateAllScheduleBroadcastDates());
       $this->info('Job dispatched successfully!');
-      Log::info('UpdateAllScheduleBroadcastDates job dispatched successfully.');
+//      Log::debug('UpdateAllScheduleBroadcastDates job dispatched successfully.');
     } catch (\Exception $e) {
       $this->error('Failed to dispatch the job.');
       Log::error('Failed to dispatch UpdateAllScheduleBroadcastDates job.', ['exception' => $e]);

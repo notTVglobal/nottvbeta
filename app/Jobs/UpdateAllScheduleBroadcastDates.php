@@ -49,19 +49,21 @@ class UpdateAllScheduleBroadcastDates implements ShouldQueue {
 
     $batch = Bus::batch($jobs)
         ->before(function (Batch $batch) {
-          Log::info('Batch created: '.$batch->id);
+//          Log::info('Batch created: '.$batch->id);
         })
         ->progress(function (Batch $batch) {
-          Log::info('Batch progress: '.$batch->processedJobs().'/'.$batch->totalJobs);
+//          Log::info('Batch progress: '.$batch->processedJobs().'/'.$batch->totalJobs);
         })
         ->then(function (Batch $batch) {
-          Log::info('All jobs in batch completed successfully.');
+//          Log::info('All jobs in batch completed successfully.');
         })
         ->catch(function (Batch $batch, Throwable $e) {
-          Log::error('Batch job failure detected: '.$e->getMessage());
+//          Log::error('Batch job failure detected: '.$e->getMessage());
         })
         ->finally(function (Batch $batch) {
-          Log::info('Batch finished executing.');
+          Log::info('All schedule broadcast dates updated successfully.');
+          // Chain the CacheAllSchedules job
+          CacheAllSchedules::dispatch();
         })
         ->onQueue('schedules')->name('Update All Scheduled Broadcast Dates')->dispatch();
 
