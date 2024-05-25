@@ -21,9 +21,9 @@
               class="mt-2 text-left text-xs font-light">
             {{ team?.public_message?.length }}/440 max characters
           </div>
-          <div v-if="hasNextBroadcastDate">
+          <div v-if="teamStore.nextBroadcastLoaded">
             <p class="italic">insert zoom link</p>
-            <input v-model="zoomLink" type="text" placeholder="Type here"
+            <input v-model="teamStore.nextBroadcastLoaded.broadcastDetails[0].zoomLink" type="text" placeholder="Type here"
                    class="input input-bordered w-full max-w-xs bg-white dark:bg-gray-800 dark:text-white border-black focus:border-black"/>
             <p class="mt-2 text-sm uppercase font-semibold">
               for the next broadcast:</p>
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import dayjs from 'dayjs'
@@ -77,31 +77,31 @@ const formatedBroadcastDate = computed(() => {
 
 const hasNextBroadcastDate = computed(() => !!teamStore.nextBroadcast.broadcastDate)
 
-
-const zoomLink = computed({
-  get() {
-    const nextBroadcast = team.value?.nextBroadcast?.find(b => b.id === teamStore.nextBroadcast?.id);
-    if (nextBroadcast && Array.isArray(nextBroadcast.broadcastDetails)) {
-      const zoomLinkObj = nextBroadcast.broadcastDetails.find(detail => detail.zoomLink);
-      return zoomLinkObj ? zoomLinkObj.zoomLink : '';
-    }
-    return '';
-  },
-  set(value) {
-    const nextBroadcast = team.value?.nextBroadcast?.find(b => b.id === teamStore.nextBroadcast?.id);
-    if (nextBroadcast) {
-      if (!Array.isArray(nextBroadcast.broadcastDetails)) {
-        nextBroadcast.broadcastDetails = [];
-      }
-      const zoomLinkObj = nextBroadcast.broadcastDetails.find(detail => detail.key === 'zoomLink');
-      if (zoomLinkObj) {
-        zoomLinkObj.value = value;
-      } else {
-        nextBroadcast.broadcastDetails.push({ key: 'zoomLink', value });
-      }
-    }
-  }
-});
+// const zoomLink = computed({
+//   get() {
+//     const nextBroadcast = team.value?.nextBroadcast?.find(b => b.id === teamStore.nextBroadcast?.id);
+//     if (nextBroadcast && Array.isArray(nextBroadcast.broadcastDetails)) {
+//       const zoomLinkObj = nextBroadcast.broadcastDetails.find(detail => detail.zoomLink);
+//       return zoomLinkObj ? zoomLinkObj.zoomLink : '';
+//     }
+//     return '';
+//   },
+//   set(value) {
+//     const nextBroadcast = team.value?.nextBroadcast?.find(b => b.id === teamStore.nextBroadcast?.id);
+//     if (nextBroadcast) {
+//       if (!Array.isArray(nextBroadcast.broadcastDetails)) {
+//         nextBroadcast.broadcastDetails = [];
+//       }
+//       const zoomLinkObj = nextBroadcast.broadcastDetails.find(detail => detail.key === 'zoomLink');
+//       if (zoomLinkObj) {
+//         zoomLinkObj.value = value;
+//       } else {
+//         nextBroadcast.broadcastDetails.push({ key: 'zoomLink', value });
+//         console.log(value)
+//       }
+//     }
+//   }
+// });
 
 const openEditPublicMessageModal = () => {
   document.getElementById('editPublicMessageModal').showModal()
@@ -128,20 +128,11 @@ const savePublicMessage = () => {
       errorMessage.value = 'No schedule index found. Error Code: VUCS001'
       return
     }
-    // Ensure nextBroadcastDetails exists and merge the zoomLink
-    const nextBroadcast = team.value?.nextBroadcast?.find(b => b.id === teamStore.nextBroadcast?.id)
-    let nextBroadcastDetails = nextBroadcast?.broadcastDetails || []
 
-    // Ensure all elements are in the correct format by filtering out old key-value pairs
-    nextBroadcastDetails = nextBroadcastDetails.filter(detail => !detail.key);
-
-    // Add the new zoomLink
-    nextBroadcastDetails.push({ zoomLink: zoomLink.value });
-
-    payload.schedule_index_id = teamStore.nextBroadcast.scheduleIndexId;
-    payload.next_broadcast_details = JSON.stringify(nextBroadcastDetails);  // Convert to JSON string
+    payload.schedule_index_id = teamStore.nextBroadcastLoaded.scheduleIndexId
+    payload.next_broadcast_details = JSON.stringify(teamStore.nextBroadcastLoaded.broadcastDetails)
+    // payload.next_broadcast_details = JSON.stringify(nextBroadcastDetails);  // Convert to JSON string
   }
-
 
 
   // console.log(nextBroadcastDetails); // Check the structure

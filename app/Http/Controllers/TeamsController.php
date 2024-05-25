@@ -924,10 +924,19 @@ class TeamsController extends Controller {
       }
     }
 
+    // Save the public message
+    $sanitizedMessage = Purifier::clean($validatedData['public_message'], [
+        'HTML.Allowed' => 'p,br,b,u,i,strong,em,sub,sup', // Allow subscript and superscript tags
+        'CSS.AllowedProperties' => [] // Specify allowed CSS properties, empty array means none allowed
+    ]);
+
+    $team->public_message = $sanitizedMessage;
+    $team->save();
+
     // Return a successful response back to the client
     return response()->json([
         'message'        => 'Public message and broadcast details updated successfully.',
-        'public_message' => $team->public_message
+        'public_message' => $validatedData['public_message']
     ]);
   }
 
