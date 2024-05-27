@@ -12,6 +12,12 @@ const initialState = () => ({
     media: 'https://not.tv/storage/images/logo_white_512.png', // Default media (image) URL for sharing
 })
 
+function decodeHTMLEntities(text) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+}
+
 export const useSocialShareStore = defineStore('socialShareStore', {
     state: initialState, // Set the initial state of the store
     actions: {
@@ -98,6 +104,6 @@ export const useSocialShareStore = defineStore('socialShareStore', {
         },
     },
     getters: {
-        // Getters can be added here if needed in the future
+        decodedDescription: (state) => decodeHTMLEntities(state.description),
     },
 })

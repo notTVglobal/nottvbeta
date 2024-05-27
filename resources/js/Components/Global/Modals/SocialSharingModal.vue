@@ -8,7 +8,8 @@
       <div class="absolute -inset-1 rounded-lg opacity-100 blur bg-gradient-to-br from-blue-500 to-blue-300"></div>
       <!-- Modal Content -->
       <div class="relative bg-darkgray px-6 pt-6 pb-16 rounded-lg">
-        <button @click="socialShareStore.hideSocialSharing" class="absolute bottom-5 right-5 bg-red-500 text-white py-1 px-3 rounded">
+        <button @click="socialShareStore.hideSocialSharing"
+                class="absolute bottom-5 right-5 bg-red-500 text-white py-1 px-3 rounded">
           Close
         </button>
         <div class="flex flex-col">
@@ -19,7 +20,8 @@
               <h4 class="text-blue-300">Help us spread the word and build our community!</h4>
             </div>
           </div>
-          <div class="flex flex-col items-center space-y-4 mb-6 p-4 rounded-lg bg-darkgray-light xl:flex-row xl:items-start xl:space-x-3 xl:space-y-0">
+          <div
+              class="flex flex-col items-center space-y-4 mb-6 p-4 rounded-lg bg-darkgray-light xl:flex-row xl:items-start xl:space-x-3 xl:space-y-0">
             <img :src="socialShareStore.media" :alt="`image`" class="max-h-30 max-w-30 object-contain"/>
             <div class="flex flex-col px-6 xl:px-0 text-center xl:text-left space-y-2">
               <h4 class="text-orange-500 text-lg">{{ socialShareStore.title }}</h4>
@@ -45,7 +47,7 @@
             <div @click="handleShare(network, share)"
                  :style="{ backgroundColor: network.color }"
                  class="social-network flex items-center justify-center p-2 rounded-lg text-white cursor-pointer">
-              <font-awesome-icon :icon="[network.iconPrefix, network.iconName]" />
+              <font-awesome-icon :icon="[network.iconPrefix, network.iconName]"/>
               <span class="ml-2">{{ network.name }}</span>
             </div>
           </ShareNetwork>
@@ -64,10 +66,10 @@ const notificationStore = useNotificationStore()
 const socialShareStore = useSocialShareStore()
 
 const shortDescription = computed(() => {
-  const description = socialShareStore.description;
-  const maxLength = 300;
-  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description;
-});
+  const description = socialShareStore.decodedDescription
+  const maxLength = 300
+  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description
+})
 
 const networks = [
   {
@@ -78,7 +80,7 @@ const networks = [
     color: '#333333',
     title: socialShareStore.title, // shows up as subject line
     url: socialShareStore.url, // appears in the body
-    description: socialShareStore.description, // appears in the body
+    description: socialShareStore.decodedDescription, // appears in the body
     // quote: props.quote,
     // hashtags: props.hashtags,
     // twitterUser: props.twitterUser,
@@ -148,7 +150,7 @@ const networks = [
     color: '#333333',
     title: socialShareStore.title,
     url: socialShareStore.url,
-    description: socialShareStore.description,
+    description: socialShareStore.decodedDescription,
     quote: socialShareStore.quote,
     hashtags: socialShareStore.hashtags,
     twitterUser: socialShareStore.twitterUser,
@@ -162,7 +164,7 @@ const networks = [
     color: '#0088cc',
     title: socialShareStore.title,
     url: socialShareStore.url,
-    description: socialShareStore.description,
+    description: socialShareStore.decodedDescription,
     // quote: props.quote,
     // hashtags: props.hashtags,
     // twitterUser: props.twitterUser,
@@ -190,7 +192,7 @@ const networks = [
     color: '#1da1f2',
     title: socialShareStore.title,
     url: socialShareStore.url,
-    description: socialShareStore.description,
+    description: socialShareStore.decodedDescription,
     quote: socialShareStore.quote,
     hashtags: socialShareStore.hashtags,
     twitterUser: socialShareStore.twitterUser,
@@ -204,7 +206,7 @@ const networks = [
     color: '#25d366',
     title: socialShareStore.title,
     url: socialShareStore.url,
-    description: socialShareStore.description,
+    description: socialShareStore.decodedDescription,
     quote: socialShareStore.quote,
     hashtags: socialShareStore.hashtags,
     twitterUser: socialShareStore.twitterUser,
@@ -218,7 +220,7 @@ const networks = [
     color: '#21759b',
     title: socialShareStore.title,
     url: socialShareStore.url,
-    description: socialShareStore.description,
+    description: socialShareStore.decodedDescription,
     quote: socialShareStore.quote,
     hashtags: socialShareStore.hashtags,
     twitterUser: socialShareStore.twitterUser,

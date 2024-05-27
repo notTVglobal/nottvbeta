@@ -286,7 +286,6 @@
 
 </template>
 <script setup>
-import { router } from '@inertiajs/vue3'
 import { computed, getCurrentInstance, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
@@ -296,6 +295,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
 import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
 import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
@@ -307,6 +307,7 @@ const userStore = useUserStore()
 const scheduleStore = useScheduleStore()
 const showStore = useShowStore()
 const notificationStore = useNotificationStore()
+const appSettingStore = useAppSettingStore()
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -955,7 +956,7 @@ const handleKeydown = (event) => {
     console.log('ESC pressed, modal is open')
     stopConfetti()
     currentStep.value = 0
-    router.redirect(`/shows/${props.show.slug}/manage`)
+    appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)
 
   }
 }
