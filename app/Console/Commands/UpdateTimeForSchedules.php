@@ -8,10 +8,10 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class UpdateUtcDateTimeForSchedules extends Command
+class UpdateTimeForSchedules extends Command
 {
 
-  protected $signature = 'update:schedule-utc-datetime';
+  protected $signature = 'update:schedule-time';
   protected $description = 'Update start_dateTime_utc and end_dateTime_utc fields for Schedule and ScheduleRecurrenceDetails';
 
     /**
