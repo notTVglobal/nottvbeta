@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: May 25, 2024\
+Last Update: May 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.0
+May 27, 2024
+* Fixed schedule, improved job handling and added caching, improved the front end layout.
 
 ## v0.9.2.5
 May 25, 2024
