@@ -118,7 +118,7 @@ class AddContentToSchedule implements ShouldQueue {
     // Check if 'priority' is provided, otherwise use a default value
     $priority = $data['priority'] ?? 5; // Use provided priority or default to 5
     $timezone = $data['timezone'] ?? 'UTC'; // Default to UTC if not provided
-    Log::debug('Debug AddContentToSchedule.php Job (tec21): ' . $data);
+//    Log::debug('Debug AddContentToSchedule.php Job (tec21): ' . $data);
     $start_DateTime = $data['startDateTime'];
     $end_DateTime = $data['endDateTime'];
 
