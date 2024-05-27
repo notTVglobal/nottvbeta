@@ -7795,6 +7795,10 @@ hr {
   margin-top: -1.5rem;
 }
 
+.mb-0 {
+  margin-bottom: 0px;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -7979,6 +7983,10 @@ hr {
   margin-inline-start: 1.5rem;
 }
 
+.ms-auto {
+  margin-inline-start: auto;
+}
+
 .mt-0 {
   margin-top: 0px;
 }
@@ -8037,14 +8045,6 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
-}
-
-.ms-auto {
-  margin-inline-start: auto;
 }
 
 .line-clamp-2 {
