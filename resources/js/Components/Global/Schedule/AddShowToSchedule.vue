@@ -407,9 +407,9 @@ function goToNextStep() {
         .millisecond(0)
 
     const now = dayjs().tz(userStore.timezone)
-    const sixHoursFromNow = now.add(6, 'hour')
+    // const sixHoursFromNow = now.add(6, 'hour')
 
-    const isBeforeSixHours = startDateTime.isBefore(sixHoursFromNow)
+    const isInTheFuture = startDateTime.isAfter(now)
 
     if (currentStep.value === 1 && form.daysOfWeek.length === 0) {
       // If no days are selected and the current step is 1, set an error message
@@ -417,9 +417,9 @@ function goToNextStep() {
     } else if (currentStep.value === 4 && !form.startDate) {
       // If no start date is selected and the current step is 4, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 4 && isBeforeSixHours) {
+    } else if (currentStep.value === 4 && isInTheFuture) {
       // If the start date is within the next 6 hours when the current step is 4, set an error message
-      stepError.value = 'Start date must be at least 6 hours in the future.'
+      stepError.value = 'Start date must be in the future.'
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
       // Allow the end date to be up to one week beyond exactly three months from the start date
       // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
@@ -440,9 +440,9 @@ function goToNextStep() {
     if (currentStep.value === 1 && !form.startDate) {
       // If no start date is selected and the current step is 1, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 1 && isBeforeSixHours) {
+    } else if (currentStep.value === 1 && isInTheFuture) {
       // If the start date is today or earlier when the current step is 1, set an error message
-      stepError.value = 'Start date must be at least 6 hours in the future.'
+      stepError.value = 'Start date must be in the future.'
     } else if (currentStep.value === 2) {
       document.getElementById('confirmAddShowModal').showModal()
     } else if (currentStep.value < totalSteps.value) {

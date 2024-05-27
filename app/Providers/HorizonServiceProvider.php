@@ -33,6 +33,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             return in_array($user->email, [
                 'admin@not.tv',
                 'travis@not.tv',
+                'travis@grandcross.ca'
             ]);
         });
     }
