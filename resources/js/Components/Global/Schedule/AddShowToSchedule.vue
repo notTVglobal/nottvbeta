@@ -409,7 +409,7 @@ function goToNextStep() {
     const now = dayjs().tz(userStore.timezone)
     // const sixHoursFromNow = now.add(6, 'hour')
 
-    const isInTheFuture = startDateTime.isAfter(now)
+    const isInThePast = dayjs(startDateTime).tz(userStore.timezone).isBefore(now)
 
     if (currentStep.value === 1 && form.daysOfWeek.length === 0) {
       // If no days are selected and the current step is 1, set an error message
@@ -417,7 +417,7 @@ function goToNextStep() {
     } else if (currentStep.value === 4 && !form.startDate) {
       // If no start date is selected and the current step is 4, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 4 && isInTheFuture) {
+    } else if (currentStep.value === 4 && isInThePast) {
       // If the start date is within the next 6 hours when the current step is 4, set an error message
       stepError.value = 'Start date must be in the future.'
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
@@ -436,12 +436,12 @@ function goToNextStep() {
     // const sixHoursFromNow = now.add(6, 'hour')
 
     // const isBeforeSixHours = dayjs(form.startDate).isBefore(sixHoursFromNow)
-    const isInTheFuture = dayjs(form.startDate).isAfter(now)
+    const isInThePast = dayjs(form.startDate).tz(userStore.timezone).isBefore(now)
 
     if (currentStep.value === 1 && !form.startDate) {
       // If no start date is selected and the current step is 1, set an error message
       stepError.value = 'Please select a start date.'
-    } else if (currentStep.value === 1 && isInTheFuture) {
+    } else if (currentStep.value === 1 && isInThePast) {
       // If the start date is today or earlier when the current step is 1, set an error message
       stepError.value = 'Start date must be in the future.'
     } else if (currentStep.value === 2) {
