@@ -433,9 +433,10 @@ function goToNextStep() {
   } else if (form.scheduleType === 'one-time') {
 
     const now = dayjs().tz(userStore.timezone)
-    const sixHoursFromNow = now.add(6, 'hour')
+    // const sixHoursFromNow = now.add(6, 'hour')
 
-    const isBeforeSixHours = dayjs(form.startDate).isBefore(sixHoursFromNow)
+    // const isBeforeSixHours = dayjs(form.startDate).isBefore(sixHoursFromNow)
+    const isInTheFuture = dayjs(form.startDate).isAfter(now)
 
     if (currentStep.value === 1 && !form.startDate) {
       // If no start date is selected and the current step is 1, set an error message

@@ -8039,6 +8039,14 @@ hr {
   margin-top: 2rem;
 }
 
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.ms-auto {
+  margin-inline-start: auto;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -10291,6 +10299,10 @@ hr {
 
 .fill-indigo-500 {
   fill: #6366f1;
+}
+
+.fill-primary {
+  fill: var(--fallback-p,oklch(var(--p)/1));
 }
 
 .stroke-current {
