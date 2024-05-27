@@ -210,7 +210,7 @@ export const useShowStore = defineStore('showStore', {
                 form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss')
                 form.endDate = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format()
 
-                form.startTime = startDate.format('HH:mm:ss')
+                // form.startTime = startDate.format('HH:mm:ss')
                 formattedDuration = (parseInt(form.durationHour) * 60) + parseInt(form.durationMinute)
                 form.duration = formattedDuration
             }
@@ -219,10 +219,10 @@ export const useShowStore = defineStore('showStore', {
                 contentType: 'show',
                 contentId: form.contentId,
                 scheduleType: form.scheduleType,
-                startTime: form.startTime,
+                // startTime: form.startTime,
                 duration: form.duration,
-                startDate: form.startDate,
-                endDate: form.endDate,
+                startDateTime: form.startDate,
+                endDateTime: form.endDate,
                 daysOfWeek: form.scheduleType === 'recurring' ? form.daysOfWeek : [],
                 timezone: userStore.canadianTimezone,
             }

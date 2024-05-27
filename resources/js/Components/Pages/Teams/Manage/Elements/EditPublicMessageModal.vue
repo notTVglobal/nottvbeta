@@ -1,9 +1,12 @@
 <template>
   <div>
+
     <button @click="openEditPublicMessageModal"
             class="btn bg-yellow-500 hover:bg-yellow-600 text-black hover:cursor-pointer">
       Change Public Message
     </button>
+
+
     <dialog id="editPublicMessageModal" class="modal">
       <div class="modal-box w-full items-center text-center bg-white dark:bg-gray-800 dark:text-white">
         <form method="dialog">
@@ -21,7 +24,10 @@
               class="mt-2 text-left text-xs font-light">
             {{ team?.public_message?.length }}/440 max characters
           </div>
-          <div v-if="teamStore.nextBroadcastLoaded">
+
+
+          <!-- Set Zoom Link for the next broadcast. -->
+          <div v-if="teamStore.nextBroadcastLoaded && teamStore.nextBroadcastLoaded.broadcastDate">
             <p class="italic">insert zoom link</p>
             <input v-model="teamStore.nextBroadcastLoaded.broadcastDetails[0].zoomLink" type="text" placeholder="Type here"
                    class="input input-bordered w-full max-w-xs bg-white dark:bg-gray-800 dark:text-white border-black focus:border-black"/>
@@ -30,7 +36,10 @@
             <p class="">{{ formatedBroadcastDate }}</p>
             <p class="font-semibold uppercase">{{ teamStore.nextBroadcast?.name }}</p>
           </div>
+
         </div>
+
+
         <div v-else class="py-4 text-xl mt-4 font-medium tracking-wide">
           <span class="text-green-500">{{ successMessage }}</span>
           <span class="text-red-500">{{ errorMessage }}</span>

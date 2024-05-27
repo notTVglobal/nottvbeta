@@ -2,52 +2,29 @@
 
 namespace App\Jobs;
 
-use App\Models\Schedule;
+use App\Services\ScheduleService;
 use App\Traits\PreloadScheduleContentRelationships;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
 
-class CacheAllSchedules implements ShouldQueue
-{
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, PreloadScheduleContentRelationships;
+class CacheAllSchedules implements ShouldQueue {
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, PreloadScheduleContentRelationships;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+  /**
+   * Execute the job.
+   */
+  public function handle(): void {
 
-    /**
-     * Execute the job.
-     */
-  public function handle(): string {
-    // Fetch all schedules with necessary relationships
-    $schedules = Schedule::with(['content.image.appSetting', 'scheduleRecurrenceDetails', 'scheduleIndexes'])
-        ->orderBy('start_dateTime')
-        ->get();
+    // Resolve ScheduleService using the service container
+    $scheduleService = App::make(ScheduleService::class);
 
-    // Preload additional relationships for each schedule
-    foreach ($schedules as $schedule) {
-      $this->preloadContentRelationships($schedule);
-    }
+    // Fetch, transform, and cache the schedules
+    $scheduleService->fetchAndCacheSchedules();
 
-    // Cache the schedules
-    $cacheKey = $this->getCacheKey('all_schedules');
-    Cache::put($cacheKey, $schedules, now()->addMinutes(30)); // Cache for 30 minutes
-    Log::info('Schedules cached successfully.');
-
-    // Return success message for Horizon
-    return 'Schedules cached successfully.';
   }
 
-  protected function getCacheKey($key): string {
-    return "schedule_cache_{$key}";
-  }
 }

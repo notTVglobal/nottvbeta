@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -118,24 +120,24 @@ class Show extends Model
     return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
   }
 
-  public function schedules(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+  public function schedules(): MorphMany {
     return $this->morphMany(Schedule::class, 'content');
   }
 
-  public function recordings(): \Illuminate\Database\Eloquent\Relations\MorphMany {
-    return $this->morphMany(Recording::class, 'model');
+  public function scheduleIndexes(): MorphMany {
+    return $this->morphMany(SchedulesIndex::class, 'content');
   }
 
-  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\MorphMany {
-    return $this->morphMany(SchedulesIndex::class, 'content');
+  public function recordings(): MorphMany {
+    return $this->morphMany(Recording::class, 'model');
   }
 
   /**
    * Get the push destinations associated with the show's wildcard.
    *
-   * @return \Illuminate\Support\Collection
+   * @return Collection
    */
-  public function getMistStreamPushDestinationsAttribute(): \Illuminate\Support\Collection {
+  public function getMistStreamPushDestinationsAttribute(): Collection {
     // If there's no associated wildcard, return an empty collection.
     if (!$this->mistStreamWildcard) {
       return collect([]);

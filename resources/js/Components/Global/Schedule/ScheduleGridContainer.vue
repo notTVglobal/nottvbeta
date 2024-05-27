@@ -3,8 +3,11 @@
   <!--  We need the CurrenTime component to keep our ScheduleStore currentTime up to date it has a SetInterval in it. -->
   <CurrentTime/>
 
-  <div class="mb-2 tracking-wide">
+  <div class="tracking-wide">
     <span class="text-sm uppercase text-purple-500">All times are listed in your timezone.</span>
+  </div>
+  <div class="mb-2 tracking-wide">
+    <span class="text-sm uppercase text-yellow-500">The schedule is updated every 30 minutes.</span>
   </div>
 
   <div class="w-full">
@@ -21,6 +24,7 @@
         <span class="loading loading-ball loading-xl text-info"></span>
       </div>
     </div>
+
     <div class="schedule-grid" :style="{ 'grid-template-columns': gridColumns }">
       <!-- Render time banners -->
       <div v-for="banner in scheduleStore.preparedTimeBanners" :key="banner.id"
@@ -28,6 +32,23 @@
         {{ banner.name }}
       </div>
     </div>
+
+
+    <div class="schedule-grid text-center" :style="{ 'grid-template-columns': gridColumns }">
+
+      <div v-if="nowPlayingShow" :style="statusGridItemStyle(nowPlayingShow)"
+           class="now-playing text-black font-semibold">
+        <span>NOW PLAYING</span>
+      </div>
+
+      <div v-if="comingUpNextShow" :style="statusGridItemStyle(comingUpNextShow)"
+           class="coming-up-next text-black font-semibold">
+        <span>COMING UP NEXT</span>
+      </div>
+
+    </div>
+
+
     <div class="schedule-grid" :style="{ 'grid-template-columns': gridColumns }">
 
 
@@ -45,9 +66,9 @@
         'bg-gradient-to-r from-tan-800 to-tan-600': item.placeholder,  // Assume tan-800 and tan-600 are defined in your tailwind config
         'gradient-on-hover': !item.placeholder
     }">
-          <div v-if="item.type" class="badge capitalize px-2 py-1 mt-2">{{item.type}}</div>
+          <div v-if="item.type" :class="getBadgeClass(item.type)" class="badge capitalize px-2 py-1 mt-6">{{item.type}}</div>
           <div class="show-info flex-grow flex flex-col items-center justify-center">
-            <h3 class="show-title my-4 w-full text-center text-lg font-semibold break-words"
+            <h3 class="show-title mt-2 mb-4 w-full text-center text-lg font-semibold break-words"
                 :class="{'gradient-on-hover': !item.placeholder}">
               {{ item.content.name || 'No Show Name' }}</h3>
             <!--            <p>{{ item.content.id }}</p>-->
@@ -55,16 +76,16 @@
             <SingleImage v-if="item.content.image"
                          :image="item.content.image"
                          :alt="item.content.name"
-                         :class="`w-full h-auto max-h-1/2screen object-cover transition-opacity duration-300 hover:opacity-80`"/>
+                         :class="`skeleton w-full h-auto max-h-1/2screen object-cover transition-opacity duration-300 hover:opacity-80`"/>
             <div v-if="!item.placeholder"
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
-              <p>{{ formatTime(item.startTime, true) }}</p>
+              <p>{{ formatTime(item.start_dateTime, true) }}</p>
               <p class="text-yellow-400">
-                <span v-if="dayjs(item.startTime).isBefore(scheduleStore.baseTime)">Started </span>
+                <span v-if="dayjs(item.start_dateTime).isBefore(scheduleStore.baseTime)">Started </span>
                 <ConvertDateTimeToTimeAgo
                     :key="scheduleStore.baseTime"
-                    :dateTime="item.startTime"
+                    :dateTime="item.start_dateTime"
                     :timezone="userStore.timezone"
               /></p>
             </div>
@@ -74,18 +95,9 @@
 
     </div>
 
-    <div class="schedule-grid text-center" :style="{ 'grid-template-columns': gridColumns }">
-
-      <div v-if="nowPlayingShow" :style="statusGridItemStyle(nowPlayingShow)"
-           class="now-playing text-black font-semibold">
-        <span>NOW PLAYING</span>
-      </div>
-
-      <div v-if="comingUpNextShow" :style="statusGridItemStyle(comingUpNextShow)"
-           class="coming-up-next text-black font-semibold">
-        <span>COMING UP NEXT</span>
-      </div>
-
+<!--    <div class="schedule-grid" :style="{ 'grid-template-columns': gridColumns }">-->
+    <div class="schedule-grid h-24 bg-yellow-900 items-center text-center uppercase font-semibold my-4">
+      <span class="text-4xl">Upcoming Broadcasts</span>
     </div>
 
     <div class="infinite-scroll-container">
@@ -93,17 +105,17 @@
            class="next-show-highlight p-5 border border-gray-300 bg-gradient-to-r from-gray-900 to-gray-700 text-center hover-gradient"
            :class="{ 'last-item': index === displayedShows.length - 1 }">
         <div class="bg-gray-900 text-white py-2">
-          <h2>{{ getPlayingTimeLabel(show.startTime) }}</h2>
+          <h2>{{ getPlayingTimeLabel(show.start_dateTime) }}</h2>
         </div>
-        <div v-if="show.type" class="badge capitalize px-2 py-1 mt-2">{{show.type}}</div>
-        <div class="show-details mt-4 mx-auto max-w-4xl">
+        <div v-if="show.type" :class="getBadgeClass(show.type)" class="badge capitalize px-2 py-1 mt-6">{{show.type}}</div>
+        <div class="show-details mt-2 mx-auto max-w-4xl">
           <h3 @click="handleShowClick(show)" class="text-3xl mb-1 hover:text-blue-300 hover:cursor-pointer">
             {{ show.content.name }}</h3>
-          <p class="text-lg">{{ formatLongDate(show.startTime) }}</p>
-          <p class="text-lg">{{ formatTime(show.startTime, true) }} - {{ formatTime(show.endTime, true) }}</p>
+          <p class="text-lg">{{ formatLongDate(show.start_dateTime) }}</p>
+          <p class="text-lg">{{ formatTime(show.start_dateTime, true) }} - {{ formatTime(show.end_dateTime, true) }}</p>
           <ConvertDateTimeToTimeAgo
               :key="scheduleStore.baseTime"
-              :dateTime="show.startTime"
+              :dateTime="show.start_dateTime"
               :timezone="userStore.timezone"
               class="text-yellow-400"
           />
@@ -111,9 +123,9 @@
             <SingleImage v-if="show.content.image"
                          :image="show.content.image"
                          :alt="show.content.name"
-                         class="w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto transition-opacity duration-300 hover:opacity-80 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
+                         class="skeleton w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto hover:opacity-80 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
           </div>
-          <p class="text-lg">{{ formatDuration(show.durationMinutes) }}</p>
+          <p class="text-lg">{{ formatDuration(show.duration_minutes) }}</p>
         </div>
       </div>
       <!-- Loading Indicator -->
@@ -127,7 +139,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
@@ -139,7 +151,6 @@ import advancedFormat from 'dayjs/plugin/advancedFormat' // for using 'a' for AM
 import { useScheduleStore } from '@/Stores/ScheduleStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
-import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import CurrentTime from '@/Components/Global/Schedule/CurrentTime.vue'
 import { throttle } from '@/Utilities/Throttle'
@@ -164,12 +175,12 @@ const displayedShowsCount = ref(6)
 const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
 
-const getPlayingTimeLabel = (startTime) => {
+const getPlayingTimeLabel = (start_dateTime) => {
   const baseTime = dayjs(scheduleStore.baseTime).startOf('isoWeek');
-  const start = dayjs(startTime);
+  const start = dayjs(start_dateTime);
 
   // console.log('baseTime:', baseTime.format('YYYY-MM-DD HH:mm:ss'));
-  // console.log('startTime:', start.format('YYYY-MM-DD HH:mm:ss'));
+  // console.log('start_dateTime:', start.format('YYYY-MM-DD HH:mm:ss'));
 
   const diffDays = start.diff(baseTime, 'day');
   const diffWeeks = start.diff(baseTime, 'week');
@@ -246,29 +257,29 @@ const upcomingShows = computed(() => {
   // console.log('Schedules:', scheduleStore.schedules);
 
   // Create a set of show start times from nextFourHoursOfContent
-  const nextFourHoursShowTimes = new Set(scheduleStore.nextFourHoursOfContent.map(show => show.startTime));
+  const nextFourHoursShowTimes = new Set(scheduleStore.nextFourHoursOfContent.map(show => show.start_dateTime));
   // console.log('Next Four Hours Show Times:', Array.from(nextFourHoursShowTimes));
 
-  // Filter out shows that are part of nextFourHoursOfContent by matching startTime
+  // Filter out shows that are part of nextFourHoursOfContent by matching start_dateTime
   const filteredShows = scheduleStore.schedules.filter(show => {
-    const isAfterNow = dayjs(show.startTime).isAfter(now);
+    const isAfterNow = dayjs(show.start_dateTime).isAfter(now);
     const isNotPlaceholder = !show.placeholder;
-    const isNotInNextFourHours = !nextFourHoursShowTimes.has(show.startTime);
+    const isNotInNextFourHours = !nextFourHoursShowTimes.has(show.start_dateTime);
     const shouldInclude = isAfterNow && isNotPlaceholder && isNotInNextFourHours;
 
-    // console.log(`Show ID: ${show.id}, Start Time: ${show.startTime}, Include: ${shouldInclude}`);
+    // console.log(`Show ID: ${show.id}, Start Time: ${show.start_dateTime}, Include: ${shouldInclude}`);
     return shouldInclude;
   });
 
   // Sort filtered shows by start time
-  return filteredShows.sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)));
+  return filteredShows.sort((a, b) => dayjs(a.start_dateTime).diff(dayjs(b.start_dateTime)));
 });
 
 const displayedShows = computed(() => upcomingShows.value.slice(0, displayedShowsCount.value))
 
-function isNowPlaying(startTime, duration) {
+function isNowPlaying(start_dateTime, duration) {
   const now = dayjs()
-  const start = dayjs(startTime)
+  const start = dayjs(start_dateTime)
   const end = start.add(duration, 'minutes')
   return now.isAfter(start) && now.isBefore(end)
 }
@@ -281,6 +292,23 @@ const nowPlayingShow = computed(() => {
 const comingUpNextShow = computed(() => {
   return scheduleStore.nextFourHoursOfContent.find(  show => show.comingUpNext)
 })
+
+// Function to return the appropriate badge class based on item type
+const getBadgeClass = (type) => {
+  switch (type) {
+    case 'show':
+      return 'badge-info';
+    case 'movie':
+      return 'badge-secondary';
+    case 'showEpisode':
+      return 'badge-success';
+    case 'newsStory':
+      return 'badge-warning';
+    case 'otherContent':
+    default:
+      return 'neutral';
+  }
+};
 
 onMounted(async () => {
   // scheduleStore.resetAll()
@@ -332,6 +360,7 @@ onMounted(async () => {
       },
       {immediate: true},
   )
+
 });
 
 onBeforeUnmount(() => {
@@ -377,7 +406,7 @@ function statusGridItemStyle(item) {
 
   return {
     gridColumn: `${item.gridStart} / span ${item.gridSpan}`,
-    gridRow: `row 1`, // Assuming status rows are always in the first grid row for visibility
+    gridRow: `row 2`, // Assuming status rows are always in the first grid row for visibility
   }
 }
 
@@ -620,7 +649,7 @@ function openModal(modalName) {
 
 /* Custom hover effect for the parent that affects children */
 .show-cell:hover .gradient-on-hover {
-  background-image: linear-gradient(to right, #06beb6, #48b1bf);
+  background-image: linear-gradient(to right, rgba(0, 123, 144), rgba(0, 105, 128));
 }
 
 .now-playing, .coming-up-next {

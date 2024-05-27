@@ -118,12 +118,17 @@ class AddContentToSchedule implements ShouldQueue {
     // Check if 'priority' is provided, otherwise use a default value
     $priority = $data['priority'] ?? 5; // Use provided priority or default to 5
     $timezone = $data['timezone'] ?? 'UTC'; // Default to UTC if not provided
-    $startDateTime = $data['startDateTime'];
-    $endDateTime = $data['endDateTime'];
+    Log::debug('Debug AddContentToSchedule.php Job (tec21): ' . $data);
+    $start_DateTime = $data['startDateTime'];
+    $end_DateTime = $data['endDateTime'];
 
     // Need to keep dateTimes in the provided timezone
-    $formattedStartDateTime = Carbon::parse($startDateTime, $timezone)->toDateTimeString();
-    $formattedEndDateTime = Carbon::parse($endDateTime, $timezone)->toDateTimeString();
+    $formattedStartDateTime = Carbon::parse($start_DateTime, $timezone)->toDateTimeString();
+    $formattedEndDateTime = Carbon::parse($end_DateTime, $timezone)->toDateTimeString();
+
+    // Convert to UTC
+    $startDateTimeUtc = Carbon::parse($formattedStartDateTime, $timezone)->setTimezone('UTC')->toDateTimeString();
+    $endDateTimeUtc = Carbon::parse($formattedEndDateTime, $timezone)->setTimezone('UTC')->toDateTimeString();
 
     // Log the attempt to find overlapping schedules
 //    Log::debug('Checking for overlapping schedules', [
@@ -159,15 +164,17 @@ class AddContentToSchedule implements ShouldQueue {
 
     // Initialize the schedule data with common fields that apply to all schedules
     $scheduleData = [
-        'type'             => $data['contentType'],
-        'recurrence_flag'  => $data['scheduleType'] === 'recurring' ? 1 : 0,
-        'status'           => 'scheduled',
-        'priority'         => $priority,
-        'duration_minutes' => $data['duration'],
-        'start_dateTime'   => $formattedStartDateTime,
-        'end_dateTime'     => $formattedEndDateTime,
-        'timezone'         => $timezone,
-        'extra_metadata'   => json_encode([])  // Initialize as empty JSON
+        'type'               => $data['contentType'],
+        'recurrence_flag'    => $data['scheduleType'] === 'recurring' ? 1 : 0,
+        'status'             => 'scheduled',
+        'priority'           => $priority,
+        'duration_minutes'   => $data['duration'],
+        'start_dateTime'     => $formattedStartDateTime,
+        'end_dateTime'       => $formattedEndDateTime,
+        'timezone'           => $timezone,
+        'start_dateTime_utc' => $startDateTimeUtc,
+        'end_dateTime_utc'   => $endDateTimeUtc,
+        'extra_metadata'     => json_encode([])  // Initialize as empty JSON
     ];
 
     DB::beginTransaction();
@@ -202,6 +209,8 @@ class AddContentToSchedule implements ShouldQueue {
             'start_dateTime'        => $startDateTime,
             'end_dateTime'          => $endDateTime,
             'timezone'              => $data['timezone'],
+            'start_dateTime_utc'    => $startDateTimeUtc,
+            'end_dateTime_utc'      => $endDateTimeUtc,
         ];
 
         // Create ScheduleRecurrenceDetails within the transaction
@@ -337,8 +346,8 @@ class AddContentToSchedule implements ShouldQueue {
     return [
         'contentType'     => $contentType,
         'contentId'       => $contentId,
-        'startDateTime'   => $startDateTimeUTC,
-        'endDateTime'     => $endDateTimeUTC,
+        'start_DateTime'  => $startDateTimeUTC,
+        'end_DateTime'    => $endDateTimeUTC,
         'timezone'        => 'UTC', // Since we're converting to UTC
 //        'broadcastDates'  => $scheduleData->broadcast_dates, // we don't have this yet, the job just got dispatched.
         'durationMinutes' => $scheduleData->duration_minutes,

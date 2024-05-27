@@ -46,9 +46,11 @@ const initialState = () => ({
     nextBroadcastLoaded: {
         scheduleIndexId: null,
         broadcastDate: null,
-        broadcastDetails: {
-            zoomLink: ''
-        },
+        broadcastDetails: [
+            {
+                zoomLink: ''
+            }
+        ],
         type: '',
         image: null,
         category: null,
@@ -72,12 +74,13 @@ export const useTeamStore = defineStore('teamStore', {
         // },
         initializeTeam(team) {
             const userStore = useUserStore()
-            if (team.nextBroadcast) {
+            if (team.nextBroadcast && team.nextBroadcast.broadcastDetails) {
                 this.nextBroadcastLoaded = team.nextBroadcast[0]
                 // Ensure broadcastDetails is an array and has the zoomLink object
-                if (!Array.isArray(this.nextBroadcastLoaded.broadcastDetails)) {
-                    this.nextBroadcastLoaded.broadcastDetails = []
-                }
+                this.nextBroadcastLoaded.broadcastDetails = []
+                // if (!Array.isArray(this.nextBroadcastLoaded.broadcastDetails)) {
+                //     this.nextBroadcastLoaded.broadcastDetails = []
+                // }
 
                 let zoomLinkObj = this.nextBroadcastLoaded.broadcastDetails.find(detail => detail.zoomLink !== undefined)
                 if (!zoomLinkObj) {

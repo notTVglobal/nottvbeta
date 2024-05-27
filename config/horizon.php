@@ -153,7 +153,7 @@ return [
     |
     */
 
-    'fast_termination' => false,
+    'fast_termination' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -166,7 +166,7 @@ return [
     |
     */
 
-    'memory_limit' => 64,
+    'memory_limit' => 512,
 
     /*
     |--------------------------------------------------------------------------
@@ -250,13 +250,13 @@ return [
             'queue' => ['schedules'],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
-            'maxProcesses' => 3,
-            'balanceMaxShift' => 1,
-            'balanceCooldown' => 3,
+            'maxProcesses' => 10,
+            'balanceMaxShift' => 2,
+            'balanceCooldown' => 1,
             'maxTime' => 0,
             'maxJobs' => 0,
-            'memory' => 128,
-            'tries' => 5,
+            'memory' => 512,
+            'tries' => 3,
             'timeout' => 300,
             'nice' => 0,
         ],
@@ -334,12 +334,12 @@ return [
                 'queue' => ['schedules'],
                 'balance' => 'auto',
                 'autoScalingStrategy' => 'time',
-                'maxProcesses' => 3,
+                'maxProcesses' => 5,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'maxTime' => 0,
                 'maxJobs' => 0,
-                'memory' => 128,
+                'memory' => 256,
                 'tries' => 5,
                 'timeout' => 300,
                 'nice' => 0,

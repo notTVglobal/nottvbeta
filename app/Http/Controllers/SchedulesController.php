@@ -88,10 +88,10 @@ class SchedulesController extends Controller {
   }
 
   public function fetchContentForRange(Request $request): JsonResponse {
-    $startDate = $request->input('start');
-    $endDate = $request->input('end');
+    $startDateTimeUtc = $request->input('start');
+    $endDateTimeUtc = $request->input('end');
 
-    $schedules = $this->scheduleService->fetchContentForRange($startDate, $endDate);
+    $schedules = $this->scheduleService->fetchContentForRange($startDateTimeUtc, $endDateTimeUtc);
 
     if (isset($schedules['error'])) {
       return response()->json($schedules, 400);
@@ -306,15 +306,15 @@ class SchedulesController extends Controller {
     // 1. Fetch schedules
     $schedules = $this->fetchSchedulesFromUserRequestedDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
 //    $schedules = $this->fetchSchedulesFromBroadcastDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
-    Log::debug("Fetched schedules:", $schedules);
+//    Log::debug("Fetched schedules:", $schedules);
 
     // 2. Transform schedules
     $transformedSchedules = $this->transformFetchedSchedules($schedules);
-    Log::debug("Transformed schedules:", $transformedSchedules);
+//    Log::debug("Transformed schedules:", $transformedSchedules);
 
     // 3. Sort schedules
     $sortedSchedules = $this->sortSchedules($transformedSchedules);
-    Log::debug("Sorted schedules:", $sortedSchedules);
+//    Log::debug("Sorted schedules:", $sortedSchedules);
 
     // Transform and sort schedules
 //    $transformedSchedules = $this->transformAndSortSchedules($schedules);
@@ -322,7 +322,7 @@ class SchedulesController extends Controller {
 
     // 4. Resolve schedule conflicts
     $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
-    Log::debug("Final schedules after resolving conflicts:", $finalSchedules);
+//    Log::debug("Final schedules after resolving conflicts:", $finalSchedules);
 
 
     // TODO: If we want to work on this later we can... but it will take some work to be efficient

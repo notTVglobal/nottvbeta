@@ -13,33 +13,33 @@ trait PreloadScheduleContentRelationships
    * @return void
    */
   public function preloadContentRelationships(Schedule $schedule): void
-  {
-    if (is_null($schedule->content)) {
-      return; // Exit if content is null
-    }
-
-    switch ($schedule->content_type) {
-      case 'App\Models\Show':
-        $schedule->content->loadMissing([
-            'image.appSetting', 'team'
-        ]);
-        break;
-
-      case 'App\Models\ShowEpisode':
-        $schedule->content->loadMissing([
-            'show.image.appSetting', 'image.appSetting',
-        ]);
-        break;
-
-      case 'App\Models\Movie':
-        $schedule->content->loadMissing([
-            'trailers', 'image.appSetting'
-        ]);
-        break;
-
-      default:
-        // Handle other content types or log an error if necessary
-        break;
-    }
+{
+  if (is_null($schedule->content)) {
+    return; // Exit if content is null
   }
+
+  switch ($schedule->content_type) {
+    case 'App\Models\Show':
+      $schedule->content->loadMissing([
+          'image.appSetting', 'team.image.appSetting'
+      ]);
+      break;
+
+    case 'App\Models\ShowEpisode':
+      $schedule->content->loadMissing([
+          'show.image.appSetting', 'show.team.image.appSetting', 'image.appSetting'
+      ]);
+      break;
+
+    case 'App\Models\Movie':
+      $schedule->content->loadMissing([
+          'trailers', 'image.appSetting', 'team.image.appSetting'
+      ]);
+      break;
+
+    default:
+      // Handle other content types or log an error if necessary
+      break;
+  }
+}
 }

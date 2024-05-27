@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Schedule extends Model {
   use HasFactory;
@@ -24,26 +27,30 @@ class Schedule extends Model {
       'start_dateTime',
       'end_dateTime',
       'timezone',
+      'start_dateTime_utc',
+      'end_dateTime_utc',
       'extra_metadata',
   ];
 
   protected $casts = [
       'start_dateTime'  => 'datetime',
       'end_dateTime'    => 'datetime',
+      'start_dateTime_utc'  => 'datetime',
+      'end_dateTime_utc'    => 'datetime',
       'broadcast_dates' => 'json',
       'extra_metadata'  => 'json',
     // other casts
   ];
 
-  public function content(): \Illuminate\Database\Eloquent\Relations\MorphTo {
-    return $this->morphTo('content', 'content_type', 'content_id');
+  public function content(): MorphTo {
+    return $this->morphTo();
   }
 
-  public function scheduleRecurrenceDetails(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+  public function scheduleRecurrenceDetails(): BelongsTo {
     return $this->belongsTo(ScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');
   }
 
-  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+  public function scheduleIndexes(): HasMany {
     return $this->hasMany(SchedulesIndex::class, 'schedule_id');
   }
 
