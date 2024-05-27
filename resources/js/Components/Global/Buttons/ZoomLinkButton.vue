@@ -16,7 +16,7 @@
   <button v-if="isBroadcastOpen" @click="joinZoom" class="w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded">
     Click to Join
   </button>
-  <button @click.prevent="socialShareStore.showSocialSharing" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+  <button @click.prevent="shareZoomLink" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
     Click to Share This
   </button>
   <button v-if="!isBroadcastOpen" @click="getEmailReminder" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
@@ -48,8 +48,6 @@ const socialShareStore = useSocialShareStore()
 
 // Map store state to local computed properties
 const team = computed(() => teamStore.team || {});
-
-const showShareModal = ref(false);
 
 const isBroadcastOpen = computed(() => {
   // Ensure nextBroadcast and broadcastDate are available
@@ -85,6 +83,15 @@ const zoomLink = computed(() => {
   return '';
 });
 
+function shareZoomLink() {
+  const payload = {
+    name: 'Join us through Zoom for the next broadcast of ' + teamStore.nextBroadcast.name + ' on notTV!',
+    description: teamStore.nextBroadcast.description,
+    url: zoomLink.value,
+    image: teamStore.nextBroadcast.image,
+  }
+  socialShareStore.parseModel(payload)
+}
 
 function joinZoom() {
   // console.log('zoomLink value:', zoomLink.value);  // Accessing the value of the computed property

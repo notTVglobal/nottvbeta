@@ -19,12 +19,16 @@ class ScheduleRecurrenceDetails extends Model
       'start_dateTime', // Optional start date for the recurrence period
       'end_dateTime', // Optional end date for the recurrence period
       'timezone',
+      'start_dateTime_utc',
+      'end_dateTime_utc',
   ];
 
   protected $casts = [
       'days_of_week' => 'array',
       'start_dateTime' => 'datetime',
       'end_dateTime' => 'datetime',
+      'start_dateTime_utc'  => 'datetime',
+      'end_dateTime_utc'    => 'datetime',
     // other casts
   ];
 

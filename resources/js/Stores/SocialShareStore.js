@@ -1,26 +1,25 @@
 import { defineStore } from 'pinia'
 
+// Initial state setup for the SocialShareStore
 const initialState = () => ({
-    socialSharingModal: false, // show or hide Modal
-    title: 'notTV',
-    url: 'https://not.tv',
-    description: 'Share this!',
-    quote: 'Community Television Re-invented',
-    hashtags: 'notTV, mediaForABetterWorld',
-    twitterUser: 'notTV',
-    media: 'https://not.tv/storage/images/Ping.png',
-    image: {
-        placeholder_url: 'https://not.tv/storage/images/logo_white_512.png'
-    }
+    socialSharingModal: false, // Controls the visibility of the social sharing modal
+    title: 'notTV', // Default title for sharing
+    url: 'https://not.tv', // Default URL for sharing
+    description: 'Share this!', // Default description for sharing
+    quote: 'Community Television Re-invented', // Default quote for sharing
+    hashtags: 'notTV,mediaForABetterWorld', // Default hashtags for sharing
+    twitterUser: 'notTV', // Default Twitter user for sharing
+    media: 'https://not.tv/storage/images/logo_white_512.png', // Default media (image) URL for sharing
 })
 
 export const useSocialShareStore = defineStore('socialShareStore', {
-    state: initialState,
+    state: initialState, // Set the initial state of the store
     actions: {
+        // Action to reset the store to its initial state
         reset() {
-        // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
         },
+        // Action to show the social sharing modal and set the payload
         showSocialSharing(payload) {
             this.socialSharingModal = true
             if (payload) {
@@ -31,56 +30,74 @@ export const useSocialShareStore = defineStore('socialShareStore', {
                 this.hashtags = payload.hashtags || this.hashtags
                 this.twitterUser = payload.twitterUser || this.twitterUser
                 this.media = payload.media || this.media
-                this.image = payload.image || this.image
             }
         },
+        // Action to parse the model and prepare the payload for sharing
         parseModel(model) {
-            console.log('Parsing model:', model)
+            // console.log('Parsing model:', model)
             let payload = {}
-            if (model.title) {
-                payload.title = model.title
-                payload.description = model.description || 'Share this!'
-                payload.url = model.url || window.location.href
 
-                // Debugging image processing
-                console.log('Original image data:', model.image)
+            if (model.name) {
+                // Assign model values to payload or use default store values
+                payload.title = model.name
+                payload.description = model.description || this.description
+                payload.url = model.url || window.location.href
+                payload.quote = model.quote || this.quote
+                payload.hashtags = model.hashtags || this.hashtags
+                payload.twitterUser = model.twitterUser || this.twitterUser
+                payload.media = model.image || this.media
+
+                // Debugging media processing
+                // console.log('Original media data:', model.image)
 
                 if (model.image) {
-                    if (model.image.url) {
-                        payload.image = { url: model.image.url }
-                        payload.media = model.image.url
-                    } else if (model.image.path) {
-                        payload.image = { url: `https://not.tv/storage/images/${model.image.path}` }
-                        payload.media = `https://not.tv/storage/images/${model.image.path}`
-                    } else {
-                        payload.image = { placeholder_url: 'https://not.tv/storage/images/logo_white_512.png' }
-                        payload.media = 'https://not.tv/storage/images/logo_white_512.png'
+                    // Handle media if it is a string
+                    if (typeof model.image === 'string') {
+                        payload.media = model.image
+                    }
+                    // Handle media if it is an object
+                    else if (typeof model.image === 'object') {
+                        if (model.image.url) {
+                            payload.media = model.image.url
+                        } else if (
+                            model.image.cdn_endpoint &&
+                            model.image.cloud_folder &&
+                            model.image.folder &&
+                            model.image.name
+                        ) {
+                            // Construct media URL from parts if all are present
+                            payload.media = `${model.image.cdn_endpoint}${model.image.cloud_folder}${model.image.folder}/${model.image.name}`
+                        } else if (model.image.placeholder_url) {
+                            payload.media = model.image.placeholder_url
+                        } else {
+                            // Use default media if any part is missing
+                            payload.media = this.media
+                        }
                     }
                 } else {
-                    payload.image = { placeholder_url: 'https://not.tv/storage/images/logo_white_512.png' }
-                    payload.media = 'https://not.tv/storage/images/logo_white_512.png'
+                    // Use default media if model.media is not provided
+                    payload.media = this.media
                 }
 
-                console.log('Processed image data:', payload.image)
-                console.log('Title:', payload.title)
-                console.log('Description:', payload.description)
-                console.log('URL:', payload.url)
-                console.log('Media:', payload.media)
-                console.log('Image:', payload.image)
-                console.log('Hashtags:', payload.hashtags)
-                console.log('Twitter User:', payload.twitterUser)
-
-                payload.hashtags = 'notTV, mediaForABetterWorld'
-                payload.twitterUser = 'notTV'
+                // Debugging the processed media URL and other payload data
+                // console.log('Processed media URL:', payload.media)
+                // console.log('Title:', payload.title)
+                // console.log('Description:', payload.description)
+                // console.log('URL:', payload.url)
+                // console.log('Media:', payload.media)
+                // console.log('Hashtags:', payload.hashtags)
+                // console.log('Twitter User:', payload.twitterUser)
             }
-            console.log('Payload for sharing:', payload)
+
+            // console.log('Payload for sharing:', payload)
             this.showSocialSharing(payload)
         },
+        // Action to hide the social sharing modal
         hideSocialSharing() {
             this.socialSharingModal = false
-        }
+        },
     },
     getters: {
-        //
-    }
+        // Getters can be added here if needed in the future
+    },
 })

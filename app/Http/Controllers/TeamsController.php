@@ -869,8 +869,10 @@ class TeamsController extends Controller {
     ]);
 
     if (isset($validatedData['schedule_index_id'])) {
+      Log::debug('get it.');
       $scheduleIndex = SchedulesIndex::find($validatedData['schedule_index_id']);
       if ($scheduleIndex) {
+        Log::debug('got it.');
         // Decode the next_broadcast_details JSON string to an array
         $nextBroadcastDetails = json_decode($validatedData['next_broadcast_details'], true);
 
@@ -881,6 +883,7 @@ class TeamsController extends Controller {
 
         // Ensure next_broadcast_details is an array
         if (!is_array($nextBroadcastDetails)) {
+          Log::debug('not an array.');
           $nextBroadcastDetails = [];
         }
 
@@ -896,6 +899,7 @@ class TeamsController extends Controller {
               return response()->json(['errors' => $validationResults->errors()], 422);
             }
           }
+          Log::debug('good.');
         }
 
         $currentDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : [];
@@ -924,10 +928,19 @@ class TeamsController extends Controller {
       }
     }
 
+    // Save the public message
+    $sanitizedMessage = Purifier::clean($validatedData['public_message'], [
+        'HTML.Allowed' => 'p,br,b,u,i,strong,em,sub,sup', // Allow subscript and superscript tags
+        'CSS.AllowedProperties' => [] // Specify allowed CSS properties, empty array means none allowed
+    ]);
+
+    $team->public_message = $sanitizedMessage;
+    $team->save();
+
     // Return a successful response back to the client
     return response()->json([
         'message'        => 'Public message and broadcast details updated successfully.',
-        'public_message' => $team->public_message
+        'public_message' => $validatedData['public_message']
     ]);
   }
 

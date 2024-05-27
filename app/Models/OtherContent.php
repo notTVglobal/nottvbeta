@@ -46,4 +46,13 @@ class OtherContent extends Model {
   public function user() {
     return $this->belongsTo(User::class, 'user_id');
   }
+
+  public function schedules(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+    return $this->morphMany(Schedule::class, 'content');
+  }
+
+  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+    return $this->morphMany(SchedulesIndex::class, 'content');
+  }
+
 }

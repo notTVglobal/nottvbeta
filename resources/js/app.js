@@ -72,7 +72,7 @@ import {  } from '@fortawesome/free-regular-svg-icons';
 import {
     faBuffer, faEvernote, faFacebookF, faFlipboard, faHackerNews,
     faLinkedin, faFacebookMessenger, faPinterest, faGetPocket, faQuora,
-    faRedditAlien, faSkype, faStumbleupon, faTelegramPlane, faTumblr, faTwitter, faViber,
+    faRedditAlien, faSkype, faStumbleupon, faTelegramPlane, faTumblr, faTwitter, faXTwitter, faViber,
     faVk, faWhatsapp, faWordpress, faYammer
 } from '@fortawesome/free-brands-svg-icons';
 // import popper for pop-up tooltips
@@ -177,7 +177,7 @@ createInertiaApp({
 library.add(
     fa1, fa2, fa3, fa4, fa5, fa6, fa7, fa8, fa9,
     faAngleLeft, faArrowRightArrowLeft, faBookOpen, faCheck, faCircle, faCircleDown, faCopy, faCircleExclamation, faCircleInfo, faClipboard, faClipboardList, faClapperboard, faComments, faEye, faFilter, faFlagUsa, faGem, faHandsHelping, faHeart, faLeaf, faList, faLock, faPaperPlane, faPencil, faPlay, faPlayCircle, faQuestion, faRepeat, faRocket, faRss, faShare, faStar, faTrashCan, faUser, faUsers, faUserGroup, faUserSecret, faVideo, faVolumeMute, faVolumeUp, faWrench,
-    faBuffer, faEnvelope, faEvernote, faFacebookF, faFlipboard, faHackerNews, faLinkedin, faFacebookMessenger, faPinterest, faGetPocket, faQuora, faRedditAlien, faSkype, faStumbleupon, faCommentDots, faTelegramPlane, faTumblr, faTwitter, faViber, faVk, faWhatsapp, faWordpress, faYammer,
+    faBuffer, faEnvelope, faEvernote, faFacebookF, faFlipboard, faHackerNews, faLinkedin, faFacebookMessenger, faPinterest, faGetPocket, faQuora, faRedditAlien, faSkype, faStumbleupon, faCommentDots, faTelegramPlane, faTumblr, faTwitter, faXTwitter, faViber, faVk, faWhatsapp, faWordpress, faYammer,
     faEnvelope, faCommentDots
 );
 

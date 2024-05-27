@@ -1,10 +1,20 @@
 # not.tv Changelog
 
-Last Update: May 25, 2024\
+Last Update: May 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.0
+May 27, 2024
+* Fixed schedule, improved job handling and added caching, improved the front end layout.
+
+## v0.9.2.5
+May 25, 2024
+* Fix the logic around storing the nextBroadcast and broadcastDetails for Teams and ScheduleIndex.
+* Added schedule caching.
+  * Note, the schedule is still slow to load in development with a lot of records. We will need to find another way to prepare the data.
+
 ## v0.9.2.4
-May 23, 2024
+May 24, 2024
 * Layout and Logic fixes.
 * Added a Share button, needs testing.
 * Fixes to the schedule complete, needs testing.

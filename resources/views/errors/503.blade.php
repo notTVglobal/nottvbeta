@@ -20,7 +20,7 @@
     <h1>Quick Intermission!</h1>
     <div>
         <p>Hey there, notTV family! We're currently tuning up our platform to bring you an even better experience. Think of it as a short commercial break. 🍿</p>
-        <p>If you've got ideas, questions, or just want to say hi, feel free to <a href="mailto:hello@not.tv">drop us a line</a>. We love hearing from you!</p>
+        <p>If you've got ideas, questions, or just want to say hi, feel free to <a href="https://help.not.tv/">drop us a line</a>. We love hearing from you!</p>
         <p>We’ll be back before you know it. Meanwhile, why not plan what you'll watch next?</p>
         <p>— Your friends at notTV</p>
     </div>

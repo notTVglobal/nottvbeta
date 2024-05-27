@@ -33,15 +33,15 @@ function convertScheduleToTimezone(scheduleData) {
     return scheduleData.data.map(item => {
         // Convert top-level start_time and end_time using UserStore methods
         // console.log(`Original startTime for ${item.id}: ${item.startTime}`)
-        const startTimeInUserTz = item.startTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.startTime, 'YYYY-MM-DD HH:mm:ss') : null
-        const endTimeInUserTz = item.endTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.endTime, 'YYYY-MM-DD HH:mm:ss') : null
+        const startTimeInUserTz = item.start_dateTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.start_dateTime, 'YYYY-MM-DD HH:mm:ss') : null
+        const endTimeInUserTz = item.end_dateTime ? userStore.formatDateTimeFromUtcToUserTimezone(item.end_dateTime, 'YYYY-MM-DD HH:mm:ss') : null
         // Add debug logging to help trace conversion issues or confirm correct conversions
         // console.log(`Converted startTime for ${item.id}: ${startTimeInUserTz}`)
 
         return {
             ...item,
-            startTime: startTimeInUserTz,
-            endTime: endTimeInUserTz,
+            start_dateTime: startTimeInUserTz,
+            end_dateTime: endTimeInUserTz,
             timezone: userStore.timezone,
         }
     })
@@ -303,8 +303,8 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
                 const response = await axios.get(`/api/schedules/range?start=${fullISOStartDate}&end=${fullISOEndDate}`)
 
-                const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
-                const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
+                // const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
+                // const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
                 // console.log('Received response:', response.data) // Log the raw response data
 
@@ -344,7 +344,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             console.log('Fetching more schedules...');
             try {
                 const lastSchedule = this.schedules[this.schedules.length - 1];
-                const startDate = lastSchedule ? dayjs(lastSchedule.startTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+                const startDate = lastSchedule ? dayjs(lastSchedule.start_dateTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
                 const endDate = dayjs(startDate).add(7, 'day').format('YYYY-MM-DD'); // Fetch the next 7 days
 
                 await this.fetchSchedules(startDate, endDate);
@@ -399,7 +399,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // Merge newData into weeklyContent, avoiding duplicates
                 this.weeklyContent = [...this.weeklyContent, ...newData].filter((value, index, self) =>
                         index === self.findIndex((t) => (
-                            t.id === value.id && t.startTime === value.startTime
+                            t.id === value.id && t.start_dateTime === value.start_dateTime
                         )),
                 )
 
@@ -490,7 +490,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             for (const date of upcomingDates) {
                 const dateString = date.format('YYYY-MM-DD')  // Day.js format for 'YYYY-MM-DD'
                 const contentCoverageAndFreshness = this.weeklyContent.some(content => {
-                    const contentDate = dayjs(content.startTime).format('YYYY-MM-DD')  // Convert and compare as 'YYYY-MM-DD'
+                    const contentDate = dayjs(content.start_dateTime).format('YYYY-MM-DD')  // Convert and compare as 'YYYY-MM-DD'
                     const lastFetchedTime = this.dataFetchLog[dateString]
                     const isFresh = lastFetchedTime && dayjs(lastFetchedTime) > fifteenMinutesAgo
                     return dateString === contentDate && isFresh
@@ -663,26 +663,26 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Step 7: Sort and group shows by rows
             this.nextFourHoursOfContent = this.sortShowsByPosition(combinedShows)
-            // console.log(28)
+            console.log(28)
         },
 
         filterShowsForTimeRange() {
             return this.schedules.filter(show => {
                 // Validate show data integrity
-                if (typeof show.startTime !== 'string' || typeof show.durationMinutes !== 'number') {
-                    console.warn('Invalid show data:', show.startTime, show.durationMinutes)
+                if (typeof show.start_dateTime !== 'string' || typeof show.duration_minutes !== 'number') {
+                    console.warn('Invalid show data:', show.start_dateTime, show.duration_minutes)
                     // console.log(29)
                     return false // Skip this show if it doesn't meet data expectations
                 }
 
-                const showStart = dayjs(show.startTime)
-                const showEnd = dayjs(show.endTime)
+                const showStart = dayjs(show.start_dateTime)
+                const showEnd = dayjs(show.end_dateTime)
                 const isInTimeRange = showStart.isBefore(this.fourHoursLater) && showEnd.isAfter(this.currentHalfHour)
 
                 // Detailed logging for debugging
                 if (isInTimeRange) {
                     const hasStarted = showStart.isBefore(this.currentHalfHour) ? 'already started' : 'starts within range'
-                    // console.log(`Show: ${show.content.name}, ${hasStarted}, Start: ${showStart.format('HH:mm:ss')}, End: ${showEnd.format('HH:mm:ss')}, Duration: ${show.durationMinutes}`)
+                    // console.log(`Show: ${show.content.name}, ${hasStarted}, Start: ${showStart.format('HH:mm:ss')}, End: ${showEnd.format('HH:mm:ss')}, Duration: ${show.duration_minutes}`)
                 }
                 // console.log(30)
                 return isInTimeRange
@@ -703,12 +703,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
 
             return shows.filter(show => {
-                const showStart = dayjs(show.startTime)
-                const showEnd = dayjs(show.endTime)
+                const showStart = dayjs(show.start_dateTime)
+                const showEnd = dayjs(show.end_dateTime)
                 return showStart.isBefore(lastTimeSlot) && showEnd.isAfter(firstTimeSlot)
             }).map(show => {
-                const showStart = dayjs(show.startTime)
-                const showEnd = dayjs(show.endTime)
+                const showStart = dayjs(show.start_dateTime)
+                const showEnd = dayjs(show.end_dateTime)
                 // console.log('************************************')
                 // console.log(`Processing show: ${show.content.name}, Start: ${show.startTime}, End: ${show.endTime}`)
 
@@ -755,8 +755,8 @@ export const useScheduleStore = defineStore('scheduleStore', {
             let comingUpNextSet = false
 
             shows.forEach(show => {
-                const start = dayjs(show.startTime)
-                const end = start.add(show.durationMinutes, 'minutes')
+                const start = dayjs(show.start_dateTime)
+                const end = start.add(show.duration_minutes, 'minutes')
                 const now = dayjs(this.baseTime)
 
                 // Determine if the show is now playing
@@ -800,6 +800,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
         findAndFillGapsForSingleRow(colOccupancy, row, cols) {
             let gridItems = []
+
+            // Skip processing for even-numbered rows
+            // if (row % 2 === 0) {
+            //     return gridItems;
+            // }
+
             let gapStart = -1
             for (let i = 0; i < cols; i++) {
                 if (!colOccupancy[i].has(row)) {
@@ -1005,7 +1011,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Group shows by start time using Day.js
             const showsGroupedByStartTime = state.weeklyContent.reduce((acc, item) => {
-                const itemStart = dayjs(item.startTime).valueOf() // Use .valueOf() to get the timestamp
+                const itemStart = dayjs(item.start_dateTime).valueOf() // Use .valueOf() to get the timestamp
                 if (!acc[itemStart]) {
                     acc[itemStart] = []
                 }
@@ -1023,10 +1029,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // Filter shows that fall within the next 6-hour window and sort them
             return selectedShows
                 .filter(item => {
-                    const itemStart = dayjs(item.startTime)
+                    const itemStart = dayjs(item.start_dateTime)
                     return itemStart.isSameOrAfter(start) && itemStart.isBefore(end)
                 })
-                .sort((a, b) => dayjs(a.startTime).unix() - dayjs(b.startTime).unix()) // Sorting by Unix timestamp
+                .sort((a, b) => dayjs(a.start_dateTime).unix() - dayjs(b.start_dateTime).unix()) // Sorting by Unix timestamp
         },
 
 

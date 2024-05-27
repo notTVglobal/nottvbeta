@@ -2,20 +2,28 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ImageResource;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\VideoResource;
+use JsonSerializable;
 
 class SimpleMovieResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-      public function toArray($request)
-    {
+
+  public static function requiredRelationships(): array
+  {
+    return ['image.appSetting', 'trailers', 'team.image.appSetting'];
+  }
+
+  /**
+   * Transform the resource into an array.
+   *
+   * @param Request $request
+   * @return array
+   */
+      public function toArray(Request $request): array {
       return [
           'name' => $this->name,
           'slug' => $this->slug,
@@ -29,8 +37,33 @@ class SimpleMovieResource extends JsonResource
               'name' => $this->resource->getCachedSubCategory()->name,
               'description' => $this->resource->getCachedSubCategory()->description,
           ] : null,
-
+          'team' => $this->whenLoaded('team') ? $this->transformTeam($this->team) : null,
         // Add other fields as necessary
       ];
     }
+
+  private function transformTeam($team)
+  {
+    // Ensure team is a collection before mapping
+    if ($team instanceof \Illuminate\Support\Collection) {
+      return $team->map(function ($member) {
+        return [
+            'id'    => $member->id,
+            'name'  => $member->name,
+            'slug'  => $member->slug,
+            'image' => optional($member->image)->map(function ($image) {
+              return new ImageResource($image);
+            }),
+        ];
+      })->all();
+    }
+
+    // If team is not a collection, handle the single member case
+    return [
+        'id'    => $team->id ?? null,
+        'name'  => $team->name ?? null,
+        'slug'  => $team->slug ?? null,
+        'image' => $team->image ? new ImageResource($team->image) : null,
+    ];
+  }
 }

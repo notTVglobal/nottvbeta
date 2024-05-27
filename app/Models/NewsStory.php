@@ -93,6 +93,14 @@ class NewsStory extends Model {
     return $this->morphMany(ChannelPlaylistItem::class, 'content');
   }
 
+  public function schedules(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+    return $this->morphMany(Schedule::class, 'content');
+  }
+
+  public function scheduleIndexes(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+    return $this->morphMany(SchedulesIndex::class, 'content');
+  }
+
   // Retrieves the cached category or loads it if not cached
   public function getCachedStatus()
   {

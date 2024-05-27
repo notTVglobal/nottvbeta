@@ -42,7 +42,7 @@
       <OrangeFeedbackBox
           v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage"/>
       <ToastNotification/>
-      <SocialSharingModal />
+      <SocialSharingModal v-if="socialShareStore.socialSharingModal" />
 
     </div>
   </div>
@@ -61,6 +61,7 @@ import { useChatStore } from '@/Stores/ChatStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { useOttStore } from '@/Stores/OttStore'
+import { useSocialShareStore } from '@/Stores/SocialShareStore'
 
 import ResponsiveNavigationMenu from '@/Components/Global/Navigation/ResponsiveNavigationMenu'
 import NavigationMenu from '@/Components/Global/Navigation/NavigationMenu'
@@ -91,6 +92,7 @@ const chatStore = useChatStore()
 const shopStore = useShopStore()
 const channelStore = useChannelStore()
 const ottStore = useOttStore()
+const socialShareStore = useSocialShareStore()
 
 let isStreamPage = ref()
 let showLogin = ref(false)

@@ -1,6 +1,11 @@
 <?php
 namespace App\Services;
 
+use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\SimpleMovieResource;
+use App\Http\Resources\SimpleShowEpisodeResource;
+use App\Http\Resources\SimpleShowResource;
+use App\Traits\PreloadScheduleContentRelationships;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Models\Schedule;
@@ -8,7 +13,9 @@ use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -16,119 +23,33 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use JsonSerializable;
 
 class ScheduleService {
 
-  private int $cacheExpiryMinutes = 60; // Cache expiry time in minutes
+  use PreloadScheduleContentRelationships;
+
+  private int $cacheExpiryMinutes = 45; // Cache expiry time in minutes
 
   /**
-   * Fetch schedules for the next 6 days and group them by day and hour.
+   * Get cache key.
    *
-   * @return array
+   * @param $type
+   * @param null $start
+   * @param null $end
+   * @return string
    */
-  public function fetchFiveDaySixHourSchedule(): array {
-    $schedulesByDay = [];
-    $now = Carbon::now()->second(0)->microsecond(0)->startOfHour();
-    $endPeriod = $now->copy()->addDays(6)->addHours(6);
-
-    $allSchedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-        ->whereBetween('start_dateTime', [$now, $endPeriod])
-        ->orderBy('start_dateTime')
-        ->get();
-
-    for ($i = 0; $i <= 6; $i++) {
-      $dayStart = $now->copy()->addDays($i)->startOfDay()->addHours($now->hour);
-      $dayEnd = $dayStart->copy()->addHours(6);
-
-      $daySchedules = $allSchedules->filter(function ($schedule) use ($dayStart, $dayEnd) {
-        $scheduleStartUtc = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_dateTime, $schedule->timezone)
-            ->setTimezone('UTC');
-
-        return $scheduleStartUtc->between($dayStart, $dayEnd);
-      })->map(function ($schedule) {
-        $this->preloadContentRelationships($schedule);
-
-        return $this->transformSchedule($schedule);
-      });
-
-      if ($daySchedules->isNotEmpty()) {
-        $schedulesByDay[$dayStart->toDateString()] = $daySchedules->toArray();
-      }
-    }
-
-//    Log::debug('Schedules by day:', $schedulesByDay);
-
-    return $schedulesByDay;
-  }
-
-  /**
-   * Preload additional relationships based on content type.
-   *
-   * @param Schedule $schedule
-   */
-  private function preloadContentRelationships(Schedule $schedule): void
-  {
-    if (is_null($schedule->content)) {
-      return; // Exit if content is null
-    }
-
-    switch ($schedule->content_type) {
-      case 'App\Models\Show':
-        $schedule->content->loadMissing([
-            'image.appSetting', 'team'
-        ]);
-        break;
-
-      case 'App\Models\ShowEpisode':
-        $schedule->content->loadMissing([
-            'show.image.appSetting', 'image.appSetting',
-        ]);
-        break;
-
-      case 'App\Models\Movie':
-        $schedule->content->loadMissing([
-            'trailers', 'image.appSetting'
-        ]);
-        break;
-
-      default:
-        // Handle other content types or log an error if necessary
-        break;
-    }
-  }
-
-  /**
-   * Transform the schedule's content based on its type.
-   *
-   * @param $content
-   * @return array
-   */
-  private function transformSchedule($content): array {
-    if (!$content) {
-      return []; // Return empty array if no content is associated
-    }
-
-    // Direct transformation using appropriate resource based on content type
-    return match ($content->getMorphClass()) {
-      'App\Models\ShowEpisode' => (new \App\Http\Resources\SimpleShowEpisodeResource($content))->resolve(),
-      'App\Models\Movie' => (new \App\Http\Resources\SimpleMovieResource($content))->resolve(),
-      'App\Models\Show' => (new \App\Http\Resources\SimpleShowResource($content))->resolve(),
-      default => [],
-    };
-  }
-
-  // Cache paths
-  private function getCacheKey($type, $start = null, $end = null): string
-  {
+  public function getCacheKey($type, $start = null, $end = null): string {
+    // Cache paths
     return match ($type) {
-      'scheduleToday' => 'scheduleToday',
-      'scheduleRange' => 'scheduleRange_' . $start . '_' . $end,
-      'scheduleWeek' => 'scheduleWeek',
-      'scheduleFiveDaySixHour' => 'scheduleFiveDaySixHour',
+      'all_schedules' => 'schedule_cache_all_schedules',
+      'scheduleToday' => 'schedule_cache_scheduleToday',
+      'scheduleRange' => 'schedule_cache_scheduleRange_' . $start . '_' . $end,
+      'scheduleWeek' => 'schedule_cache_scheduleWeek',
+      'scheduleFiveDaySixHour' => 'schedule_cache_scheduleFiveDaySixHour',
       default => '',
     };
   }
-
 
   /**
    * Check if cache is valid.
@@ -136,10 +57,153 @@ class ScheduleService {
    * @param string $cacheKey
    * @return bool
    */
-  private function isCacheValid(string $cacheKey): bool
-  {
+  private function isCacheValid(string $cacheKey): bool {
     return Cache::has($cacheKey);
   }
+
+  /**
+   * Fetch and cache schedules.
+   *
+   * @return Arrayable|JsonSerializable|array
+   */
+  public function fetchAndCacheSchedules(): Arrayable|JsonSerializable|array {
+
+    // 1. Load the schedules
+    $schedules = Schedule::with('content', 'scheduleRecurrenceDetails', 'scheduleIndexes')
+        ->orderBy('start_dateTime_utc')
+        ->get();
+
+    // 2. Preload necessary relationships for each schedule
+    $schedules->each(function ($schedule) {
+      $this->preloadContentRelationships($schedule);
+    });
+
+    // 3. Transform the schedules using ScheduleResource
+    $loadedSchedules = ScheduleResource::collection($schedules)->toArray(request());
+
+    // 4. Transform the schedules using the new transformation logic
+    $transformedSchedules = $this->transformFetchedSchedules($loadedSchedules);
+
+    // 5. Sort schedules
+    $sortedSchedules = $this->sortSchedules($transformedSchedules);
+//    Log::debug("Sorted schedules:", $sortedSchedules);
+
+    // 6. Resolve schedule conflicts
+    $resolvedSchedules = $this->resolveScheduleConflicts($sortedSchedules);
+//    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
+
+    // Log the first 2 or 3 schedules
+    $this->logSampleSchedules($resolvedSchedules);
+
+    // 7. Cache the schedules
+    $cacheKey = $this->getCacheKey('all_schedules');
+    Cache::put($cacheKey, $resolvedSchedules, now()->addMinutes($this->cacheExpiryMinutes)); // Cache for 45 minutes
+    Log::info('Schedules cached successfully.');
+
+    // 8. Return the schedules if needed elsewhere in this service
+    return $resolvedSchedules;
+  }
+
+  /**
+   * Log the first 2 or 3 schedules.
+   *
+   * @param array $schedules
+   */
+  protected function logSampleSchedules(array $schedules): void {
+    $sampleSchedules = array_slice($schedules, 0, 3);
+    Log::info('Sample schedules going into the cache:', $sampleSchedules);
+  }
+
+  /**
+   * Get schedules from the cache.
+   * (if not available then fetch and cache.)
+   *
+   * @return array
+   */
+  public function getSchedulesFromCache(): array {
+
+    $cacheKey = $this->getCacheKey('all_schedules');
+
+    // Attempt to retrieve schedules from cache
+    $schedules = Cache::get($cacheKey);
+
+    // If cache is empty or outdated, fetch and cache schedules
+    if (is_null($schedules)) {
+      $schedules = $this->fetchAndCacheSchedules();
+    }
+
+    return $schedules;
+  }
+
+  /**
+   * Fetch schedules for the next 6 days and group them by day and hour.
+   *
+   * @return array
+   */
+  public function fetchFiveDaySixHourSchedule(): array {
+    $cacheKey = $this->getCacheKey('scheduleFiveDaySixHour');
+
+    // Attempt to retrieve grouped schedules from cache
+    $fiveDaySixHourSchedule = Cache::get($cacheKey);
+
+    if (is_null($fiveDaySixHourSchedule)) {
+      $schedulesByDay = [];
+      $now = Carbon::now()->second(0)->microsecond(0)->startOfHour();
+      $endPeriod = $now->copy()->addDays(6)->addHours(6);
+
+      // Fetch schedules from cache or database
+      $allSchedules = $this->getSchedulesFromCache();
+
+      for ($i = 0; $i <= 6; $i++) {
+        $dayStart = $now->copy()->addDays($i)->startOfDay()->addHours($now->hour);
+        $dayEnd = $dayStart->copy()->addHours(6);
+
+        $daySchedules = collect($allSchedules)->filter(function ($schedule) use ($dayStart, $dayEnd) {
+          $scheduleStartUtc = Carbon::parse($schedule['start_dateTime'])->setTimezone('UTC');
+          $scheduleEndUtc = Carbon::parse($schedule['end_dateTime'])->setTimezone('UTC');
+
+          return ($scheduleStartUtc->between($dayStart, $dayEnd) ||
+              $scheduleEndUtc->between($dayStart, $dayEnd) ||
+              ($scheduleStartUtc->lessThanOrEqualTo($dayStart) && $scheduleEndUtc->greaterThanOrEqualTo($dayEnd)));
+        });
+
+        if ($daySchedules->isNotEmpty()) {
+          $schedulesByDay[$dayStart->toDateString()] = $daySchedules->toArray();
+        }
+      }
+
+      // Cache the grouped schedules
+      Cache::put($cacheKey, $schedulesByDay, now()->addMinutes($this->cacheExpiryMinutes));
+    }
+
+    // Log::debug('Schedules by day:', $schedulesByDay);
+
+    return $schedulesByDay;
+  }
+
+//  tec21: 2024-05-26 The transformSchedule() is now performed in the ScheduleResource
+  // we process the schedule in the CacheAllSchedules job.
+
+//  /**
+//   * Transform the schedule's content based on its type.
+//   *
+//   * @param $content
+//   * @return array
+//   */
+//  private function transformSchedule($content): array {
+//    if (!$content) {
+//      return []; // Return empty array if no content is associated
+//    }
+//
+//    // Direct transformation using appropriate resource based on content type
+//    return match ($content->getMorphClass()) {
+//      'App\Models\ShowEpisode' => (new \App\Http\Resources\SimpleShowEpisodeResource($content))->resolve(),
+//      'App\Models\Movie' => (new \App\Http\Resources\SimpleMovieResource($content))->resolve(),
+//      'App\Models\Show' => (new \App\Http\Resources\SimpleShowResource($content))->resolve(),
+//      default => [],
+//    };
+//  }
+
 
   /**
    * Cache the data.
@@ -149,13 +213,12 @@ class ScheduleService {
    * @param Carbon $start
    * @param Carbon $end
    */
-  private function cacheData(string $cacheKey, array $data, Carbon $start, Carbon $end): void
-  {
+  private function cacheData(string $cacheKey, array $data, Carbon $start, Carbon $end): void {
     $dataToCache = [
-        'timestamp' => Carbon::now()->toDateTimeString(),
+        'timestamp'      => Carbon::now()->toDateTimeString(),
         'start_dateTime' => $start->toDateTimeString(),
-        'end_dateTime' => $end->toDateTimeString(),
-        'data' => $data,
+        'end_dateTime'   => $end->toDateTimeString(),
+        'data'           => $data,
     ];
 
     Cache::put($cacheKey, $dataToCache, $this->cacheExpiryMinutes * 60); // Cache for expiry time in seconds
@@ -171,8 +234,7 @@ class ScheduleService {
   /**
    * Invalidate caches.
    */
-  public function invalidateCaches(): void
-  {
+  public function invalidateCaches(): void {
     $keys = ['scheduleToday', 'scheduleWeek', 'scheduleFiveDaySixHour'];
 
     // Invalidate keys with patterns
@@ -185,8 +247,7 @@ class ScheduleService {
   }
 
 
-  public function purgeOldCacheFiles(int $hours = 1): void
-  {
+  public function purgeOldCacheFiles(int $hours = 1): void {
     $patternKeys = Redis::connection()->keys('scheduleRange_*');
     foreach ($patternKeys as $key) {
       $content = Cache::get($key);
@@ -213,10 +274,12 @@ class ScheduleService {
     if ($this->isCacheValid($cachePath)) {
       $content = Storage::disk('local')->get("json/{$cachePath}.json");
       $cache = json_decode($content, true);
+
       return $cache['data'];
     }
 
     $data = $this->fetchContentForRange(today(), today()->endOfDay());
+
 //    $this->cacheData($cachePath, (array) $data);
 
     return $data;
@@ -226,62 +289,73 @@ class ScheduleService {
   /**
    * Fetch schedules for a specified date range with detailed processing.
    *
-   * @param string $startDate
-   * @param string $endDate
+   * @param string $startDateTimeUtc
+   * @param string $endDateTimeUtc
    * @return array
    */
-  public function fetchContentForRange(string $startDate, string $endDate): array {
-    $validationError = $this->validateDate($startDate) ?: $this->validateDate($endDate);
+  public function fetchContentForRange(string $startDateTimeUtc, string $endDateTimeUtc): array {
+
+    $validationError = $this->validateDate($startDateTimeUtc) ?: $this->validateDate($endDateTimeUtc);
     if ($validationError) {
       return ['error' => 'Invalid date provided', 'details' => $validationError];
     }
 
-    // IMPORTANT: Make sure the user requested time is in UTC at this point.
-    // It should get converted to UTC here. Unless we convert it before the request comes in???
-    // Before we fetch the schedule... Convert UTC time to schedule's local timezone !!! IMPORTANT > Schedules are stored in the user's preferred timezone.
-    // NOTE: BroadcastDates are converted to UTC when they are created and marked with the UTC timezone in the array.
-    // NOTE: Start dates and times in the schedule tables other than BroadcastDates are stored in UTC as part of our standardization.
-    // NOTE: The reason Schedules are saved in a specific timezone is to prevent daylight savings changes causing issues.
-
-//    Log::debug('Fetching schedules for date range', [
-//        'start' => $startDate,
-//        'end'   => $endDate
-//    ]);
-
     try {
-      $start = Carbon::parse($startDate)->startOfDay();
-      $end = Carbon::parse($endDate)->endOfDay();
+      $start = Carbon::parse($startDateTimeUtc)->startOfDay();
+      $end = Carbon::parse($endDateTimeUtc)->endOfDay();
     } catch (\Exception $e) {
       return ['error' => 'Invalid date provided', 'details' => $e->getMessage()];
-    }
-
-    // Cache path based on the requested date range
-//    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
-
-    $cacheKey = $this->getCacheKey('scheduleRange', $startDate, $endDate);
-    if ($this->isCacheValid($cacheKey)) {
-      $content = Cache::get($cacheKey);
-      if ($content && $this->isRequestedRangeWithinCache($start, $end, $content)) {
-        return $content['data'];
-      }
     }
 
     // Expand the fetch range by one day on each side
     $expandedStart = $start->copy()->subDay();
     $expandedEnd = $end->copy()->addDay();
 
-    // 1. Fetch schedules for the expanded range
-    $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
-        ->whereBetween('start_dateTime', [$expandedStart, $expandedEnd])
-        ->orderBy('start_dateTime')
-        ->get();
+    // 1. Fetch schedules from cache for the expanded range
+    $cacheKey = $this->getCacheKey('all_schedules');
+    $cachedSchedules = Cache::get($cacheKey);
 
-//    Log::info('Fetched schedules:', $schedules->toArray());
+    if ($cachedSchedules) {
+      Log::debug('Cached schedule used');
 
-    // Preload additional relationships
-    foreach ($schedules as $schedule) {
-      $this->preloadContentRelationships($schedule);
+      return $this->filterSchedulesByDateRange($cachedSchedules, $expandedStart, $expandedEnd);
+    } else {
+
+      $fetchedSchedules = $this->fetchAndCacheSchedules();
+
+      return $this->filterSchedulesByDateRange($fetchedSchedules, $expandedStart, $expandedEnd);
+
+//      // Fetch all schedules with necessary relationships
+//      $schedules = Schedule::with(['content.image.appSetting'])
+//          ->orderBy('start_dateTime')
+//          ->get();
+
+      // If cache is empty or invalid, fetch from the database
+      // Transform the schedules using ScheduleResource
+//      $transformedSchedules = ScheduleResource::collection($schedules)->toArray(request());
+//      $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
+//          ->whereBetween('start_dateTime', [$expandedStart, $expandedEnd])
+//          ->orderBy('start_dateTime')
+//          ->get();
+
+//      // Preload additional relationships
+//      foreach ($schedules as $schedule) {
+//        $this->preloadContentRelationships($schedule);
+//      }
+
+      // Cache the schedules for future use
+//      Log::error('Problem getting the schedule from the cache in the ScheduleService->fetchContentForRange().');
+//      Cache::put($cacheKey, $schedules, now()->addMinutes(30));
     }
+
+// Convert cached data to the expected collection type if necessary
+//    if (is_array($schedules)) {
+//      $schedules = new EloquentCollection($schedules);
+//    } elseif ($schedules instanceof Collection && !$schedules instanceof EloquentCollection) {
+//      $schedules = new EloquentCollection($schedules->all());
+//    }
+
+//    Log::debug('Fetched schedules:', $schedules);
 
     // 2. Transform schedules
     $transformedSchedules = $this->transformFetchedSchedules($schedules);
@@ -292,83 +366,142 @@ class ScheduleService {
 //    Log::debug("Sorted schedules:", $sortedSchedules);
 
     // 4. Resolve schedule conflicts
-    $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
+    return $this->resolveScheduleConflicts($sortedSchedules);
 //    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
 
-    // Cache the final schedules with expanded start and end times
-    $this->cacheData($cacheKey, $finalSchedules, $expandedStart, $expandedEnd);
+  }
 
-    return $finalSchedules;
+  protected function filterSchedulesByDateRange(array $schedules, $start, $end): array {
+    // Ensure $schedules is a collection
+    $schedulesCollection = collect($schedules);
 
+    // Filter schedules by the requested date range
+    return $schedulesCollection->filter(function ($schedule) use ($start, $end) {
+      return isset($schedule['start_dateTime']) && isset($schedule['end_dateTime']) &&
+          $schedule['start_dateTime'] >= $start->toDateTimeString() &&
+          $schedule['end_dateTime'] <= $end->toDateTimeString();
+    })->values()->toArray();
   }
 
   /**
    * Transform fetched schedules.
    *
-   * @param Collection $schedules
+   * @param array $schedules
    * @return array
    */
-  private function transformFetchedSchedules(Collection $schedules): array {
-    return $schedules->flatMap(function ($schedule) {
-      $this->preloadContentRelationships($schedule);
+  private function transformFetchedSchedules(array $schedules): array {
 
-      $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
-      $timezone = $schedule->timezone ?? 'UTC';
+    return array_reduce($schedules, function ($carry, $schedule) {
+      // Check if 'broadcast_dates' is already an array
+      $broadcastDates = is_array($schedule['broadcast_dates'])
+          ? $schedule['broadcast_dates']
+          : json_decode($schedule['broadcast_dates'], true)['broadcastDates'] ?? [];
 
-//      Log::debug('Transforming schedule', [
-//          'schedule_id'     => $schedule->id,
-//          'broadcast_dates' => $broadcastDates,
-//          'timezone'        => $timezone
-//      ]);
+      $timezone = $schedule['timezone'] ?? 'UTC';
 
-      return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
+      foreach ($broadcastDates as $date) {
         try {
-//          $startTime = new DateTime($date, new DateTimeZone($timezone));
-//          $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
-
-//          Log::debug('Mapped broadcast date before timecode conversion', [
-//              'schedule_id' => $schedule->id,
-//              'date'        => $date,
-//              'duration'    => $schedule->duration_minutes
-//          ]);
-
           // Initialize start time and end time using the provided date
-          $startTime = new DateTime($date);
-          $endTime = (clone $startTime)->modify("+{$schedule->duration_minutes} minutes");
+          $startDateTime = new DateTime($date, new DateTimeZone('UTC'));
+          $endDateTime = (clone $startDateTime)->modify("+{$schedule['duration_minutes']} minutes");
 
-          $startTime->setTimezone(new DateTimeZone('UTC'));
-          $endTime->setTimezone(new DateTimeZone('UTC'));
-
-//          Log::debug('Mapped broadcast date after timecode conversion', [
-//              'schedule_id' => $schedule->id,
-//              'start_dateTime'  => $startTime->format('c'),
-//              'end_dateTime'    => $endTime->format('c'),
-//              'duration'    => $schedule->duration_minutes
-//          ]);
-
-          return [
-              'id'              => $schedule->content_id,
-              'createdAt'       => $schedule->created_at,
-              'type'            => $schedule->type,
-              'startTime'      => $startTime->format('c'),
-              'endTime'        => $endTime->format('c'),
-              'priority'        => $schedule->priority,
-              'durationMinutes' => $schedule->duration_minutes,
-              'timezone'        => $timezone,
-              'content'         => $this->transformSchedule($schedule->content),
+          // Add the transformed schedule to the accumulator
+          $carry[] = [
+              'id'               => $schedule['id'],
+              'created_at'       => $schedule['created_at'],
+              'type'             => $schedule['type'],
+              'start_dateTime'   => $startDateTime->format('c'),
+              'end_dateTime'     => $endDateTime->format('c'),
+              'priority'         => $schedule['priority'],
+              'duration_minutes' => $schedule['duration_minutes'],
+              'timezone'         => $timezone,
+              'content'          => $schedule['content'],
           ];
         } catch (\Exception $e) {
           Log::error('Error transforming broadcast date', [
-              'schedule_id' => $schedule->id,
+              'schedule_id' => $schedule['id'],
               'date'        => $date,
               'error'       => $e->getMessage()
           ]);
-
-          return null;
         }
-      })->filter()->all();
-    })->toArray();
+      }
+      return $carry; // Return the accumulator for the next iteration
+    }, []); // Initial value of the accumulator is an empty array
+
   }
+
+//
+//
+//    // Convert cached data to the expected collection type if necessary
+//    if (is_array($schedules)) {
+//      $schedules = new EloquentCollection(array_map(function ($item) {
+//        return new Schedule($item);
+//      }, $schedules));
+//    } elseif ($schedules instanceof Collection && !$schedules instanceof EloquentCollection) {
+//      $schedules = new EloquentCollection($schedules->map(function ($item) {
+//        return new Schedule($item);
+//      })->all());
+//    }
+//
+//    return $schedules->flatMap(function ($schedule) {
+//      $broadcastDates = json_decode($schedule->broadcast_dates, true)['broadcastDates'] ?? [];
+//      $timezone = $schedule->timezone ?? 'UTC';
+//
+////      Log::debug('Transforming schedule', [
+////          'schedule_id'     => $schedule->id,
+////          'broadcast_dates' => $broadcastDates,
+////          'timezone'        => $timezone
+////      ]);
+//
+//      return collect($broadcastDates)->map(function ($date) use ($timezone, $schedule) {
+//        try {
+////          $startTime = new DateTime($date, new DateTimeZone($timezone));
+////          $endTime = (clone $startTime)->add(new DateInterval('PT' . $schedule->duration_minutes . 'M'));
+//
+////          Log::debug('Mapped broadcast date before timecode conversion', [
+////              'schedule_id' => $schedule->id,
+////              'date'        => $date,
+////              'duration'    => $schedule->duration_minutes
+////          ]);
+//
+//          // Initialize start time and end time using the provided date
+//          $startDateTime = new DateTime($date);
+//          $endDateTime = (clone $startDateTime)->modify("+{$schedule->duration_minutes} minutes");
+//
+//          $startDateTime->setTimezone(new DateTimeZone('UTC'));
+//          $endDateTime->setTimezone(new DateTimeZone('UTC'));
+//
+////          Log::debug('Mapped broadcast date after timecode conversion', [
+////              'schedule_id'    => $schedule->id,
+////              'start_dateTime' => $startDateTime->format('c'),
+////              'end_dateTime'   => $endDateTime->format('c'),
+////              'duration'       => $schedule->duration_minutes
+////          ]);
+//
+//          return [
+//              'id'               => $schedule->content_id,
+//              'created_at'       => $schedule->created_at,
+//              'type'             => $schedule->type,
+//              'start_DateTime'   => $startDateTime->format('c'),
+//              'end_DateTime'     => $endDateTime->format('c'),
+//              'priority'         => $schedule->priority,
+//              'duration_minutes' => $schedule->duration_minutes,
+//              'timezone'         => $timezone,
+////              'content'          => $this->transformSchedule($schedule->content),
+//              'content'          => $schedule->content,
+//          ];
+//        } catch (\Exception $e) {
+//          Log::error('Error transforming broadcast date', [
+//              'schedule_id' => $schedule->id,
+//              'date'        => $date,
+//              'error'       => $e->getMessage()
+//          ]);
+//
+//          return null;
+//        }
+//      })->filter()->all();
+//    })->toArray();
+//  }
 
   /**
    * Sort schedules.
@@ -376,19 +509,31 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  private function sortSchedules(array $schedules): array
-  {
+  private function sortSchedules(array $schedules): array {
+
+    // Remove duplicates based on unique composite key
+    $uniqueSchedules = [];
+    foreach ($schedules as $schedule) {
+      $key = $schedule['id'] . '_' . $schedule['start_dateTime'] . '_' . $schedule['end_dateTime'] . '_' . $schedule['priority'];
+      if (!isset($uniqueSchedules[$key])) {
+        $uniqueSchedules[$key] = $schedule;
+      }
+    }
+
+    // Convert associative array back to a sequential array
+    $schedules = array_values($uniqueSchedules);
+
     usort($schedules, function ($a, $b) {
-      $startComparison = $a['startTime'] <=> $b['startTime'];
+      $startComparison = $a['start_dateTime'] <=> $b['start_dateTime'];
       if ($startComparison !== 0) return $startComparison;
 
-      $endComparison = $a['endTime'] <=> $b['endTime'];
+      $endComparison = $a['end_dateTime'] <=> $b['end_dateTime'];
       if ($endComparison !== 0) return $endComparison;
 
       $priorityComparison = $a['priority'] <=> $b['priority'];
       if ($priorityComparison !== 0) return $priorityComparison;
 
-      return $a['createdAt'] <=> $b['createdAt']; // Older shows have higher priority
+      return $a['created_at'] <=> $b['created_at']; // Older shows have higher priority
     });
 
     return $schedules;
@@ -407,34 +552,48 @@ class ScheduleService {
 
     // Sort schedules before handling overlaps to ensure they are processed in the correct order
     usort($schedules, function ($a, $b) {
-      return $a['startTime'] <=> $b['startTime'] ?: $a['endTime'] <=> $b['endTime'] ?: $a['priority'] <=> $b['priority'] ?: $a['createdAt'] <=> $b['createdAt'];
+      return $a['start_dateTime'] <=> $b['start_dateTime'] ?: $a['end_dateTime'] <=> $b['end_dateTime'] ?: $a['priority'] <=> $b['priority'] ?: $a['created_at'] <=> $b['created_at'];
     });
 
     return array_map(function ($item) use (&$rowOccupancy) {
-      $item['gridRow'] = 1; // Start placing each item in the first row
+      $item['gridRow'] = 1; // Start placing each item in the first row (odd number)
 
       // Check each row to see if placing the item there would cause a conflict
-      foreach ($rowOccupancy as $row => $times) {
+      while (true) {
         $conflict = false;
-        foreach ($times as $time) {
-          if ($item['startTime'] < $time['endTime'] && $item['endTime'] > $time['startTime']) {
-            $conflict = true;
-            break;
+
+        if (isset($rowOccupancy[$item['gridRow']])) {
+          foreach ($rowOccupancy[$item['gridRow']] as $time) {
+            if ($item['start_dateTime'] < $time['end_dateTime'] && $item['end_dateTime'] > $time['start_dateTime']) {
+              $conflict = true;
+              break;
+            }
           }
         }
+
         if (!$conflict) {
-          $item['gridRow'] = $row;
-          break;
+          break; // No conflict found, place the item in the current row
         }
-        $item['gridRow']++; // Move to the next row if there is a conflict
+
+        // Move to the next odd-numbered row if there is a conflict
+        $item['gridRow'] += 2;
+      }
+
+      // Adjust the priority if the item was moved to a new row
+      if ($item['gridRow'] > 1) {
+        $item['priority']++;
       }
 
       // Record the item's time in the appropriate row's occupancy data
-      $rowOccupancy[$item['gridRow']][] = ['startTime' => $item['startTime'], 'endTime' => $item['endTime']];
+      $rowOccupancy[$item['gridRow']][] = [
+          'start_dateTime' => $item['start_dateTime'],
+          'end_dateTime'   => $item['end_dateTime']
+      ];
 
       return $item;
     }, $schedules);
   }
+
 
   /**
    * Validate date format.
@@ -442,8 +601,7 @@ class ScheduleService {
    * @param string $formattedDateTimeUtc
    * @return JsonResponse|null
    */
-  public function validateDate(string $formattedDateTimeUtc): ?JsonResponse
-  {
+  public function validateDate(string $formattedDateTimeUtc): ?JsonResponse {
     $validator = Validator::make(['formattedDateTimeUtc' => $formattedDateTimeUtc], [
         'formattedDateTimeUtc' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
     ]);

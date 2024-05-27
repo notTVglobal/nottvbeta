@@ -18,16 +18,34 @@ class ScheduleRecurrenceDetailsSeeder extends Seeder
    */
   public function run(): void
   {
-    $startDateTime = Carbon::now()->subHours(6);
-    $currentStartDateTime = ScheduleHelpers::roundToNearestHalfHour($startDateTime);
+    $startDateTimeUtc = Carbon::now()->subHours(6); // Now is server time and server time is UTC
+    $currentStartDateTimeUtc = ScheduleHelpers::roundToNearestHalfHour($startDateTimeUtc);
+
+    // List of Canadian timezones
+    $canadianTimezones = [
+        'America/Vancouver', // Pacific Time
+        'America/Edmonton',  // Mountain Time
+        'America/Winnipeg',  // Central Time
+        'America/Toronto',   // Eastern Time
+        'America/Halifax',   // Atlantic Time
+        'America/St_Johns',  // Newfoundland Time
+    ];
 
     for ($i = 0; $i < 144; $i++) {
       $schedule = Schedule::factory()->make();
 
-      // Set the start time and calculate the end time based on the duration
-      $schedule->start_dateTime = $currentStartDateTime;
-      $schedule->end_dateTime = $currentStartDateTime->copy()->addMinutes($schedule->duration_minutes);
-      $schedule->timezone = 'UTC';
+      // Randomly select a Canadian timezone
+      $randomTimezone = $canadianTimezones[array_rand($canadianTimezones)];
+      $schedule->timezone = $randomTimezone;
+
+      // Set start and end times in Server's UTC
+      $schedule->start_dateTime_utc = $currentStartDateTimeUtc->copy()->setTimezone('UTC');
+      $schedule->end_dateTime_utc = $currentStartDateTimeUtc->copy()->addMonths(3)->addMinutes($schedule->duration_minutes)->setTimezone('UTC');
+
+      // Convert start and end times to the selected timezone using Carbon
+      $schedule->start_dateTime = Carbon::parse($schedule->start_dateTime_utc, 'UTC')->setTimezone($randomTimezone)->toDateTimeString();
+      $schedule->end_dateTime = Carbon::parse($schedule->end_dateTime_utc, 'UTC')->setTimezone($randomTimezone)->toDateTimeString();
+
       $schedule->recurrence_flag = 1;
 
       // Save the schedule
@@ -40,13 +58,12 @@ class ScheduleRecurrenceDetailsSeeder extends Seeder
           ->toArray();
 
       // Calculate the end date 3 months in the future that falls on one of the days_of_week
-      $endDate = ScheduleHelpers::getValidEndDate(Carbon::now()->addMonths(3), $daysOfWeek);
+//      $endDate = ScheduleHelpers::getValidEndDate(Carbon::now()->addMonths(3), $daysOfWeek);
 
       $scheduleRecurrenceDetails = ScheduleRecurrenceDetails::factory()
           ->forSchedule($schedule)
           ->create([
               'days_of_week' => json_encode($daysOfWeek),
-              'end_dateTime' => $endDate,
           ]);
 
       // Update the schedule with the recurrence details ID
@@ -54,7 +71,7 @@ class ScheduleRecurrenceDetailsSeeder extends Seeder
       $schedule->save();
 
       // Update the current start time for the next schedule item
-      $currentStartDateTime = ScheduleHelpers::roundToNearestHalfHour($schedule->end_dateTime);
+      $currentStartDateTimeUtc = ScheduleHelpers::roundToNearestHalfHour(Carbon::parse($schedule->start_dateTime_utc->addMinutes($schedule->duration_minutes), 'UTC'));
     }
   }
 }

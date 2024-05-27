@@ -1,9 +1,8 @@
 <template>
-  <div class="p-3 border-2 border-green-500">
-    <div class="text-green-500 mb-2">Coming Soon! (These buttons are currently being built)</div>
+  <div class="flex flex-col items-center justify-center p-3 border-2 border-green-500">
+    <div class="text-green-500 mb-2">Coming Soon!</div>
     <div class="flex flex-row gap-3">
       <SaveForLaterButton/>
-      <ShareButton/>
     </div>
   </div>
 </template>

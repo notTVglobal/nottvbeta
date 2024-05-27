@@ -60,6 +60,7 @@
 
             <ShowIdIndexPlayEpisode v-if="$page.props.user" :show="show" :team="team"/>
             <ComingSoonShareAndSaveButtons/>
+            <ShareButton :model="show" />
 
           </div>
 
@@ -88,6 +89,7 @@ import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWith
 import ShowIdIndexPlayEpisode from '@/Components/Pages/Shows/Elements/ShowIdIndexPlayEpisode.vue'
 import ShowsIdIndexWatchLive from '@/Components/Pages/Shows/Elements/ShowsIdIndexWatchLive.vue'
 import { onMounted } from 'vue'
+import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 
 const userStore = useUserStore()
 

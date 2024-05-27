@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Schedule;
+use App\Traits\PreloadScheduleContentRelationships;
 use Illuminate\Bus\Batch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
@@ -15,21 +16,10 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UpdateAllScheduleBroadcastDates implements ShouldQueue {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable, PreloadScheduleContentRelationships;
 
-
-  // TODO: Brand new. This will run "after" we Purge Expired Shows.
-  //  This runs a batch of `UpdateBroadcastScheduleForShow` Jobs.
-
-
-  /**
-   * Create a new job instance.
-   *
-   * @return void
-   */
-  public function __construct() {
-    //
-  }
+  // This will run "after" we Purge Expired Shows.
+  // This runs a batch of `UpdateBroadcastScheduleForShow` Jobs.
 
   /**
    * Execute the job.
@@ -40,30 +30,31 @@ class UpdateAllScheduleBroadcastDates implements ShouldQueue {
   public function handle(): string {
     $jobs = [];
 
-    Schedule::with(['content', 'scheduleRecurrenceDetails', 'scheduleIndexes'])
-        ->chunk(100, function ($schedules) use (&$jobs) {
-          foreach ($schedules as $schedule) {
-            $jobs[] = new UpdateBroadcastDates($schedule);
-          }
-        });
+    $schedules = Schedule::with('content', 'scheduleRecurrenceDetails', 'scheduleIndexes')
+        ->get();
+
+    foreach ($schedules as $schedule) {
+      $this->preloadContentRelationships($schedule); // Preload necessary relationships
+      $jobs[] = new UpdateBroadcastDates($schedule);
+    }
 
     $batch = Bus::batch($jobs)
-        ->before(function (Batch $batch) {
-          Log::info('Batch created: '.$batch->id);
-        })
-        ->progress(function (Batch $batch) {
-          Log::info('Batch progress: '.$batch->processedJobs().'/'.$batch->totalJobs);
-        })
         ->then(function (Batch $batch) {
-          Log::info('All jobs in batch completed successfully.');
+          Log::info('Batch completed successfully.' . PHP_EOL . 'Batch ID: ' . $batch->id);
+          UpdateSchedulesAndIndexes::dispatch();
         })
         ->catch(function (Batch $batch, Throwable $e) {
-          Log::error('Batch job failure detected: '.$e->getMessage());
+          Log::error('Batch job failure detected: ' . $e->getMessage());
+          HandleBatchFailure::dispatch();
         })
         ->finally(function (Batch $batch) {
-          Log::info('Batch finished executing.');
+          Log::info('All schedule broadcast dates updated successfully.' . PHP_EOL . 'Batch ID: ' . $batch->id);
+          CacheAllSchedules::dispatch();
         })
-        ->onQueue('schedules')->name('Update All Scheduled Broadcast Dates')->dispatch();
+        ->name('Update All Scheduled Broadcast Dates')
+        ->dispatch();
+
+    Log::info('Update all schedule broadcast dates batch dispatched.' . PHP_EOL . 'Batch ID: ' . $batch->id);
 
     return $batch->id;
   }

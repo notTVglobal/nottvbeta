@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-row flex-wrap gap-2 items-center">
+  <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
     <div v-if="show.nextBroadcast"
-         class="flex flex-col bg-gray-800 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
-      <h2 class="text-2xl font-semibold mb-4">Next Broadcast</h2>
+         class="flex flex-col bg-yellow-300 border border-yellow-500 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">Next Broadcast</h2>
       <p class="text-lg">
         <ConvertDateTimeToTimeAgo :dateTime="show.nextBroadcast.next_broadcast" :timezone="userStore.timezone"
-                                  :class="`text-yellow-400`"/>
+                                  :class="`text-yellow-700`"/>
       </p>
-      <p class="text-lg">
+      <p class="text-lg text-gray-800">
         {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show.nextBroadcast.next_broadcast) }}
         {{ userStore.timezoneAbbreviation }}
       </p>

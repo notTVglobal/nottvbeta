@@ -22,12 +22,15 @@ class ScheduleRecurrenceDetailsFactory extends Factory
    */
   public function definition(): array
   {
+
+    $duration_minutes = $this->faker->numberBetween(30, 180);
+
     return [
         'frequency' => 'weekly',
         'days_of_week' => [], // Placeholder for `days_of_week`
-        'duration_minutes' => $this->faker->numberBetween(30, 180),
+        'duration_minutes' => $duration_minutes,
         'start_dateTime' => Carbon::now(),
-        'end_dateTime' => Carbon::now()->addMinutes($this->faker->numberBetween(30, 180)),
+        'end_dateTime' => Carbon::now()->addMinutes($duration_minutes),
         'timezone' => 'UTC',
     ];
   }
@@ -40,12 +43,14 @@ class ScheduleRecurrenceDetailsFactory extends Factory
    */
   public function forSchedule(Schedule $schedule): static
   {
-    return $this->state(function (array $attributes) use ($schedule) {
+    return $this->state(function () use ($schedule) {
       return [
           'duration_minutes' => $schedule->duration_minutes,
           'start_dateTime' => $schedule->start_dateTime,
           'end_dateTime' => $schedule->end_dateTime,
           'timezone' => $schedule->timezone,
+          'start_dateTime_utc' => $schedule->start_dateTime_utc,
+          'end_dateTime_utc' => $schedule->end_dateTime_utc,
       ];
     });
   }

@@ -381,6 +381,7 @@ class ShowEpisodeController extends Controller {
             'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime ?? null,
             'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
             'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
+            'image'                      => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
             'video'                      => (new VideoResource($showEpisode->video))->resolve(),
 //            'video'                      => [
 //                'ulid'                 => $showEpisode->video->ulid ?? '',
@@ -407,7 +408,6 @@ class ShowEpisodeController extends Controller {
 //            'cloud_folder'  => $showEpisode->video->cloud_folder ?? '',
 //            'upload_status' => $showEpisode->video->upload_status ?? '',
 //        ],
-        'image'    => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
         'creators' => TeamMember::where('team_id', $teamId)
             ->join('users', 'team_members.user_id', '=', 'users.id')
             ->select('users.*', 'team_members.user_id')
