@@ -3,6 +3,11 @@
 Last Update: May 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.2
+May 28, 2024
+
+* Fix Social Share image width.
+
 ## v0.9.3.1
 May 28, 2024
 
