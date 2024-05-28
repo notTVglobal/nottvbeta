@@ -711,6 +711,8 @@ Route::middleware([
   ->can('viewAdmin', 'App\Models\User');
   Route::post('/admin/unban-user/{userId}', [AdminController::class, 'unbanUser'])
   ->can('viewAdmin', 'App\Models\User');
+  Route::get('/admin/banned-users', [AdminController::class, 'bannedUsers'])
+      ->can('viewAdmin', 'App\Models\User');
 
   //// ADMIN: SECURE NOTES
   Route::get('/admin/secure-notes',

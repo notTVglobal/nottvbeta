@@ -8051,6 +8051,10 @@ hr {
   margin-top: -1px;
 }
 
+.ml-20 {
+  margin-left: 5rem;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;

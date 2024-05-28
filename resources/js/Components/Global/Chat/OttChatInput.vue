@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <ListShadowBannedUsersButton v-if="$page.props.auth.user.isAdmin" />
     <form @submit.prevent="">
       <div class="flex flex-col w-full justify-center items-center">
         <div class="flex flex-col">
@@ -14,9 +14,9 @@
                 maxlength=”300″
                 placeholder="Write a message..."
                 v-model="chatStore.message"
-                @keyup.enter="sendMessage"
-                v-on:focus="appSettingStore.turnPipChatModeOn"
-                v-on:blur="appSettingStore.turnPipChatModeOff"
+                @keyup.enter.stop.prevent="sendMessage"
+                @focus="appSettingStore.turnPipChatModeOn"
+                @blur="appSettingStore.turnPipChatModeOff"
             />
             <div @mousedown.prevent="sendMessage"
                  class="right-auto lg:right-5 p-2 w-fit text-white form-control cursor-pointer">
@@ -24,7 +24,7 @@
             </div>
           </div>
           <div class="flex flex-row w-full justify-start">
-            <div class="pt-2 right-auto lg:right-10 font-thin text-xs">{{ chatStore.message.length }}</div>
+            <div class="ml-10 pt-2 right-auto lg:right-10 font-thin text-xs">{{ chatStore.message.length }}</div>
           </div>
         </div>
 
@@ -42,6 +42,7 @@ import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import EmojiPicker from '@/Components/Global/Text/EmojiPicker.vue'
+import ListShadowBannedUsersButton from '@/Components/Pages/Admin/Chat/ListShadowBannedUsersButton.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()

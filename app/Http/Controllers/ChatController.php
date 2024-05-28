@@ -28,7 +28,7 @@ class ChatController extends Controller {
         ->where('channel_id', $channelId)
         ->where('created_at', '>=', Carbon::now()->subDay())
         ->with(['user' => function ($query) {
-          $query->select('id', 'name', 'profile_photo_path');
+          $query->select('id', 'name', 'profile_photo_path', 'is_banned', 'ban_expires_at');
         }])
         ->latest()
         ->limit(20)
@@ -59,7 +59,6 @@ class ChatController extends Controller {
       return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-
     $user = Auth::user();
     $isVisible = true;
 
@@ -75,7 +74,6 @@ class ChatController extends Controller {
         $isVisible = false;
       }
     }
-
 
     // First, escape the message to prevent XSS attacks
     $escapedMessage = e($validated['message']);
@@ -98,22 +96,6 @@ class ChatController extends Controller {
         },
         $escapedMessage
     );
-
-
-
-    // Then, detect URLs in the escaped message and format them as clickable links
-//    $formattedMessage = preg_replace_callback(
-//        "#\b(https?://)?([^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#",
-//        function ($matches) {
-//          // Prepend http:// if the URL does not have a protocol
-//          $url = $matches[1] ? $matches[0] : "http://" . $matches[0];
-//          return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . $url . '" style="color: #3B82F6; /* Equivalent to text-blue-100 */
-//        transition: color 0.2s ease-in-out;"
-//        onmouseover="this.style.color = \'#F59E0B\'"
-//        onmouseout="this.style.color = \'#3B82F6\'">' . $url . '</a>';
-//        },
-//        $escapedMessage
-//    );
 
     // Encrypt the message and username
     $encryptedMessage = Crypt::encryptString($formattedMessage);
@@ -143,48 +125,4 @@ class ChatController extends Controller {
 
     return response()->json(['message' => 'Failed to send message'], 500);
   }
-
-
-//    public function newMessage(HttpRequest $request): \Illuminate\Http\JsonResponse
-//    {
-//
-//
-//
-//      $validator = Validator::make($request->all(), [
-//          'message' => 'required|string|max:300', // Adjust max length as needed
-//          'channel_id' => 'required|exists:channels,id', // Ensure the channel exists
-//        // Add validation for other fields if necessary
-//          'user_name' => 'required|string',
-//          'user_profile_photo_path' => 'nullable|string',
-////          'user_profile_photo_url' => 'nullable|string',
-//      ]);
-//
-//      if ($validator->fails()) {
-//        return response()->json(['errors' => $validator->errors()], 422);
-//      }
-//
-//      $validated = $validator->validated();
-//
-//      if (Gate::denies('send-chat-message', $validated['channel_id'])) {
-//        return response()->json(['message' => 'Unauthorized'], 403);
-//      }
-//
-//      $chatMessage = new ChatMessage([
-//          'user_id' => Auth::id(),
-//          'channel_id' => $validated['channel_id'],
-//          'message' => e($validated['message']), // Use HTML entity encoding
-//          'user_name' => ($validated['user_name']),
-//          'user_profile_photo_path' => ($validated['user_profile_photo_path']),
-////          'user_profile_photo_url' => e($validated['user_profile_photo_url']),
-//      ]);
-//
-//      // Save first, then dispatch event
-//      if ($chatMessage->save()) {
-//        event(new NewChatMessage($chatMessage));
-//        return response()->json(['message' => 'Message sent successfully'], 201);
-//      }
-//
-//      return response()->json(['message' => 'Failed to send message'], 500);
-//
-//    }
 }

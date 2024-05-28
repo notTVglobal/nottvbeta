@@ -452,6 +452,13 @@ class AdminController extends Controller {
     return response()->json(['message' => 'User unbanned successfully'], 200);
   }
 
+  public function bannedUsers(): \Illuminate\Http\JsonResponse {
+    $bannedUsers = User::where('is_banned', true)
+        ->get(['id', 'name', 'ban_expires_at']);
+
+    return response()->json($bannedUsers, 200);
+  }
+
 
 ////////////  INVITE CODES
 //////////////////////////
