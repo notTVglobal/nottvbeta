@@ -123,12 +123,12 @@ class AddContentToSchedule implements ShouldQueue {
     $end_DateTime = $data['endDateTime'];
 
     // Need to keep dateTimes in the provided timezone
-    $formattedStartDateTime = Carbon::parse($start_DateTime, $timezone)->toDateTimeString();
-    $formattedEndDateTime = Carbon::parse($end_DateTime, $timezone)->toDateTimeString();
+    $formattedStartDateTime = Carbon::parse($start_DateTime, $timezone)->setSecond(0)->toDateTimeString();
+    $formattedEndDateTime = Carbon::parse($end_DateTime, $timezone)->setSecond(0)->toDateTimeString();
 
     // Convert to UTC
-    $startDateTimeUtc = Carbon::parse($formattedStartDateTime, $timezone)->setTimezone('UTC')->toDateTimeString();
-    $endDateTimeUtc = Carbon::parse($formattedEndDateTime, $timezone)->setTimezone('UTC')->toDateTimeString();
+    $startDateTimeUtc = Carbon::parse($formattedStartDateTime, $timezone)->setSecond(0)->setTimezone('UTC')->toDateTimeString();
+    $endDateTimeUtc = Carbon::parse($formattedEndDateTime, $timezone)->setSecond(0)->setTimezone('UTC')->toDateTimeString();
 
     // Log the attempt to find overlapping schedules
 //    Log::debug('Checking for overlapping schedules', [
@@ -198,8 +198,6 @@ class AddContentToSchedule implements ShouldQueue {
 
         // Assuming $endDateTime holds the value "2024-04-18T00:00:00-07:00"
         $endDateTime = Carbon::parse($data['endDateTime']);
-
-        // Now $startTime contains only the time in "HH:mm:ss" format
 
         $recurrenceDetailsData = [
             'recurrence_details_id' => $recurrenceDetailsId ?? null,
@@ -342,6 +340,9 @@ class AddContentToSchedule implements ShouldQueue {
         ->setTimezone('UTC')
         ->toDateTimeString();
 
+    // Ensure recurrence_details_id exists before using it
+    $recurrenceType = property_exists($scheduleData, 'recurrence_details_id') && $scheduleData->recurrence_details_id ? 'recurring' : 'one-time';
+
     // Construct the schedule details array
     return [
         'contentType'     => $contentType,
@@ -353,7 +354,7 @@ class AddContentToSchedule implements ShouldQueue {
         'durationMinutes' => $scheduleData->duration_minutes,
         'priority'        => $scheduleData->priority,
         'daysOfWeek'      => $daysOfWeek, // Now this contains the array of days or is empty
-        'type'            => $scheduleData->recurrence_details_id ? 'recurring' : 'one-time',
+        'type'            => $recurrenceType,
     ];
   }
 

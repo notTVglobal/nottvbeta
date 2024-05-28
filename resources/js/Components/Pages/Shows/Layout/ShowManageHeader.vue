@@ -122,7 +122,7 @@ const props = defineProps({
 const errors = ref();
 
 const nextBroadcastDate = computed(() => {
-  console.log('showStore.scheduleDetails:', showStore.scheduleDetails);
+  // console.log('showStore.scheduleDetails:', showStore.scheduleDetails);
 
   const now = dayjs();
   if (showStore.scheduleDetails && showStore.scheduleDetails.broadcastDates) {

@@ -333,12 +333,18 @@ onMounted(() => {
         })
       })
       .listen('.ShowScheduleDetailsUpdated', (event) => {
-        console.log('ShowScheduleDetailsUpdated event received:', event)
-        showStore.scheduleDetails = event.scheduleDetails
+        console.log('ShowScheduleDetailsUpdated event received:', event);
+        // Assuming `start_DateTime` needs to be transformed into `startTime`
+        const formattedStartTime = event.scheduleDetails.start_DateTime
+        showStore.scheduleDetails = {
+          ...event.scheduleDetails,
+          startTime: formattedStartTime
+        };
+        console.log('Updated scheduleDetails.startTime:', showStore.scheduleDetails.startTime);
       })
       .error((error) => {
-        console.error('Error subscribing to channel:', error)
-      })
+        console.error('Error subscribing to channel:', error);
+      });
 
 })
 

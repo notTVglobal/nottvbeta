@@ -37,10 +37,9 @@ class UpdateBroadcastDates implements ShouldQueue {
 
   public function handle() {
 
-    // Check if the batch has been cancelled
-    if ($this->batch()->cancelled()) {
+    // Check if the job is part of a batch and if the batch has been cancelled
+    if ($this->batch() && $this->batch()->cancelled()) {
       Log::info('Batch cancelled, job will not run', ['scheduleId' => $this->schedule->id]);
-
       return;
     }
 
