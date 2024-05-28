@@ -1,7 +1,7 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/js/manifest.js": "/js/manifest.js",
-    "/css/liveStreamGuide.css": "/css/liveStreamGuide.css",
-    "/css/app.css": "/css/app.css",
-    "/js/vendor.js": "/js/vendor.js"
+    "/js/app.js": "/js/app.js?id=60c4f7c87e9afd67f2c2d71faf4475a7",
+    "/js/manifest.js": "/js/manifest.js?id=916d782e2d475948635cc368d765956b",
+    "/css/liveStreamGuide.css": "/css/liveStreamGuide.css?id=598d723ad9705450a14faa4240d7717d",
+    "/css/app.css": "/css/app.css?id=db9a0b55484d7f4c0ad7f9f085655eac",
+    "/js/vendor.js": "/js/vendor.js?id=194aae2cd5381c5f105322cb9c3a063e"
 }
