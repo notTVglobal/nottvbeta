@@ -436,7 +436,31 @@ export const useAdminStore = defineStore('adminStore', {
             // type
             // name
 
-        }
+        },
+        async banUser(userId, duration) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post(`/admin/ban-user/${userId}`, { duration });
+                notificationStore.setGeneralServiceNotification('Success', 'User banned successfully.');
+                return response.data;
+            } catch (error) {
+                notificationStore.setGeneralServiceNotification('Error', 'Failed to ban user.');
+                console.error('Error banning user:', error);
+                throw error;
+            }
+        },
+        async unbanUser(userId) {
+            const notificationStore = useNotificationStore()
+            try {
+                const response = await axios.post(`/admin/unban-user/${userId}`);
+                notificationStore.setGeneralServiceNotification('Success', 'User unbanned successfully.');
+                return response.data;
+            } catch (error) {
+                notificationStore.setGeneralServiceNotification('Error', 'Failed to unban user.');
+                console.error('Error unbanning user:', error);
+                throw error;
+            }
+        },
     },
 
     // Getters (if needed)

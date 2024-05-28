@@ -665,6 +665,8 @@ Route::middleware([
   ///  getting video urls from embed
   ///  codes for all episodes.
   ///
+  ///
+
   Route::post('/admin/getVideosFromEmbedCodes', [AdminController::class, 'getVideosFromEmbedCodes'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('getVideosFromEmbedCodes');
@@ -704,6 +706,11 @@ Route::middleware([
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.fetchActiveStreams');
 
+  //// ADMIN: BAN USERS
+  Route::post('/admin/ban-user/{userId}', [AdminController::class, 'banUser'])
+  ->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/unban-user/{userId}', [AdminController::class, 'unbanUser'])
+  ->can('viewAdmin', 'App\Models\User');
 
   //// ADMIN: SECURE NOTES
   Route::get('/admin/secure-notes',

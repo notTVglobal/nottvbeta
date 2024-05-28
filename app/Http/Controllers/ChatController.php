@@ -59,6 +59,24 @@ class ChatController extends Controller {
       return response()->json(['message' => 'Unauthorized'], 403);
     }
 
+
+    $user = Auth::user();
+    $isVisible = true;
+
+    // Check if the user is shadow banned
+    if ($user->is_banned) {
+      if ($user->ban_expires_at && Carbon::now()->greaterThan($user->ban_expires_at)) {
+        // Ban has expired, lift the ban
+        $user->is_banned = false;
+        $user->ban_expires_at = null;
+        $user->save();
+      } else {
+        // User is still banned
+        $isVisible = false;
+      }
+    }
+
+
     // First, escape the message to prevent XSS attacks
     $escapedMessage = e($validated['message']);
 
@@ -81,9 +99,7 @@ class ChatController extends Controller {
         $escapedMessage
     );
 
-    // Encrypt the message and username
-    $encryptedMessage = Crypt::encryptString($formattedMessage);
-    $encryptedUserName = Crypt::encryptString($validated['user_name']);
+
 
     // Then, detect URLs in the escaped message and format them as clickable links
 //    $formattedMessage = preg_replace_callback(
@@ -99,19 +115,28 @@ class ChatController extends Controller {
 //        $escapedMessage
 //    );
 
+    // Encrypt the message and username
+    $encryptedMessage = Crypt::encryptString($formattedMessage);
+    $encryptedUserName = Crypt::encryptString($validated['user_name']);
 
     $chatMessage = new ChatMessage([
         'user_id'                 => Auth::id(),
         'channel_id'              => $validated['channel_id'],
-        'message'                 => $encryptedMessage, // Use the encrypted message
-        'user_name'               => $encryptedUserName, // Use the encrypted username
+        'message'                 => $formattedMessage,
+        'user_name'               => $validated['user_name'],
         'user_profile_photo_path' => $validated['user_profile_photo_path'],
         'user_profile_photo_url'  => e($validated['user_profile_photo_url']),
+        'is_visible'              => $isVisible, // Set visibility based on ban status
     ]);
 
-    // Save first, then dispatch event
+    // Dispatch first, then save.
+    event(new NewChatMessage($chatMessage));
+
+    // Encrypt the message and username before saving
+    $chatMessage->message = Crypt::encryptString($formattedMessage);
+    $chatMessage->user_name = Crypt::encryptString($validated['user_name']);
+
     if ($chatMessage->save()) {
-      event(new NewChatMessage($chatMessage));
 
       return response()->json(['message' => 'Message sent successfully'], 201);
     }
