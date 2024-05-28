@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,7 +32,11 @@ class ChatController extends Controller {
         }])
         ->latest()
         ->limit(20)
-        ->get();
+        ->get()
+        ->each(function ($message) {
+          $message->message = Crypt::decryptString($message->message);
+          $message->user_name = Crypt::decryptString($message->user_name);
+        });
   }
 
   public function newMessage(HttpRequest $request): \Illuminate\Http\JsonResponse {
@@ -76,6 +81,10 @@ class ChatController extends Controller {
         $escapedMessage
     );
 
+    // Encrypt the message and username
+    $encryptedMessage = Crypt::encryptString($formattedMessage);
+    $encryptedUserName = Crypt::encryptString($validated['user_name']);
+
     // Then, detect URLs in the escaped message and format them as clickable links
 //    $formattedMessage = preg_replace_callback(
 //        "#\b(https?://)?([^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#",
@@ -94,8 +103,8 @@ class ChatController extends Controller {
     $chatMessage = new ChatMessage([
         'user_id'                 => Auth::id(),
         'channel_id'              => $validated['channel_id'],
-        'message'                 => $formattedMessage, // Use the formatted message
-        'user_name'               => $validated['user_name'],
+        'message'                 => $encryptedMessage, // Use the encrypted message
+        'user_name'               => $encryptedUserName, // Use the encrypted username
         'user_profile_photo_path' => $validated['user_profile_photo_path'],
         'user_profile_photo_url'  => e($validated['user_profile_photo_url']),
     ]);
