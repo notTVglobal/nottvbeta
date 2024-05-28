@@ -70,10 +70,10 @@ onMounted(() => {
   topDiv.scrollIntoView()
   appSettingStore.currentPage = 'news'
 
-  if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
+  if (userStore.isMobile || window.innerWidth < 1024) {
     appSettingStore.ott = 0;
   } else {
-    appSettingStore.ott = 1;
+    // appSettingStore.ott = 1;
     appSettingStore.showOttButtons = true;
   }
 })

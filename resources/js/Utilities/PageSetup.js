@@ -13,10 +13,16 @@ export function usePageSetup(pageName) {
     appSettingStore.showFlashMessage = true
     appSettingStore.pageIsHidden = false
 
-    if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
-        appSettingStore.ott = 0;
+// PageSetup utility
+    if (userStore.isMobile || window.innerWidth < 1024) {
+        appSettingStore.ott = 0; // Close all panels on mobile devices
+    } else if (appSettingStore.fullPage) {
+        appSettingStore.ott = 0; // Default to closed in fullPage mode
     } else {
-        appSettingStore.ott = 1;
+        if (appSettingStore.ott === 0) {
+            appSettingStore.ott = 4
+        }
+        // appSettingStore.ott = 4; // Open OttChat by default on larger screens
         appSettingStore.showOttButtons = true;
     }
 
@@ -37,10 +43,14 @@ export function usePageSetup(pageName) {
         //     topDiv.scrollIntoView()
         // }
         router.on('navigate', (event) => {
+            // Ensure OTT panels do not open automatically on mobile devices
             if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
-                appSettingStore.ott = 0;
+                appSettingStore.ott = 0; // Close all panels on mobile devices
             } else {
-                appSettingStore.ott = 1;
+                if (appSettingStore.ott === 0) {
+                    appSettingStore.ott = 4
+                }
+                // appSettingStore.ott = 0; // Default to closed on larger screens
             }
             const hasQueryStrings = window.location.search !== '';
             if (!hasQueryStrings || appSettingStore.shouldScrollToTop) {
