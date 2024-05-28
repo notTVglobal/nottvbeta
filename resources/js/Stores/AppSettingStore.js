@@ -163,7 +163,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             if (userStore.isMobile || window.innerWidth < 1024 || this.fullPage) {
                 this.ott = num === this.ott && !this.fullPage ? 0 : num;
             } else {
-                this.ott = num === this.ott && !this.fullPage ? 1 : num;
+                this.ott = num === this.ott && !this.fullPage ? 4 : num;
             }
 
             // Handling the visibility of ottSlot.one and ottSlot.two
@@ -187,8 +187,6 @@ export const useAppSettingStore = defineStore('appSettingStore', {
                 }
             }
         },
-
-
 
 
         toggleOttInfo() {

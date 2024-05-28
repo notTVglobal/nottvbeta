@@ -25,181 +25,195 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class UploadVideoToSpacesJob implements ShouldQueue
-{
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+class UploadVideoToSpacesJob implements ShouldQueue {
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected Video $video;
-    protected $userId;
-    public int $timeout = 3600;
-    public int $tries = -1;
-    public int $backoff = 2;
+  protected Video $video;
+  protected int $userId;
+  public int $timeout = 3600;
+  public int $tries = -1;
+  public int $backoff = 2;
 
-    /**
-     * UploadVideoToSpacesJob constructor.
-     * @param Video $video
-     */
-    public function __construct(Video $video, $userId)
-    {
-        $this->video = $video;
-        $this->userId = $userId;
+  /**
+   * UploadVideoToSpacesJob constructor.
+   * @param Video $video
+   * @param $userId
+   */
+  public function __construct(Video $video, $userId) {
+    $this->video = $video;
+    $this->userId = $userId;
+  }
+
+  /**
+   * Get the tags that should be assigned to the job.
+   *
+   * @return array<int, string>
+   */
+  public function tags(): array {
+    return ['render', 'video:' . $this->video->id];
+  }
+
+  /**
+   * @parm UploadedFile $file
+   * @throws Exception
+   */
+  public function handle(): void {
+
+
+    $tempPath = storage_path('app/temp-videos/') . $this->video->file_name;
+
+    // Perform virus scan
+    $scanResult = shell_exec("clamscan $tempPath 2>&1");
+    Log::info("ClamAV scan result: $scanResult");
+
+    if (str_contains($scanResult, 'FOUND')) {
+      Log::warning("Virus detected in file: {$this->video->file_name}. File will be deleted.");
+      // Optionally, move the file to a quarantine directory instead of deleting it
+      // Storage::disk('local')->move($tempPath, storage_path('app/quarantine/') . $this->video->file_name);
+      unlink($tempPath);
+      SendUserNotificationJob::dispatch($this->userId, 'Virus Detected', 'A virus was detected in your uploaded video and the file has been deleted.', url('/')); // Dispatch the new job
+
+      return;
     }
 
-    /**
-     * Get the tags that should be assigned to the job.
-     *
-     * @return array<int, string>
-     */
-    public function tags(): array
-    {
-        return ['render', 'video:'.$this->video->id];
-    }
+    // Remove EXIF metadata
+    $exifResult = shell_exec("exiftool -all= $tempPath 2>&1");
+    Log::info("ExifTool result: $exifResult");
 
-    /**
-     * @parm UploadedFile $file
-     * @throws Exception
-     */
-    public function handle()
-    {
 //        error_log('Starting job.');
 
 //        error_log('Now attempting to upload to the cloud.');
 
-        // get the file
+    // get the file
 //        $file = Storage::get($this->file->file_path.$this->file->filename);
 
-        // upload the file to the cloud
+    // upload the file to the cloud
 //        Storage::disk('spaces')->putFileAs($this->video->cloud_folder.$this->video->folder, storage_path('app/temp-videos/').$this->video->file_name, $this->video->file_name);
 //        error_log('upload to the cloud done.');
 
-      // Determine the correct base path using a ternary operator
-      $basePath = $this->video->cloud_folder ? $this->video->cloud_folder : $this->video->cloud_private_folder;
+    // Proceed with the file upload
+    $basePath = $this->video->cloud_folder ? $this->video->cloud_folder : $this->video->cloud_private_folder;
+    // Append the additional folder path
+    $fullPath = $basePath . $this->video->folder;
 
-      // Append the additional folder path
-      $fullPath = $basePath . $this->video->folder;
+    // Proceed with the file upload
+    Storage::disk('spaces')->putFileAs(
+        $fullPath,
+        storage_path('app/temp-videos/') . $this->video->file_name,
+        $this->video->file_name
+    );
 
-      // Proceed with the file upload
-      Storage::disk('spaces')->putFileAs(
-          $fullPath,
-          storage_path('app/temp-videos/') . $this->video->file_name,
-          $this->video->file_name
-      );
-
-        Log::info('Video uploaded to Spaces. ID: '.$this->video->id.'. ULID: '. $this->video->ulid .'. Filename: '.$this->video->file_name . ' Cloud folder: ' . $fullPath);
-        // delete the temporary file
-        // not working yet.
+    Log::info('Video uploaded to Spaces. ID: ' . $this->video->id . '. ULID: ' . $this->video->ulid . '. Filename: ' . $this->video->file_name . ' Cloud folder: ' . $fullPath);
+    // delete the temporary file
+    // not working yet.
 //        Storage::delete(storage_path('app/temp-videos/').$this->video->file_name);
 //        unlink($this->file->getFile()->getPathname());
-        unlink(storage_path('app/temp-videos/').$this->video->file_name);
+    unlink(storage_path('app/temp-videos/') . $this->video->file_name);
 
-        // update the file_name on the model
-        $this->video->upload_status = 'Uploaded to Spaces via Job';
-        $this->video->storage_location = 'spaces';
-        $this->video->save();
+    // update the file_name on the model
+    $this->video->upload_status = 'Uploaded to Spaces via Job';
+    $this->video->storage_location = 'spaces';
+    $this->video->save();
 
-        // update the showEpisode if applicable
-        // Check if the Video has a show_episodes_id
-        if ($this->video->show_episodes_id) {
-            // Update the ShowEpisode with the video_id
-            $showEpisode = ShowEpisode::find($this->video->show_episodes_id);
-            $this->userId = $showEpisode->user_id;
-            if ($showEpisode) {
+    // update the showEpisode if applicable
+    // Check if the Video has a show_episodes_id
+    if ($this->video->show_episodes_id) {
+      // Update the ShowEpisode with the video_id
+      $showEpisode = ShowEpisode::find($this->video->show_episodes_id);
+      $this->userId = $showEpisode->user_id;
+      if ($showEpisode) {
 //              Log::info('Before update: ' . json_encode($showEpisode->toArray()));
-              try {
-              $showEpisode->video_id = $this->video->id;
-                $showEpisode->save();
-              } catch (\Exception $e) {
-                Log::error('Error updating ShowEpisode: ' . $e->getMessage());
-              }
+        try {
+          $showEpisode->video_id = $this->video->id;
+          $showEpisode->save();
+        } catch (\Exception $e) {
+          Log::error('Error updating ShowEpisode: ' . $e->getMessage());
+        }
 //              Log::info('After update: ' . json_encode($showEpisode->fresh()->toArray()));
-                // Retrieve the ULID of the ShowEpisode
-                $ulid = $showEpisode->ulid;
-                // if Show Episode does not have a ulid use the id.
-                if(!$ulid) {
-                    $ulid = $this->video->show_episodes_id;
-                }
+        // Retrieve the ULID of the ShowEpisode
+        $ulid = $showEpisode->ulid;
+        // if Show Episode does not have a ulid use the id.
+        if (!$ulid) {
+          $ulid = $this->video->show_episodes_id;
+        }
 //                Log::info('Successfully updated the Show Episode '. $ulid .' with the video ID '. $this->video->id);
-              event(new NewVideoUploaded($this->video, $this->video->user_id));
-            } else {
-                // Handle the case where ShowEpisode is not found
-                // e.g., log an error or throw an exception
-                Log::info('Problem updating the Show Episode with the video ID.');
-            }
-        }
+        event(new NewVideoUploaded($this->video, $this->video->user_id));
+      } else {
+        // Handle the case where ShowEpisode is not found
+        // e.g., log an error or throw an exception
+        Log::info('Problem updating the Show Episode with the video ID.');
+      }
+    }
 
-        // update the movieTrailer if applicable
-        // Check if the Video has a movie_trailers_id
-        if ($this->video->movie_trailers_id) {
-            // Update the MovieTrailer with the video_id
-            $movieTrailer = MovieTrailer::find($this->video->movie_trailers_id);
-          $this->userId = $movieTrailer->user_id;
-            if ($movieTrailer) {
-                $movieTrailer->video_id = $this->video->id;
-                $movieTrailer->save();
-                // Retrieve the ULID of the MovieTrailer
-                $ulid = $movieTrailer->ulid;
-                // if Movie Trailer does not have a ulid use the id.
-                if(!$ulid) {
-                    $ulid = $this->video->movie_trailers_id;
-                }
-                Log::info('Successfully updated the Movie Trailer '. $ulid .' with the video ID '. $this->video->id);
-              event(new NewVideoUploaded($this->video, auth()->user()->id));
-            } else {
-                // Handle the case where MovieTrailer is not found
-                // e.g., log an error or throw an exception
-                Log::info('Problem updating the Movie Trailer with the video ID.');
-            }
+    // update the movieTrailer if applicable
+    // Check if the Video has a movie_trailers_id
+    if ($this->video->movie_trailers_id) {
+      // Update the MovieTrailer with the video_id
+      $movieTrailer = MovieTrailer::find($this->video->movie_trailers_id);
+      $this->userId = $movieTrailer->user_id;
+      if ($movieTrailer) {
+        $movieTrailer->video_id = $this->video->id;
+        $movieTrailer->save();
+        // Retrieve the ULID of the MovieTrailer
+        $ulid = $movieTrailer->ulid;
+        // if Movie Trailer does not have a ulid use the id.
+        if (!$ulid) {
+          $ulid = $this->video->movie_trailers_id;
         }
+        Log::info('Successfully updated the Movie Trailer ' . $ulid . ' with the video ID ' . $this->video->id);
+        event(new NewVideoUploaded($this->video, auth()->user()->id));
+      } else {
+        // Handle the case where MovieTrailer is not found
+        // e.g., log an error or throw an exception
+        Log::info('Problem updating the Movie Trailer with the video ID.');
+      }
+    }
 
-        // update the movie if applicable
-        // Check if the Video has a movies_id
-        if ($this->video->movies_id) {
-            // Update the Movie with the video_id
-            $movie = Movie::find($this->video->movies_id);
-          $this->userId = $movie->user_id;
-            if ($movie) {
-                $movie->video_id = $this->video->id;
-                $movie->save();
-                // Retrieve the ULID of the Movie
-                $ulid = $movie->ulid;
-                // if Movie does not have a ulid use the id.
-                if(!$ulid) {
-                    $ulid = $this->video->movies_id;
-                }
-                Log::info('Successfully updated the Movie '. $ulid .' with the video ID '. $this->video->id);
-              event(new NewVideoUploaded($this->video, $this->userId));
-            } else {
-                // Handle the case where Movie is not found
-                // e.g., log an error or throw an exception
-                Log::info('Problem updating the Movie with the video ID.');
-            }
+    // update the movie if applicable
+    // Check if the Video has a movies_id
+    if ($this->video->movies_id) {
+      // Update the Movie with the video_id
+      $movie = Movie::find($this->video->movies_id);
+      $this->userId = $movie->user_id;
+      if ($movie) {
+        $movie->video_id = $this->video->id;
+        $movie->save();
+        // Retrieve the ULID of the Movie
+        $ulid = $movie->ulid;
+        // if Movie does not have a ulid use the id.
+        if (!$ulid) {
+          $ulid = $this->video->movies_id;
         }
-      event(new VideoProcessed($this->video->user_id));
+        Log::info('Successfully updated the Movie ' . $ulid . ' with the video ID ' . $this->video->id);
+        event(new NewVideoUploaded($this->video, $this->userId));
+      } else {
+        // Handle the case where Movie is not found
+        // e.g., log an error or throw an exception
+        Log::info('Problem updating the Movie with the video ID.');
+      }
+    }
+    event(new VideoProcessed($this->video->user_id));
 //      event(new ProcessVideoInfoCompleted($this->videoId, $messageArray));
 //        error_log('Updated the Video model');
 
 
-
 //        error_log('Ending job for ' . $this->file->original_name);
-    }
+  }
 
-    /**
-     * @throws Exception
-     */
-    protected function getVideo(): Video
-    {
-        if($this->video instanceof Video){
-            return $this->video;
-        } else {
-            throw new Exception("Video not set on UploadVideoToSpacesJob");
-        }
+  /**
+   * @throws Exception
+   */
+  protected function getVideo(): Video {
+    if ($this->video instanceof Video) {
+      return $this->video;
+    } else {
+      throw new Exception("Video not set on UploadVideoToSpacesJob");
     }
+  }
 
-    public function retryUntil()
-    {
-        return now()->addMinute();
-    }
-
+  public function retryUntil(): \Illuminate\Support\Carbon {
+    return now()->addMinute();
+  }
 
 
 }

@@ -160,30 +160,37 @@ class ShowsController extends Controller {
           ->isBetween(\Carbon\Carbon::now()->subWeek(), \Carbon\Carbon::now());
     }
 
+    // Get the next closest scheduled release dateTime in the future
+    $nextScheduledReleaseDateTime = $show->showEpisodes()
+        ->where('scheduled_release_dateTime', '>', now())
+        ->orderBy('scheduled_release_dateTime', 'asc')
+        ->value('scheduled_release_dateTime');
+
     return [
-        'id'                 => $show->id,
-        'ulid'               => $show->ulid,
-        'name'               => $show->name,
-        'description'        => $show->description,
-        'team_id'            => $show->team_id,
-        'teamName'           => $show->team->name ?? null,
-        'teamSlug'           => $show->team->slug ?? null,
-        'showRunner'         => [
+        'id'                         => $show->id,
+        'ulid'                       => $show->ulid,
+        'name'                       => $show->name,
+        'description'                => $show->description,
+        'team_id'                    => $show->team_id,
+        'teamName'                   => $show->team->name ?? null,
+        'teamSlug'                   => $show->team->slug ?? null,
+        'showRunner'                 => [
             'id'   => $show->showRunner->id ?? null,
             'name' => $show->showRunner->user->name ?? null,
         ],
-        'image'              => $this->transformImage($show->image),
-        'slug'               => $show->slug,
-        'totalEpisodes'      => $show->showEpisodes->count(),
-        'status'             => $show->status->name ?? null,
-        'statusId'           => $show->status->id ?? null,
-        'copyrightYear'      => $show->created_at->format('Y'),
-        'first_release_year' => $show->first_release_year,
-        'last_release_year'  => $show->last_release_year,
-        'category'           => $show->getCachedCategory() ? $show->getCachedCategory()->toArray() : null,
-        'subCategory'        => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
-        'isNew'              => $isNew,
-        'can'                => [
+        'image'                      => $this->transformImage($show->image),
+        'slug'                       => $show->slug,
+        'totalEpisodes'              => $show->showEpisodes->count(),
+        'scheduled_release_dateTime' => $nextScheduledReleaseDateTime ?? null,
+        'status'                     => $show->status->name ?? null,
+        'statusId'                   => $show->status->id ?? null,
+        'copyrightYear'              => $show->created_at->format('Y'),
+        'first_release_year'         => $show->first_release_year,
+        'last_release_year'          => $show->last_release_year,
+        'category'                   => $show->getCachedCategory() ? $show->getCachedCategory()->toArray() : null,
+        'subCategory'                => $show->getCachedSubCategory() ? $show->getCachedSubCategory()->toArray() : null,
+        'isNew'                      => $isNew,
+        'can'                        => [
             'editShow' => optional($user)->can('editShow', $show),
             'viewShow' => optional($user)->can('viewShowManagePage', $show)
         ]
@@ -271,9 +278,9 @@ class ShowsController extends Controller {
   // release dateTime
 //  private function formatReleaseDate($date): string {
 
-    // NOTE: We are deprecating this in favour of doing the timezone conversions
-    // on the frontend.
-    //    if (is_null($date)) {
+  // NOTE: We are deprecating this in favour of doing the timezone conversions
+  // on the frontend.
+  //    if (is_null($date)) {
 //      // Handle the null case. You can return an empty string or a default value.
 //      return ''; // or return some default value or message
 //    }
@@ -554,8 +561,7 @@ class ShowsController extends Controller {
         ->first();
   }
 
-  private function getNextBroadcastDate(Show $show)
-  {
+  private function getNextBroadcastDate(Show $show) {
     $currentDateTime = Carbon::now();
     $closestBroadcast = null;
 
@@ -606,6 +612,7 @@ class ShowsController extends Controller {
             // Ensure broadcast_data contains both broadcastDates array and durationMinutes
             if (!isset($broadcastData['broadcastDates'], $broadcastData['durationMinutes']) || !is_array($broadcastData['broadcastDates'])) {
               Log::error('Broadcast dates entry is missing required fields or is not an array:', ['broadcast_data' => $broadcastData]);
+
               return response()->json(['isLive' => false, 'liveScheduledStartTime' => null]);
             }
 
@@ -630,6 +637,7 @@ class ShowsController extends Controller {
       }
     } catch (\Exception $e) {
       Log::error('Error in checkIsLive:', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
       return response()->json(['isLive' => false, 'liveScheduledStartTime' => null, 'mistStreamName' => null]);
     }
 
@@ -944,8 +952,8 @@ class ShowsController extends Controller {
       return [
           'id'                          => $recording->id,
           'comment'                     => $recording->comment,
-          'start_dateTime'                  => $recording->start_dateTime,
-          'end_dateTime'                    => $recording->end_dateTime,
+          'start_dateTime'              => $recording->start_dateTime,
+          'end_dateTime'                => $recording->end_dateTime,
           'total_milliseconds_recorded' => $recording->total_milliseconds_recorded,
           'streamName'                  => $playableStreamName,
           'shareUrl'                    => $shareUrl,
@@ -1617,7 +1625,7 @@ class ShowsController extends Controller {
       $validatedData = $request->validate([
 //          'isSaving' => 'nullable|boolean',
           'isUpdatingSchedule' => 'nullable|boolean',
-          'updatedBy' => 'nullable|string',
+          'updatedBy'          => 'nullable|string',
       ]);
 
 //      Log::debug('Validated data', ['validatedData' => $validatedData]);
@@ -1636,6 +1644,7 @@ class ShowsController extends Controller {
         // Skip the conflict response and fail silently
         // Optionally, you could log the conflict for debugging purposes
         Log::info('Schedule update conflict: currently being updated by ' . $meta['updatedBy']);
+
         // Return a silent response to avoid triggering a notification
         return response()->json(['message' => '', 'notificationType' => 'silent']);
       }
@@ -1661,8 +1670,8 @@ class ShowsController extends Controller {
     } catch (\Exception $e) {
       Log::error('Error updating meta for show', [
           'show_id' => $show->id,
-          'error' => $e->getMessage(),
-          'stack' => $e->getTraceAsString()
+          'error'   => $e->getMessage(),
+          'stack'   => $e->getTraceAsString()
       ]);
 
       return response()->json(['message' => 'Failed to update show meta'], 500);
@@ -1694,14 +1703,13 @@ class ShowsController extends Controller {
     } catch (\Exception $e) {
       Log::error('Error updating meta for show internally', [
           'show_id' => $show->id,
-          'error' => $e->getMessage(),
-          'stack' => $e->getTraceAsString()
+          'error'   => $e->getMessage(),
+          'stack'   => $e->getTraceAsString()
       ]);
     }
   }
 
-  public function userLeftChannel(HttpRequest $request): \Illuminate\Http\JsonResponse
-  {
+  public function userLeftChannel(HttpRequest $request): \Illuminate\Http\JsonResponse {
     $user = $request->input('user');
     $channel = $request->input('channel');
     $showSlug = $request->input('showSlug'); // Assuming you pass the show slug

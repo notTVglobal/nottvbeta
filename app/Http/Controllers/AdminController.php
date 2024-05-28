@@ -21,6 +21,7 @@ use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\User;
 use App\Services\MistServer\MistServerService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\Response;
@@ -419,6 +420,45 @@ class AdminController extends Controller {
     // Return the server time as JSON response
     return response()->json(['serverTime' => $serverTime]);
   }
+
+////////////  USER SETTINGS AND CONTROLS
+////////////////////////////////////////
+
+  public function banUser(HttpRequest $request, $userId): \Illuminate\Http\JsonResponse {
+    $request->validate([
+        'duration' => 'nullable|integer', // Duration in minutes, null for permanent
+    ]);
+
+    $user = User::findOrFail($userId);
+    $user->is_banned = true;
+
+    if ($request->duration) {
+      $user->ban_expires_at = Carbon::now()->addMinutes($request->duration);
+    } else {
+      $user->ban_expires_at = null; // Permanent ban
+    }
+
+    $user->save();
+
+    return response()->json(['message' => 'User banned successfully'], 200);
+  }
+
+  public function unbanUser($userId): \Illuminate\Http\JsonResponse {
+    $user = User::findOrFail($userId);
+    $user->is_banned = false;
+    $user->ban_expires_at = null;
+    $user->save();
+
+    return response()->json(['message' => 'User unbanned successfully'], 200);
+  }
+
+  public function bannedUsers(): \Illuminate\Http\JsonResponse {
+    $bannedUsers = User::where('is_banned', true)
+        ->get(['id', 'name', 'ban_expires_at']);
+
+    return response()->json($bannedUsers, 200);
+  }
+
 
 ////////////  INVITE CODES
 //////////////////////////

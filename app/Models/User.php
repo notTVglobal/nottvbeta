@@ -50,7 +50,9 @@ class User extends Authenticatable implements MustVerifyEmail {
       'stripe_id',
       'cookie_consent',
       'cookie_consent_at',
-      'cookie_consent_expires_at'
+      'cookie_consent_expires_at',
+      'is_banned',
+      'ban_expires_at'
   ];
 
   /**
@@ -76,6 +78,8 @@ class User extends Authenticatable implements MustVerifyEmail {
       'terms_agreed_at'   => 'datetime',
       'cookie_consent_expires_at' => 'datetime',
       'cookie_consent_at' => 'datetime',
+      'is_banned' => 'boolean',
+      'ban_expires_at' => 'datetime',
   ];
 
 //    public function setPasswordAttribute($value)

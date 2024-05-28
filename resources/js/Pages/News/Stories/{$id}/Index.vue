@@ -23,32 +23,7 @@
 
           <NewsStoryHeader :newsStory="newsStory" />
 
-
-          <div v-if="userStore.loggedIn" class="w-full flex flex-row flex-wrap justify-end px-6 gap-2">
-            <!--              This Back Button doesn't work...
-                              because there is no prevUrl function that runs unless PageSetup() is called..
-                              and PageSetup() is only called on LoggedIn pages.-->
-            <!--              <BackButton v-if="!appSettingStore.loggedIn"/>-->
-
-            <!--            <BackButton />-->
-            <div class="">
-              <button
-                  v-if="props.can.viewNewsroom"
-                  @click="appSettingStore.btnRedirect(`/newsroom`)"
-                  class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
-
-              >Newsroom
-              </button>
-            </div>
-            <div v-if="can.editNewsStory" class="ml-2">
-              <button
-
-                  @click="appSettingStore.btnRedirect(`/newsStory/${props.newsStory.slug}/edit`)"
-                  class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-              >Edit
-              </button>
-            </div>
-          </div>
+          <NewsPersonHeaderButtons :can="can" :newsStory="newsStory" />
 
           <NewsStoryMain :newsStory="newsStory"/>
 
@@ -141,6 +116,7 @@ import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/Publi
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 import NewsStoryHeader from '@/Components/Pages/News/Stories/NewsStoryHeader.vue'
 import NewsStoryMain from '@/Components/Pages/News/Stories/NewsStoryMain.vue'
+import NewsPersonHeaderButtons from '@/Components/Pages/News/Stories/NewsPersonHeaderButtons.vue'
 // import TipTapViewOnly from '@/Components/Global/TextEditor/TipTapViewOnly.vue'
 
 const appSettingStore = useAppSettingStore()

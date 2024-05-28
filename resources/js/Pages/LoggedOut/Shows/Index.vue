@@ -183,6 +183,9 @@
                           show?.subCategory?.name
                         }}
                       </div>
+                      <div class="tracking-wide text-green-500 text-sm font-thin mt-1">
+                        TIME
+                      </div>
                     </div>
 
                   </button>

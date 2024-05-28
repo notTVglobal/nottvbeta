@@ -158,6 +158,9 @@
                       <Link :href="`/shows/${show.slug}`" class="tracking-wide hover:text-gray-300">{{ show.name }}</Link>
                       <div class="uppercase tracking-wider text-yellow-700 text-sm mt-1">{{ show?.category?.name }}</div>
                       <div class="tracking-wide text-yellow-500 text-sm font-thin mt-1">{{ show?.subCategory?.name }}</div>
+                      <div :class="getDateTimeClass(show.scheduled_release_dateTime)" class="tracking-wide text-sm font-thin mt-1">
+                        <ConvertDateTimeToTimeAgo :dateTime="show.scheduled_release_dateTime" :timezone="userStore.timezone" />
+                      </div>
                     </div>
 
                 </button>
@@ -185,11 +188,14 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
-import { ref, watch } from 'vue'
-import { useTimeAgo } from '@vueuse/core'
+import { computed, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import MostAnticipated from '@/Components/Pages/Shows/Elements/MostAnticipated'
 import PaginationDark from '@/Components/Global/Paginators/PaginationDark'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
@@ -198,8 +204,12 @@ import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTi
 import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 import NewContentBadge from '@/Components/Global/Badges/NewContentBadge.vue'
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 usePageSetup('shows')
 
+const userStore = useUserStore()
 const appSettingStore = useAppSettingStore()
 
 function scrollToNewEpisodes() {
@@ -236,6 +246,14 @@ watch(search, throttle(function (value) {
     replace: true,
   })
 }, 300))
+
+const getDateTimeClass = (dateTime) => {
+  const scheduledReleaseDateTime = dayjs(dateTime).tz(userStore.timezone);
+  const now = dayjs().tz(userStore.timezone);
+  const isWithin24Hours = scheduledReleaseDateTime.isBefore(now.add(24, 'hours')) && scheduledReleaseDateTime.isAfter(now);
+
+  return isWithin24Hours ? 'text-green-500' : 'text-gray-300';
+};
 
 </script>
 

@@ -15,8 +15,13 @@ class ChatMessage extends Model
         'message',
         'user_name',
         'user_profile_photo_path',
-        'user_profile_photo_url'
+        'user_profile_photo_url',
+        'is_visible'
     ];
+
+  protected $casts = [
+      'is_visible' => 'boolean',
+  ];
 
     public function channel() {
         return $this->hasOne('App\Models\Channel', 'id', 'channel_id');

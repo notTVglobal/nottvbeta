@@ -39,7 +39,8 @@ const initialState = () => ({
                 api_id: ''
             }
         },
-    }
+    },
+    bannedUsers: [],
 })
 
 export const useAdminStore = defineStore('adminStore', {
@@ -54,7 +55,7 @@ export const useAdminStore = defineStore('adminStore', {
             this.channels = channels
         },
         setCheckSendProcessing() {
-          this.checkSendProcessing = true
+            this.checkSendProcessing = true
         },
         unsetCheckSendProcessing() {
             this.checkSendProcessing = false
@@ -73,7 +74,7 @@ export const useAdminStore = defineStore('adminStore', {
             try {
                 const response = await axios.post('/admin/channels/' + channelId + '/toggleChannelActive');
                 // Extract message and status from the response
-                const { message, status } = response.data;
+                const {message, status} = response.data;
                 // Use the status from the response for the notification
                 notificationStore.setToastNotification(message, status);
             } catch (error) {
@@ -93,7 +94,7 @@ export const useAdminStore = defineStore('adminStore', {
                 } else {
                     // Handle logical errors even when the HTTP response was OK
                     // Assuming 'status' and 'message' are part of the error response
-                    const { message, status } = response.data;
+                    const {message, status} = response.data;
                     let errorMessage = 'Failed to add channel due to a server error.';
 
                     if (status === 'error' && message && message.fallbackMessages) {
@@ -124,7 +125,7 @@ export const useAdminStore = defineStore('adminStore', {
                 } else {
                     // Handle logical errors even when the HTTP response was OK
                     // Assuming 'status' and 'message' are part of the error response
-                    const { message, status } = response.data;
+                    const {message, status} = response.data;
                     let errorMessage = 'Failed to add channel due to a server error.';
 
                     if (status === 'error' && message && message.fallbackMessages) {
@@ -311,7 +312,7 @@ export const useAdminStore = defineStore('adminStore', {
                 } else {
                     // Handle logical errors even when the HTTP response was OK
                     // Assuming 'status' and 'message' are part of the error response
-                    const { message, status } = response.data;
+                    const {message, status} = response.data;
                     let errorMessage = 'Failed to fetch First Play Settings due to a server error.';
 
                     if (status === 'error' && message && message.fallbackMessages) {
@@ -341,12 +342,11 @@ export const useAdminStore = defineStore('adminStore', {
                     this.firstPlaySettings = response.data.firstPlaySettings;
                     this.validationErrors = {}; // Clear any existing validation errors
                     notificationStore.setToastNotification(response.data.message, 'success', 1500);
-                }
-                else if (!response.data.success) {
+                } else if (!response.data.success) {
                     // This block might not be necessary if your server correctly uses HTTP status codes for errors
                     this.validationErrors = response.data.errors || {};
                     notificationStore.setToastNotification(response.data.message, 'error');
-                     // Exit early since we've handled the error case
+                    // Exit early since we've handled the error case
                 }
             } catch (error) {
                 // Properly handle the error response
@@ -392,7 +392,7 @@ export const useAdminStore = defineStore('adminStore', {
                 } else {
                     // Handle logical errors even when the HTTP response was OK
                     // Assuming 'status' and 'message' are part of the error response
-                    const { message, status } = response.data;
+                    const {message, status} = response.data;
                     let errorMessage = 'Failed to fetch active streams due to a server error.';
 
                     if (status === 'error' && message && message.fallbackMessages) {
@@ -436,7 +436,66 @@ export const useAdminStore = defineStore('adminStore', {
             // type
             // name
 
-        }
+        },
+        async banUser(userId, duration) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post(`/admin/ban-user/${userId}`, {duration});
+                notificationStore.setGeneralServiceNotification('Success', 'User banned successfully.');
+                return response.data;
+            } catch (error) {
+                notificationStore.setGeneralServiceNotification('Error', 'Failed to ban user. ' + error);
+                console.error('Error banning user:', error);
+                throw error;
+            }
+        },
+        async unbanUser(userId) {
+            const notificationStore = useNotificationStore()
+            try {
+                const response = await axios.post(`/admin/unban-user/${userId}`);
+                notificationStore.setGeneralServiceNotification('Success', 'User unbanned successfully.');
+                return response.data;
+            } catch (error) {
+                notificationStore.setGeneralServiceNotification('Error', 'Failed to unban user. ' + error);
+                console.error('Error unbanning user:', error);
+                throw error;
+            }
+        },
+        async fetchBannedUsers() {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.get('/admin/banned-users');
+                this.bannedUsers = response.data;
+                return this.bannedUsers;
+            } catch (error) {
+                notificationStore.setToastNotification('Failed to fetch banned users: ' + error, 'error')
+                console.error('Failed to fetch banned users:', error);
+            }
+        },
+        async showBannedUsers() {
+            try {
+                await this.fetchBannedUsers();
+                const bannedUsers = this.bannedUsers;
+                let content = `<div class="p-4">
+                         <h2 class="text-xl font-semibold mb-2">Banned Users</h2>
+                         <ul>`;
+                bannedUsers.forEach(user => {
+                    content += `<li class="mb-2">
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <strong>${user.name}</strong>
+                            <p>Banned until: ${user.ban_expires_at ? new Date(user.ban_expires_at).toLocaleString() : 'Permanently'}</p>
+                          </div>
+                          <button class="unban-button" onclick="window.unbanUser(${user.id})">Unban</button>
+                        </div>
+                      </li>`;
+                });
+                content += `</ul></div>`;
+            } catch (error) {
+                notificationStore.setToastNotification('Error showing banned users: ' + error, 'error')
+                console.error('Error showing banned users:', error);
+            }
+        },
     },
 
     // Getters (if needed)

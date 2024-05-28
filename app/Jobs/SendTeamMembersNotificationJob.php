@@ -18,9 +18,9 @@ class SendTeamMembersNotificationJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected Team $team;
-    protected $title;
-    protected $message;
-    protected $url;
+    protected string $title;
+    protected string $message;
+    protected string $url;
     protected Notification $notification;
 
     /**
@@ -41,8 +41,7 @@ class SendTeamMembersNotificationJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
-    {
+    public function handle(): void {
 
         $teamMembers = $this->team->members;
 
