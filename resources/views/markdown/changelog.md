@@ -1,7 +1,24 @@
 # not.tv Changelog
 
-Last Update: May 27, 2024\
+Last Update: May 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.1
+May 28, 2024
+
+* Removed 6 hour in the future requirement for scheduling shows.
+* Fix add to schedule.
+* Fix html entities on the share button description.
+* Fix array to string conversion error.
+* Chat now breaks words instead of all. Fixed the social sharing to not include html entities.
+* Fix the Schedule bug, conflict between one-time and recurring shows and newly scheduled shows using the same job as the update schedule batch.
+* Added times to Coming Soon shows on the shows page.
+* Added virus scanning to uploaded images and videos with a user notification if a virus is found, and exif removal on both images and videos.
+* Fixed the image uploader.
+* Improved the responsive layout of the news navigation buttons.
+* Added encryption to chat messages.
+* Added a shadow ban/unban feature for admins in the chat.
+* Chat is now open by default in TopRight mode.
 
 ## v0.9.3.0
 May 27, 2024
