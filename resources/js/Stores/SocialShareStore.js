@@ -18,6 +18,13 @@ function decodeHTMLEntities(text) {
     return textArea.value;
 }
 
+function stripHTMLTags(text) {
+    // Replace HTML tags with a space
+    const noTags = text.replace(/<\/?[^>]+(>|$)/g, " ");
+    // Replace multiple spaces with a single space
+    return noTags.replace(/\s\s+/g, ' ').trim();
+}
+
 export const useSocialShareStore = defineStore('socialShareStore', {
     state: initialState, // Set the initial state of the store
     actions: {
@@ -104,6 +111,9 @@ export const useSocialShareStore = defineStore('socialShareStore', {
         },
     },
     getters: {
-        decodedDescription: (state) => decodeHTMLEntities(state.description),
+        decodedDescription: (state) => {
+            const decoded = decodeHTMLEntities(state.description);
+            return stripHTMLTags(decoded);
+        },
     },
 })

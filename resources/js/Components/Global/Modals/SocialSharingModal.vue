@@ -65,8 +65,22 @@ import { ShareNetwork } from 'vue3-social-sharing'
 const notificationStore = useNotificationStore()
 const socialShareStore = useSocialShareStore()
 
+function decodeHTMLEntities(text) {
+  const textArea = document.createElement('textarea');
+  textArea.innerHTML = text;
+  return textArea.value;
+}
+
+function stripHTMLTags(text) {
+  // Replace HTML tags with a space
+  const noTags = text.replace(/<\/?[^>]+(>|$)/g, " ");
+  // Replace multiple spaces with a single space
+  return noTags.replace(/\s\s+/g, ' ').trim();
+}
+
+
 const shortDescription = computed(() => {
-  const description = socialShareStore.decodedDescription
+  const description = stripHTMLTags(decodeHTMLEntities(socialShareStore.description));
   const maxLength = 300
   return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description
 })
