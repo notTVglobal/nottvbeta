@@ -15,9 +15,9 @@
       </label>
 
       <ImageUpload :image="image"
+                   :name="'Upload Show Poster'"
                    :modelType="'show'"
                    :modelId="`${show.id}`"
-                   :name="'Upload Show Poster'"
                    :maxSize="'30MB'"
                    :fileTypes="'image/jpg, image/jpeg, image/png'"
                    @reloadImage="handleReloadImage"

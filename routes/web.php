@@ -1086,6 +1086,7 @@ Route::middleware([
       ->name('movies.uploadPoster');
 
   Route::post('/api/image-upload', [ImageController::class, 'upload'])
+      ->can('viewCreator', 'App\Models\User')
       ->name('image.upload');
 
 // Movies
@@ -1122,7 +1123,7 @@ Route::middleware([
 //        ->can('viewAdmin', 'App\Models\User')
 //        ->name('image.show');
 
-  Route::post('/upload', [ImageController::class, 'store'])
+  Route::post('/upload', [ImageController::class, 'upload'])
       ->can('viewCreator', 'App\Models\User')
       ->name('image.store');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CheckImageHashAndHandleDuplicate;
+use App\Jobs\SendUserNotificationJob;
 use App\Models\AppSetting;
 use App\Models\Movie;
 use App\Models\NewsRssFeedItemArchive;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -244,26 +246,122 @@ class ImageController extends Controller {
 
   ////////////// UPLOAD FORMERLY UPLOAD TEAM LOGO
   ///////////////////////////////////////////////
+  ///
+  /// /**
+  // * This controller handles the file upload functionality, including scanning uploaded files for viruses
+  // * using ClamAV and removing metadata using ExifTool. The following steps explain how to install these tools
+  // * and update the ClamAV database on a server.
+  //
+  // * 1. Installing ExifTool:
+  // *    - ExifTool is a Perl library plus a command-line application for reading, writing, and editing meta information
+  // *      in a wide variety of files.
+  // *    - To install ExifTool on a Debian-based system, use the following command:
+  // *
+  // *      ```sh
+  // *      sudo apt-get update
+  // *      sudo apt-get install libimage-exiftool-perl
+  // *      ```
+  // *    - Verify the installation by running:
+  // *
+  // *      ```sh
+  // *      exiftool -ver
+  // *      ```
+  //
+  // * 2. Installing ClamAV:
+  // *    - ClamAV is an open-source antivirus engine for detecting trojans, viruses, malware, and other malicious threats.
+  // *    - To install ClamAV on a Debian-based system, use the following commands:
+  // *
+  // *      ```sh
+  // *      sudo apt-get update
+  // *      sudo apt-get install clamav clamav-daemon
+  // *      ```
+  // *    - After installation, update the ClamAV virus database with:
+  // *
+  // *      ```sh
+  // *      sudo freshclam
+  // *      ```
+  //
+  // * 3. Updating ClamAV Database:
+  // *    - It is crucial to keep the ClamAV virus database up to date to ensure the latest threats are detected.
+  // *    - Update the database periodically using the following command:
+  // *
+  // *      ```sh
+  // *      sudo freshclam
+  // *      ```
+  // *    - You can automate this process by setting up a cron job. Edit the crontab file using:
+  // *
+  // *      ```sh
+  // *      sudo crontab -e
+  // *      ```
+  // *    - Add the following line to schedule a daily update at midnight:
+  // *
+  // *      ```sh
+  // *      0 0 * * * /usr/bin/freshclam
+  // *      ```
+  //
+  // * Ensure that both ExifTool and ClamAV are installed and updated on your server to enhance the security and
+  // * metadata handling of the uploaded files.
+  // */
 
 
   public function upload(HttpRequest $request) {
-    // Updated validation rules
+    Log::info('image uploading...');
+    Log::info($request->all());
+
     $rules = [
         'image'     => 'required|image|max:30720', // Max 30MB
-        'modelType' => 'nullable|string|in:team,show,showEpisode,newsStory', // Validate if present
-        'modelId'   => 'nullable|integer', // Validate if present
+        'modelType' => 'nullable|string', // Validate if present
+        'modelId'   => 'nullable|string|',
     ];
 
-    // Perform validation
     $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
       return response()->json(['errors' => $validator->errors()], 422);
-//      return redirect()->back()->with('error', $validator->errors());
     }
 
-    // Proceed with file upload and record creation
     $file = $request->file('image');
+    $filePath = $file->getPathname();
+
+    // Scan the file with ClamAV
+    $scanResult = shell_exec("clamscan $filePath 2>&1");
+    Log::info("ClamAV scan result: $scanResult");
+
+    if (str_contains($scanResult, 'FOUND')) {
+      // If a virus is found, delete the file and send a notification
+      unlink($filePath);
+      SendUserNotificationJob::dispatch($request->user()->id, 'Virus Detected', 'A virus was detected in your uploaded image and the file has been deleted.', url('/')); // Dispatch the new job
+
+      return response()->json(['errors' => ['image' => 'The file contains a virus and cannot be uploaded.']], 422);
+    }
+
+    // Remove all metadata from the image
+    $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
+    Log::info("ExifTool result: $exifResult");
+
+
+//    // Custom validation for modelId
+//    $validator->sometimes('modelId', ['integer'], function ($input) {
+//      return is_numeric($input->modelId);
+//    });
+//
+//    $validator->sometimes('modelId', ['regex:/^[0-9A-Za-z]{26}$/'], function ($input) {
+//      return !is_numeric($input->modelId);
+//    });
+//
+//    if ($validator->fails()) {
+//      return response()->json(['errors' => $validator->errors()], 422);
+//    }
+
+    // Proceed with file upload and record creation
+    // Check the MIME type of the file
+    $mimeType = $file->getMimeType();
+    if (!in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+      return response()->json(['errors' => ['image' => 'The file must be a valid image (jpeg, png, gif).']], 422);
+    }
+
+    Log::info($mimeType);
+
     $modelType = $request->input('modelType', null); // Default to null if not provided
     $modelId = $request->input('modelId', null); // Default to null if not provided
 
@@ -301,40 +399,19 @@ class ImageController extends Controller {
   }
 
   protected function updateModelWithImageId($modelType, $modelId, $imageId): void {
-    $model = null;
-    switch ($modelType) {
-      case 'team':
-        $model = \App\Models\Team::find($modelId);
-        break;
-      case 'show':
-        $model = \App\Models\Show::find($modelId);
-        break;
-      case 'showEpisode':
-        $model = \App\Models\ShowEpisode::find($modelId);
-        break;
-      case 'movie':
-        $model = \App\Models\Movie::find($modelId);
-        break;
-      case 'newsStory':
-        $model = \App\Models\NewsStory::find($modelId);
-        break;
-      case 'newsRssFeedItem':
-        $model = \App\Models\NewsRssFeedItemArchive::find($modelId);
-        break;
-      case 'otherContent':
-        $model = \App\Models\OtherContent::find($modelId);
-        break;
-      case 'subscriptionPlan':
-        $model = \App\Models\SubscriptionPlan::find($modelId);
-        break;
-      case 'product':
-        $model = \App\Models\Product::find($modelId);
-        break;
-      case 'video':
-        $model = \App\Models\Video::find($modelId);
-        break;
-      // Add more cases as needed for additional models
-    }
+    $model = match ($modelType) {
+      'team' => \App\Models\Team::find($modelId),
+      'show' => \App\Models\Show::find($modelId),
+      'showEpisode' => \App\Models\ShowEpisode::find($modelId),
+      'newsStory' => \App\Models\NewsStory::find($modelId),
+      'newsRssFeedItem' => \App\Models\NewsRssFeedItemArchive::find($modelId),
+      'movie' => \App\Models\Movie::find($modelId),
+      'otherContent' => \App\Models\OtherContent::find($modelId),
+      'subscriptionPlan' => \App\Models\SubscriptionPlan::find($modelId),
+      'product' => \App\Models\Product::find($modelId),
+      'video' => \App\Models\Video::find($modelId),
+      default => null,
+    };
 
     if ($model) {
       $model->update(['image_id' => $imageId]);
