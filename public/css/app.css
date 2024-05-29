@@ -8745,6 +8745,10 @@ hr {
   flex: 0 1 auto;
 }
 
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
 .shrink {
   flex-shrink: 1;
 }
@@ -9156,6 +9160,10 @@ hr {
 
 .place-self-center {
   place-self: center;
+}
+
+.self-start {
+  align-self: flex-start;
 }
 
 .self-end {
