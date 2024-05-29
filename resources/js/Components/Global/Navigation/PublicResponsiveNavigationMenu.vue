@@ -62,49 +62,49 @@
           <JetResponsiveNavLink
               @click="goToWatchPage"
               :href="$route('home')"
-              :active="route().current('home')">
+              :active="$route().current('home')">
             Watch Now
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('schedule')"
-              :active="route().current('schedule')">
+              :active="$route().current('schedule')">
             Schedule
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink hidden
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('teams.index')"
-              :active="route().current('teams.index')">
+              :active="$route().current('teams.index')">
             Browse
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('news.index')"
-              :active="route().current('news.index')">
+              :active="$route().current('news.index')">
             News Stories
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('news.reporters.index')"
-              :active="route().current('news.reporters.index')">
+              :active="$route().current('news.reporters.index')">
             Reporters
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('public.newsletterSignup')"
-              :active="route().current('public.newsletterSignup')">
+              :active="$route().current('public.newsletterSignup')">
             Get Exclusive Access!
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('public.contact')"
-              :active="route().current('public.contact')">
+              :active="$route().current('public.contact')">
             Contact Us
           </JetResponsiveNavLink>
 
