@@ -31,6 +31,12 @@
         <TeamIdIndexHeader/>
         <TeamIdIndexBanner/>
 
+        <div class="flex w-full justify-center mt-2 mb-8">
+          <div class="max-w-lg text-center">
+            <LoginToWatch />
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <!-- Description and Creators section -->
           <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
@@ -68,6 +74,7 @@ import TeamIdIndexBanner from '@/Components/Pages/Teams/Elements/TeamIdIndexBann
 import TeamIdIndexCreators from '@/Components/Pages/Teams/Elements/TeamIdIndexCreators.vue'
 import TeamIdIndexDescription from '@/Components/Pages/Teams/Elements/TeamIdIndexDescription.vue'
 import TeamIdIndexSearchShowEpisodes from '@/Components/Pages/Teams/Elements/TeamIdIndexSearchShowEpisodes.vue'
+import LoginToWatch from '@/Components/Global/Banners/LoginToWatch.vue'
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
