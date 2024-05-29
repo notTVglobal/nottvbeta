@@ -50,6 +50,8 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
         $this->updateScheduleAndIndex($schedule, $broadcastDatesData, $closestBroadcastDate);
         Redis::del($redisKey); // Clear the data from Redis after updating
       }
+
+
     }
 
 //    Log::debug('UpdateSchedulesAndIndexes completed successfully.');

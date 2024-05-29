@@ -216,30 +216,33 @@ class UpdateBroadcastDates implements ShouldQueue {
       }
       $daysOfWeek = array_map('strtolower', $daysOfWeek);
 
-      // Use the Utc start and end date times directly
-      $startDateTimeUtc = Carbon::parse($details->start_dateTime_utc);
-      $endDateTimeUtc = Carbon::parse($details->end_dateTime_utc);
+      // Use the start and end date times with the specified timezone
+      $timezone = new DateTimeZone($details->timezone);
+      $startDateTime = Carbon::parse($details->start_dateTime, $timezone);
+      $endDateTime = Carbon::parse($details->end_dateTime, $timezone);
 
-      $currentDateTimeUtc = $startDateTimeUtc->copy();
+      $currentDateTime = $startDateTime->copy();
 
-      while (!in_array(strtolower($currentDateTimeUtc->format('l')), $daysOfWeek) && $currentDateTimeUtc->lte($endDateTimeUtc)) {
-        $currentDateTimeUtc->addDay();
+      // Find the first valid day within the date range
+      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTime)) {
+        $currentDateTime->addDay();
       }
 
 
       // Generate all occurrences of the specified days within the date range
-      while ($currentDateTimeUtc->lte($endDateTimeUtc)) {
-        if (in_array(strtolower($currentDateTimeUtc->format('l')), $daysOfWeek)) {
-          $recurrentDates[] = $currentDateTimeUtc->copy()->toIso8601String();
+      while ($currentDateTime->lte($endDateTime)) {
+        if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
+          // Convert the date to utc and add it to the array
+          $recurrentDates[] = $currentDateTime->copy()->setTimezone('UTC')->toIso8601String();
         }
 
         // Find the next valid day
-        $currentDayIndex = array_search(strtolower($currentDateTimeUtc->format('l')), $daysOfWeek);
+        $currentDayIndex = array_search(strtolower($currentDateTime->format('l')), $daysOfWeek);
         $nextDayIndex = ($currentDayIndex + 1) % count($daysOfWeek);
 
         // Calculate days to add to get to the next valid day
         $daysToAdd = ($nextDayIndex > $currentDayIndex) ? $nextDayIndex - $currentDayIndex : (7 - $currentDayIndex) + $nextDayIndex;
-        $currentDateTimeUtc->addDays($daysToAdd);
+        $currentDateTime->addDays($daysToAdd);
       }
 
 //      Log::debug('Recurrent schedule dates', ['scheduleId' => $schedule->id, 'recurrentDates' => $recurrentDates]);
