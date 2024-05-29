@@ -10,7 +10,7 @@
 
 <!--    <PublicNavigationMenu v-if="!userStore.loggedIn" class="fixed top-0 w-full nav-mask"/>-->
 <!--    <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />-->
-    <main class="flex-grow text-black mx-auto pb-64">
+    <main class="max-w-7xl flex flex-col justify-center flex-grow text-black mx-auto pb-64">
       <div class="mx-auto px-4 border-b border-gray-800 flex justify-center">
 
         <section>

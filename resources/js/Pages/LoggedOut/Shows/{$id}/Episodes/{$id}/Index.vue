@@ -72,18 +72,7 @@
               <ShareButton/>
             </div>
 
-
-
-            <div class="mt-8 border border-yellow-600 rounded-lg p-8">
-              <h2 class="text-2xl font-bold mb-4">Join the Community</h2>
-              <p class="text-lg mb-6">
-                Login to watch this episode and explore more inspiring content!
-              </p>
-              <Link :href="`/login`"
-                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-2 px-4 rounded-full">
-                Login Now
-              </Link>
-            </div>
+            <LoginToWatch />
           </div>
 
 
@@ -190,6 +179,7 @@ import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import LoginToWatch from '@/Components/Global/Banners/LoginToWatch.vue'
 
 const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()

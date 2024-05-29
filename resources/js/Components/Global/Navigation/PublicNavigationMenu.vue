@@ -11,7 +11,7 @@
                 <JetApplicationMark class="block h-9 w-auto"/>
               </Link>
             </div>
-            <div v-if="!$page.props.user" class="w-full flex flex-row justify-between">
+            <div v-if="!$page.props.auth.user" class="w-full flex flex-row justify-between">
               <div class="space-x-4 py-6 pt-6 ml-8 text-gray-200">
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
@@ -68,7 +68,7 @@
               </div>
             </div>
           </div>
-          <div v-if="!$page.props.user" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+          <div v-if="!$page.props.auth.user" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
             <h3 class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/login`"
@@ -83,8 +83,8 @@
             </h3>
 
           </div>
-          <div v-if="$page.props.user && !isVerificationNoticeRoute" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
-            <h3 v-if="$page.props.user.isCreator" class="inline-flex items-center relative">
+          <div v-if="$page.props.auth.user && !isVerificationNoticeRoute" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+            <h3 v-if="$page.props.auth.user.isCreator" class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/dashboard`">
                 Dashboard</JetNavLink>

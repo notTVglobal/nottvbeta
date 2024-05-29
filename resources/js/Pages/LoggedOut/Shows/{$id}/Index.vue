@@ -1,21 +1,21 @@
 <template>
   <Head :title="pageTitle">
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" :content="ogUrl" />
-    <meta property="og:type" :content="ogType" />
-    <meta property="og:title" :content="ogTitle" />
-    <meta property="og:description" :content="ogDescription" />
-    <meta property="og:image" :content="ogImage" />
-    <meta property="og:image:alt" :content="twitterImageAlt" /> <!-- Optional: for better accessibility -->
+    <meta property="og:url" :content="ogUrl"/>
+    <meta property="og:type" :content="ogType"/>
+    <meta property="og:title" :content="ogTitle"/>
+    <meta property="og:description" :content="ogDescription"/>
+    <meta property="og:image" :content="ogImage"/>
+    <meta property="og:image:alt" :content="twitterImageAlt"/> <!-- Optional: for better accessibility -->
 
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" :content="twitterCard" />
-    <meta name="twitter:site" :content="twitterSite" />
-    <meta name="twitter:creator" :content="twitterCreator" />
-    <meta name="twitter:title" :content="ogTitle" />
-    <meta name="twitter:description" :content="ogDescription" />
-    <meta name="twitter:image" :content="ogImage" />
-    <meta name="twitter:image:alt" :content="twitterImageAlt" />
+    <meta name="twitter:card" :content="twitterCard"/>
+    <meta name="twitter:site" :content="twitterSite"/>
+    <meta name="twitter:creator" :content="twitterCreator"/>
+    <meta name="twitter:title" :content="ogTitle"/>
+    <meta name="twitter:description" :content="ogDescription"/>
+    <meta name="twitter:image" :content="ogImage"/>
+    <meta name="twitter:image:alt" :content="twitterImageAlt"/>
   </Head>
 
   <div id="topDiv" class="place-self-center flex flex-col h-screen">
@@ -24,9 +24,10 @@
       <PublicNavigationMenu/>
       <PublicResponsiveNavigationMenu/>
 
-      <ShowIdIndexHeader :show="show" :team="team"/>
-
-      <ShowIdIndexMain :show="show" :team="team" :episodes="episodes" :creators="creators" />
+      <div class="flex flex-col mx-auto justify-center max-w-7xl">
+        <ShowIdIndexHeader :show="show" :team="team"/>
+        <ShowIdIndexMain :show="show" :team="team" :episodes="episodes" :creators="creators"/>
+      </div>
 
       <Footer/>
 
@@ -46,7 +47,7 @@ import ShowIdIndexHeader from '@/Components/Pages/Shows/Elements/ShowIdIndexHead
 import ShowIdIndexMain from '@/Components/Pages/Shows/Elements/ShowIdIndexMain.vue'
 
 const appSettingStore = useAppSettingStore()
-const page  = usePage().props
+const page = usePage().props
 
 let props = defineProps({
   show: Object,
@@ -79,33 +80,33 @@ onMounted(() => {
 })
 
 const pageTitle = computed(() => props.show.name)
-const ogUrl = computed(() => `${page.appUrl}${page.currentPath}`);
-const ogType = computed(() => 'video.tv_show');
-const ogTitle = computed(() => props.show.name);
+const ogUrl = computed(() => `${page.appUrl}${page.currentPath}`)
+const ogType = computed(() => 'video.tv_show')
+const ogTitle = computed(() => props.show.name)
 // Truncate the description if it exceeds 300 characters
 const ogDescription = computed(() => {
-  const description = props.show.description;
-  const maxLength = 300;
-  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description;
-});
+  const description = props.show.description
+  const maxLength = 300
+  return description.length > maxLength ? `${description.substring(0, maxLength)}...` : description
+})
 const ogImage = computed(() => {
-  const image = props.show.image;
+  const image = props.show.image
   if (image) {
-    const { cdn_endpoint, cloud_folder, name, placeholder_url } = image;
+    const {cdn_endpoint, cloud_folder, name, placeholder_url} = image
     if (cdn_endpoint && cloud_folder && name) {
-      return `${cdn_endpoint}${cloud_folder}${name}`;
+      return `${cdn_endpoint}${cloud_folder}${name}`
     } else if (placeholder_url) {
-      return placeholder_url;
+      return placeholder_url
     }
   }
-  return null;
-});
-const twitterCard = computed(() => 'summary_large_image'); // Type of Twitter card
-const twitterSite = computed(() => '@notTV'); // Your Twitter handle
+  return null
+})
+const twitterCard = computed(() => 'summary_large_image') // Type of Twitter card
+const twitterSite = computed(() => '@notTV') // Your Twitter handle
 const twitterCreator = computed(() => {
-  return props?.show?.socialMediaLinks?.twitter_handle || '';
-});
-const twitterImageAlt = computed(() => props.show.name + ' Poster'); // Alt text for the image
+  return props?.show?.socialMediaLinks?.twitter_handle || ''
+})
+const twitterImageAlt = computed(() => props.show.name + ' Poster') // Alt text for the image
 
 </script>
 <script>

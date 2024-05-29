@@ -8,13 +8,13 @@
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex justify-end mb-3 gap-2 pt-6">
-        <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`">
+        <Link v-if="$page.props.auth.user.isAdmin === 1" :href="`/users`">
           <button
               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
           >All Users
           </button>
         </Link>
-        <Link v-if="$page.props.user.isAdmin === 1" :href="`/users/${props.userSelected.id}/edit`">
+        <Link v-if="$page.props.auth.user.isAdmin === 1" :href="`/users/${props.userSelected.id}/edit`">
           <button
               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
           >Edit User
@@ -62,7 +62,7 @@
           <div><span class="text-xs uppercase mr-2">User Type: </span>{{ props.role }}</div>
         </div>
         <div>
-          <div v-if="$page.props.userSelected.role_id === 4">
+          <div v-if="$page.props.auth.userSelected.role_id === 4">
             <span class="text-xs uppercase mr-2">Creator Number: </span>{{ props.userSelected.creatorNumber }}
           </div>
         </div>
@@ -78,10 +78,10 @@
         <div v-if="props.endsAt">
           <span class="text-xs uppercase mr-2">Subscription Renewal Date: </span>{{ formatDate(props.endsAt) }}
         </div>
-        <div v-if="$page.props.user.isAdmin">
+        <div v-if="$page.props.auth.user.isAdmin">
           <span class="text-xs uppercase mr-2">Stripe ID: </span>{{ props.userSelected.stripe_id }}
         </div>
-        <div v-if="$page.props.user.isAdmin" class="text-yellow-500">
+        <div v-if="$page.props.auth.user.isAdmin" class="text-yellow-500">
           <span class="text-xs uppercase mr-2">Last Login: </span>{{ userStore.formatDateTimeFromUtcToUserTimezone(props.lastLoginAt) }} {{ userStore.timezoneAbbreviation}}
         </div>
       </div>

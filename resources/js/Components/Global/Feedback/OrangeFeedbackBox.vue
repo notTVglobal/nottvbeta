@@ -123,7 +123,7 @@ const appSettingStore = useAppSettingStore()
 const notificationStore = useNotificationStore()
 
 const page = usePage()
-const user = computed(() => page.props.user)
+const user = computed(() => page.props.auth.user)
 
 const screenshot = ref(null);
 const hover = ref(false);

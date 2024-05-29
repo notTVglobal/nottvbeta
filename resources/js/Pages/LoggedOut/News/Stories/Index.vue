@@ -13,10 +13,11 @@
     <main class="flex-grow text-black mx-auto pb-64">
       <div class="mx-auto px-4 border-b border-gray-800 flex justify-center">
 
-        <section>
-          <NewsStoriesTable :newsStories="newsStories" :filters="filters" :can="null"/>
-        </section>
-
+        <div class="flex flex-col mx-auto justify-center max-w-7xl">
+          <section>
+            <NewsStoriesTable :newsStories="newsStories" :filters="filters" :can="null"/>
+          </section>
+        </div>
       </div>
     </main>
 

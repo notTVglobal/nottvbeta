@@ -14,7 +14,7 @@ dayjs.extend(timezone)
 // const appSettingStore = useAppSettingStore()
 const page = usePage()
 const initialState = () => ({
-    user: page.props.user || {},
+    user: page.props.auth.user || {},
     currentTimeUtc: dayjs().toISOString(),
     isMobile: Boolean,
     showNavDropdown: Boolean,
