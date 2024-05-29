@@ -218,8 +218,14 @@ class UpdateBroadcastDates implements ShouldQueue {
 
       // Use the start and end date times with the specified timezone
       $timezone = new DateTimeZone($details->timezone);
-      $startDateTime = Carbon::parse($details->start_dateTime, $timezone);
-      $endDateTime = Carbon::parse($details->end_dateTime, $timezone);
+      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime, $timezone);
+      $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime, $timezone);
+
+//      Log::debug('DateTime Details', [
+//          'startDateTime' => $startDateTime,
+//          'endDateTime' => $endDateTime,
+//          'timezone' => $timezone
+//      ]);
 
       $currentDateTime = $startDateTime->copy();
 

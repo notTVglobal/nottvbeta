@@ -284,11 +284,11 @@ class AddContentToSchedule implements ShouldQueue {
           $content->id,
           $meta
       ));
-      Log::debug('tec21: before construct details');
+//      Log::debug('tec21: before construct details');
 
       $scheduleDetails = $this->constructScheduleDetails($shortContentType, $content->id, (object) $scheduleData);
-      Log::debug('tec21: after construct details');
-      Log::debug('tec21: broadcast Show Schedule Details Updated from UpdateBroadcastDates Job', $scheduleData);
+//      Log::debug('tec21: after construct details');
+//      Log::debug('tec21: broadcast Show Schedule Details Updated from UpdateBroadcastDates Job', $scheduleData);
 
       broadcast(new ShowScheduleDetailsUpdated(
           $scheduleDetails['contentType'],
