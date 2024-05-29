@@ -19,10 +19,10 @@
                     class="flex pb-1 cursor-pointer disabled:cursor-not-allowed"
                     :disabled="isUserOnTeam(creator)"
             >
-              <img v-if="creator.profile_photo_path" :alt="creator.name"
-                   :src="`/storage/${creator.profile_photo_path}`" class="rounded-full mr-3 h-10 w-10 object-cover">
-              <img v-else-if="creator.profile_photo_url" :alt="creator.name" :src="creator.profile_photo_url"
-                   class="rounded-full mr-3 h-10 w-10 object-cover">
+              <img v-if="creator.profile_photo_path"
+                   :src="`/storage/${creator.profile_photo_path}`" class="skeleton rounded-full mr-3 h-10 w-10 object-cover">
+              <img v-else-if="creator.profile_photo_url" :alt="creator.name + ' image'" :src="creator.profile_photo_url"
+                   class="skeleton rounded-full mr-3 h-10 w-10 object-cover">
               <span>{{ creator.name }}</span>
             </button>
             <div v-for="team in creator.teams" :key="team.id">

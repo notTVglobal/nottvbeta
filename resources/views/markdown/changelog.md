@@ -7,6 +7,10 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 May 29, 2024
 
 * Fix how recurring scheduled dates are calculated, they need to be calculated in the timezone they were created in, then converted to UTC.
+* Fix the team members not showing up in the Team Manage page.
+* Scheduled a virus scan for 9am UTC.
+* Disable scanning images and videos for viruses on upload (it takes too long.)
+* Updated add/remove manager buttons on Team Manage page.
 
 ## v0.9.3.3
 May 29, 2024

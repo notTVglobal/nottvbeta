@@ -60,25 +60,25 @@ class UploadVideoToSpacesJob implements ShouldQueue {
   public function handle(): void {
 
 
-    $tempPath = storage_path('app/temp-videos/') . $this->video->file_name;
+//    $tempPath = storage_path('app/temp-videos/') . $this->video->file_name;
 
     // Perform virus scan
-    $scanResult = shell_exec("clamscan $tempPath 2>&1");
-    Log::info("ClamAV scan result: $scanResult");
+//    $scanResult = shell_exec("clamscan $tempPath 2>&1");
+//    Log::info("ClamAV scan result: $scanResult");
 
-    if (str_contains($scanResult, 'FOUND')) {
-      Log::warning("Virus detected in file: {$this->video->file_name}. File will be deleted.");
+//    if (str_contains($scanResult, 'FOUND')) {
+//      Log::warning("Virus detected in file: {$this->video->file_name}. File will be deleted.");
       // Optionally, move the file to a quarantine directory instead of deleting it
       // Storage::disk('local')->move($tempPath, storage_path('app/quarantine/') . $this->video->file_name);
-      unlink($tempPath);
-      SendUserNotificationJob::dispatch($this->userId, 'Virus Detected', 'A virus was detected in your uploaded video and the file has been deleted.', url('/')); // Dispatch the new job
+//      unlink($tempPath);
+//      SendUserNotificationJob::dispatch($this->userId, 'Virus Detected', 'A virus was detected in your uploaded video and the file has been deleted.', url('/')); // Dispatch the new job
 
-      return;
-    }
+//      return;
+//    }
 
     // Remove EXIF metadata
-    $exifResult = shell_exec("exiftool -all= $tempPath 2>&1");
-    Log::info("ExifTool result: $exifResult");
+//    $exifResult = shell_exec("exiftool -all= $tempPath 2>&1");
+//    Log::info("ExifTool result: $exifResult");
 
 //        error_log('Starting job.');
 

@@ -41,6 +41,7 @@ trait GetTeamUserData {
     $isTeamManager = $team->managers->contains('id', $user->id) ?? false;
     $isTeamLeader = optional($team->teamLeader)->user_id === $user->id ?? false;
     $isTeamOwner = $team->user_id === $user->id ?? false;
+//    dd($team->members);
     $isTeamMember = $team->members->contains('id', $user->id) ?? false;
 
     // Example logic to determine user permissions

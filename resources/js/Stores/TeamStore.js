@@ -48,8 +48,8 @@ const initialState = () => ({
         broadcastDate: null,
         broadcastDetails: [
             {
-                zoomLink: ''
-            }
+                zoomLink: '',
+            },
         ],
         type: '',
         image: null,
@@ -58,7 +58,7 @@ const initialState = () => ({
         slug: null,
         name: null,
         description: null,
-    }
+    },
 })
 
 export const useTeamStore = defineStore('teamStore', {
@@ -84,7 +84,7 @@ export const useTeamStore = defineStore('teamStore', {
 
                 let zoomLinkObj = this.nextBroadcastLoaded.broadcastDetails.find(detail => detail.zoomLink !== undefined)
                 if (!zoomLinkObj) {
-                    zoomLinkObj = { zoomLink: '' }
+                    zoomLinkObj = {zoomLink: ''}
                     this.nextBroadcastLoaded.broadcastDetails.push(zoomLinkObj)
                 }
                 team.nextBroadcast = team.nextBroadcast.map(broadcast => ({
@@ -106,13 +106,13 @@ export const useTeamStore = defineStore('teamStore', {
             this.can = can || {}
         },
         setActiveTeam(team) {
-            this.id = team.id
-            this.name = team.name
-            this.description = team.description
-            this.slug = team.slug
-            this.members = team.members
-            this.managers = team.managers
-            this.totalSpots = team.totalSpots
+            this.team.id = team.id
+            this.team.name = team.name
+            this.team.description = team.description
+            this.team.slug = team.slug
+            this.team.members = team.members
+            this.team.managers = team.managers
+            this.team.totalSpots = team.totalSpots
             this.memberSpots = team.memberSpots
         },
         setActiveShow(show) {
@@ -125,7 +125,7 @@ export const useTeamStore = defineStore('teamStore', {
             this.members.push(member)
         },
         removeMember(memberId) {
-            this.members = this.members.filter(member => member.id !== memberId)
+            this.team.members = this.team.members.filter(member => member.id !== memberId)
         },
         updateCreatorTeams(creatorId, teamId, remove = false) {
             const creator = this.creators.find(c => c.id === creatorId)
@@ -163,14 +163,14 @@ export const useTeamStore = defineStore('teamStore', {
             const notificationStore = useNotificationStore()
             const payload = {
                 user_id: this.deleteMemberId,
-                team_id: this.id,
+                team_id: this.team.id,
             }
 
             try {
                 const response = await axios.post(route('teams.removeTeamMember'), payload)
                 if (response.status === 200) {
                     this.removeMember(this.deleteMemberId)
-                    this.updateCreatorTeams(this.deleteMemberId, this.id, true) // Remove the team from the creator's teams
+                    this.updateCreatorTeams(this.deleteMemberId, this.team.id, true) // Remove the team from the creator's teams
                     this.confirmDialog = false
                     notificationStore.setToastNotification(response.data.message, 'success')
                 } else {
@@ -183,28 +183,54 @@ export const useTeamStore = defineStore('teamStore', {
                 notificationStore.setToastNotification('An error occurred while removing the member from the team.', 'error')
             }
         },
-
-        addTeamManager() {
-            router.visit(route('teams.addTeamManager'), {
-                method: 'post',
-                data: {
-                    user_id: this.selectedManagerId,
-                    team_id: this.id,
-                    team_slug: this.slug,
-                },
-            })
-            this.confirmManagerDialog = false
+        async addTeamManager() {
+            const notificationStore = useNotificationStore()
+            const payload = {
+                user_id: this.selectedManagerId,
+                team_id: this.team.id,
+                team_slug: this.team.slug,
+            }
+            try {
+                const response = await axios.post(route('teams.addTeamManager'), payload)
+                if (response.status === 200) {
+                    // Add any additional logic if needed, e.g., updating team data in the store
+                    this.team.managers.push(response.data.manager);
+                    this.confirmManagerDialog = false
+                    notificationStore.setToastNotification(response.data.message, 'success')
+                } else {
+                    this.confirmManagerDialog = false
+                    notificationStore.setToastNotification('Failed to add manager to the team.', 'warning')
+                }
+            } catch (error) {
+                console.error(error)
+                this.confirmManagerDialog = false
+                notificationStore.setToastNotification('An error occurred while adding the manager to the team.', 'error')
+            }
         },
-        removeTeamManager() {
-            router.visit(route('teams.removeTeamManager'), {
-                method: 'post',
-                data: {
-                    user_id: this.selectedManagerId,
-                    team_id: this.id,
-                    team_slug: this.slug,
-                },
-            })
-            this.confirmManagerDialog = false
+        async removeTeamManager() {
+            const notificationStore = useNotificationStore()
+            const payload = {
+                user_id: this.selectedManagerId,
+                team_id: this.team.id,
+                team_slug: this.team.slug,
+            }
+
+            try {
+                const response = await axios.post(route('teams.removeTeamManager'), payload)
+                if (response.status === 200) {
+                    // Remove the manager from the team.managers array
+                    this.team.managers = this.team.managers.filter(manager => manager.id !== this.selectedManagerId)
+                    this.confirmManagerDialog = false
+                    notificationStore.setToastNotification(response.data.message, 'success')
+                } else {
+                    this.confirmManagerDialog = false
+                    notificationStore.setToastNotification('Failed to remove manager from the team.', 'warning')
+                }
+            } catch (error) {
+                console.error(error)
+                this.confirmManagerDialog = false
+                notificationStore.setToastNotification('An error occurred while removing the manager from the team.', 'error')
+            }
         },
         toggleGoLiveDisplay() {
             this.goLiveDisplay = !this.goLiveDisplay
@@ -225,6 +251,7 @@ export const useTeamStore = defineStore('teamStore', {
             if (!state.team.members) {
                 return state.team.totalSpots // Assume no members if state.members is not defined
             } else if (state.team.members) {
+                this.totalSpots = state.team.totalSpots
                 return Math.max(state.team.totalSpots - state.team.members.length, 0)
             }
         },
@@ -232,6 +259,7 @@ export const useTeamStore = defineStore('teamStore', {
             if (!state.team.members) {
                 return 0 // Assume no members if state.members is not defined
             } else if (state.team.members) {
+                this.memberSpots = state.team.members.length
                 return state.team.members.length
             }
         },

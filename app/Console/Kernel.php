@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel {
 
     $schedule->command('purge:rssFeed')->daily();
     $schedule->command('expire:inviteCodes')->daily();
+    $schedule->command('clamav:scan')->dailyAt('9:00'); // 9am UTC is 2am PDT or 3am PST
 
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('schedule:purge')->daily();

@@ -340,10 +340,11 @@ class TeamsController extends Controller {
 ////////////////////
 
   public function manage(Team $team): \Inertia\Response {
+
     // Load necessary relationships
     $team->load([
         'user',
-        'teamLeader.user',
+        'teamLeader',
         'managers',
         'members',
         'image.appSetting'
@@ -351,7 +352,6 @@ class TeamsController extends Controller {
 
     // Retrieve shows
     $shows = $this->getShows($team->id);
-
 
     // Prepare the response data using TeamDetailedResource
     return Inertia::render('Teams/{$id}/Manage', [

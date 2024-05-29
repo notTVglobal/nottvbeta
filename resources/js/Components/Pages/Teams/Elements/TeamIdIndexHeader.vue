@@ -34,15 +34,14 @@
       </div>
 
     <div class="flex flex-col justify-between pt-2 lg:pt-6 px-5">
-      <div class="flex flex-row flex-wrap justify-between gap-2">
-        <div class="flex flex-row w-full justify-center xl:justify-end mb-6">
-          <button @click="router.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
-        </div>
-        <div class="flex flex-col items-center justify-center xl:flex-row xl:items-start xl:justify-start gap-2 mb-4 w-full">
-          <SingleImageWithModal :image="team.image"
-                                :alt="'team logo'"
-                                :class="'min-w-40 min-h-40 max-h-40 mb-4 xl:mr-4 xl:mb-0'"
-                                class="transition-transform duration-300 ease-in-out transform hover:scale-105"/>
+      <div class="flex flex-col xl:flex-row flex-wrap items-start justify-between gap-2">
+        <div class="flex flex-col xl:flex-row items-start justify-start gap-2 mb-4 w-full xl:w-auto">
+          <div class="flex-shrink-0 self-start">
+            <SingleImageWithModal :image="team.image"
+                                  :alt="'team logo'"
+                                  :class="'min-w-40 min-h-40 max-h-40 mb-4 xl:mb-0'"
+                                  class="transition-transform duration-300 ease-in-out transform hover:scale-105"/>
+          </div>
           <div class="flex flex-col items-center xl:items-start justify-center w-full xl:w-auto text-center xl:text-left">
             <h3 class="light:text-gray-900 dark:text-gray-50 text-3xl font-semibold uppercase">
               {{ team.name }}
@@ -53,8 +52,14 @@
             <ShareButton class="mt-2 xl:mt-2" :model="team"/>
           </div>
         </div>
+        <div class="flex w-full xl:w-auto justify-center xl:justify-end mb-6">
+          <button @click="router.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
+        </div>
       </div>
     </div>
+
+
+
 
   </div>
 </template>
