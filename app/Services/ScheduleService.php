@@ -111,7 +111,7 @@ class ScheduleService {
    */
   protected function logSampleSchedules(array $schedules): void {
     $sampleSchedules = array_slice($schedules, 0, 3);
-    Log::info('Sample schedules going into the cache:', $sampleSchedules);
+//    Log::info('Sample schedules going into the cache:', $sampleSchedules);
   }
 
   /**
