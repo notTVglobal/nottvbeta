@@ -89,9 +89,13 @@ class NewsStoryPolicy
   {
 
     // Deny editing if the news story is already published
-    if ($newsStory->status === 6) {
-      return Response::deny('Published news stories cannot be edited.');
-    }
+    // tec21: 2024-05-29 - I'm enabling news story editing if published
+    // because the likelihood of mistakes is too high... and this means
+    // we can update stories as new information becomes available.
+
+//    if ($newsStory->status === 6) {
+//      return Response::deny('Published news stories cannot be edited.');
+//    }
 
     // Directly allow admins to edit
     if ($user->isAdmin) {

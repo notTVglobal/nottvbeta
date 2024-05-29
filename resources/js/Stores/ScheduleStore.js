@@ -306,7 +306,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
-                // console.log('Received response:', response.data) // Log the raw response data
+                console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone

@@ -19,7 +19,7 @@
       </button>
     </div>
 
-    <span v-if="!props.can.publishNewsStory && !newsStory.published_at"
+    <span v-if="!props.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
           class="mr-6 text-gray-500 italic"> not yet published</span>
     <span v-if="newsStory.published_at" class="mr-6 text-gray-800 dark:text-white font-semibold">{{
         userStore.formatDateTimeWithYearFromUtcToUserTimezone(newsStory.published_at)

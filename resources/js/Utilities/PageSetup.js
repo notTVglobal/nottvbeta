@@ -1,4 +1,4 @@
-import { onBeforeMount, onMounted } from 'vue'
+import { onBeforeMount, onMounted, watch } from 'vue'
 import { useUserStore } from "@/Stores/UserStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -71,5 +71,17 @@ export function usePageSetup(pageName) {
     appSettingStore.noLayout = false
 
     // router.reload()
+
+    watch(
+        () => appSettingStore.isSmallScreen,
+        (newValue) => {
+            if (newValue) {
+                appSettingStore.ott = 0;
+            } else {
+                appSettingStore.ott = 4;
+            }
+        },
+        { immediate: true } // This option ensures the watch executes immediately with the current value
+    );
 
 }

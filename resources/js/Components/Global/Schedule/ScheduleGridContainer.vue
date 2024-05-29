@@ -46,6 +46,10 @@
         <span>COMING UP NEXT</span>
       </div>
 
+      <div v-if="hasRemainingCols" :style="remainingColsStyle" class="remaining-cols">
+        <!-- Content for remaining columns, if any -->
+      </div>
+
     </div>
 
 
@@ -81,8 +85,10 @@
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
               <p>{{ formatTime(item.start_dateTime, true) }}</p>
-              <p class="text-yellow-400">
-                <span v-if="dayjs(item.start_dateTime).isBefore(scheduleStore.baseTime)">Started </span>
+              <p :class="computeClassForConvertDateTimeToTimeAgo(item)">
+                <span v-if="!hasStarted(item)">Starting </span>
+                <span v-if="hasStarted(item) && !isEndingSoon(item)">Started </span>
+                <span v-if="isEndingSoon(item)">Ending </span>
                 <ConvertDateTimeToTimeAgo
                     :key="scheduleStore.baseTime"
                     :dateTime="item.start_dateTime"
@@ -125,7 +131,7 @@
                          :alt="show.content.name"
                          class="skeleton w-3/4 md:w-1/2 lg:w-1/3 h-auto object-cover mx-auto hover:opacity-80 transition-transform duration-300 ease-in-out transform hover:scale-105"/>
           </div>
-          <p class="text-lg">{{ formatDuration(show.duration_minutes) }}</p>
+          <p class="pt-2 text-xs uppercase text-gray-300 tracking-wider">Duration: {{ formatDuration(show.duration_minutes) }}</p>
         </div>
       </div>
       <!-- Loading Indicator -->
@@ -489,6 +495,46 @@ const getStatusCellClasses = (gridStart, isFirst, isSecond) => {
   }
   return classes
 }
+
+// Compute the total occupied columns
+const occupiedCols = computed(() => {
+  let cols = 0;
+  if (nowPlayingShow.value) {
+    cols += nowPlayingShow.value.cols;
+  }
+  if (comingUpNextShow.value) {
+    cols += comingUpNextShow.value.cols;
+  }
+  return cols;
+});
+
+// Check if there are remaining columns to fill
+const hasRemainingCols = computed(() => {
+  return gridColumns > occupiedCols.value;
+});
+
+// Style for remaining columns
+const remainingColsStyle = computed(() => {
+  if (hasRemainingCols.value) {
+    return {
+      'grid-column': `span ${gridColumns - occupiedCols.value}`,
+    };
+  }
+  return {};
+});
+
+const hasStarted = (item) => dayjs(item.start_dateTime).isBefore(scheduleStore.baseTime);
+const isEndingSoon = (item) => dayjs(item.end_dateTime).isAfter(scheduleStore.baseTime) && dayjs(item.end_dateTime).diff(scheduleStore.baseTime, 'minute') <= 15;
+
+const computeClassForConvertDateTimeToTimeAgo = (item) => {
+  if (isEndingSoon(item)) {
+    return 'text-orange-500';
+  } else if (!hasStarted(item)) {
+    return 'text-green-500';
+  } else {
+    return 'text-yellow-500';
+  }
+};
 
 function openModal(modalName) {
   document.getElementById(modalName).showModal()

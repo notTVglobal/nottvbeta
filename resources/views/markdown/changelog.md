@@ -7,6 +7,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 May 28, 2024
 
 * Fix Social Share image width.
+* Fix Ott opening on screen size change. Ott now closes for smaller screens and loads the chat for larger screens.
 
 ## v0.9.3.1
 May 28, 2024

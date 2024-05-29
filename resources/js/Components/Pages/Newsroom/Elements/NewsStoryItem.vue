@@ -5,14 +5,15 @@
         <SingleImage :image="newsStory.image" alt="news cover" class="rounded-full h-20 w-20 object-cover" />
       </button>
     </div>
-    <div class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap align-middle flex-1">
-      <button @click="appSettingStore.btnRedirect(`/news/story/${newsStory.slug}`)" class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
+    <div class="table-cell px-6 py-4 w-full font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap align-middle flex-1">
+      <div @click="appSettingStore.btnRedirect(`/news/story/${newsStory.slug}`)"
+           class="w-full max-w-xs break-words break-all text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
         {{ newsStory.title }}
-      </button>
+      </div>
       <div>By {{ newsStory.newsPerson && newsStory.newsPerson.name ? newsStory.newsPerson.name : '' }}</div>
 
       <div class="flex flex-col pt-2 text-sm">
-        <div v-if="newsStory.category?.id" class="font-medium text-orange-800">
+        <div v-if="newsStory.category?.id" class=" font-medium text-orange-800">
           {{ newsStory.category.name }}
           <span v-if="newsStory.subCategory?.id"><span class="text-black"> | </span>{{ newsStory.subCategory.name }}</span>
         </div>
@@ -40,7 +41,7 @@
       <div>
         <button
             v-if="newsStory.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
-            @click="openConfirmPublishDialog(newsStory)"
+            @click="requestPublish"
             class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 h-fit rounded disabled:bg-gray-400"
         >
           Publish
@@ -57,7 +58,6 @@
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import NewsStoryItemDates from '@/Components/Pages/Newsroom/Elements/NewsStoryItemDates.vue'
@@ -72,18 +72,11 @@ const props = defineProps({
   can: Object,
 })
 
-const selectedNewsStory = ref(null)
+const emit = defineEmits(['request-publish']);
 
-const openConfirmPublishDialog = (newsStory) => {
-  selectedNewsStory.value = newsStory
-  appSettingStore.showConfirmationDialog = true
-}
-
-function publish() {
-  router.patch(route('newsroom.publish', {newsStory: selectedNewsStory.value.slug}))
-  const topDiv = document.getElementById("topDiv")
-  topDiv.scrollIntoView()
-}
+const requestPublish = () => {
+  emit('request-publish', props.newsStory);
+};
 
 // Computed property for location display
 const locationDisplay = computed(() => {

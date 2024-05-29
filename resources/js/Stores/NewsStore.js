@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { router } from '@inertiajs/vue3'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
     id: null,
@@ -397,6 +398,20 @@ export const useNewsStore = defineStore('newsStore', {
                 console.error('An unexpected error occurred:', error)
                 this.processing = false
             }
+        },
+        async publish(newsStory) {
+            await router.patch(route('newsroom.publish', newsStory), {
+                onError: (errors) => {
+                    this.errors = errors
+                    this.processing = false
+                    notificationStore.setToastNotification(errors, 'error')
+                },
+                onSuccess: () => {
+                    this.processing = false
+                    const notificationStore = useNotificationStore()
+                    notificationStore.setToastNotification('News story published successfully.', 'success')
+                }
+            })
         },
         changeNewsStoryStatus(statusId) {
             document.getElementById('newsStoryStatusChangeModal').close()
