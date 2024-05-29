@@ -30,10 +30,15 @@ class TeamDetailedResource extends JsonResource {
       });
     });
 
+    $managers = $this->whenLoaded('managers', function () {
+      return $this->managers->map(function ($manager) {
+        return (new TeamManagerResource($manager))->resolve();
+      });
+    });
+
     // Check if the team is loaded and not null
     $teamOwnerData = $this->team ? $this->getTeamUserData($this->team->user) : $this->getEmptyTeamUserData();
     $teamLeaderData = $this->team && $this->team->teamLeader ? $this->getTeamUserData($this->team->teamLeader->user) : $this->getEmptyTeamUserData();
-    $managers = $this->team ? $this->team->managers->map->only(['id', 'name']) : [];
 
     return [
         'id'               => $this->id,

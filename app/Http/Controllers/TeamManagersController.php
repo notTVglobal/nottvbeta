@@ -8,105 +8,89 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\TeamManager;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
-class TeamManagersController extends Controller
-{
+class TeamManagersController extends Controller {
 
 //    public function toggle(User $user, Team $team) {
 //        $user->member->toggle($team);
 //    }
 
-    public function attach(Request $request)
-    {
-        // If you are not signed in, no way.
-        if (auth()->guest()) {
-            abort(403, 'You are not signed in.');
-        }
-
-        $teamSlug = $request->team_slug;
-        $teamId = $request->team_id;
-        $userId = $request->user_id;
-        $user = User::findOrFail($userId);
-        $team = Team::findOrFail($teamId);
-
-        // If you are not the owner of the team, no way.
-//        if ($team->user_id !== auth()->user()->id && !auth()->user()->isAdmin) {
-//            abort(403, 'You must be the owner of this team to add new managers.');
-//        }
-
-        // If you are not the creator of the team or the team leader, no way.
-        // Use the 'update' policy method
-        $this->authorize('update', $team);
-
-        $team->managers()->attach($request->user_id, [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            // Add any other additional attributes here
-        ]);
-
-
-        // notify new team member
-        $notification = new Notification;
-        $notification->user_id = $user->id;
-        // make the image the team_poster
-        $notification->image_id = $team->image_id;
-        $notification->url = '/teams/'.$team->slug.'/manage';
-        $notification->title = $team->name;
-        $notification->message = '<span class="text-yellow-500">You are now a team manager.</span>';
-        $notification->save();
-        // Trigger the event to broadcast the new notification
-        event(new NewNotificationEvent($notification));
-
-        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' is now a team manager.');
-//        return inertia('',['message', $user->name . ' has been successfully added to the team.']);
-
-//        $isUserOnTeam = TeamMember::query()
-//        ->where('user_id', $user)
-//        ->where('team_id', $team);
-//        if ($isUserOnTeam) {
-//            return ['message', 'This person is already on the team!'];
-//        }
-//dd($request->team_id);
-//        $user->member->attach($request->team_id);
+  public function attach(Request $request) {
+    // If you are not signed in, no way.
+    if (auth()->guest()) {
+      abort(403, 'You are not signed in.');
     }
 
-//    public function detach(User $user, Team $team)
-//    {
-//        if ($user->member->team_id != $team->id) {
-//            return message('This person is not on the team!');
-//        }
-//
-//        $user->member->detach($team);
-//    }
+    $teamSlug = $request->team_slug;
+    $teamId = $request->team_id;
+    $userId = $request->user_id;
+    $user = User::findOrFail($userId);
+    $team = Team::findOrFail($teamId);
 
-    public function detach(Request $request)
-    {
-        $teamSlug = $request->team_slug;
-        $user = User::findOrFail($request->user_id);
+    // If you are not the creator of the team or the team leader, no way.
+    // Use the 'update' policy method
+    $this->authorize('update', $team);
 
-        $team = Team::findOrFail($request->team_id);
+    $team->managers()->attach($request->user_id, [
+        'user_id' => $userId,
+        'team_id' => $teamId,
+    ]);
 
-        $team->managers()->detach($user->id);
+    // notify new team member
+    $notification = new Notification;
+    $notification->user_id = $user->id;
+    // make the image the team_poster
+    $notification->image_id = $team->image_id;
+    $notification->url = '/teams/' . $team->slug . '/manage';
+    $notification->title = $team->name;
+    $notification->message = '<span class="text-yellow-500">You are now a team manager.</span>';
+    $notification->save();
+    // Trigger the event to broadcast the new notification
+    event(new NewNotificationEvent($notification));
+    Log::info('$notification');
+
+    return response()->json([
+        'message' => $user->name . ' is now a team manager.',
+        'manager' => $user, // Ensure this contains the necessary manager data
+    ]);
+  }
+
+  public function detach(Request $request) {
+    // Ensure the user is authenticated
+    if (auth()->guest()) {
+      abort(403, 'You are not signed in.');
+    }
+
+    $teamSlug = $request->team_slug;
+    $user = User::findOrFail($request->user_id);
+    $team = Team::findOrFail($request->team_id);
+
+    $team->managers()->detach($user->id);
 
 //        return Inertia::render('Teams/{$id}/Edit', [
 //            'members' => $team->members,
 //        ])->with('message', $user->name . ' has been successfully removed from the team.');
 
-        // notify new team member
-        $notification = new Notification;
-        $notification->user_id = $user->id;
-        // make the image the team_poster
-        $notification->image_id = $team->image_id;
-        $notification->url = '/teams/'.$team->slug;
-        $notification->title = $team->name;
-        $notification->message = '<span class="text-yellow-500">You have been removed as a team manager.</span>';
-        $notification->save();
-        // Trigger the event to broadcast the new notification
-        event(new NewNotificationEvent($notification));
+    // notify new team member
+    $notification = new Notification;
+    $notification->user_id = $user->id;
+    // make the image the team_poster
+    $notification->image_id = $team->image_id;
+    $notification->url = '/teams/' . $team->slug;
+    $notification->title = $team->name;
+    $notification->message = '<span class="text-yellow-500">You have been removed as a team manager.</span>';
+    $notification->save();
 
-        return redirect()->route('teams.manage', $teamSlug)->with('message', $user->name . ' has been removed as a manager.');
-//        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully removed from the team.');
-    }
+    // Trigger the event to broadcast the new notification
+    event(new NewNotificationEvent($notification));
+
+    // Return a JSON response
+    return response()->json([
+        'message' => $user->name . ' has been removed as a manager.',
+        'manager' => $user, // Return the user data if needed
+    ]);
+  }
 }
