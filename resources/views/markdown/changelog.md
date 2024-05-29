@@ -3,6 +3,11 @@
 Last Update: May 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.4
+May 29, 2024
+
+* Fix how recurring scheduled dates are calculated, they need to be calculated in the timezone they were created in, then converted to UTC.
+
 ## v0.9.3.3
 May 29, 2024
 
