@@ -3,7 +3,7 @@
 Last Update: May 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.9.3.4
+## v0.9.3.5
 May 29, 2024
 
 * Fix how recurring scheduled dates are calculated, they need to be calculated in the timezone they were created in, then converted to UTC.
@@ -11,6 +11,7 @@ May 29, 2024
 * Scheduled a virus scan for 9am UTC.
 * Disable scanning images and videos for viruses on upload (it takes too long.)
 * Updated add/remove manager buttons on Team Manage page.
+* Fix problem with creating a new episode.
 
 ## v0.9.3.3
 May 29, 2024

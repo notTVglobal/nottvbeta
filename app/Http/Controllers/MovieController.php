@@ -12,6 +12,7 @@ use App\Models\MovieCategorySub;
 use App\Models\MovieStatus;
 use App\Models\User;
 use App\Models\Video;
+use App\Traits\ImageTransformable;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -30,6 +31,7 @@ use App\Services\VideoUrlService;
 class MovieController extends Controller {
 
   protected VideoUrlService $mistVideoUrlService;
+  use ImageTransformable;
 
   public function __construct(VideoUrlService $mistVideoUrlService) {
 
@@ -194,18 +196,7 @@ class MovieController extends Controller {
     ];
   }
 
-  // transformImage is a helper method to structure the image data.
-  // It's called within transformMovie
-  private function transformImage($image) {
-    return [
-        'id'              => $image->id,
-        'name'            => $image->name,
-        'folder'          => $image->folder,
-        'cdn_endpoint'    => $image->appSetting->cdn_endpoint,
-        'cloud_folder'    => $image->cloud_folder,
-        'placeholder_url' => $image->placeholder_url,
-    ];
-  }
+
 
   private function applyStatusFilter() {
     return function ($query) {

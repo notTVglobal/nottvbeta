@@ -1022,16 +1022,6 @@ Route::middleware([
   // Update show notes
   Route::post('/shows/notes', [ShowsController::class, 'updateNotes']);
 
-  ///////////////
-  // tec21: move these into the ShowEpisodeController section below.
-  // Display episode create page
-  Route::get('/shows/{show}/episode/create', [ShowsController::class, 'createEpisode'])
-      ->name('shows.createEpisode');
-  // Display episode manage page
-  Route::get('/shows/{show}/episode/{showEpisode}/manage', [ShowsController::class, 'manageEpisode'])
-      ->name('shows.showEpisodes.manageEpisode')
-      ->scopeBindings();
-
   Route::put('/api/shows/{show}/meta', [ShowsController::class, 'updateMeta'])
       ->name('shows.updateMeta');
 
@@ -1042,9 +1032,19 @@ Route::middleware([
 ///////////
   // Shows resource
   Route::resource('showEpisodes', ShowEpisodeController::class);
+
   // Display episodes index page
   Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
       ->name('showEpisodes');
+
+  // Display episode create page
+  Route::get('/showEpisodes/{show}/episode/create', [ShowEpisodeController::class, 'create'])
+      ->name('showEpisodes.createWithSlug');
+
+  // Display episode manage page
+  Route::get('/shows/{show}/episode/{showEpisode}/manage', [ShowEpisodeController::class, 'manage'])
+      ->name('showEpisode.manage')
+      ->scopeBindings();
 
   // Display episode edit page
   Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'edit'])

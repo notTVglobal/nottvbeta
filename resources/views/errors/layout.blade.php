@@ -5,17 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Error - The notTV Team')</title>
     <style>
-        body { text-align: center; padding: 50px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-        .logo { margin-bottom: 40px; }
-        .message { margin-top: 20px; }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #1a1a1a; /* Dark background color */
+            color: #f5f5f5; /* Light text color */
+        }
+        .content {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #2a2a2a; /* Slightly lighter dark background for content */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 40px;
+        }
+        .logo img {
+            max-width: 200px;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        a {
+            color: #ffcc00; /* Brand accent color */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 <div class="content">
     <div class="logo">
-{{--        <img src="/path-to-your-logo.png" alt="notTV Logo" width="200">--}}
-        <a href="/"><img src="https://not.tv/storage/images/logo_black_311.png" class="w-full" alt="notTV Logo"></a>
-
+        <a href="/"><img src="https://not.tv/storage/images/logo_white_512.png" alt="notTV Logo"></a>
     </div>
     <div class="message">
         @yield('message')

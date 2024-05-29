@@ -50,7 +50,6 @@ class TeamManagersController extends Controller {
     $notification->save();
     // Trigger the event to broadcast the new notification
     event(new NewNotificationEvent($notification));
-    Log::info('$notification');
 
     return response()->json([
         'message' => $user->name . ' is now a team manager.',
