@@ -194,14 +194,14 @@ let form = useForm({
   scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
   copyright_year: props.episode.copyright_year,
   creative_commons_id: '',
-  video_url: props.episode.video.video_url,
+  video_url: props.episode?.video?.video_url,
   youtube_url: props.episode.youtube_url,
   video_embed_code: props.episode.video_embed_code,
 })
 
 
 let submit = () => {
-  if (showEpisodeStore.episode.video_embed_code !== props.episode.video_embed_code && showEpisodeStore.episode.video_url) {
+  if (showEpisodeStore.episode.video_embed_code !== props.episode.video_embed_code && showEpisodeStore.episode?.video_url) {
     addEmbedCodeConfirm()
   } else
     form.name = showEpisodeStore.episode.name
@@ -213,7 +213,7 @@ let submit = () => {
     form.scheduled_release_dateTime = showEpisodeStore.episode.scheduled_release_dateTime
     form.copyright_year = showEpisodeStore.episode.copyrightYear
     form.creative_commons_id = showEpisodeStore.episode.creative_commons.id
-    form.video_url = showEpisodeStore.episode.video.video_url
+    form.video_url = showEpisodeStore.episode.video?.video_url
     form.youtube_url = showEpisodeStore.episode.youtube_url
     form.video_embed_code = showEpisodeStore.episode.video_embed_code
     form.patch(route('showEpisodes.update', props.episode.slug))

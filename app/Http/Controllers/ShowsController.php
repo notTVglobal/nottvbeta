@@ -25,6 +25,7 @@ use App\Models\User;
 use App\Models\AppSetting;
 use App\Models\Video;
 use App\Services\MistServer\MistServerService;
+use App\Traits\ImageTransformable;
 use http\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -45,6 +46,7 @@ class ShowsController extends Controller {
   private string $formattedReleaseDateTime;
   private string $formattedScheduledDateTime;
   protected MistServerService $playbackService;
+  use ImageTransformable;
 
   public function __construct() {
 
@@ -262,17 +264,6 @@ class ShowsController extends Controller {
         ->limit(8) // Limit to 8 shows
         ->get() // Get the results without pagination
         ->map(fn($show) => $this->transformShow($show)); // Transform each show if needed
-  }
-
-  private function transformImage($image): array {
-    return [
-        'id'              => $image->id,
-        'name'            => $image->name,
-        'folder'          => $image->folder,
-        'cdn_endpoint'    => $image->appSetting->cdn_endpoint,
-        'cloud_folder'    => $image->cloud_folder,
-        'placeholder_url' => $image->placeholder_url,
-    ];
   }
 
   // release dateTime
@@ -1354,136 +1345,13 @@ class ShowsController extends Controller {
   ///                                EPISODES                                     ///
   ////////////////////////////////////////////////////////////////////////////////////
 
-////////////  CREATE EPISODE
-////////////////////////////
-///
-/// tec21: this might be better
-/// in the ShowEpisodes Controller.
-
-  public function createEpisode(Show $show) {
-
-    $creativeCommons = CreativeCommons::all();
-
-    $show->load('image.appSetting', 'showRunner.user'); // Eager load necessary relationships
-
-    return Inertia::render('Shows/{$id}/Episodes/Create', [
-        'show'             => [
-            'name'        => $show->name,
-            'id'          => $show->id,
-            'slug'        => $show->slug,
-            'showRunner'  => [
-                'name' => $show->showRunner->user->name ?? null,
-            ],
-            'image'       => $this->transformImage($show->image),
-            'category'    => [
-                'name'        => $show->getCachedCategory()->name ?? null,
-                'description' => $show->getCachedCategory()->description ?? null,
-            ],
-            'subCategory' => [
-                'name'        => $show->subCategory->name,
-                'description' => $show->subCategory->description,
-            ],
-
-        ],
-        'team'             => Team::query()->where('id', $show->team_id)->first(),
-        'user'             => [
-            'id' => auth()->user()->id,
-        ],
-        'creative_commons' => $creativeCommons,
-    ]);
-  }
-
 ////////////  MANAGE EPISODE
 ////////////////////////////
 ///
 /// tec21: this might be better
 /// in the ShowEpisodes Controller.
 
-  public function manageEpisode(Show $show, ShowEpisode $showEpisode) {
 
-    // convert release dateTime to user's timezone
-    if ($showEpisode->release_dateTime) {
-      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-    }
-
-    // convert scheduled_release dateTime to user's timezone
-    if ($showEpisode->scheduled_release_dateTime) {
-      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
-    }
-
-//    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
-
-    // Eager load relationships for the Show model
-    $show->load(['team', 'image.appSetting', 'showRunner.user']);
-
-    // Eager load relationships for the ShowEpisode model
-    $showEpisode->load(['creativeCommons', 'video.appSetting', 'image.appSetting', 'showEpisodeStatus', 'mistStreamWildcard']);
-
-
-    return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
-        'show'              => [
-            'name'          => $show->name,
-            'slug'          => $show->slug,
-            'showRunner'    => [
-                'name' => $show->showRunner->user->name ?? null,
-            ],
-            'image'         => $this->transformImage($show->image),
-            'copyrightYear' => $show->created_at->format('Y'),
-        ],
-        'team'              => [
-            'name' => $show->team->name,
-            'slug' => $show->team->slug,
-        ],
-        'episode'           => [
-            'id'                         => $showEpisode->id,
-            'ulid'                       => $showEpisode->ulid,
-            'show_id'                    => $showEpisode->show_id,
-            'name'                       => $showEpisode->name,
-            'slug'                       => $showEpisode->slug,
-            'description'                => $showEpisode->description,
-            'notes'                      => $showEpisode->notes,
-            'episode_number'             => $showEpisode->episode_number,
-            'status'                     => $showEpisode->showEpisodeStatus,
-            'release_year'               => $showEpisode->release_year ?? null,
-            'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
-            'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
-            'copyrightYear'              => $showEpisode->copyrightYear ?? null,
-            'creative_commons'           => $showEpisode->creativeCommons ?? null,
-            'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
-            'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
-            'video_id'                   => $showEpisode->video_id,
-            'youtube_url'                => $showEpisode->youtube_url,
-            'video_embed_code'           => $showEpisode->video_embed_code,
-            'video'                      => [
-                'file_name'        => $showEpisode->video->file_name ?? '',
-                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-                'folder'           => $showEpisode->video->folder ?? '',
-                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
-                'upload_status'    => $showEpisode->video->upload_status ?? '',
-                'video_url'        => $showEpisode->video->video_url ?? '',
-                'type'             => $showEpisode->video->type ?? '',
-                'storage_location' => $showEpisode->video->storage_location ?? '',
-            ],
-            'image'                      => $this->transformImage($showEpisode->image),
-        ],
-        'releaseDateTime'   => $this->formattedReleaseDateTime ?? null,
-        'scheduledDateTime' => $this->formattedScheduledDateTime ?? null,
-        'episodeStatus'     => [
-            'id'   => $showEpisode->showEpisodeStatus->id,
-            'name' => $showEpisode->showEpisodeStatus->name,
-        ],
-        'can'               => [
-            'editEpisode' => auth()->user()->can('editEpisode', $show),
-            'goLive'      => auth()->user()->can('goLive', $show),
-        ]
-    ]);
-  }
-
-  private function transformVideo($video) {
-    return $video ? [
-
-    ] : null;
-  }
 
 ////////////  CHANGE EPISODE STATUS
 ////////////////////////////

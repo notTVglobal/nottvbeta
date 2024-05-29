@@ -13,9 +13,9 @@
     </div>
   </dialog>
 </template>
+
 <script setup>
 import { useNotificationStore } from "@/Stores/NotificationStore"
-import { ref } from 'vue'
 
 const notificationStore = useNotificationStore()
 

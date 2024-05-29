@@ -3,7 +3,7 @@
   <div>
     <button
         v-if="teamStore.can.createEpisode"
-        @click="appSettingStore.btnRedirect(`/shows/${showStore.show.slug}/episode/create`)"
+        @click="appSettingStore.btnRedirect(`/showEpisodes/${showStore.show.slug}/episode/create`)"
         class="ml-6 my-4 px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg disabled:bg-gray-400"
 
     >Create Episode

@@ -243,10 +243,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useForm } from "@inertiajs/vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 import LicensingExplained from '@/Components/Global/CreativeCommonsLicensing/LicensingExplained.vue'
@@ -257,6 +258,7 @@ import CreativeCommonsAboutTheLicenses
 usePageSetup('shows/slug/episodes/create')
 
 const showEpisodeStore = useShowEpisodeStore()
+const notificationStore = useNotificationStore()
 
 let props = defineProps({
   user: Object,
@@ -320,15 +322,34 @@ const selectedCreativeCommonsDescription = computed(() => {
 });
 
 
+onMounted(() => {
+  notificationStore.reset()
+  // Watch for confirmation result
+  watch(() => notificationStore.confirmation, (newValue) => {
+    if (newValue !== null) {
+      if (newValue) {
+        // User confirmed, load cached content
+        form.creative_commons_id = selectedCreativeCommons.value
+        form.copyrightYear = selectedCopyrightYear.value
+        form.description = showEpisodeStore.episode.description
+        form.post(route('showEpisodes.store', props.show.slug));
+      } else {
+        // User cancelled, load initial content
+      }
+      notificationStore.clearConfirmNotification()
+    }
+  })
+})
 
 
 let submit = () => {
   if (form.video_embed_code && form.video_url) {
-    addEmbedCodeConfirm();
+    notificationStore.setConfirmNotification('Confirm', 'Are you sure you want to add this embed code? It will override the video url.')
+    return
   } else
     form.creative_commons_id = selectedCreativeCommons.value
     form.copyrightYear = selectedCopyrightYear.value
-    form.description = showEpisodeStore.description
+    form.description = showEpisodeStore.episode.description
     form.post(route('showEpisodes.store', props.show.slug));
 };
 

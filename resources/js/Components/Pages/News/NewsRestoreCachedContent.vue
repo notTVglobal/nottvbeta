@@ -36,6 +36,7 @@ watch(() => notificationStore.confirmation, (newValue) => {
 })
 
 onMounted(async () => {
+  notificationStore.clearConfirmNotification()
   // Check for cached content and prompt the user
   if (newsStore.cachedContent) {
     notificationStore.setConfirmNotification('Confirmation Needed', 'You have unsaved changes from your previous session. Do you want to load them?')

@@ -34,7 +34,7 @@ const initialState = () => ({
     toastNotificationStatus: '', // success, error, info, warning
     toastNotificationTimeout: 5000, // default timeout to 5 seconds
     timeoutId: null, // Add this line
-    errorMessage: null,
+    errorMessage: {},
 
 })
 
