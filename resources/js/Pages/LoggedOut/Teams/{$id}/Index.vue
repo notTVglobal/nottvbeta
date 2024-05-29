@@ -1,11 +1,23 @@
 <template>
   <Head :title="pageTitle">
+    <!-- Open Graph Meta Tags -->
     <meta property="og:url" :content="ogUrl" />
     <meta property="og:type" :content="ogType" />
     <meta property="og:title" :content="ogTitle" />
     <meta property="og:description" :content="ogDescription" />
     <meta property="og:image" :content="ogImage" />
+    <meta property="og:image:alt" :content="twitterImageAlt" /> <!-- Optional: for better accessibility -->
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" :content="twitterCard" />
+    <meta name="twitter:site" :content="twitterSite" />
+    <meta name="twitter:creator" :content="twitterCreator" />
+    <meta name="twitter:title" :content="ogTitle" />
+    <meta name="twitter:description" :content="ogDescription" />
+    <meta name="twitter:image" :content="ogImage" />
+    <meta name="twitter:image:alt" :content="twitterImageAlt" />
   </Head>
+
 
   <div id="topDiv" class="place-self-center h-screen flex flex-col">
 
@@ -128,6 +140,13 @@ const ogImage = computed(() => {
   }
   return null;
 });
+const twitterCard = computed(() => 'summary_large_image'); // Type of Twitter card
+const twitterSite = computed(() => '@notTV'); // Your Twitter handle
+const twitterCreator = computed(() => {
+  return props?.team?.socialMediaLinks?.twitter_handle || '';
+});
+const twitterImageAlt = computed(() => props.team.name + ' Logo'); // Alt text for the image
+
 
 </script>
 <script>

@@ -9,7 +9,7 @@
 
         <Messages v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-        <NewsStoriesContainer :newsStories="newsStories" :can="can" :filters="filters"/>
+        <NewsStoriesContainer :newsStories="newsStories" :publishedStories="publishedStories" :can="can" :filters="filters"/>
 
         <WelcomeToTheNewsroom />
 
@@ -40,6 +40,7 @@ let props = defineProps({
   filters: Object,
   can: Object,
   newsStories: Object,
+  publishedStories: Object,
   newsStoryStatuses: Object,
 })
 

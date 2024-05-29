@@ -15,6 +15,7 @@ use App\Models\NewsCategory;
 use App\Models\NewsCountry;
 use App\Models\NewsSubnationalElectoralDistrict;
 use App\Models\User;
+use App\Traits\SearchableNewsTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -34,6 +35,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class NewsStoryController extends Controller {
 
+  use SearchableNewsTrait;
+
   public function __construct() {
 //        $this->middleware('auth');
     $this->middleware('can:edit,newsStory')->only(['edit', 'update']);
@@ -50,9 +53,7 @@ class NewsStoryController extends Controller {
    *
    * @return Response
    */
-
-
-  public function index() {
+  public function index(): Response {
     // Check if user is logged in
     if (Auth::check()) {
       // User is logged in, show the news index for logged-in users
@@ -72,10 +73,14 @@ class NewsStoryController extends Controller {
     }
   }
 
-  private function getNewsStories() {
+
+  private function getNewsStories(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+  {
+    // Get the authenticated user
     $user = Auth::user();
 
-    $newsStoriesQuery  = NewsStory::with([
+    // Query to fetch news stories with related data
+    $newsStoriesQuery = NewsStory::with([
         'image.appSetting',
         'user',
         'newsPerson.user',
@@ -87,69 +92,21 @@ class NewsStoryController extends Controller {
         'subnationalElectoralDistrict',
         'newsStatus',
         'video.appSetting'
-    ])
-        ->when(Request::input('search'), function ($query, $search) {
-          $lowerSearch = strtolower($search); // Convert search term to lowercase
-          $query->whereRaw('LOWER(title) like ?', "%{$lowerSearch}%")
-              ->orWhereRaw('LOWER(content_json) like ?', "%{$lowerSearch}%")
-              ->orWhereHas('newsPerson', function ($query) use ($lowerSearch) {
-                $query->whereHas('user', function ($q) use ($lowerSearch) {
-                  $q->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-                });
-              })
-              ->orWhereHas('user', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhereHas('newsCategory', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhereHas('newsCategorySub', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhereHas('city', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhereHas('province', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhereHas('federalElectoralDistrict', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($lowerSearch) {
-                $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
-              })
-              ->orWhere(function ($query) use ($search) {
-                // Check if search query could be a year
-                if (preg_match('/^\d{4}$/', $search)) { // Regex to match a 4-digit year
-                  $query->whereYear('published_at', $search);
-                }
-              })
-              ->orWhere(function ($query) use ($search) {
-                // Check if search query could be a year-month
-                try {
-                  $date = \Carbon\Carbon::createFromFormat('Y-m', $search);
-                  $query->whereYear('published_at', $date->format('Y'))
-                      ->whereMonth('published_at', $date->format('m'));
-                } catch (\Exception $e) {
-                  // If it's not a valid year-month, do nothing
-                }
-              })
-              ->orWhere(function ($query) use ($search) {
-                // Check if search query could be a date
-                try {
-                  $date = \Carbon\Carbon::parse($search);
-                  $query->whereDate('published_at', $date->format('Y-m-d'));
-                } catch (\Exception $e) {
-                  // If it's not a valid date, do nothing
-                }
-              });
-        })
-        ->whereNotNull('published_at')
-        ->orderBy('published_at', 'desc');
+    ]);
 
-        $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
+    // Apply search filters to the query
+    $this->applySearch($newsStoriesQuery, Request::input('search'), [6]); // No specific status filter here
 
+    // Ensure only stories with a non-null published_at are included, and order them by published_at
+    $newsStoriesQuery->whereNotNull('published_at')->orderBy('published_at', 'desc');
+
+    // Paginate the results
+    $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
+
+    // Transform the data using the resource
     return NewsStoryResource::collection($paginatedNewsStories);
+  }
+
 
 //
 //        ->paginate(10, ['*'], 'news')
@@ -178,9 +135,6 @@ class NewsStoryController extends Controller {
 //            'created_at'                   => $newsStory->created_at,
 //            'published_at'                 => $newsStory->published_at,
 //        ]);
-  }
-
-
 
 
 //
@@ -401,7 +355,7 @@ class NewsStoryController extends Controller {
     return Inertia::render(
         $component,
         [
-            'newsStory'         => (new NewsStoryResource($newsStory))->toArray(request()),
+            'newsStory' => (new NewsStoryResource($newsStory))->toArray(request()),
 //            'newsStory' => [
 //                'id'                           => $newsStory->id,
 //                'slug'                         => $newsStory->slug,
@@ -464,7 +418,7 @@ class NewsStoryController extends Controller {
 //        'categories'     => $categories,
 //        'locationSearch' => $locationSearch,
 //        'filters'        => Request::only(['search']),
-        'newsStory'         => (new NewsStoryResource($newsStory))->toArray(request()),
+        'newsStory'     => (new NewsStoryResource($newsStory))->toArray(request()),
 //        'newsStory'     => [
 //            'id'                           => $newsStory->id,
 //            'slug'                         => $newsStory->slug,

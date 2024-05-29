@@ -64,6 +64,7 @@ class NewsStoryResource extends JsonResource {
         'video'                        => $this->video ? (new ImageResource($this->video))->toArray($request) : null,
         'created_at'                   => $this->created_at,
         'published_at'                 => $this->published_at,
+        'updated_at'                   => $this->updated_at,
         'can'                          => $user ? [
             'editNewsStory'    => $user->can('edit', $this->resource),
             'deleteNewsStory'  => $user->can('delete', $this->resource),

@@ -311,12 +311,11 @@ class ScheduleService {
     $expandedStart = $start->copy()->subDay();
     $expandedEnd = $end->copy()->addDay();
 
-    // 1. Fetch schedules from cache for the expanded range
     $cacheKey = $this->getCacheKey('all_schedules');
     $cachedSchedules = Cache::get($cacheKey);
 
     if ($cachedSchedules) {
-      Log::debug('Cached schedule used');
+//      Log::debug('Cached schedule used');
 
       return $this->filterSchedulesByDateRange($cachedSchedules, $expandedStart, $expandedEnd);
     } else {
@@ -324,6 +323,8 @@ class ScheduleService {
       $fetchedSchedules = $this->fetchAndCacheSchedules();
 
       return $this->filterSchedulesByDateRange($fetchedSchedules, $expandedStart, $expandedEnd);
+    }
+  }
 
 //      // Fetch all schedules with necessary relationships
 //      $schedules = Schedule::with(['content.image.appSetting'])
@@ -346,7 +347,7 @@ class ScheduleService {
       // Cache the schedules for future use
 //      Log::error('Problem getting the schedule from the cache in the ScheduleService->fetchContentForRange().');
 //      Cache::put($cacheKey, $schedules, now()->addMinutes(30));
-    }
+//    }
 
 // Convert cached data to the expected collection type if necessary
 //    if (is_array($schedules)) {
@@ -358,18 +359,18 @@ class ScheduleService {
 //    Log::debug('Fetched schedules:', $schedules);
 
     // 2. Transform schedules
-    $transformedSchedules = $this->transformFetchedSchedules($schedules);
-//    Log::debug("Transformed schedules:", $transformedSchedules);
+//    $transformedSchedules = $this->transformFetchedSchedules($schedules);
+////    Log::debug("Transformed schedules:", $transformedSchedules);
+//
+//    // 3. Sort schedules
+//    $sortedSchedules = $this->sortSchedules($transformedSchedules);
+////    Log::debug("Sorted schedules:", $sortedSchedules);
+//
+//    // 4. Resolve schedule conflicts
+//    return $this->resolveScheduleConflicts($sortedSchedules);
+////    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
 
-    // 3. Sort schedules
-    $sortedSchedules = $this->sortSchedules($transformedSchedules);
-//    Log::debug("Sorted schedules:", $sortedSchedules);
-
-    // 4. Resolve schedule conflicts
-    return $this->resolveScheduleConflicts($sortedSchedules);
-//    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
-
-  }
+//  }
 
   protected function filterSchedulesByDateRange(array $schedules, $start, $end): array {
     // Ensure $schedules is a collection
@@ -556,7 +557,7 @@ class ScheduleService {
     });
 
     return array_map(function ($item) use (&$rowOccupancy) {
-      $item['gridRow'] = 1; // Start placing each item in the first row (odd number)
+      $item['gridRow'] = 1; // Start placing each item in the second row (even number)
 
       // Check each row to see if placing the item there would cause a conflict
       while (true) {
@@ -575,12 +576,12 @@ class ScheduleService {
           break; // No conflict found, place the item in the current row
         }
 
-        // Move to the next odd-numbered row if there is a conflict
-        $item['gridRow'] += 2;
+        // Move to the next row if there is a conflict
+        $item['gridRow'] += 1;
       }
 
       // Adjust the priority if the item was moved to a new row
-      if ($item['gridRow'] > 1) {
+      if ($item['gridRow'] > 2) {
         $item['priority']++;
       }
 

@@ -295,6 +295,11 @@ Route::resource('teams', TeamsController::class);
 // Public view .. Shows/{show}/Index
 Route::resource('shows', ShowsController::class);
 
+// Public view .. Display episode page
+Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'show'])
+    ->name('shows.showEpisodes.show')
+    ->scopeBindings();
+
 // Public view .. Schedule/Index
 Route::get('/schedule', [SchedulesController::class, 'index'])
     ->name('schedule');
@@ -1027,9 +1032,6 @@ Route::middleware([
       ->name('shows.showEpisodes.manageEpisode')
       ->scopeBindings();
 
-  Route::get('/api/shows/{show}/check-live', [ShowsController::class, 'checkIsLive'])
-      ->name('shows.checkLive');
-
   Route::put('/api/shows/{show}/meta', [ShowsController::class, 'updateMeta'])
       ->name('shows.updateMeta');
 
@@ -1043,10 +1045,7 @@ Route::middleware([
   // Display episodes index page
   Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
       ->name('showEpisodes');
-  // Display episode page
-  Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'show'])
-      ->name('shows.showEpisodes.show')
-      ->scopeBindings();
+
   // Display episode edit page
   Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'edit'])
 //        ->middleware('can:edit,show')
@@ -1383,6 +1382,9 @@ Route::get('/api/schedules/range', [SchedulesController::class, 'fetchContentFor
 // Check for existing email/user account on creator registration
 Route::post('/api/creators/register-check-email', [CreatorsController::class, 'registerCheckEmail'])
     ->name('creators.registerCheckEmail');
+
+Route::get('/api/shows/{show}/check-live', [ShowsController::class, 'checkIsLive'])
+    ->name('shows.checkLive');
 
 
 //Route::any('/{any}', function() {

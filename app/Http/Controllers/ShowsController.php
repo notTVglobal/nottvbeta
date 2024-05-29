@@ -51,7 +51,7 @@ class ShowsController extends Controller {
     $this->playbackService = MistServerServiceFactory::make('playback');
 
     // Apply auth middleware only to certain methods
-    $this->middleware('auth')->except(['index', 'show']);
+    $this->middleware('auth')->except(['index', 'show', 'checkIsLive']);
 
 //    $this->middleware('can:viewAny,show')->only(['index']);
 //    $this->middleware('can:view,show')->only(['show']);

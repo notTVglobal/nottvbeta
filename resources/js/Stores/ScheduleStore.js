@@ -306,7 +306,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
-                // console.log('Received response:', response.data) // Log the raw response data
+                console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone
@@ -760,15 +760,17 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 const now = dayjs(this.baseTime)
 
                 // Determine if the show is now playing
-                show.nowPlaying = !show.placeholder && now.isAfter(start) && now.isBefore(end) && show.gridStart === 1
+                show.nowPlaying = !show.placeholder && now.isAfter(start) && now.isBefore(end) && show.gridRow === 1
 
-                // Find the first show that does not start in the first grid column
-                if (!comingUpNextSet && !show.placeholder && show.gridStart > 1) {
+                // Find the first show that starts in gridRow 1 and does not start in the first grid column
+                if (!comingUpNextSet && !show.placeholder && show.gridRow === 1 && now.isBefore(start)) {
                     show.comingUpNext = true
                     comingUpNextSet = true  // Ensure only one show gets this flag
+                } else {
+                    show.comingUpNext = false
                 }
             })
-            // console.log(33)
+
             return shows
         },
 

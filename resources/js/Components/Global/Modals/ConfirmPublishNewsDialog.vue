@@ -21,10 +21,10 @@
       </template>
       <template #footer>
         <div class="w-full flex justify-center">
-          <button @click.prevent="publishConfirmed" class="bg-green-500 hover:bg-green-600 py-2 px-4 text-white rounded-lg">
+          <button @click="$emit('confirm')" class="bg-green-500 hover:bg-green-600 py-2 px-4 text-white rounded-lg">
             Publish
           </button>
-          <button @click.prevent="appSettingStore.showConfirmationDialog = false"
+          <button @click="$emit('cancelConfirmation')"
                   class="bg-gray-500 hover:bg-gray-600 py-2 px-4 text-white rounded-lg ml-2">Cancel
           </button>
         </div>
@@ -45,11 +45,10 @@ defineProps({
   newsStory: Object,
 })
 
-const emit = defineEmits(['confirmPublish'])
+const emit = defineEmits(['confirm', 'cancelConfirmation']);
 
-function publishConfirmed() {
-  emit('confirmPublish')
-  appSettingStore.showConfirmationDialog = false
-}
-
+// function publishConfirmed(newsStory) {
+//   emit('confirmPublish', newsStory)
+//   appSettingStore.showConfirmationDialog = false
+// }
 </script>

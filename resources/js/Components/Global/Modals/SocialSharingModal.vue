@@ -21,8 +21,8 @@
             </div>
           </div>
           <div
-              class="flex flex-col items-center space-y-4 mb-6 p-4 rounded-lg bg-darkgray-light xl:flex-row xl:items-start xl:space-x-3 xl:space-y-0">
-            <img :src="socialShareStore.media" :alt="`image`" class="max-h-30 max-w-30 object-contain"/>
+              class="flex flex-col max-w-full items-center space-y-4 mb-6 p-4 rounded-lg bg-darkgray-light xl:flex-row xl:items-start xl:space-x-3 xl:space-y-0">
+            <img :src="socialShareStore.media" :alt="`image`" class="max-h-md max-w-xs object-contain"/>
             <div class="flex flex-col px-6 xl:px-0 text-center xl:text-left space-y-2">
               <h4 class="text-orange-500 text-lg">{{ socialShareStore.title }}</h4>
               <h5 class="font-light">{{ shortDescription }}</h5>

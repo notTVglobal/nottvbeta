@@ -48,6 +48,7 @@
           </div>
 
         </div>
+        <ShareButton :model="newsStory" />
       </div>
     </section>
 
@@ -72,6 +73,8 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import TipTapRender from '@/Components/Global/TextEditor/TipTapNewsStoryRender.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
+import { computed } from 'vue'
+import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
