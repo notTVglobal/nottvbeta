@@ -66,7 +66,7 @@ class NewsController extends Controller
         'newsPerson.user',
     ])->where('city_id', $newsCity->id);
 
-    $this->applySearch($newsStoriesQuery);
+//    $this->applySearch($newsStoriesQuery);
 
     $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
     $newsStories = NewsStoryResource::collection($paginatedNewsStories);
@@ -97,7 +97,7 @@ class NewsController extends Controller
         'newsPerson.user',
     ])->where('news_category_id', $newsCategory->id);
 
-    $this->applySearch($newsStoriesQuery);
+//    $this->applySearch($newsStoriesQuery);
 
     $paginatedNewsStories = $newsStoriesQuery->paginate(10)->withQueryString();
     $newsStories = NewsStoryResource::collection($paginatedNewsStories);

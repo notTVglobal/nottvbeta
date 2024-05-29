@@ -47,8 +47,12 @@
                 class="text-xs font-medium text-gray-500 uppercase">Subnational Electoral District</span></div>
           </div>
 
+          <div class="mt-6" :class="{'w-full flex justify-center': appSettingStore.isSmallScreen}">
+            <ShareButton :model="newsStory" />
+          </div>
+
         </div>
-        <ShareButton :model="newsStory" />
+
       </div>
     </section>
 
