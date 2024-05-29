@@ -3,7 +3,11 @@
     <!--        OLD STORIES PLACEHOLDER-->
     <section class="mt-10 px-8">
       <div class="flex w-full h-fit flex-wrap justify-between align-baseline">
-        <h2 class="text-center text-xl md:text-2xl font-medium my-auto align-middle pl-6 uppercase">News Stories</h2>
+        <h2 class="text-center text-xl md:text-2xl font-medium my-auto align-middle pl-6 uppercase">
+          <span v-if="showPublished">Published </span>
+          <span v-if="!showPublished">Unpublished </span>
+          News Stories
+        </h2>
 
         <div class="my-auto">
           <div class="relative" v-if="!showPublished">

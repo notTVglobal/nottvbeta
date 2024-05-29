@@ -7,7 +7,7 @@
     </div>
     <div class="table-cell px-6 py-4 w-full font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap align-middle flex-1">
       <div @click="appSettingStore.btnRedirect(`/news/story/${newsStory.slug}`)"
-           class="w-full max-w-xs break-words break-all text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
+           class="hover:cursor-pointer w-full max-w-xs break-words break-all text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
         {{ newsStory.title }}
       </div>
       <div>By {{ newsStory.newsPerson && newsStory.newsPerson.name ? newsStory.newsPerson.name : '' }}</div>
