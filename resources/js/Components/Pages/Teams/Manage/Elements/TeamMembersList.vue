@@ -1,15 +1,12 @@
 <template>
-  <div v-if="can.editTeam">
+  <div v-if="can.manageTeam">
     <button
         class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         @click="openModal"
         :disabled="!teamStore.spotsRemaining"
-        v-if="can.isTeamOwner || can.isTeamLeader || can.isTeamManager || can.isAdmin"
     >Add Member ({{ teamStore.spotsRemaining }} spots left)
     </button>
   </div>
-
-
   <div class="overflow-x-auto">
     <table class="table min-w-full divide-y divide-gray-200">
       <thead>

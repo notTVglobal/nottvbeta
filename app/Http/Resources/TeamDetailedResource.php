@@ -35,7 +35,6 @@ class TeamDetailedResource extends JsonResource {
     $teamLeaderData = $this->team && $this->team->teamLeader ? $this->getTeamUserData($this->team->teamLeader->user) : $this->getEmptyTeamUserData();
     $managers = $this->team ? $this->team->managers->map->only(['id', 'name']) : [];
 
-
     return [
         'id'               => $this->id,
         'name'             => $this->name,

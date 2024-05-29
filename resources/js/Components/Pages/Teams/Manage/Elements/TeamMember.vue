@@ -4,11 +4,11 @@
       <img v-if="member.profile_photo_path"
            :src="`/storage/${member.profile_photo_path}`"
            alt=""
-           class="min-h-[3rem] min-w-[3rem] max-h-[3rem] max-w-[3rem] rounded-full object-cover">
+           class="skeleton min-h-[3rem] min-w-[3rem] max-h-[3rem] max-w-[3rem] rounded-full object-cover">
       <img v-if="!member.profile_photo_path"
            :src="`${member.profile_photo_url}`"
            alt=""
-           class="min-h-[3rem] min-w-[3rem] max-h-[3rem] max-w-[3rem] rounded-full object-cover">
+           class="skeleton min-h-[3rem] min-w-[3rem] max-h-[3rem] max-w-[3rem] rounded-full object-cover">
     </td>
 
     <td class="text-xl font-medium px-6 py-4">
@@ -18,9 +18,9 @@
     </td>
 
     <td class="light:text-gray-600 px-6 py-4 text-sm">
-      <span v-if="member.id === teamStore.teamLeader.id" class="text-indigo-700">Team Leader</span>
-      <span v-else-if="member.id === teamStore.teamCreator.id" class="text-indigo-700">Team Creator</span>
-      <span v-else-if="teamStore.managers.some(manager => manager.id === member.id)" class="text-orange-700">Team Manager</span>
+      <span v-if="member.id === teamStore.team?.teamLeader?.id" class="text-indigo-700">Team Leader</span>
+      <span v-else-if="member.id === teamStore.team?.teamCreator?.id" class="text-indigo-700">Team Creator</span>
+      <span v-else-if="teamStore.team.managers.some(manager => manager.id === member.id)" class="text-orange-700">Team Manager</span>
       <span v-else>Team Member</span>
     </td>
 
@@ -33,13 +33,13 @@
     </td>
 
     <td class="px-6 py-4">
-      <button v-if="member.team_members.active === 1" class="text-green-400 text-xl font-semibold">Active</button>
-      <button v-if="member.team_members.active === 0" class="text-gray-400 text-xl font-semibold" disabled>Inactive
+      <button v-if="member.active === 1" class="text-green-400 text-xl font-semibold">Active</button>
+      <button v-if="member.active === 0" class="text-gray-400 text-xl font-semibold" disabled>Inactive
       </button>
     </td>
 
     <td v-if="can.editTeam" class="px-6 py-4">
-      <div v-if="team.user.id !== member.id && team.team_leader !== member.id">
+      <div v-if="team.teamOwner.id !== member.id && team.teamLeader.id !== member.id">
         <button v-if="can.isTeamOwner || can.isTeamLeader"
                 class="bg-blue-600 text-white hover:bg-blue-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                 @click.prevent="confirmTeamManager(props.member)"
@@ -48,7 +48,7 @@
           <span v-if="removeManager">Remove Manager</span>
         </button>
 
-        <div v-if="$page.props.auth.user.id !== member.id || team.user_id !== member.id">
+        <div v-if="$page.props.auth.user.id !== member.id || team.teamOwner.id !== member.id">
           <button v-if="can.isTeamOwner || can.isTeamLeader"
                   class="bg-red-600 text-white hover:bg-red-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                   @click.prevent="deleteTeamMember(member)"
@@ -100,14 +100,14 @@ function confirmTeamManager(member) {
   teamStore.selectedManagerId = member.id;
   teamStore.confirmManagerDialog = true;
 
-  teamStore.addManager = !teamStore.managers.some(manager => manager.id === member.id);
+  teamStore.addManager = !teamStore.team.managers.some(manager => manager.id === member.id);
 
 
 }
 
 const memberID = props.member.id;
 
-const isManager = teamStore.managers.some(manager => manager.id === memberID);
+const isManager = teamStore.team.managers.some(manager => manager.id === memberID);
 
 if (isManager) {
   removeManager = true;

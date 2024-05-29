@@ -14,14 +14,16 @@ class TeamMemberResource extends JsonResource
      */
   public function toArray($request)
   {
-    $user = $this->whenLoaded('user');
+//    $user = $this->whenLoaded('members');
+//    $user = $this->user;
+//    dd($this);
     return [
         'id' => $this->id,
-        'name' => $user->name ?? '',
-        'email' => $user->email ?? '',
-        'phone' => $user->phone ?? '',
-        'profile_photo_path' => $user->profile_photo_path ?? '',
-        'profile_photo_url' => $user->profile_photo_url ?? '',
+        'name' => $this->name ?? '',
+        'email' => $this->email ?? '',
+        'phone' => $this->phone ?? '',
+        'profile_photo_path' => $this->profile_photo_path ?? '',
+        'profile_photo_url' => $this->profile_photo_url ?? '',
         'active' => $this->pivot->active ?? null,
         'team_profile_is_public' => $this->pivot->team_profile_is_public ?? null,
         'created_at' => $this->pivot->created_at ?? null,

@@ -306,7 +306,6 @@ class ImageController extends Controller {
 
   public function upload(HttpRequest $request) {
     Log::info('image uploading...');
-//    Log::info($request->all());
 
     $rules = [
         'image'     => 'required|image|max:30720', // Max 30MB
@@ -323,35 +322,21 @@ class ImageController extends Controller {
     $file = $request->file('image');
     $filePath = $file->getPathname();
 
-    // Scan the file with ClamAV
-    $scanResult = shell_exec("clamscan $filePath 2>&1");
-    Log::info("ClamAV scan result: $scanResult");
-
-    if (str_contains($scanResult, 'FOUND')) {
-      // If a virus is found, delete the file and send a notification
-      unlink($filePath);
-      SendUserNotificationJob::dispatch($request->user()->id, 'Virus Detected', 'A virus was detected in your uploaded image and the file has been deleted.', url('/')); // Dispatch the new job
-
-      return response()->json(['errors' => ['image' => 'The file contains a virus and cannot be uploaded.']], 422);
-    }
+//    // Scan the file with ClamAV
+//    $scanResult = shell_exec("clamscan $filePath 2>&1");
+//    Log::info("ClamAV scan result: $scanResult");
+//
+//    if (str_contains($scanResult, 'FOUND')) {
+//      // If a virus is found, delete the file and send a notification
+//      unlink($filePath);
+//      SendUserNotificationJob::dispatch($request->user()->id, 'Virus Detected', 'A virus was detected in your uploaded image and the file has been deleted.', url('/')); // Dispatch the new job
+//
+//      return response()->json(['errors' => ['image' => 'The file contains a virus and cannot be uploaded.']], 422);
+//    }
 
     // Remove all metadata from the image
     $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
     Log::info("ExifTool result: $exifResult");
-
-
-//    // Custom validation for modelId
-//    $validator->sometimes('modelId', ['integer'], function ($input) {
-//      return is_numeric($input->modelId);
-//    });
-//
-//    $validator->sometimes('modelId', ['regex:/^[0-9A-Za-z]{26}$/'], function ($input) {
-//      return !is_numeric($input->modelId);
-//    });
-//
-//    if ($validator->fails()) {
-//      return response()->json(['errors' => $validator->errors()], 422);
-//    }
 
     // Proceed with file upload and record creation
     // Check the MIME type of the file

@@ -74,11 +74,12 @@ class Team extends Model {
   }
 
   public function members(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
-    return $this->belongsToMany(User::class, 'team_members')
+    return $this->belongsToMany(User::class, 'team_members', 'team_id', 'user_id')
         ->using(TeamMember::class)
         ->as('teamMembers')
         ->withPivot('active', 'team_profile_is_public', 'created_at', 'updated_at')
         ->withTimestamps()
+//        ->with('user') // Ensure the 'user' relationship is loaded
         ->select('id', 'name', 'email', 'phone', 'profile_photo_path');
   }
 
