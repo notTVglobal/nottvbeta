@@ -25,14 +25,14 @@
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('schedule')"
-                      :active="$route().current('schedule')">
+                      :active="route().current('schedule')">
                     Schedule</JetNavLink>
                 </h3>
 
                 <h3 class="hidden inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('schedule')"
-                      :active="$route().current('teams.index')">
+                      :active="route().current('teams.index')">
                     Browse</JetNavLink>
                 </h3>
 
@@ -44,25 +44,25 @@
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('news.index')"
-                      :active="$route().current('news.index')">
+                      :active="route().current('news.index')">
                     News Stories</JetNavLink>
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('news.reporters.index')"
-                      :active="$route().current('news.reporters.index')">
+                      :active="route().current('news.reporters.index')">
                     Reporters</JetNavLink>
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('public.newsletterSignup')"
-                      :active="$route().current('public.newsletterSignup')">
+                      :active="route().current('public.newsletterSignup')">
                     Get Exclusive Access!</JetNavLink>
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('public.contact')"
-                      :active="$route().current('public.contact')">
+                      :active="route().current('public.contact')">
                     Contact Us</JetNavLink>
                 </h3>
               </div>

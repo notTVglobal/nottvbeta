@@ -306,7 +306,7 @@ class ImageController extends Controller {
 
   public function upload(HttpRequest $request) {
     Log::info('image uploading...');
-    Log::info($request->all());
+//    Log::info($request->all());
 
     $rules = [
         'image'     => 'required|image|max:30720', // Max 30MB
