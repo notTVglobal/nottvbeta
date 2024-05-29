@@ -17,10 +17,10 @@
                   <JetNavLink
                   ><Link :href="`/`">Watch Now</Link></JetNavLink>
                 </h3>
-<!--                <h3 class="inline-flex items-center relative">-->
-<!--                  <JetNavLink-->
-<!--                  ><Link :href="`/teams`">Browse</Link></JetNavLink>-->
-<!--                </h3>-->
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
+                  ><Link :href="`/teams`">Browse</Link></JetNavLink>
+                </h3>
 
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink

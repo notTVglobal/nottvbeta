@@ -1,5 +1,4 @@
 <template>
-
   <div v-if="appSettingStore.noLayout" :class="[layoutClass, scrollbarClass]">
     <slot/>
   </div>

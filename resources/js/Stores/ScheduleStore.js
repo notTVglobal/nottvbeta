@@ -760,15 +760,17 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 const now = dayjs(this.baseTime)
 
                 // Determine if the show is now playing
-                show.nowPlaying = !show.placeholder && now.isAfter(start) && now.isBefore(end) && show.gridStart === 1
+                show.nowPlaying = !show.placeholder && now.isAfter(start) && now.isBefore(end) && show.gridRow === 1
 
-                // Find the first show that does not start in the first grid column
-                if (!comingUpNextSet && !show.placeholder && show.gridStart > 1) {
+                // Find the first show that starts in gridRow 1 and does not start in the first grid column
+                if (!comingUpNextSet && !show.placeholder && show.gridRow === 1 && now.isBefore(start)) {
                     show.comingUpNext = true
                     comingUpNextSet = true  // Ensure only one show gets this flag
+                } else {
+                    show.comingUpNext = false
                 }
             })
-            // console.log(33)
+
             return shows
         },
 

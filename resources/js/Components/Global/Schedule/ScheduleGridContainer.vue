@@ -46,9 +46,6 @@
         <span>COMING UP NEXT</span>
       </div>
 
-      <div v-if="hasRemainingCols" :style="remainingColsStyle" class="remaining-cols">
-        <!-- Content for remaining columns, if any -->
-      </div>
 
     </div>
 
@@ -71,6 +68,7 @@
         'gradient-on-hover': !item.placeholder
     }">
           <div v-if="item.type" :class="getBadgeClass(item.type)" class="badge capitalize px-2 py-1 mt-6">{{item.type}}</div>
+
           <div class="show-info flex-grow flex flex-col items-center justify-center">
             <h3 class="show-title mt-2 mb-4 w-full text-center text-lg font-semibold break-words"
                 :class="{'gradient-on-hover': !item.placeholder}">

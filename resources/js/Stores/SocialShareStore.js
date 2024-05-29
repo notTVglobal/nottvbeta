@@ -50,10 +50,10 @@ export const useSocialShareStore = defineStore('socialShareStore', {
             // console.log('Parsing model:', model)
             let payload = {}
 
-            if (model.name) {
+            if (model.name || model.title) {
                 // Assign model values to payload or use default store values
-                payload.title = model.name
-                payload.description = model.description || this.description
+                payload.title = model.name || model.title
+                payload.description = model.description || model.content || this.description
                 payload.url = model.url || window.location.href
                 payload.quote = model.quote || this.quote
                 payload.hashtags = model.hashtags || this.hashtags

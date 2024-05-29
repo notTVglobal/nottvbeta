@@ -1,5 +1,22 @@
 <template>
-  <Head title="Beta"/>
+  <Head :title="pageTitle">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" :content="ogUrl" />
+    <meta property="og:type" :content="ogType" />
+    <meta property="og:title" :content="ogTitle" />
+    <meta property="og:description" :content="ogDescription" />
+    <meta property="og:image" :content="ogImage" />
+    <meta property="og:image:alt" :content="twitterImageAlt" /> <!-- Optional: for better accessibility -->
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" :content="twitterCard" />
+    <meta name="twitter:site" :content="twitterSite" />
+    <meta name="twitter:creator" :content="twitterCreator" />
+    <meta name="twitter:title" :content="ogTitle" />
+    <meta name="twitter:description" :content="ogDescription" />
+    <meta name="twitter:image" :content="ogImage" />
+    <meta name="twitter:image:alt" :content="twitterImageAlt" />
+  </Head>
   <transition name="fade" mode="out-in">
     <div id="topDiv"
          :class="welcomeContainer">
@@ -13,29 +30,29 @@
             <div class="flex gap-2">
               <Button
                   class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.user" @click="router.visit('/schedule')">
+                  v-if="!$page.props.auth.user" @click="router.visit('/schedule')">
                 Schedule
               </Button>
               <Button
                   class="hidden h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.user" @click="router.visit('/teams')">
+                  v-if="!$page.props.auth.user" @click="router.visit('/teams')">
                 Browse
               </Button>
             </div>
             <div class="flex gap-2">
               <Button
                   class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.user" @click="welcomeStore.showLogin = true">
+                  v-if="!$page.props.auth.user" @click="welcomeStore.showLogin = true">
                 Log in
               </Button>
               <!--            <Button-->
               <!--                class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
-              <!--                v-if="!$page.props.user" @click="welcomeStore.showRegister = true">-->
-              <!--              &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
+              <!--                v-if="!$page.props.auth.user" @click="welcomeStore.showRegister = true">-->
+              <!--              &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.auth.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
 
               <!--              Register-->
               <!--            </Button>-->
-              <Button v-if="!$page.props.user"
+              <Button v-if="!$page.props.auth.user"
                       class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                       @click="router.visit('register')">Register
               </Button>
@@ -190,8 +207,8 @@ import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 import { usePage } from '@inertiajs/vue3'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 
-const page = usePage()
-const flash = ref(page.props.flash || {}) // Default to an empty object if flash is undefined
+const page = usePage().props
+const flash = ref(page.flash || {}) // Default to an empty object if flash is undefined
 const errorMessage = ref('')
 
 const appSettingStore = useAppSettingStore()
@@ -278,6 +295,17 @@ function watchNow() {
   welcomeStore.showOverlay = false
   videoPlayerStore.unMute()
 }
+
+const pageTitle = 'Beta'
+const ogUrl = computed(() => `${page.appUrl}`);
+const ogType = computed(() => 'website');
+const ogTitle = computed(() => 'notTV - Community Television Re-invented!');
+const ogDescription = computed(() => 'Join the revolution of community television with notTV. Experience innovative, creative, and inspiring content that brings communities together. Watch, create, and engage with autonomous broadcasting chapters worldwide!');
+const ogImage = 'https://not.tv/storage/logo_black_311.png';
+const twitterCard = computed(() => 'summary_large_image'); // Type of Twitter card
+const twitterSite = computed(() => '@notTV'); // Your Twitter handle
+const twitterCreator = computed(() => '@notTV'); // Creator's Twitter handle (if different)
+const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
 
 </script>
 

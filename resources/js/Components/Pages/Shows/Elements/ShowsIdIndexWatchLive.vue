@@ -1,26 +1,26 @@
 <template>
   <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
-    <div v-if="show.nextBroadcast"
+    <div v-if="show?.nextBroadcast"
          class="flex flex-col bg-yellow-300 border border-yellow-500 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
       <h2 class="text-2xl font-semibold mb-4 text-gray-800">Next Broadcast</h2>
       <p class="text-lg">
-        <ConvertDateTimeToTimeAgo :dateTime="show.nextBroadcast.next_broadcast" :timezone="userStore.timezone"
+        <ConvertDateTimeToTimeAgo :dateTime="show?.nextBroadcast?.next_broadcast" :timezone="userStore.timezone"
                                   :class="`text-yellow-700`"/>
       </p>
       <p class="text-lg text-gray-800">
-        {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show.nextBroadcast.next_broadcast) }}
+        {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show?.nextBroadcast?.next_broadcast) }}
         {{ userStore.timezoneAbbreviation }}
       </p>
     </div>
 
-    <div v-if="showStore.isLive" class="flex flex-col justify-center ml-5">
+    <div v-if="showStore?.isLive" class="flex flex-col justify-center ml-5">
 
       <div class="flex text-yellow-400">
         Started&nbsp;
         <ConvertDateTimeToTimeAgo
             :key="scheduleStore.baseTime"
-            v-if="showStore.liveScheduledStartTime"
-            :dateTime="showStore.liveScheduledStartTime"
+            v-if="showStore?.liveScheduledStartTime"
+            :dateTime="showStore?.liveScheduledStartTime"
             :class="`text-yellow-400`"/>
       </div>
 

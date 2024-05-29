@@ -350,7 +350,11 @@ class ShowEpisodeController extends Controller {
       return response()->json(['error' => 'Video not loaded'], 500);
     }
 
-    return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
+    $user = Auth::user();
+
+    $component = $user ? 'Shows/{$id}/Episodes/{$id}/Index' : 'LoggedOut/Shows/{$id}/Episodes/{$id}/Index';
+
+    return Inertia::render($component, [
         'show'     => [
             'name'               => $show->name,
             'slug'               => $show->slug,
@@ -420,9 +424,9 @@ class ShowEpisodeController extends Controller {
                 'profile_photo_path' => $user->profile_photo_path,
             ]),
         'can'      => [
-            'manageShow'  => Auth::user()->can('manage', $show),
-            'editShow'    => Auth::user()->can('edit', $show),
-            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            'manageShow'  => optional($user)->can('manage', $show),
+            'editShow'    => optional($user)->can('edit', $show),
+            'viewCreator' => optional($user)->can('viewCreator', User::class),
         ]
 
     ]);
