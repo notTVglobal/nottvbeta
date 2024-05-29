@@ -82,12 +82,15 @@
             <div v-if="!item.placeholder"
                  class="show-time w-full text-center text-sm p-2 mt-2"
                  :class="{'gradient-on-hover': !item.placeholder}">
-              <p>{{ formatTime(item.start_dateTime, true) }}</p>
+              <p v-if="!hasEnded">
+                {{ formatTime(item.start_dateTime, true) }}</p>
               <p :class="computeClassForConvertDateTimeToTimeAgo(item)">
                 <span v-if="!hasStarted(item)">Starting </span>
-                <span v-if="hasStarted(item) && !isEndingSoon(item)">Started </span>
-                <span v-if="isEndingSoon(item)">Ending </span>
+                <span v-if="hasStarted(item) && !isEndingSoon(item) && !hasEnded(item)">Started </span>
+                <span v-if="isEndingSoon(item)">Ending Soon </span>
+                <span v-if="hasEnded(item)">Ended </span>
                 <ConvertDateTimeToTimeAgo
+                    v-if="!isEndingSoon(item) && !hasEnded(item)"
                     :key="scheduleStore.baseTime"
                     :dateTime="item.start_dateTime"
                     :timezone="userStore.timezone"
@@ -143,7 +146,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { vElementVisibility } from '@vueuse/components'
 import dayjs from 'dayjs'
@@ -313,6 +316,10 @@ const getBadgeClass = (type) => {
       return 'neutral';
   }
 };
+
+onBeforeMount(() => {
+  scheduleStore.reset()
+})
 
 onMounted(async () => {
   // scheduleStore.resetAll()
@@ -522,18 +529,20 @@ const remainingColsStyle = computed(() => {
 });
 
 const hasStarted = (item) => dayjs(item.start_dateTime).isBefore(scheduleStore.baseTime);
-const isEndingSoon = (item) => dayjs(item.end_dateTime).isAfter(scheduleStore.baseTime) && dayjs(item.end_dateTime).diff(scheduleStore.baseTime, 'minute') <= 15;
+const isEndingSoon = (item) => dayjs(item.end_dateTime).isAfter(scheduleStore.baseTime) && dayjs(item.end_dateTime).diff(scheduleStore.baseTime, 'minute') <= 5;
+const hasEnded = (item) => dayjs(item.end_dateTime).isBefore(scheduleStore.baseTime);
 
 const computeClassForConvertDateTimeToTimeAgo = (item) => {
   if (isEndingSoon(item)) {
     return 'text-orange-500';
   } else if (!hasStarted(item)) {
     return 'text-green-500';
+  } else if (hasEnded(item)) {
+    return 'text-gray-500'; // You can choose any color that signifies "Ended"
   } else {
     return 'text-yellow-500';
   }
 };
-
 function openModal(modalName) {
   document.getElementById(modalName).showModal()
 }

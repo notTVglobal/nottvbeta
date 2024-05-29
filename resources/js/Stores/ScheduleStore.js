@@ -71,14 +71,14 @@ const getTimeZone = () => {
 }
 
 const initialState = () => ({
-    baseTime: dayjs().tz(getTimeZone()).toDate(),
-    currentHalfHour: dayjs().tz(getTimeZone()).startOf('hour').add(dayjs().minute() >= 30 ? 30 : 0, 'minute').toDate(),
-    fourHoursLater: dayjs().tz(getTimeZone()).startOf('hour').add(dayjs().minute() >= 30 ? 30 : 0, 'minute').add(4, 'hour').toDate(),
-    viewingWindowStart: dayjs().tz(getTimeZone()).startOf('hour').toDate(),
-    currentMonth: dayjs().tz(getTimeZone()).startOf('month').toDate(),
-    selectedDay: dayjs().tz(getTimeZone()).toDate(),
-    currentWeekStart: dayjs().tz(getTimeZone()).startOf('week').toDate(),
-    currentWeekEnd: dayjs().tz(getTimeZone()).endOf('week').toDate(),
+    baseTime: dayjs().tz(getTimeZone()),
+    currentHalfHour: dayjs().tz(getTimeZone()).startOf('hour').add(dayjs().minute() >= 30 ? 30 : 0, 'minute'),
+    fourHoursLater: dayjs().tz(getTimeZone()).startOf('hour').add(dayjs().minute() >= 30 ? 30 : 0, 'minute').add(4, 'hour'),
+    viewingWindowStart: dayjs().tz(getTimeZone()).startOf('hour'),
+    currentMonth: dayjs().tz(getTimeZone()).startOf('month'),
+    selectedDay: dayjs().tz(getTimeZone()),
+    currentWeekStart: dayjs().tz(getTimeZone()).startOf('week'),
+    currentWeekEnd: dayjs().tz(getTimeZone()).endOf('week'),
     nextFourHoursOfContent: [],
     nextFourHoursOfContentWithPlaceholders: [],
     // nextFourHoursWithHalfHourIntervals: [],
@@ -117,9 +117,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // console.log(3)
         },
         reset() {
-            this.viewingWindowStart = dayjs().tz(getTimeZone()).startOf('hour').toDate()
-            this.currentMonth = dayjs().tz(getTimeZone()).startOf('month').toDate()
-            this.selectedDay = dayjs().tz(getTimeZone()).toDate()
+            this.baseTime = dayjs().tz(getTimeZone())
+            this.viewingWindowStart = dayjs().tz(getTimeZone()).startOf('hour')
+            this.currentMonth = dayjs().tz(getTimeZone()).startOf('month')
+            this.selectedDay = dayjs().tz(getTimeZone())
             // console.log(4)
         },
         async setSelectedDay(day) {
@@ -586,7 +587,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
             const roundedMinutes = baseDate.minute() < 30 ? 0 : 30
 
             // Set the current half hour, rounding down to the nearest half-hour mark
-            const currentHalfHour = baseDate.minute(roundedMinutes).second(0).millisecond(0).startOf('minute')
+            let currentHalfHour = baseDate.minute(roundedMinutes).second(0).millisecond(0).startOf('minute')
+
+            // Adjust currentHalfHour to start 30 minutes earlier
+            currentHalfHour = currentHalfHour.subtract(30, 'minutes');
 
             // Calculate four hours later from the current half-hour mark
             const fourHoursLater = currentHalfHour.add(4, 'hours')
@@ -992,6 +996,8 @@ export const useScheduleStore = defineStore('scheduleStore', {
             // Determine if the current minute is less than 30 to start at the top of the hour or at the half-hour
             let current = now.minute() < 30 ? now.startOf('hour') : now.startOf('hour').add(30, 'minutes')
 
+            // Adjust current to start 30 minutes before the calculated time
+            current = current.subtract(30, 'minutes');
 
             // Generate intervals for the next 4 hours, each 30 minutes apart
             // Adjust the loop count based on the number of columns/ intervals needed

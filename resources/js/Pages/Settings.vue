@@ -22,13 +22,13 @@
                         <div class="max-w-7xl mx-auto pb-10 sm:px-6 lg:px-8">
 
                             <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                                <UpdateProfileInformationForm :user="$page.props.user" />
+                                <UpdateProfileInformationForm :user="$page.props.auth.user" />
 
                                 <JetSectionBorder />
                             </div>
 
                             <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                                <UserUpdateContactForm :user="$page.props.user" class="pt-10"/>
+                                <UserUpdateContactForm :user="$page.props.auth.user" class="pt-10"/>
 
                                 <JetSectionBorder />
                             </div>

@@ -74,7 +74,7 @@
                       :active="route().current('profile.show')"
                       :href="`#`">
                   <img class="min-h-12 min-w-12 max-h-12 max-w-12 mr-2 rounded-full object-cover border-1 border-gray-300"
-                       :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
+                       :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
                 </Link>
               </div>
               <div class="mt-1 ml-3 w-full">
@@ -83,7 +83,7 @@
                         @click.prevent="router.visit('/user/profile')"
                         :active="route().current('profile.show')"
                         :href="`#`">
-                    {{ $page.props.user.name }}
+                    {{ $page.props.auth.user.name }}
                   </Link>
                 </div>
                 <div class="font-medium text-sm text-gray-100 w-full">
@@ -91,7 +91,7 @@
                         @click.prevent="router.visit('/user/profile')"
                         :active="route().current('profile.show')"
                         :href="`#`">
-                    {{ $page.props.user.email }}
+                    {{ $page.props.auth.user.email }}
                   </Link>
                 </div>
               </div>

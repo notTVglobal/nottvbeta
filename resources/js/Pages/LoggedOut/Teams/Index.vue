@@ -10,7 +10,9 @@
 
             <div class="min-h-screen bg-gray-700 text-gray-50 dark:bg-gray-800 dark:text-gray-50 shadow rounded sm:rounded-lg">
 
-              <TeamsIndexGrid :teams ="teams" :filters="filters"/>
+              <div class="flex flex-col mx-auto justify-center max-w-7xl">
+                <TeamsIndexGrid :teams ="teams" :filters="filters"/>
+              </div>
 
             </div>
 

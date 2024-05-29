@@ -8,6 +8,9 @@ May 29, 2024
 
 * Fix broken PublicNav links.
 * Fix Social Share image size, width was still too large.
+* Schedule now shows 30 minutes before now so if a show has just ended you will still be able to see it.
+* Added a Login to watch banner to Logged out pages.
+* Some CSS fixes.
 
 ## v0.9.3.2
 May 29, 2024
