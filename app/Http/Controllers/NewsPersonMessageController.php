@@ -72,12 +72,20 @@ class NewsPersonMessageController extends Controller {
    */
   public function store(Request $request): \Illuminate\Foundation\Application|\Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse {
 
-    // Validate the request data
+    // Custom messages
+    $messages = [
+        'recipient_id.required' => 'Oops! Looks like you forgot to select a recipient. Please choose a news person to send your message to.',
+        'recipient_id.exists' => 'Hmm, that recipient doesn’t seem to exist. Please select a valid news person.',
+        'subject.required' => 'The subject field is required.',
+        'message.required' => 'The message field is required.',
+    ];
+
+    // Validate the request data with custom messages
     $validatedData = $request->validate([
         'recipient_id' => 'required|exists:news_people,id',
-        'subject'      => 'nullable|string',
+        'subject'      => 'required|string',
         'message'      => 'required|string',
-    ]);
+    ], $messages);
 
     // Set the sender_id to the authenticated user id or null if not authenticated
     $validatedData['sender_id'] = Auth::id();

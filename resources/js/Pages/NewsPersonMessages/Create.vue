@@ -12,16 +12,19 @@
               <div>
                 <label for="recipient_id" class="block text-lg font-medium mb-2">Recipient</label>
                 <NewsPersonSelector v-model="form.recipient_id" :initialRecipient="initialRecipient" />
+                <span v-if="form.errors.recipient_id" class="text-red-600">{{ form.errors.recipient_id }}</span>
               </div>
               <div>
-                <label for="subject" class="block text-lg font-medium mb-2">Subject (optional)</label>
+                <label for="subject" class="block text-lg font-medium mb-2">Subject</label>
                 <input
                     v-model="form.subject"
                     id="subject"
                     type="text"
                     class="w-full p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-black dark:text-gray-50"
+                    required
                 />
               </div>
+              <span v-if="form.errors.subject" class="text-red-600">{{ form.errors.subject }}</span>
               <div>
                 <label for="message" class="block text-lg font-medium mb-2">Message</label>
                 <textarea
@@ -29,14 +32,25 @@
                     id="message"
                     class="w-full p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-black dark:text-gray-50"
                     rows="6"
+                    required
                 ></textarea>
+                <span v-if="form.errors.message" class="text-red-600">{{ form.errors.message }}</span>
               </div>
-              <button
-                  type="submit"
-                  class="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-              >
-                Send
-              </button>
+              <div class="flex space-x-4">
+                <button
+                    type="submit"
+                    class="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+                >
+                  Send
+                </button>
+                <button
+                    type="button"
+                    @click="cancel"
+                    class="w-full py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -45,16 +59,19 @@
   </div>
 </template>
 
+
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useForm } from '@inertiajs/vue3'
 import { useNewsPersonMessageStore } from '@/Stores/NewsPersonMessageStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import NewsPersonSelector from '@/Components/Pages/NewsPersonMessages/NewsPersonSelector.vue'
 import NewsHeader from '@/Components/Pages/News/NewsHeader.vue'
 import { computed, onBeforeUnmount, watch } from 'vue'
 
 const newsPersonMessageStore = useNewsPersonMessageStore()
+const appSettingStore = useAppSettingStore()
 const notificationStore = useNotificationStore()
 
 usePageSetup('newsPersonMessages.create')
@@ -78,17 +95,28 @@ watch([initialRecipient, initialSubject], ([newRecipient, newSubject]) => {
 }, { immediate: true })
 
 function submit() {
+  console.log('Submitting form with values:', form);
   form.post('/news-person-messages', {
     preserveScroll: true,
     onSuccess: () => {
       notificationStore.setToastNotification('Message successfully sent.', 'info')
       form.reset()
+    },
+    onError: (errors) => {
+      console.error('Error submitting form:', errors);
     }
   })
+}
+
+function cancel() {
+  newsPersonMessageStore.clearRecipient()
+  newsPersonMessageStore.clearSubject()
+  appSettingStore.btnRedirect('/news-person-messages')
 }
 
 onBeforeUnmount(() => {
   newsPersonMessageStore.clearRecipient()
   newsPersonMessageStore.clearSubject()
+  newsPersonMessageStore.setSearchInput('')
 })
 </script>
