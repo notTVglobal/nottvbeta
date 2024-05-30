@@ -13,6 +13,7 @@ use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistStreamPushDestinationController;
 use App\Http\Controllers\NewsFederalElectoralDistrictController;
+use App\Http\Controllers\NewsPersonMessageController;
 use App\Http\Controllers\NewsPersonRoleController;
 use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
@@ -584,6 +585,29 @@ Route::middleware([
 
   Route::get('/api/news/persons', [NewsPersonController::class, 'fetchNewsPersons']);
 
+// News Person Messages
+/////////////
+
+  Route::resource('news-person-messages', NewsPersonMessageController::class);
+
+//  Route::post('/news-person-messages/store', [NewsPersonMessageController::class, 'store']);
+
+//  Route::post('/news-person-messages/store', [NewsPersonMessageController::class, 'show']);
+
+  Route::get('/news-person-messages-fetch', [NewsPersonMessageController::class, 'fetchMessages']);
+
+  Route::get('/news-person-messages-count', [NewsPersonMessageController::class, 'count']);
+
+//  Route::post('news-person-messages/{id}/restore', [NewsPersonMessageController::class, 'restore'])
+//      ->name('news-person-messages.restore');
+//
+//  Route::delete('news-person-messages/{id}/force-delete', [NewsPersonMessageController::class, 'forceDelete'])
+//      ->name('news-person-messages.forceDelete');
+
+  Route::delete('/news-person-messages/delete-all', [NewsPersonMessageController::class, 'deleteAll'])
+      ->name('news-person-messages.deleteAll');
+
+
 // News Locations and APIs
 //////////////////////////
 
@@ -975,6 +999,16 @@ Route::middleware([
     // Search creators (used in TeamAddMember.vue)
     Route::get('/api/search-creators', [TeamsController::class, 'searchCreators']);
 
+// Creator Messages
+///////////////////
+
+    Route::resource('news-person-messages', NewsPersonMessageController::class);
+
+    Route::post('news-person-messages/{id}/restore', [NewsPersonMessageController::class, 'restore'])
+        ->name('news-person-messages.restore');
+
+    Route::delete('news-person-messages/{id}/force-delete', [NewsPersonMessageController::class, 'forceDelete'])
+        ->name('news-person-messages.forceDelete');
 
 // Training
 ///////////

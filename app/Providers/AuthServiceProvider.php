@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Mail\VerifyMail;
 use App\Models\Channel;
+use App\Models\NewsPersonMessage;
 use App\Models\Notification;
 use App\Models\User;
+use App\Policies\NewsPersonMessagePolicy;
 use App\Policies\NotificationPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Models\Model' => 'App\Policies\ModelPolicy',
+        NewsPersonMessage::class => NewsPersonMessagePolicy::class,
 //        Notification::class => NotificationPolicy::class,
 //        \App\Models\Movie::class => \App\Policies\MoviePolicy::class,
 //        \App\Models\Show::class => \App\Policies\ShowPolicy::class,
@@ -34,6 +37,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+      $this->registerPolicies();
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)

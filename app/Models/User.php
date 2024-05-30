@@ -289,4 +289,14 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->hasMany(NewsRssFeedItemArchive::class, 'saved_by_user_id');
   }
 
+  public function sentNewsPersonMessages(): HasMany
+  {
+    return $this->hasMany(NewsPersonMessage::class, 'sender_id');
+  }
+
+  public function sentCreatorMessages(): HasMany
+  {
+    return $this->hasMany(CreatorMessage::class, 'sender_id');
+  }
+
 }

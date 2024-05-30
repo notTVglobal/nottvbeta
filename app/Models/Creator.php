@@ -86,4 +86,9 @@ class Creator extends Model {
   public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(CreatorStatus::class, 'status_id');
   }
+
+  public function receivedMessages()
+  {
+    return $this->hasMany(CreatorMessage::class, 'recipient_id');
+  }
 }
