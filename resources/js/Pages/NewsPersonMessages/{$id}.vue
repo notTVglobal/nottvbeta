@@ -12,13 +12,18 @@
               <h2 class="text-2xl font-semibold mb-4">{{ newsPersonMessage.subject || 'No Subject' }}</h2>
               <div v-if="newsPersonMessage.sender" class="text-lg mb-2">
                 <div class="flex items-center">
-                  <img :src="newsPersonMessage.sender.profile_photo_url" alt="Profile Photo" class="w-12 h-12 rounded-full mr-4">
+                  <img :src="newsPersonMessage.sender.profile_photo_url" alt="Profile Photo"
+                       class="w-12 h-12 rounded-full mr-4">
                   <div>
                     <p><span class="font-semibold">Sender:</span> {{ newsPersonMessage.sender.name }}</p>
-                    <p v-if="newsPersonMessage.sender.roles.length"><span class="font-semibold">Roles:</span> {{ newsPersonMessage.sender.roles.join(', ') }}</p>
-                    <p v-if="newsPersonMessage.sender.creator_slug"><span class="font-semibold">Creator Slug:</span> {{ newsPersonMessage.sender.creator_slug }}</p>
-                    <p v-if="newsPersonMessage.sender.email"><span class="font-semibold">Email:</span> {{ newsPersonMessage.sender.email }}</p>
-                    <p v-if="newsPersonMessage.sender.phone"><span class="font-semibold">Phone:</span> {{ newsPersonMessage.sender.phone }}</p>
+                    <p v-if="newsPersonMessage.sender.roles.length"><span class="font-semibold">Roles:</span>
+                      {{ newsPersonMessage.sender.roles.join(', ') }}</p>
+                    <p v-if="newsPersonMessage.sender.creator_slug"><span class="font-semibold">Creator Slug:</span>
+                      {{ newsPersonMessage.sender.creator_slug }}</p>
+                    <p v-if="newsPersonMessage.sender.email"><span class="font-semibold">Email:</span>
+                      {{ newsPersonMessage.sender.email }}</p>
+                    <p v-if="newsPersonMessage.sender.phone"><span class="font-semibold">Phone:</span>
+                      {{ newsPersonMessage.sender.phone }}</p>
                   </div>
                 </div>
               </div>
@@ -35,10 +40,17 @@
                 Back to Inbox
               </button>
               <button
+                  v-if="newsPersonMessage.sender && newsPersonMessage.sender.type === 'newsPerson'"
+                  @click="replyToMessage(newsPersonMessage.sender, newsPersonMessage.subject)"
+                  class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+              >
+                Reply
+              </button>
+              <button
                   @click="deleteMessage(newsPersonMessage.id)"
                   class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center"
               >
-                <font-awesome-icon icon="fa-trash-can" class="mr-2" />
+                <font-awesome-icon icon="fa-trash-can" class="mr-2"/>
                 Delete
               </button>
             </div>
@@ -69,6 +81,12 @@ usePageSetup('newsPersonMessages.' + props.newsPersonMessage.id)
 
 function deleteMessage(messageId) {
   newsPersonMessageStore.deleteMessage(messageId)
+}
+
+function replyToMessage(sender, subject) {
+  newsPersonMessageStore.setRecipient({id: sender.id, name: sender.name})
+  newsPersonMessageStore.setSubject(`Reply: ${subject || 'No Subject'}`);
+  appSettingStore.btnRedirect('/news-person-messages/create')
 }
 
 onMounted(() => {

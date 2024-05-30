@@ -85,6 +85,14 @@ const selectNewsPerson = (person) => {
   emit('select', person.id ) // Emit the selected person to the parent component
 }
 
+// Set initial recipient if provided
+watch(() => newsPersonMessageStore.recipient, (newVal) => {
+  if (newVal) {
+    searchInput.value = newVal.name;
+    emit('select', newVal.id);
+  }
+}, { immediate: true });
+
 onMounted(() => {
   newsPersonMessageStore.fetchNewsPersons()
 })

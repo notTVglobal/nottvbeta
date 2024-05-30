@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Head title="News Message Inbox"/>
+    <Head title="Create News Person Message"/>
+
     <div class="place-self-center flex flex-col">
       <div id="topDiv" class="bg-white h-screen text-black dark:bg-gray-900 dark:text-gray-50">
         <NewsHeader>Newsroom</NewsHeader>
@@ -10,7 +11,7 @@
             <form @submit.prevent="submit" class="space-y-6">
               <div>
                 <label for="recipient_id" class="block text-lg font-medium mb-2">Recipient</label>
-                <NewsPersonSelector @select="setRecipientId" />
+                <NewsPersonSelector v-model="form.recipient_id" :initialRecipient="initialRecipient" />
               </div>
               <div>
                 <label for="subject" class="block text-lg font-medium mb-2">Subject (optional)</label>
@@ -30,21 +31,12 @@
                     rows="6"
                 ></textarea>
               </div>
-              <div class="flex space-x-4">
-                <button
-                    type="submit"
-                    class="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-                >
-                  Send
-                </button>
-                <button
-                    type="button"
-                    @click="$inertia.get('/news-person-messages')"
-                    class="w-full py-3 px-6 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition"
-                >
-                  Cancel
-                </button>
-              </div>
+              <button
+                  type="submit"
+                  class="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+              >
+                Send
+              </button>
             </form>
           </div>
         </div>
@@ -60,6 +52,7 @@ import { useNewsPersonMessageStore } from '@/Stores/NewsPersonMessageStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import NewsPersonSelector from '@/Components/Pages/NewsPersonMessages/NewsPersonSelector.vue'
 import NewsHeader from '@/Components/Pages/News/NewsHeader.vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 
 const newsPersonMessageStore = useNewsPersonMessageStore()
 const notificationStore = useNotificationStore()
@@ -67,14 +60,22 @@ const notificationStore = useNotificationStore()
 usePageSetup('newsPersonMessages.create')
 
 let form = useForm({
-  recipient_id: '',
+  recipient_id: newsPersonMessageStore.recipient ? newsPersonMessageStore.recipient.id : '',
   subject: '',
   message: '',
 })
 
-const setRecipientId = (person) => {
-  form.recipient_id = person
-}
+const initialRecipient = computed(() => newsPersonMessageStore.recipient)
+const initialSubject = computed(() => newsPersonMessageStore.subject)
+
+watch([initialRecipient, initialSubject], ([newRecipient, newSubject]) => {
+  if (newRecipient) {
+    form.recipient_id = newRecipient.id;
+  }
+  if (newSubject) {
+    form.subject = `${newSubject}`;
+  }
+}, { immediate: true })
 
 function submit() {
   form.post('/news-person-messages', {
@@ -85,4 +86,9 @@ function submit() {
     }
   })
 }
+
+onBeforeUnmount(() => {
+  newsPersonMessageStore.clearRecipient()
+  newsPersonMessageStore.clearSubject()
+})
 </script>
