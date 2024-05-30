@@ -34,7 +34,7 @@
             Edit
           </button>
         </div>
-        <div class="flex w-full justify-center mb-2">
+        <div @click.prevent="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)" class="flex w-full justify-center mb-2 hover:cursor-pointer">
           <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-full max-h-1/2screen w-auto object-contain" />
         </div>
         <div class="flex justify-between text-sm text-gray-600 mb-1">

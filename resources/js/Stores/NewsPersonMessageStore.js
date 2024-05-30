@@ -7,6 +7,8 @@ const initialState = () => ({
     messageCount: 0,
     newsPersons: [],
     searchInput: '',
+    recipient: null,
+    subject: null,
 })
 
 export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
@@ -79,6 +81,18 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
         incrementMessageCount() {
             this.messageCount += 1;
         },
+        setRecipient(recipient) {
+            this.recipient = recipient;
+        },
+        clearRecipient() {
+            this.recipient = null;
+        },
+        setSubject(subject) {
+            this.subject = subject
+        },
+        clearSubject() {
+            this.subject = ''
+        }
     },
     getters: {
         computedMessageCount: (state) => {

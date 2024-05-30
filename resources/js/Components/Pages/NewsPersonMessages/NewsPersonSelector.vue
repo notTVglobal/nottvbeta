@@ -9,6 +9,7 @@
           @focus="dropdownVisible = true"
           @blur="handleInputBlur"
           @keydown="handleKeydown"
+          required
       />
       <ul
           v-if="dropdownVisible && filteredNewsPersons.length > 0"
@@ -81,9 +82,18 @@ const handleKeydown = (event) => {
 const selectNewsPerson = (person) => {
   searchInput.value = person.name // Set the input value to the selected person's name
   newsPersonMessageStore.setSearchInput(searchInput.value)
+  newsPersonMessageStore.recipient = person
   dropdownVisible.value = false // Hide the dropdown
-  emit('select', person.id ) // Emit the selected person to the parent component
+  emit('select', person.id) // Emit the selected person to the parent component
 }
+
+// Set initial recipient if provided
+watch(() => newsPersonMessageStore.recipient, (newVal) => {
+  if (newVal) {
+    searchInput.value = newVal.name;
+    emit('select', newVal.id);
+  }
+}, { immediate: true });
 
 onMounted(() => {
   newsPersonMessageStore.fetchNewsPersons()
