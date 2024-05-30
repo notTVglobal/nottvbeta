@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
 
 class NewsPersonMessageResource extends JsonResource
 {
@@ -21,8 +22,8 @@ class NewsPersonMessageResource extends JsonResource
         'id' => $this->id,
         'sender_id' => $this->sender_id,
         'recipient_id' => $this->recipient_id,
-        'subject' => $this->subject,
-        'message' => $this->message,
+        'subject' => $this->subject ? Crypt::decryptString($this->subject) : null,
+        'message' => Crypt::decryptString($this->message),
         'read_at' => $this->read_at,
         'created_at' => $this->created_at,
         'updated_at' => $this->updated_at,
