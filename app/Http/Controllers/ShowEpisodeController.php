@@ -715,7 +715,7 @@ class ShowEpisodeController extends Controller {
 ////////////////////
 
   public function update(HttpRequest $request, ShowEpisode $showEpisode) {
-dd($request->all());
+
     // validate the request
     $validatedData = $request->validate([
         'name'                       => [

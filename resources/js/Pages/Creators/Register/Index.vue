@@ -298,7 +298,7 @@ import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/Publi
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 
-const pageProps = usePage().props;
+const page = usePage().props;
 const storeReset = useStoreReset()
 
 const appSettingStore = useAppSettingStore()
@@ -392,7 +392,7 @@ const toggleVideoModal = () => {
 
 
 const checkEmail = async () => {
-  if (pageprops.user && pageprops.user.email === form.email) {
+  if (page.auth.user && page.auth.user.email === form.email) {
     emailExists.value = false;
     return;
   }

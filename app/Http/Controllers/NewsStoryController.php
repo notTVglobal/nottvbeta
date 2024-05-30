@@ -74,8 +74,7 @@ class NewsStoryController extends Controller {
   }
 
 
-  private function getNewsStories(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-  {
+  private function getNewsStories(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection {
     // Get the authenticated user
     $user = Auth::user();
 
@@ -292,8 +291,13 @@ class NewsStoryController extends Controller {
     // Sanitize the content using Mews\Purifier
     $sanitizedContent = Purifier::clean($validatedData['content']);
 
+    // Get the author's name for the newsStory.
+    $user = Auth::user();
+    $author = $user->name;
+
     $newsStory = new NewsStory([
         'title'                              => htmlentities($validatedData['title']), // Sanitize the title
+        'author'                             => e($author),
 //        'content_json'                       => $validatedData['content_json'],
         'content'                            => $sanitizedContent,
         'slug'                               => \Str::slug($validatedData['title']),
@@ -305,8 +309,8 @@ class NewsStoryController extends Controller {
         'country_id'                         => $this->getCountry()->id,
     ]);
 
-    $newsStory->user_id = Auth::id(); // Directly get the authenticated user's ID
-    $newsStory->news_person_id = Auth::user()->newsPerson->id;
+    $newsStory->user_id = $user->id; // Directly get the authenticated user's ID
+    $newsStory->news_person_id = $user->newsPerson->id;
     $newsStory->save();
 
     return redirect()

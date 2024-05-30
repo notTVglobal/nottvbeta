@@ -16,7 +16,7 @@ class NewNotificationEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $notification;
+    public Notification $notification;
 
 
     /**
@@ -43,8 +43,7 @@ class NewNotificationEvent implements ShouldBroadcastNow
         return new PrivateChannel('user.'.$this->notification->user_id);
     }
 
-    public function broadcastWith()
-    {
+    public function broadcastWith(): array {
         $notificationWithRelations = $this->notification
             ->load('image.appSetting');
         return [

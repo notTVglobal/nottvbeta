@@ -15,6 +15,7 @@ class NewsStory extends Model {
       'user_id',
       'news_person_id',
       'title',
+      'author',
       'slug',
       'news_category_id',
       'news_category_sub_id',

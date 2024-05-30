@@ -40,6 +40,21 @@
         a:hover {
             text-decoration: underline;
         }
+        .brand-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 1em;
+            color: #1a1a1a;
+            background-color: #ffcc00; /* Brand yellow color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .brand-button:hover {
+            background-color: #e6b800; /* Darker shade of yellow for hover effect */
+        }
     </style>
 </head>
 <body>
@@ -49,6 +64,9 @@
     </div>
     <div class="message">
         @yield('message')
+    </div>
+    <div>
+        <a href="https://help.not.tv" class="brand-button">Contact Us</a>
     </div>
 </div>
 </body>

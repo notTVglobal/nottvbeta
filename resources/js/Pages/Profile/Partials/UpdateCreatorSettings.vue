@@ -81,7 +81,7 @@ const profileIsPublic = computed({
 })
 
 const fetchCreatorSettings = async () => {
-  const userId = props.user.id // Assuming props are passed directly without 'value'
+  const userId = props.auth.user.id // Assuming props are passed directly without 'value'
 
   try {
     console.log(`Fetching settings for user ID: ${userId}`) // Debug log
@@ -121,7 +121,7 @@ const updateCreatorSettings = () => {
     return;
   }
 
-  const userId = props.user.id  // Ensure userId is available
+  const userId = props.auth.user.id  // Ensure userId is available
   form.patch(`/user/creator/update-settings/${userId}`, {
     onSuccess: (response) => {
       console.log('Settings updated successfully!', response.message)

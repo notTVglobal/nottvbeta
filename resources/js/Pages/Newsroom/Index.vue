@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col">
       <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 mb-10">
 
-        <NewsHeader :can="can">Newsroom</NewsHeader>
+        <NewsHeader>Newsroom</NewsHeader>
 
         <Messages v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 

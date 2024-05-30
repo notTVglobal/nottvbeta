@@ -83,10 +83,10 @@ appSettingStore.currentPage = 'verify-email'
 const submitProcessing = ref(false);
 
 // Directly destructure 'flash' from usePage().props
-const pageProps = usePage().props;
+const page = usePage().props;
 
 // Now, you can directly use 'flash' as it's already reactive
-const verificationLinkSent = computed(() => pageprops.flash?.success === 'verification-link-sent');
+const verificationLinkSent = computed(() => page.flash?.success === 'verification-link-sent');
 
 // Watch for changes on the 'verificationLinkSent'
 watch(verificationLinkSent, (newValue, oldValue) => {
