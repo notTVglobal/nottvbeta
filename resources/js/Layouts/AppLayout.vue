@@ -80,6 +80,7 @@ import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vu
 import CookieBanner from '@/Components/Global/Banners/CookieBanner.vue'
 import ConfirmNotificationModal from '@/Components/Global/Modals/ConfirmNotificationModal.vue'
 import SocialSharingModal from '@/Components/Global/Modals/SocialSharingModal.vue'
+import useEchoListeners from '@/Utilities/EchoListeners'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()
@@ -152,6 +153,7 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   console.log('we are here.')
+  useEchoListeners()
   await nowPlayingStore.fetchFirstPlayData()
   ottStore.showContentForDemo()
   if (props.user) { // Checking if user is logged in based on page props
@@ -174,6 +176,8 @@ onBeforeUnmount(() => {
 function setPage() {
   isStreamPage = appSettingStore.currentPage === 'stream'
 }
+
+
 
 function disconnect() {
   window.Echo.leave('channel.' + channelStore.currentChannelId)

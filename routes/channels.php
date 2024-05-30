@@ -52,11 +52,23 @@ Broadcast::channel('viewerCount.{id}', function ($user, $id) {
 
 // This channel is for user notifications.
 Broadcast::channel('user.{id}', function ($user, $id) {
-    if( Auth::check() ) {
-        return true;
-    }
-    return false;
+  return Auth::check() && $user->id === (int) $id;
 });
+//Broadcast::channel('user.{id}', function ($user, $id) {
+//    if( Auth::check() ) {
+//        return true;
+//    }
+//    return false;
+//});
+
+Broadcast::channel('news-person-messages.{id}', function ($user, $id) {
+  // Ensure the user is authorized to listen to this channel
+  if (Auth::check() && $user->newsPerson) {
+    return $user->newsPerson->id === (int) $id;
+  }
+  return false;
+});
+
 
 // This channel is for receiving notifications related to a specific
 // model, for Creators.... such as on the Show Manage page, to
