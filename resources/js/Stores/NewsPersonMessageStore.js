@@ -58,7 +58,7 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
         },
         async deleteAllMessages() {
             try {
-                await router.delete('/news-person-messages/delete-all');
+                await router.delete('/news-person-messages-delete-all');
                 await this.fetchMessages();
                 await this.fetchMessageCount();
             } catch (error) {

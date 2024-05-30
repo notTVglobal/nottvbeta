@@ -16,11 +16,22 @@
                 Create New Message
               </button>
               <button
-                  @click="deleteAllMessages"
-                  class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+                  @click="showModal = true"
+                  :disabled="isDeleteAllDisabled"
+                  :class="[
+        'text-white font-semibold py-2 px-4 rounded-lg transition',
+        isDeleteAllDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 cursor-pointer'
+      ]"
               >
                 Delete All
               </button>
+              <ConfirmationModal
+                  :show="showModal"
+                  title="Confirm Deletion"
+                  message="Are you sure you want to delete all messages? This action cannot be undone."
+                  @confirm="deleteAllMessages"
+                  @cancelDelete="showModal = false"
+              />
             </div>
             <ul class="space-y-4">
               <li
@@ -46,7 +57,8 @@
                   </div>
                   <div v-if="message.sender" class="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     <div>
-                      <img :src="message.sender.profile_photo_url" alt="Profile Photo" class="w-10 h-10 rounded-full mr-2">
+                      <img :src="message.sender.profile_photo_url" alt="Profile Photo"
+                           class="w-10 h-10 rounded-full mr-2">
                       <span>{{ message.sender.name }}</span>
                     </div>
                     <div v-if="message.sender.roles.length">
@@ -83,15 +95,18 @@
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useNewsPersonMessageStore } from '@/Stores/NewsPersonMessageStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useUserStore } from '@/Stores/UserStore'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import NewsHeader from '@/Components/Pages/News/NewsHeader.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
+import ConfirmationModal from '@/Components/Pages/NewsPersonMessages/ConfirmationModal.vue'
 
 const newsPersonMessageStore = useNewsPersonMessageStore()
 const userStore = useUserStore()
 const appSettingStore = useAppSettingStore()
+const notificationStore = useNotificationStore()
 
 usePageSetup('newsPersonMessages.index')
 
@@ -99,14 +114,24 @@ let props = defineProps({
   messages: Object,
 })
 
+const showModal = ref(false)
+
 const filteredMessages = computed(() => newsPersonMessageStore.messages)
 
 function deleteMessage(messageId) {
   newsPersonMessageStore.deleteMessage(messageId)
 }
 
-function deleteAllMessages() {
-  newsPersonMessageStore.deleteAllMessages()
+const isDeleteAllDisabled = computed(() => {
+  return newsPersonMessageStore.messages.length === 0;
+});
+
+const deleteAllMessages = async () => {
+  await newsPersonMessageStore.deleteAllMessages()
+  showModal.value = false
+  newsPersonMessageStore.reset()
+  notificationStore.setToastNotification('All messages successfully deleted.', 'warning')
+
 }
 
 onMounted(() => {

@@ -604,8 +604,8 @@ Route::middleware([
 //  Route::delete('news-person-messages/{id}/force-delete', [NewsPersonMessageController::class, 'forceDelete'])
 //      ->name('news-person-messages.forceDelete');
 
-  Route::delete('/news-person-messages/delete-all', [NewsPersonMessageController::class, 'deleteAll'])
-      ->name('news-person-messages.deleteAll');
+  Route::delete('/news-person-messages-delete-all', [NewsPersonMessageController::class, 'deleteAll'])
+      ->name('news-person-messages-deleteAll');
 
 
 // News Locations and APIs

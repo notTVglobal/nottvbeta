@@ -42,7 +42,7 @@ class NewsPersonMessageController extends Controller {
     $this->authorize('fetch', NewsPersonMessage::class);
 
     $user = $request->user();
-    $messages = NewsPersonMessage::where('recipient_id', $user->newsPerson->id)->get();
+    $messages = NewsPersonMessage::where('recipient_id', $user->newsPerson->id)->latest()->get();
 
     return response()->json(NewsPersonMessageResource::collection($messages)->resolve());
   }
@@ -153,14 +153,17 @@ class NewsPersonMessageController extends Controller {
         ->with('success', 'Message deleted successfully');
   }
 
-  public function deleteAll()
+  public function deleteAll(Request $request)
   {
+    $user = Auth::user();
+
     $this->authorize('deleteAll', NewsPersonMessage::class);
 
-    $user = auth()->user();
-    NewsPersonMessage::where('recipient_id', $user->newsPerson->id)->delete();
+    $newsPersonId = $user->newsPerson->id;
+    NewsPersonMessage::where('recipient_id', $newsPersonId)->delete();
 
-    return response()->json(['message' => 'All messages deleted']);
+    return redirect()->route('news-person-messages.index')
+        ->with('success', 'Message deleted successfully');
   }
 
   public function restore($id): \Illuminate\Http\RedirectResponse {

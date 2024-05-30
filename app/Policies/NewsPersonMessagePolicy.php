@@ -32,8 +32,9 @@ class NewsPersonMessagePolicy {
     return $user->newsPerson && $user->newsPerson->id === $newsPersonMessage->recipient_id;
   }
 
-  public function deleteAll(User $user, NewsPersonMessage $newsPersonMessage) {
-    return $user->newsPerson && $user->newsPerson->id === $newsPersonMessage->recipient_id;
+  public function deleteAll(User $user)
+  {
+    return $user->newsPerson()->exists();
   }
 
   public function restore(User $user, NewsPersonMessage $newsPersonMessage)
