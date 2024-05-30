@@ -19,14 +19,16 @@ const notificationStore = useNotificationStore();
 
 const page = usePage()
 
+const channel = Echo.private(`news-person-messages.${page.props.auth.user.newsPersonId}`)
+
+channel.subscribed(() => {
+}).listen('.newsPersonMessage', (event) => {
+      newsPersonMessageStore.incrementMessageCount();
+      notificationStore.setToastNotification('New Message Received.', 'info')
+})
+
 onMounted(() => {
   newsPersonMessageStore.fetchMessageCount();
-
-  Echo.private(`news-person-messages.${page.props.auth.user.newsPersonId}`)
-      .listen('newsPersonMessage', (event) => {
-        newsPersonMessageStore.incrementMessageCount();
-        notificationStore.setToastNotification('New Message Received.', 'info')
-      });
 });
 
 const messageCount = computed(() => newsPersonMessageStore.computedMessageCount);

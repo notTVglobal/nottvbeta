@@ -3,6 +3,11 @@
 Last Update: May 30, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.7
+May 29, 2024
+
+* Fix to news message broadcast event.
+
 ## v0.9.3.6
 May 30, 2024
 
