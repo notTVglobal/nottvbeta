@@ -67,6 +67,7 @@ return [
                     'local_cert' => env('REVERB_SERVER_CERT'),
                     'local_pk' => env('REVERB_SERVER_PK'),
                 ],
+              ],
             'scheme' => env('REVERB_SCHEME'),
             'encrypted' => true,
         ],
