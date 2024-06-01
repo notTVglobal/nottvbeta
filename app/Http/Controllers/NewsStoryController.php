@@ -106,7 +106,50 @@ class NewsStoryController extends Controller {
     return NewsStoryResource::collection($paginatedNewsStories);
   }
 
+  public function fetchNewsStories(HttpRequest $request)
+    {
+      $categoryId = $request->query('news_category_id');
+      $subCategoryId = $request->query('news_category_sub_id');
+      $cityId = $request->query('city_id');
+      $federalDistrictId = $request->query('federal_district_id');
+      $subnationalDistrictId = $request->query('subnational_district_id');
+      $perPage = 10;
 
+      $query = NewsStory::with([
+          'image.appSetting',
+          'video.appSetting',
+          'newsPerson.user',
+      ]);
+
+      if ($categoryId) {
+        $query->where('news_category_id', $categoryId);
+      }
+
+      if ($subCategoryId) {
+        $query->where('news_category_sub_id', $subCategoryId);
+      }
+
+      if ($cityId) {
+        $query->where('city_id', $cityId);
+      }
+
+      if ($federalDistrictId) {
+        $query->where('news_federal_electoral_district_id', $federalDistrictId);
+      }
+
+      if ($subnationalDistrictId) {
+        $query->where('news_subnational_electoral_district_id', $subnationalDistrictId);
+      }
+
+      $newsStories = $query->paginate($perPage);
+
+      return response()->json([
+          'data' => NewsStoryResource::collection($newsStories)->items(),
+          'current_page' => $newsStories->currentPage(),
+          'last_page' => $newsStories->lastPage(),
+          'total' => $newsStories->total(),
+      ]);
+    }
 //
 //        ->paginate(10, ['*'], 'news')
 //        ->withQueryString()

@@ -61,7 +61,7 @@ class NewsStoryResource extends JsonResource {
                 'id'   => null,
                 'name' => null,
             ],
-        'video'                        => $this->video ? (new ImageResource($this->video))->toArray($request) : null,
+        'video'                        => $this->video ? (new VideoResource($this->video))->toArray($request) : null,
         'created_at'                   => $this->created_at,
         'published_at'                 => $this->published_at,
         'updated_at'                   => $this->updated_at,

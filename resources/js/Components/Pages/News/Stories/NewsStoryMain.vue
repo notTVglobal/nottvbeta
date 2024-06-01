@@ -56,7 +56,7 @@
       </div>
     </section>
 
-    <section class="w-full max-w-7xl mx-auto flex flex-wrap items-center justify-center px-6">
+    <section class="w-full max-w-7xl mx-auto flex flex-wrap items-center justify-center">
       <div
           class="vw-100 overflow-x-none break-words flex flex-wrap px-6 border-b border-gray-200 news-content space-y-5">
         <!--                        <div v-html="'<pre>'+news.content+'</pre>'" class="text-left mb-6 leading-loose font-['monospace']">-->

@@ -270,6 +270,9 @@ Route::prefix('/news')->group(function () {
 });
 
 
+Route::get('/news-stories', [NewsStoryController::class, 'fetchNewsStories'])
+    ->name('news-stories');
+
 // Redirect GET requests for 'news/story' to 'news'
 Route::get('news/story', function () {
   return redirect('/news');

@@ -20,7 +20,6 @@
 
       </div>
     </main>
-
   </div>
 </template>
 

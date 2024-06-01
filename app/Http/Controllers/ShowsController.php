@@ -372,16 +372,24 @@ class ShowsController extends Controller {
 
     // Validation passes, extract validated data
     $validatedData = $validator->validated(); // Ensure all data is validated
-    $teamId = $validatedData['team_id'];
-// Sanitize Twitter and Instagram usernames after validating to ensure input exists and is correct
+
+
+    // Sanitize social media handles
     $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
     $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
+
+    // Sanitize URLs
+    $wwwUrl = isset($validatedData['www_url']) ? filter_var($validatedData['www_url'], FILTER_SANITIZE_URL) : null;
+    $telegramUrl = isset($validatedData['telegram_url']) ? filter_var($validatedData['telegram_url'], FILTER_SANITIZE_URL) : null;
 
     // Sanitize description
     $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
+    // Sanitize and process name
+    $processedName = strip_tags($validatedData['name']);
+
     // Retrieve the team with the team_id and check its status
-    $team = Team::find($teamId);
+    $team = Team::find($validatedData['team_id']);
     // Check if the team's status is 1, 2, 3, 4, or 11
     if (!$team || !in_array($team->team_status_id, [1, 2, 3, 4, 11])) {
       return back()->withErrors([
@@ -399,21 +407,22 @@ class ShowsController extends Controller {
 
     try {
       $show = Show::create([
-          'name'                   => $validatedData['name'],
+          'name'                   => $processedName,
           'description'            => $sanitizedDescription,
           'user_id'                => $validatedData['user_id'],
           'team_id'                => $validatedData['team_id'],
           'show_category_id'       => $validatedData['category'],
           'show_category_sub_id'   => $validatedData['sub_category'] ?? null,  // Handle optional data
           'slug'                   => \Str::slug($validatedData['name']),
-          'www_url'                => $validatedData['www_url'] ?? null,
+          'www_url'                => $wwwUrl,
           'instagram_name'         => $instagramName,
-          'telegram_url'           => $validatedData['telegram_url'] ?? null,
+          'telegram_url'           => $telegramUrl,
           'twitter_handle'         => $twitterHandle,
           'notes'                  => $validatedData['notes'] ?? null,
           'isBeingEditedByUser_id' => $validatedData['user_id'],  // Assuming this is intended to be the same as user_id
           'first_release_year'     => Carbon::now()->format('Y'),
           'show_runner'            => $creatorId,
+          'meta'                   => [],
       ]);
 
       $mistStream = MistStream::firstOrCreate([
@@ -1207,7 +1216,6 @@ class ShowsController extends Controller {
     // Check if the authenticated user is not a Creator
     if (is_null($creatorId)) {
       // Use withErrors to pass custom error messages, similar to validation errors
-      // The first argument of withErrors can be an array or MessageBag
       return back()->withErrors([
           'show_runner_creator_id' => 'An active registered creator is required as the show runner.'
       ])->withInput();
@@ -1242,44 +1250,33 @@ class ShowsController extends Controller {
         'release_date.after'    => 'The release date must be at least 24 hours in the future.'
     ]);
 
-    $twitterHandle = str_replace('@', '', $validatedData['twitter_handle'] ?? '');
-    $instagramName = str_replace('@', '', $validatedData['instagram_name'] ?? '');
+    // Sanitize social media handles
+    $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
+    $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
+
+    // Sanitize URLs
+    $wwwUrl = isset($validatedData['www_url']) ? filter_var($validatedData['www_url'], FILTER_SANITIZE_URL) : null;
+    $telegramUrl = isset($validatedData['telegram_url']) ? filter_var($validatedData['telegram_url'], FILTER_SANITIZE_URL) : null;
+
     // Sanitize the notes to prevent XSS
     $sanitizedNotes = htmlentities($validatedData['notes'] ?? '', ENT_QUOTES, 'UTF-8');
 
     // Sanitize description
-//    $sanitizedNotes = Purifier::clean($validatedData['notes']);
-
-    // Sanitize description
     $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
 
-    // update the show >>> THE OLD WAY!!
-//    $show->name = $request->name;
-//    $show->description = $request->description;
-//    $show->show_category_id = $request->category;
-//    $show->show_category_sub_id = $request->sub_category;
-//    $show->slug = \Str::slug($request->name);
-//    $show->www_url = $request->www_url;
-//    $show->instagram_name = $instagramName;
-//    $show->telegram_url = $request->telegram_url;
-//    $show->twitter_handle = $twitterHandle;
-//    $show->notes = htmlentities($request->notes);
-//    $show->show_status_id = $request->show_status_id;
-//    $show->episode_play_order = $request->episode_play_order;
-//
-//    $show->show_runner = $creatorId;
-//    $show->save();
+    // Sanitize and process name
+    $processedName = strip_tags($validatedData['name']);
 
     $show->update([
-        'name'                 => $validatedData['name'],
+        'name'                 => $processedName,
         'description'          => $sanitizedDescription,
-        'slug'                 => \Str::slug($validatedData['name']),
+        'slug'                 => \Str::slug($processedName),
         'release_date'         => $validatedData['release_date'] ?? null,
         'show_category_id'     => $validatedData['category'],
-        'show_category_sub_id' => $validatedData['sub_category'],
-        'www_url'              => $validatedData['www_url'] ?? null,
+        'show_category_sub_id' => $validatedData['sub_category'] ?? null,
+        'www_url'              => $wwwUrl,
         'instagram_name'       => $instagramName,
-        'telegram_url'         => $validatedData['telegram_url'] ?? null,
+        'telegram_url'         => $telegramUrl,
         'twitter_handle'       => $twitterHandle,
         'notes'                => $sanitizedNotes,
         'show_status_id'       => $validatedData['show_status_id'],
@@ -1287,24 +1284,10 @@ class ShowsController extends Controller {
         'show_runner'          => $creatorId
     ]);
 
-    // gather the data needed to render the Manage page
-    // this is all redundant. It's all contained in the
-    // teams.manage route above. But I (tec21) don't know
-    // how to simplify this *frustrated*.
-
     // redirect
     return redirect(route('shows.manage', [$show->slug]))->with('success', 'Show Updated Successfully');
-
-//        return Inertia::render('Shows/{$id}/Manage', [
-//            // responses need to be limited to only
-//            // the information required with ->only()
-//            // https://inertiajs.com/responses
-//            'show' => $show,
-//            'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->firstOrFail(),
-//            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
-//            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
-//        ])->with('message', 'Show Updated Successfully');
   }
+
 
   public function updateNotes(HttpRequest $request) {
     // get the show
@@ -1350,7 +1333,6 @@ class ShowsController extends Controller {
 ///
 /// tec21: this might be better
 /// in the ShowEpisodes Controller.
-
 
 
 ////////////  CHANGE EPISODE STATUS

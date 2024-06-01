@@ -17,7 +17,7 @@
 
         <section>
 
-          <NewsCategoryShowContainer :newsCategory="newsCategory" :newsStories="newsStories" :filters="filters"/>
+          <NewsCategoryShowContainer :newsCategory="newsCategory" :newsStories="newsStories" :newsSubCategories="newsSubCategories"/>
 
         </section>
 
@@ -60,7 +60,7 @@ onMounted(() => {
 defineProps({
   newsCategory: Object,
   newsStories: Object,
-  filters: Object,
+  newsSubCategories: Array,
 })
 
 </script>

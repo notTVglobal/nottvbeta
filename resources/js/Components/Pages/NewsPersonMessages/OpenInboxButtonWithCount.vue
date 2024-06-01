@@ -4,7 +4,7 @@
         @click="goToInbox"
         :class="buttonClass"
     >
-      Inbox ({{ newMessageCount }})
+      Inbox ({{ newsPersonMessageStore.newMessageCount }})
     </button>
   </div>
 </template>

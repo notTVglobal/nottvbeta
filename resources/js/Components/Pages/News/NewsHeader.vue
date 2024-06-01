@@ -76,5 +76,6 @@ const buttons = reactive([
   {name: 'Districts', path: '/news-districts', enabled: true},
   {name: 'Press Releases', path: '/pressReleases', enabled: false},
   {name: 'Calendar', path: '/calendar', enabled: false},
+  {name: 'Public News Page', path: '/news', enabled: true},
 ])
 </script>

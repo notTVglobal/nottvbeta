@@ -17,7 +17,7 @@
 
         <section>
 
-          <NewsCityShowContainer :newsCity="newsCity" :newsStories="newsStories"/>
+          <NewsCityShowContainer :newsCity="newsCity" :newsStories="newsStories" :newsSubCategories="newsSubCategories"/>
 
         </section>
 
@@ -60,6 +60,7 @@ onMounted(() => {
 defineProps({
   newsCity: Object,
   newsStories: Object,
+  newsSubCategories: Array,
 })
 </script>
 <script>

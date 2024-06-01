@@ -1803,12 +1803,6 @@ html {
 .card-body :where(p) {
   flex-grow: 1;
 }
-.card-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
 .card figure {
   display: flex;
   align-items: center;
@@ -7181,11 +7175,10 @@ hr {
     /* Your content styles here */
     /* You may add border and shadow styles to match with the header */
 }
-
 /* Paragraphs within TipTap editor */
 .tiptap p {
     margin-bottom: 1.2em; /* Provides space between paragraphs */
-    font-size: 1rem; /* Standard font size for readability */
+    font-size: 1.2rem; /* Standard font size for readability */
     line-height: 1.6; /* Good line height for text readability */
 }
 
@@ -7203,9 +7196,15 @@ hr {
 }
 
 /* Lists within TipTap editor */
+.tiptap ul, .tiptap ol {
+    padding-left: 30px; /* Adjust for proper indentation */
+    list-style-position: outside; /* Adjusts bullet/number positioning */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
 .tiptap ul {
     list-style-type: circle; /* Change disc to circle for a different bullet style */
-    padding-left: 30px; /* Increase padding for better visibility of bullets */
 }
 
 .tiptap ol {
@@ -7213,23 +7212,24 @@ hr {
     counter-reset: list-counter; /* Optional: Reset counters for nested lists */
 }
 
-.tiptap li p {
-    counter-increment: list-counter; /* Optional: Use counters for custom numbering */
-    margin-bottom: 0.2em; /* Reduce the space between items more if needed */
-    padding: 0; /* Remove padding to tighten the list */
+.tiptap li {
+    margin-bottom: 0.1em; /* Reduce the space between items more if needed */
+    padding-left: 0; /* Remove padding to tighten the list */
+    line-height: 1.2; /* Adjust line height for list items */
 }
 
-.tiptap ul, .tiptap ol {
-    padding-left: 30px; /* Adjust for proper indentation */
-    list-style-position: inside; /* Adjusts bullet/number positioning */
+.tiptap li p {
+    display: inline; /* Display paragraphs inside list items inline */
+    margin: 0; /* Remove margin to prevent the text from going to the next line */
+    padding: 0; /* Remove padding to tighten the list */
+    line-height: inherit; /* Ensure paragraph inherits line height from list item */
 }
 
 /* Example of custom styling for list numbers */
-.tiptap ol li:before {
-    content: counter(list-counter) ". "; /* Display custom counter */
-    color: #555; /* Grey color for list numbers */
-    font-weight: bold; /* Bold list numbers */
-}
+/*.tiptap ol li:before {*/
+/*    color: #555; !* Grey color for list numbers *!*/
+/*    font-weight: bold; !* Bold list numbers *!*/
+/*}*/
 
 .ProseMirror ol {
     padding-left: 20px;
@@ -7242,9 +7242,7 @@ hr {
 }
 
 .ProseMirror {
-    padding:10px;
-    /*min-height: 150px;*/
-    /*max-height: 200px;*/
+    padding: 10px;
     overflow-y: auto;
 }
 
@@ -7271,6 +7269,7 @@ hr {
     width: 0;
     height: 0;
 }
+
 /* Hide scrollbar for IE, Edge, and Firefox for <pre> and <code> */
 .tiptap pre {
     -ms-overflow-style: none;  /* IE and Edge */
@@ -7281,6 +7280,7 @@ hr {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
 .z-60 {
     z-index: 60;
 }
@@ -7464,6 +7464,10 @@ hr {
 
 .left-3 {
   left: 0.75rem;
+}
+
+.left-4 {
+  left: 1rem;
 }
 
 .left-5 {
@@ -7808,8 +7812,8 @@ hr {
   margin-top: -1.5rem;
 }
 
-.-mt-px {
-  margin-top: -1px;
+.mb-0 {
+  margin-bottom: 0px;
 }
 
 .mb-1 {
@@ -7998,6 +8002,10 @@ hr {
 
 .ms-6 {
   margin-inline-start: 1.5rem;
+}
+
+.ms-auto {
+  margin-inline-start: auto;
 }
 
 .mt-0 {
@@ -8320,6 +8328,10 @@ hr {
 
 .max-h-32 {
   max-height: 8rem;
+}
+
+.max-h-36 {
+  max-height: 9rem;
 }
 
 .max-h-40 {
@@ -8645,6 +8657,10 @@ hr {
   min-width: 2.5rem;
 }
 
+.min-w-\[200px\] {
+  min-width: 200px;
+}
+
 .min-w-\[2rem\] {
   min-width: 2rem;
 }
@@ -8722,10 +8738,6 @@ hr {
 
 .max-w-64 {
   max-width: 16rem;
-}
-
-.max-w-6xl {
-  max-width: 72rem;
 }
 
 .max-w-7xl {
@@ -9168,6 +9180,10 @@ hr {
 
 .gap-y-3 {
   row-gap: 0.75rem;
+}
+
+.gap-y-4 {
+  row-gap: 1rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
@@ -10497,6 +10513,10 @@ hr {
   fill: #6366f1;
 }
 
+.fill-primary {
+  fill: var(--fallback-p,oklch(var(--p)/1));
+}
+
 .stroke-current {
   stroke: currentColor;
 }
@@ -11378,6 +11398,11 @@ hr {
   color: rgb(254 202 202 / var(--tw-text-opacity));
 }
 
+.text-red-300 {
+  --tw-text-opacity: 1;
+  color: rgb(252 165 165 / var(--tw-text-opacity));
+}
+
 .text-red-400 {
   --tw-text-opacity: 1;
   color: rgb(248 113 113 / var(--tw-text-opacity));
@@ -11446,6 +11471,11 @@ hr {
 .text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
+}
+
+.text-blue-900 {
+  --tw-text-opacity: 1;
+  color: rgb(30 58 138 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -11536,6 +11566,12 @@ hr {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.shadow-inner {
+  --tw-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: inset 0 2px 4px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .shadow-cyan-950 {
   --tw-shadow-color: #083344;
   --tw-shadow: var(--tw-shadow-colored);
@@ -11558,6 +11594,11 @@ hr {
 .ring-black {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(0 0 0 / var(--tw-ring-opacity));
+}
+
+.ring-blue-300 {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
 }
 
 .ring-gray-300 {
@@ -13415,10 +13456,6 @@ hr {
     align-items: center;
   }
 
-  .sm\:justify-start {
-    justify-content: flex-start;
-  }
-
   .sm\:justify-center {
     justify-content: center;
   }
@@ -13575,6 +13612,10 @@ hr {
     display: block;
   }
 
+  .md\:flex {
+    display: flex;
+  }
+
   .md\:table-cell {
     display: table-cell;
   }
@@ -13635,6 +13676,10 @@ hr {
     width: 24rem;
   }
 
+  .md\:w-auto {
+    width: auto;
+  }
+
   .md\:min-w-\[8rem\] {
     min-width: 8rem;
   }
@@ -13675,12 +13720,20 @@ hr {
     align-items: flex-start;
   }
 
+  .md\:items-center {
+    align-items: center;
+  }
+
   .md\:justify-start {
     justify-content: flex-start;
   }
 
   .md\:justify-end {
     justify-content: flex-end;
+  }
+
+  .md\:justify-center {
+    justify-content: center;
   }
 
   .md\:justify-between {
@@ -13828,14 +13881,6 @@ hr {
 
   .lg\:top-10 {
     top: 2.5rem;
-  }
-
-  .lg\:col-span-1 {
-    grid-column: span 1 / span 1;
-  }
-
-  .lg\:col-span-2 {
-    grid-column: span 2 / span 2;
   }
 
   .lg\:col-span-4 {
@@ -14113,6 +14158,10 @@ hr {
     grid-column: auto;
   }
 
+  .xl\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+
   .xl\:col-span-2 {
     grid-column: span 2 / span 2;
   }
@@ -14175,6 +14224,10 @@ hr {
     display: table-cell;
   }
 
+  .xl\:grid {
+    display: grid;
+  }
+
   .xl\:hidden {
     display: none;
   }
@@ -14205,6 +14258,10 @@ hr {
 
   .xl\:max-w-4xl {
     max-width: 56rem;
+  }
+
+  .xl\:max-w-7xl {
+    max-width: 80rem;
   }
 
   .xl\:max-w-xl {
@@ -14273,6 +14330,21 @@ hr {
   .xl\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  .xl\:py-10 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .xl\:px-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  .xl\:px-20 {
+    padding-left: 5rem;
+    padding-right: 5rem;
   }
 
   .xl\:pr-12 {

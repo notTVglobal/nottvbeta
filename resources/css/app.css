@@ -1152,11 +1152,10 @@ hr {
     /* Your content styles here */
     /* You may add border and shadow styles to match with the header */
 }
-
 /* Paragraphs within TipTap editor */
 .tiptap p {
     margin-bottom: 1.2em; /* Provides space between paragraphs */
-    font-size: 1rem; /* Standard font size for readability */
+    font-size: 1.2rem; /* Standard font size for readability */
     line-height: 1.6; /* Good line height for text readability */
 }
 
@@ -1174,9 +1173,15 @@ hr {
 }
 
 /* Lists within TipTap editor */
+.tiptap ul, .tiptap ol {
+    padding-left: 30px; /* Adjust for proper indentation */
+    list-style-position: outside; /* Adjusts bullet/number positioning */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 0; /* Remove bottom margin */
+}
+
 .tiptap ul {
     list-style-type: circle; /* Change disc to circle for a different bullet style */
-    padding-left: 30px; /* Increase padding for better visibility of bullets */
 }
 
 .tiptap ol {
@@ -1184,23 +1189,24 @@ hr {
     counter-reset: list-counter; /* Optional: Reset counters for nested lists */
 }
 
-.tiptap li p {
-    counter-increment: list-counter; /* Optional: Use counters for custom numbering */
-    margin-bottom: 0.2em; /* Reduce the space between items more if needed */
-    padding: 0; /* Remove padding to tighten the list */
+.tiptap li {
+    margin-bottom: 0.1em; /* Reduce the space between items more if needed */
+    padding-left: 0; /* Remove padding to tighten the list */
+    line-height: 1.2; /* Adjust line height for list items */
 }
 
-.tiptap ul, .tiptap ol {
-    padding-left: 30px; /* Adjust for proper indentation */
-    list-style-position: inside; /* Adjusts bullet/number positioning */
+.tiptap li p {
+    display: inline; /* Display paragraphs inside list items inline */
+    margin: 0; /* Remove margin to prevent the text from going to the next line */
+    padding: 0; /* Remove padding to tighten the list */
+    line-height: inherit; /* Ensure paragraph inherits line height from list item */
 }
 
 /* Example of custom styling for list numbers */
-.tiptap ol li:before {
-    content: counter(list-counter) ". "; /* Display custom counter */
-    color: #555; /* Grey color for list numbers */
-    font-weight: bold; /* Bold list numbers */
-}
+/*.tiptap ol li:before {*/
+/*    color: #555; !* Grey color for list numbers *!*/
+/*    font-weight: bold; !* Bold list numbers *!*/
+/*}*/
 
 .ProseMirror ol {
     padding-left: 20px;
@@ -1213,9 +1219,7 @@ hr {
 }
 
 .ProseMirror {
-    padding:10px;
-    /*min-height: 150px;*/
-    /*max-height: 200px;*/
+    padding: 10px;
     overflow-y: auto;
 }
 
@@ -1242,6 +1246,7 @@ hr {
     width: 0;
     height: 0;
 }
+
 /* Hide scrollbar for IE, Edge, and Firefox for <pre> and <code> */
 .tiptap pre {
     -ms-overflow-style: none;  /* IE and Edge */
@@ -1252,6 +1257,7 @@ hr {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
 .z-60 {
     z-index: 60;
 }

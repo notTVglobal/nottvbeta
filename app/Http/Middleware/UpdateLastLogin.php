@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UpdateLastLogin
 {
-  public function handle($request, Closure $next)
+  public function handle(Request $request, Closure $next)
   {
     if (Auth::check()) {
       Auth::user()->update(['last_login_at' => now()]);
