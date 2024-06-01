@@ -56,7 +56,7 @@ window.Echo = new Echo({
     broadcaster: 'reverb',
     key: process.env.MIX_REVERB_APP_KEY,
     wsHost: process.env.MIX_REVERB_HOST,
-    wsPort: process.env.MIX_REVERB_POR ?? 80,
+    wsPort: process.env.MIX_REVERB_PORT ?? 80,
     wssPort: process.env.MIX_REVERB_PORT ?? 443,
     forceTLS: (process.env.MIX_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
