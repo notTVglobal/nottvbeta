@@ -62,6 +62,11 @@ return [
             'secret' => env('REVERB_APP_SECRET'),
             'host' => env('REVERB_HOST'),
             'port' => env('REVERB_PORT'),
+            'options' => [
+                'tls' => [
+                    'local_cert' => env('REVERB_SERVER_CERT'),
+                    'local_pk' => env('REVERB_SERVER_PK'),
+                ],
             'scheme' => env('REVERB_SCHEME'),
             'encrypted' => true,
         ],
