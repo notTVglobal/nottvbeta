@@ -29,13 +29,15 @@ window.Pusher = Pusher;
 // console.log('Echo Host:', echoHost); // Debug log to verify host
 
 window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: process.env.MIX_PUSHER_APP_TLS,
-    encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
+    // broadcaster: 'pusher',
+    // key: process.env.MIX_PUSHER_APP_KEY,
+    // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    // forceTLS: process.env.MIX_PUSHER_APP_TLS,
+    // encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
     // broadcaster: 'reverb',
     // key: process.env.MIX_PUSHER_APP_KEY,
+
+
     // wsHost: process.env.MIX_WEBSOCKET_HOST,
     // wsPort: process.env.MIX_WEBSOCKET_PORT,
     // wssPort: process.env.MIX_WEBSOCKET_PORT_SSL,
@@ -51,13 +53,13 @@ window.Echo = new Echo({
     //
     // enabledTransports: ['ws', 'wss'],
 
-    // broadcaster: 'reverb',
-    // key: process.env.VITE_REVERB_APP_KEY,
-    // wsHost: process.env.VITE_REVERB_HOST,
-    // wsPort: process.env.VITE_REVERB_PORT,
-    // wssPort: process.env.VITE_REVERB_PORT,
-    // forceTLS: (process.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    // enabledTransports: ['ws', 'wss'],
+    broadcaster: 'reverb',
+    key: process.env.MIX_REVERB_APP_KEY,
+    wsHost: process.env.MIX_REVERB_HOST,
+    wsPort: process.env.MIX_REVERB_PORT,
+    wssPort: process.env.MIX_REVERB_PORT,
+    forceTLS: (process.env.MIX_REVERB_SCHEME ?? 'https') === 'https',
+    enabledTransports: ['ws', 'wss'],
 
     // broadcaster: 'reverb',
     // key: import.meta.env.VITE_REVERB_APP_KEY,
