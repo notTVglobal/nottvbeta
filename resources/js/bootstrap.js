@@ -17,9 +17,9 @@ window.axios = axios;
  */
 
 import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 
-window.Pusher = Pusher;
+window.Pusher = require('pusher-js');
 
 // const echoKey = process.env.MIX_REVERB_APP_KEY;
 // const echoHost = process.env.MIX_REVERB_HOST;
@@ -53,11 +53,13 @@ window.Echo = new Echo({
     //
     // enabledTransports: ['ws', 'wss'],
 
-    broadcaster: 'reverb',
+    broadcaster: 'pusher',
     key: process.env.MIX_REVERB_APP_KEY,
     wsHost: process.env.MIX_REVERB_HOST,
     wsPort: process.env.MIX_REVERB_PORT ?? 80,
     wssPort: process.env.MIX_REVERB_PORT ?? 443,
+    disableStats: true,
+    encrypted: true,
     forceTLS: (process.env.MIX_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 
