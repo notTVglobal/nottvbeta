@@ -37,14 +37,14 @@ return [
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'encrypted' => env('PUSHER_APP_ENCRYPTED'),
-//                'useTLS' => env('PUSHER_APP_TLS'),
+//                'encrypted' => env('PUSHER_APP_ENCRYPTED'),
+                'useTLS' => env('PUSHER_APP_TLS'), true,
 //                'host' => env('WEBSOCKET_HOST'),
 //                'port' => env('WEBSOCKET_PORT'),
 //                'scheme' => env('WEBSOCKET_SCHEME')
-                'host' => 'socket.not.tv',
-                'port' => 443,
-                'scheme' => 'https'
+//                'host' => 'socket.not.tv',
+//                'port' => 443,
+//                'scheme' => 'https'
 //                'host' => '127.0.0.1',
 //                'port' => 6001,
 //                'scheme' => 'http'
@@ -53,6 +53,17 @@ return [
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
+        ],
+
+        'reverb' => [
+            'driver' => 'reverb',
+            'app_id' => env('REVERB_APP_ID'),
+            'key' => env('REVERB_APP_KEY'),
+            'secret' => env('REVERB_APP_SECRET'),
+            'host' => env('REVERB_HOST'),
+            'port' => env('REVERB_PORT'),
+            'scheme' => env('REVERB_SCHEME'),
+            'encrypted' => true,
         ],
 
         'ably' => [

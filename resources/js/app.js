@@ -77,7 +77,6 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
-import { format } from 'date-fns'
 import VueConfetti from 'vue-confetti'
 
 // import confirm dialog

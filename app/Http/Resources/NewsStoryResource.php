@@ -22,7 +22,7 @@ class NewsStoryResource extends JsonResource {
         'content'                      => $this->content,
         'newsPerson'                   => [
             'id'   => $this->newsPerson->id ?? null,
-            'name' => $this->newsPerson->user->name ?? null,
+            'name' => $this->newsPerson->user->name ?? 'Unknown',
         ],
         'category'                     => $this->getCachedCategory() ?? [
                 'id'          => null,

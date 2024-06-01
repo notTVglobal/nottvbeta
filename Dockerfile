@@ -26,6 +26,9 @@ RUN mkdir -p /var/run/clamav && \
     chown clamav:clamav /var/run/clamav/clamd.sock && \
     echo "ClamAV daemon setup complete"
 
+# Copy Supervisor configuration
+COPY docker/8.3/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 # Copy the existing application
 COPY . /var/www/html
 
@@ -39,8 +42,16 @@ RUN composer install && echo "Composer install complete"
 RUN chown -R www-data:www-data storage bootstrap/cache && \
     echo "Permissions set successfully"
 
+# Set environment variables for Supervisor
+ENV SUPERVISOR_PHP_COMMAND="php-fpm"
+ENV SUPERVISOR_PHP_USER="www-data"
+
+# Ensure logs directory exists
+RUN mkdir -p /var/log/supervisor /var/www/html/storage/logs
+
 # Expose the application port
 EXPOSE 8000
+EXPOSE 8080
 
 # Start services
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]

@@ -28,10 +28,10 @@
           </div>
 
           <div class="pt-6">
-            <div v-if="newsStory.newsCategory?.id" class="font-semibold text-orange-800">
-              {{ newsStory.newsCategory.name }}
-              <span v-if="newsStory.newsCategorySub?.id"><span
-                  class="text-black"> | </span>{{ newsStory.newsCategorySub.name }}</span>
+            <div v-if="newsStory.category?.id" class="font-semibold text-orange-800">
+              {{ newsStory.category.name }}
+              <span v-if="newsStory.subCategory?.id"><span
+                  class="text-black"> | </span>{{ newsStory.subCategory.name }}</span>
             </div>
             <div v-if="newsStory.city?.id" class="font-semibold">{{ newsStory.city.name }}, <span
                 class="font-medium text-gray-800">{{ newsStory.province?.name }}</span></div>

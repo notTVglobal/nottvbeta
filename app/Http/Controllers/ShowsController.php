@@ -1488,7 +1488,7 @@ class ShowsController extends Controller {
     return $creatorId;
   }
 
-  public function updateMeta(HttpRequest $request, Show $show) {
+  public function updateMeta(HttpRequest $request, Show $show): \Illuminate\Http\JsonResponse {
     try {
       $validatedData = $request->validate([
 //          'isSaving' => 'nullable|boolean',
@@ -1496,41 +1496,34 @@ class ShowsController extends Controller {
           'updatedBy'          => 'nullable|string',
       ]);
 
-//      Log::debug('Validated data', ['validatedData' => $validatedData]);
+      Log::debug('Validated data', ['validatedData' => $validatedData]);
 
-      // Decode the meta field to an array, or initialize as an empty array if null or not valid JSON
-      $meta = json_decode($show->meta, true);
-      if (!is_array($meta)) {
-//        Log::warning('Invalid meta format, initializing as empty array', ['meta' => $show->meta]);
-        $meta = [];
+      // Since the 'meta' field is cast to JSON, it will be automatically decoded to an array
+      $meta = $show->meta ?? [];
+
+      if (is_string($meta)) {
+        $meta = json_decode($meta, true);
       }
 
       // Check if someone else is already updating the schedule
       if (isset($meta['isUpdatingSchedule']) && $meta['isUpdatingSchedule'] && isset($meta['updatedBy']) && $meta['updatedBy'] !== $validatedData['updatedBy']) {
-        // Return a response indicating that the schedule is already being updated by someone else
-//        return response()->json(['message' => 'The schedule is currently being updated by ' . $meta['updatedBy'] . '.'], 409);
-        // Skip the conflict response and fail silently
-        // Optionally, you could log the conflict for debugging purposes
         Log::info('Schedule update conflict: currently being updated by ' . $meta['updatedBy']);
 
-        // Return a silent response to avoid triggering a notification
         return response()->json(['message' => '', 'notificationType' => 'silent']);
       }
 
-      // Ensure 'isSaving', 'isUpdatingSchedule' and 'updatedBy' keys exist
-//      $meta['isSaving'] = $validatedData['isSaving'];
+      // Update 'isUpdatingSchedule' and 'updatedBy' keys
       $meta['isUpdatingSchedule'] = $validatedData['isUpdatingSchedule'] ?? null;
-      // if isUpdatingSchedule is false then set updatedBy to null.
       $meta['updatedBy'] = $validatedData['isUpdatingSchedule'] ? ($validatedData['updatedBy'] ?? null) : null;
       $meta['triggeredBy'] = 'ShowsController updateMeta()';
 
-//      Log::debug('Updated meta data', ['meta' => $meta]);
+      Log::debug('Updated meta data', ['meta' => $meta]);
 
-      // Encode the meta array back to JSON and save it
-      $show->meta = json_encode($meta);
+      // Assign the array directly to the 'meta' attribute
+      $show->meta = $meta;
       $show->save();
 
-//      Log::debug('Meta saved successfully for show', ['show_id' => $show->id, 'meta' => $meta]);
+      Log::debug('Meta saved successfully for show', ['show_id' => $show->id, 'meta' => $meta]);
 
       broadcast(new CreatorContentStatusUpdated('show', $show->id, $meta));
 

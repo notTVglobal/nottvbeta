@@ -22,6 +22,9 @@ class UpdateShowMeta extends Command {
     // Update the meta field
     foreach ($shows as $show) {
       $meta = $show->meta ?? [];
+      if (is_string($meta)) {
+        $meta = json_decode($meta, true);
+      }
       $meta['isScheduled'] = true;
       $show->meta = $meta;
       $show->save();
