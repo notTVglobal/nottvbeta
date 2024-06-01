@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Services\MistServer\MistServerService;
 use App\Services\SearchService;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -46,5 +48,10 @@ class AppServiceProvider extends ServiceProvider
       Validator::extend('custom_streaming_url', function ($attribute, $value, $parameters, $validator) {
         return Str::startsWith($value, ['http://', 'https://', 'rtmp://', 'rtmps://', 'srt://', 'rtsp://', 'dtsc://']);
       }, 'The :attribute must be a valid streaming URL.');
+
+      Gate::define('viewPulse', function (User $user) {
+        return $user->isAdmin();
+      });
+
     }
 }
