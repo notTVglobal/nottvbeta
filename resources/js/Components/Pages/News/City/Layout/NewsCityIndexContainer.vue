@@ -2,6 +2,11 @@
   <div class="pt-8 max-w-7xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Cities</h1>
 
+    <div class="flex flex-wrap justify-center mx-auto gap-3 pb-6">
+      <NewsTipButton />
+      <UploadPressReleaseButton />
+    </div>
+
     <!-- Search Box -->
     <div class="flex mb-6 justify-center">
       <input
@@ -57,6 +62,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { defineProps } from 'vue'
+import NewsTipButton from '@/Components/Global/News/NewsTipButton.vue'
+import UploadPressReleaseButton from '@/Components/Global/News/UploadPressReleaseButton.vue'
 
 const props = defineProps({
   newsProvinces: {

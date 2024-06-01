@@ -45,4 +45,9 @@ class NewsPerson extends Model {
     return $this->hasMany(NewsPersonMessage::class, 'recipient_id');
   }
 
+  public function newsTips()
+  {
+    return $this->hasMany(NewsTip::class);
+  }
+
 }

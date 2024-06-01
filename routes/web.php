@@ -15,8 +15,10 @@ use App\Http\Controllers\MistStreamPushDestinationController;
 use App\Http\Controllers\NewsFederalElectoralDistrictController;
 use App\Http\Controllers\NewsPersonMessageController;
 use App\Http\Controllers\NewsPersonRoleController;
+use App\Http\Controllers\NewsPressReleaseController;
 use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
+use App\Http\Controllers\NewsTipController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecordingController;
 use App\Http\Controllers\SearchController;
@@ -288,6 +290,9 @@ Route::prefix('news')->group(function () {
   Route::get('/category/{newsCategory}', [NewsController::class, 'showCategory'])->name('news.category.show');
 });
 
+Route::post('/news-tip', [NewsTipController::class, 'submitNewsTip'])->name('news-tip');
+
+Route::post('/upload-press-release', [NewsPressReleaseController::class, 'submitPressRelease'])->name('upload-press-release');
 
 // Public view .. Teams/{team}/Index
 Route::resource('teams', TeamsController::class);

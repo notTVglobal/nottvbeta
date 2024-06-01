@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col py-8 max-w-7xl justify-center items-center gap-8">
     <h1 class="text-2xl font-bold">Categories</h1>
+    <div class="flex flex-wrap justify-center mx-auto gap-3">
+      <NewsTipButton />
+      <UploadPressReleaseButton />
+    </div>
     <div class="flex flex-row flex-wrap justify-center gap-6 mx-auto">
       <div
           v-for="newsCategory in newsCategories"
@@ -24,6 +28,8 @@
 <script setup>
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { defineProps } from 'vue'
+import NewsTipButton from '@/Components/Global/News/NewsTipButton.vue'
+import UploadPressReleaseButton from '@/Components/Global/News/UploadPressReleaseButton.vue'
 
 const appSettingStore = useAppSettingStore()
 

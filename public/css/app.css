@@ -8068,6 +8068,10 @@ hr {
   margin-top: 2rem;
 }
 
+.mr-96 {
+  margin-right: 24rem;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -13963,6 +13967,10 @@ hr {
     margin-top: 0.5rem;
   }
 
+  .lg\:mr-96 {
+    margin-right: 24rem;
+  }
+
   .lg\:block {
     display: block;
   }
@@ -14210,6 +14218,10 @@ hr {
 
   .xl\:mt-2 {
     margin-top: 0.5rem;
+  }
+
+  .xl\:mr-96 {
+    margin-right: 24rem;
   }
 
   .xl\:block {

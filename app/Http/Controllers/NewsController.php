@@ -36,6 +36,8 @@ class NewsController extends Controller {
     ]);
   }
 
+
+
   public function getNewsCountriesSimpleList(): \Illuminate\Http\JsonResponse {
     $countries = NewsCountry::orderBy('name', 'asc')->get(['id', 'name']);
 

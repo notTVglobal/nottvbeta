@@ -12,7 +12,7 @@
               <h2 class="text-2xl font-semibold mb-4">{{ newsPersonMessage.subject || 'No Subject' }}</h2>
               <div v-if="newsPersonMessage.sender" class="text-lg mb-2">
                 <div class="flex items-center">
-                  <img :src="newsPersonMessage.sender.profile_photo_url" alt="Profile Photo"
+                  <img v-if="newsPersonMessage.sender.profile_photo_url" :src="newsPersonMessage.sender.profile_photo_url" alt="Profile Photo"
                        class="w-12 h-12 rounded-full mr-4">
                   <div>
                     <p><span class="font-semibold">Sender:</span> {{ newsPersonMessage.sender.name }}</p>
@@ -30,7 +30,8 @@
               <p class="text-lg mt-4">
                 <span class="font-semibold">Message:</span>
               </p>
-              <p class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mt-2">{{ newsPersonMessage.message }}</p>
+              <p class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mt-2">
+                <span v-html="newsPersonMessage.message"/></p>
             </div>
             <div class="flex space-x-4">
               <button

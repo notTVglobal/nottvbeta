@@ -4,8 +4,8 @@
       📝 Have a News Tip?
     </button>
 
-    <div v-if="showForm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+    <div v-if="showForm" :class="modalClass">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 lg:mx-0">
         <h2 class="text-xl font-bold mb-4">Submit a News Tip</h2>
         <form @submit.prevent="submitForm">
           <div class="mb-4">
@@ -17,12 +17,12 @@
             <input type="email" id="email" v-model="form.email" class="w-full p-2 border border-gray-300 rounded-md">
           </div>
           <div class="mb-4">
-            <label for="email" class="block text-gray-700">Your Phone</label>
-            <input type="email" id="email" v-model="form.phone" class="w-full p-2 border border-gray-300 rounded-md">
+            <label for="phone" class="block text-gray-700">Your Phone</label>
+            <input type="tel" id="phone" v-model="form.phone" class="w-full p-2 border border-gray-300 rounded-md">
           </div>
           <div class="mb-4">
-            <label for="email" class="block text-gray-700">Your Postal Code</label>
-            <input type="email" id="email" v-model="form.phone" class="w-full p-2 border border-gray-300 rounded-md">
+            <label for="postalCode" class="block text-gray-700">Your Postal Code</label>
+            <input type="text" id="postalCode" v-model="form.postalCode" class="w-full p-2 border border-gray-300 rounded-md">
           </div>
           <div class="mb-4">
             <label for="message" class="block text-gray-700">Your Message</label>
@@ -39,7 +39,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 
 const showForm = ref(false)
 const form = ref({
@@ -49,6 +50,8 @@ const form = ref({
   postalCode: '',
   message: ''
 })
+
+const page = usePage().props
 
 const openForm = () => {
   showForm.value = true
@@ -65,21 +68,23 @@ const closeForm = () => {
   }
 }
 
-const submitForm = () => {
-  // Send the form data to the server
-  // For example, using axios:
-  // axios.post('/news-tip', form.value)
-  //   .then(response => {
-  //     // Handle success
-  //     closeForm()
-  //   })
-  //   .catch(error => {
-  //     // Handle error
-  //   })
-
-  // Close the form for now
-  closeForm()
+const submitForm = async () => {
+  try {
+    await axios.post('/news-tip', form.value)
+    alert('Your news tip has been submitted successfully.')
+    closeForm()
+  } catch (error) {
+    console.error('Failed to submit news tip:', error)
+    alert('There was an error submitting your news tip. Please try again.')
+  }
 }
+
+const modalClass = computed(() => {
+  return {
+    'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50': true,
+    'lg:mr-96': page.auth.user
+  }
+})
 </script>
 
 <style scoped>
