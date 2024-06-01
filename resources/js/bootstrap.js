@@ -34,7 +34,7 @@ window.Echo = new Echo({
     // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     // forceTLS: process.env.MIX_PUSHER_APP_TLS,
     // encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
-    // broadcaster: 'reverb',
+    // // broadcaster: 'reverb',
     // key: process.env.MIX_PUSHER_APP_KEY,
 
 
@@ -56,8 +56,8 @@ window.Echo = new Echo({
     broadcaster: 'reverb',
     key: process.env.MIX_REVERB_APP_KEY,
     wsHost: process.env.MIX_REVERB_HOST,
-    wsPort: process.env.MIX_REVERB_PORT,
-    wssPort: process.env.MIX_REVERB_PORT,
+    wsPort: process.env.MIX_REVERB_POR ?? 80,
+    wssPort: process.env.MIX_REVERB_PORT ?? 443,
     forceTLS: (process.env.MIX_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 
