@@ -165,20 +165,32 @@ class TeamsController extends Controller {
       return redirect()->back()->with('error', 'The creator does not have the required status to create a team.');
     }
 
+    // Sanitize social media handles
+    $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
+    $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
+
+    // Sanitize URLs
+    $wwwUrl = isset($validatedData['www_url']) ? filter_var($validatedData['www_url'], FILTER_SANITIZE_URL) : null;
+    $telegramUrl = isset($validatedData['telegram_url']) ? filter_var($validatedData['telegram_url'], FILTER_SANITIZE_URL) : null;
+
     // Sanitize description
     $sanitizedDescription = Purifier::clean($validatedData['description']);
 
+    // Simply strip any unwanted tags from the title without encoding characters
+    $processedName = strip_tags($validatedData['name']);
+
+
     Team::create([
-        'name'                   => $validatedData['name'],
+        'name'                   => $processedName,
         'description'            => $sanitizedDescription,  // Use the sanitized description
         'user_id'                => $validatedData['user_id'],
       //            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
         'totalSpots'             => $validatedData['totalSpots'],
         'slug'                   => \Str::slug($validatedData['name']),
         'isBeingEditedByUser_id' => $validatedData['user_id'],  // Assuming this is intended to be the same as user_id
-        'www_url'                => $validatedData['www_url'] ?? null,
+        'www_url'                => $wwwUrl,
         'instagram_name'         => $instagramName,
-        'telegram_url'           => $validatedData['telegram_url'] ?? null,
+        'telegram_url'           => $telegramUrl,
         'twitter_handle'         => $twitterHandle,
     ]);
 
@@ -816,9 +828,21 @@ class TeamsController extends Controller {
     // Sanitize description
     $sanitizedDescription = Purifier::clean($validatedData['description']);
 
+
     // Sanitize social media handles
     $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
     $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
+
+    // Sanitize URLs
+    $wwwUrl = isset($validatedData['www_url']) ? filter_var($validatedData['www_url'], FILTER_SANITIZE_URL) : null;
+    $telegramUrl = isset($validatedData['telegram_url']) ? filter_var($validatedData['telegram_url'], FILTER_SANITIZE_URL) : null;
+
+    // Sanitize and process name
+    $processedName = strip_tags($validatedData['name']);
+
+    // Sanitize social media handles
+//    $twitterHandle = isset($validatedData['twitter_handle']) ? str_replace('@', '', $validatedData['twitter_handle']) : null;
+//    $instagramName = isset($validatedData['instagram_name']) ? str_replace('@', '', $validatedData['instagram_name']) : null;
 
     // Check if the teamLeader is provided and is a valid creator with a status of 1
     if (!is_null($validatedData['teamLeader'])) {
@@ -838,14 +862,14 @@ class TeamsController extends Controller {
 
     // update the team
     $team->update([
-        'name'           => $validatedData['name'],
+        'name'           => $processedName,
         'description'    => $sanitizedDescription,  // Use the sanitized description
         'totalSpots'     => $validatedData['totalSpots'],
         'team_leader'    => $team_leader_id,  // Optional, handle absence
         'slug'           => \Str::slug($validatedData['name']),  // Creating slug from the validated name
-        'www_url'        => $validatedData['www_url'],
+        'www_url'        => $wwwUrl,
         'instagram_name' => $instagramName,
-        'telegram_url'   => $validatedData['telegram_url'],
+        'telegram_url'   => $telegramUrl,
         'twitter_handle' => $twitterHandle
     ]);
 

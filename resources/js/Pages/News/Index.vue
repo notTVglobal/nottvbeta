@@ -37,7 +37,7 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 import { useForm, usePage } from '@inertiajs/vue3'
 import throttle from 'lodash/throttle'
 import { router } from '@inertiajs/vue3'
-import NewsStoriesTable from '@/Components/Pages/Newsroom/NewsStoriesTable.vue'
+import NewsStoriesTable from '@/Components/Pages/News/NewsStoriesTable.vue'
 // import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
 const appSettingStore = useAppSettingStore()

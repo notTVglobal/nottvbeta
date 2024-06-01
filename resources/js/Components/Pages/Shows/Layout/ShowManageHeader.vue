@@ -208,8 +208,7 @@ onMounted(async () => {
   // Check the flag in meta on page load
   console.log('show.meta:', props.show.meta);
 
-  const meta = props.show.meta ? JSON.parse(props.show.meta) : {};
-  console.log('Parsed meta:', meta);
+  const meta = props.show.meta
   console.log('isUpdatingSchedule:', meta.isUpdatingSchedule);
   console.log('updatedBy:', meta.updatedBy);
   console.log('current user:', page.user.name);

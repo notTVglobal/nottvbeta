@@ -55,9 +55,17 @@ class NewsPersonMessageController extends Controller {
     $this->authorize('viewAny', NewsPersonMessage::class);
 
     $user = $request->user();
-    $count = NewsPersonMessage::where('recipient_id', $user->newsPerson->id)->count();
+    $recipientId = $user->newsPerson->id;
 
-    return response()->json(['count' => $count]);
+    $count = NewsPersonMessage::where('recipient_id', $recipientId)->count();
+    $newMessageCount = NewsPersonMessage::where('recipient_id', $recipientId)
+        ->whereNull('read_at')
+        ->count();
+
+    return response()->json([
+        'count' => $count,
+        'newMessageCount' => $newMessageCount
+    ]);
   }
 
   /**

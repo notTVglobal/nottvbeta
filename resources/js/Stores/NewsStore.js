@@ -55,6 +55,17 @@ const initialState = () => ({
     isLoading: true,
     processing: false,
 
+    latestStories: [],
+    newsStories: [],
+    currentPage: 1,
+    totalPages: 1,
+    selectedSubCategoryId: null,
+    selectedSubCategoryName: '',
+    selectedSubCategoryDescription: '',
+    selectedCategoryId: null,
+    selectedCityId: null,
+    selectedFederalDistrictId: null,
+    selectedSubnationalDistrictId: null,
     // Computed property for displaying
 })
 
@@ -215,12 +226,12 @@ export const useNewsStore = defineStore('newsStore', {
         updateSelectedLocation(location) {
             if (!location) {
                 // Handle the case where no location is passed
-                this.city = {};
-                this.province = {};
-                this.federalElectoralDistrict = {};
-                this.subnationalElectoralDistrict = {};
-                this.displayText = '';
-                return;
+                this.city = {}
+                this.province = {}
+                this.federalElectoralDistrict = {}
+                this.subnationalElectoralDistrict = {}
+                this.displayText = ''
+                return
             }
 
             // Update the selectedLocation based on the type of location
@@ -228,13 +239,13 @@ export const useNewsStore = defineStore('newsStore', {
             this.displayText = this.getDisplayTextForType(location.type)
 
             // Reset all location types
-            this.city = {};
-            this.province = {};
-            this.federalElectoralDistrict = {};
-            this.subnationalElectoralDistrict = {};
+            this.city = {}
+            this.province = {}
+            this.federalElectoralDistrict = {}
+            this.subnationalElectoralDistrict = {}
 
             // Update the selected location based on the type of location
-            this.displayText = this.getDisplayTextForType(location.type);
+            this.displayText = this.getDisplayTextForType(location.type)
 
             switch (location.type) {
                 case 'city':
@@ -243,41 +254,41 @@ export const useNewsStore = defineStore('newsStore', {
                         id: location.id,
                         name: location.name,
                         province: location.province,
-                    };
+                    }
                     this.province = {
                         id: location.province.id,
                         name: location.province.name,
-                    };
-                    this.displayText = `${location.name}, ${location.province.name}`;
-                    break;
+                    }
+                    this.displayText = `${location.name}, ${location.province.name}`
+                    break
                 case 'province':
                 case 'territory':
                     this.province = {
                         id: location.id,
                         name: location.name,
                         type: location.type,
-                    };
-                    this.displayText = location.name;
-                    break;
+                    }
+                    this.displayText = location.name
+                    break
                 case 'federalElectoralDistrict':
                     this.federalElectoralDistrict = {
                         id: location.id,
                         name: location.name,
                         type: location.type,
-                    };
-                    this.displayText = location.name;
-                    break;
+                    }
+                    this.displayText = location.name
+                    break
                 case 'subnationalElectoralDistrict':
                     this.subnationalElectoralDistrict = {
                         id: location.id,
                         name: location.name,
                         type: location.type,
-                    };
-                    this.displayText = location.name;
-                    break;
+                    }
+                    this.displayText = location.name
+                    break
                 default:
-                    this.displayText = '';
-                    break;
+                    this.displayText = ''
+                    break
             }
         },
 
@@ -381,7 +392,7 @@ export const useNewsStore = defineStore('newsStore', {
                         },
                         onSuccess: () => {
                             this.processing = false
-                        }
+                        },
                     })
                 } else {
                     await router.post(route('newsStory.store'), data, {
@@ -391,7 +402,7 @@ export const useNewsStore = defineStore('newsStore', {
                         },
                         onSuccess: () => {
                             this.processing = false
-                        }
+                        },
                     })
                 }
             } catch (error) {
@@ -410,23 +421,78 @@ export const useNewsStore = defineStore('newsStore', {
                     this.processing = false
                     const notificationStore = useNotificationStore()
                     notificationStore.setToastNotification('News story published successfully.', 'success')
-                }
+                },
             })
         },
         changeNewsStoryStatus(statusId) {
             document.getElementById('newsStoryStatusChangeModal').close()
             router.patch(route('news.story.changeStatus'), {
-              newsStory_id: this.newsStoryId, // Assuming you have the ID available in `newsStory`
-              new_status_id: statusId
+                newsStory_id: this.newsStoryId, // Assuming you have the ID available in `newsStory`
+                new_status_id: statusId,
             }, {
-              onError: (errors) => {
-                console.error('Error changing status:', errors);
-              }
-            });
+                onError: (errors) => {
+                    console.error('Error changing status:', errors)
+                },
+            })
+        },
+        async fetchNewsStories(
+            categoryId = null,
+            subCategoryId = null,
+            cityId = null,
+            federalDistrictId = null,
+            subnationalDistrictId = null,
+            page = 1) {
+            try {
+                const response = await axios.get('/news-stories', {
+                    params: {
+                        news_category_id: categoryId,
+                        news_category_sub_id: subCategoryId,
+                        city_id: cityId,
+                        federal_district_id: federalDistrictId,
+                        subnational_district_id: subnationalDistrictId,
+                        page: page,
+                    },
+                })
+                const data = response.data
+                if (page === 1) {
+                    this.newsStories = data.data
+                } else {
+                    this.newsStories = [...this.newsStories, ...data.data]
+                }
+                this.currentPage = data.current_page
+                this.totalPages = data.last_page
+            } catch (error) {
+                console.error('Failed to fetch news stories:', error)
+            }
+        },
+        filterStoriesBySubCategory(subCategoryId, subCategoryName, subCategoryDescription) {
+            this.selectedSubCategoryId = subCategoryId
+            this.selectedSubCategoryName = subCategoryName
+            this.selectedSubCategoryDescription = subCategoryDescription
+            this.fetchNewsStories(this.selectedCategoryId, subCategoryId, this.selectedCityId, 1)
+        },
+        resetFilter() {
+            this.selectedSubCategoryId = null
+            this.selectedSubCategoryName = ''
+            this.selectedSubCategoryDescription = ''
+        },
+        updateSelectedSubCategory(subCategoryId) {
+            this.selectedSubCategoryId = subCategoryId
+        },
+        initializeLatestStories(latestStories, newsCategoryId, newsCityId) {
+            this.latestStories = latestStories
+            this.selectedCategoryId = newsCategoryId
+            this.selectedCityId = newsCityId
         },
     },
 
     getters: {
+        filteredNewsStories(state) {
+            if (!state.selectedSubCategoryId) {
+                return state.latestStories
+            }
+            return state.newsStories
+        },
         filteredCitySearchItems: (state) => {
             if (!state.search) return state.citySearchItems
             return state.citySearchItems.filter(item =>
@@ -435,15 +501,15 @@ export const useNewsStore = defineStore('newsStore', {
         },
         searchInput: (state) => {
             if (state.city.id) {
-                return `${state.city.name}, ${state.province.name}`;
+                return `${state.city.name}, ${state.province.name}`
             } else if (state.province.id) {
-                return state.province.name;
+                return state.province.name
             } else if (state.federalElectoralDistrict.id) {
-                return state.federalElectoralDistrict.name;
+                return state.federalElectoralDistrict.name
             } else if (state.subnationalElectoralDistrict.id) {
-                return state.subnationalElectoralDistrict.name;
+                return state.subnationalElectoralDistrict.name
             }
-            return state.search;
+            return state.search
         },
         locationType(state) {
             if (!state.selectedLocation) {

@@ -16,20 +16,30 @@ class UpdateShowMeta extends Command {
 
   public function handle() {
 
-    // Fetch all shows with schedules
-    $shows = Show::whereHas('schedules')->get();
+    // Fetch all shows
+    $shows = Show::all();
 
     // Update the meta field
     foreach ($shows as $show) {
-      $meta = $show->meta ?? [];
-      $meta['isScheduled'] = true;
+      if ($show->schedules()->exists()) {
+        // Show has schedules, update meta accordingly
+        $meta = $show->meta ?? [];
+        if (is_string($meta)) {
+          $meta = json_decode($meta, true);
+        }
+        $meta['isScheduled'] = true;
+      } else {
+        // Show does not have schedules, set meta to an empty array
+        $meta = [];
+      }
+
       $show->meta = $meta;
       $show->save();
 
       $this->info("Updated meta for show ID: {$show->id}");
     }
 
-    $this->info('All scheduled shows have been updated.');
+    $this->info('All shows have been updated.');
     return 0;
   }
 }

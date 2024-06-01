@@ -78,9 +78,9 @@ class NewsPersonMessageResource extends JsonResource
       }
     } else {
       return [
-          'type' => 'anonymous',
+          'type' => '',
           'id' => null,
-          'name' => 'Anonymous',
+          'name' => '',
           'roles' => [],
           'profile_photo_path' => null,
           'profile_photo_url' => null,

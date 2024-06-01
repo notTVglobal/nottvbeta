@@ -6,7 +6,12 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.9.3.8
 May 29, 2024
 
+* Switch to pusher for websockets.
 * Add notifications to users being added, removed or roles updated on news team"
+* Fix descriptions not showing bold, italic or underline
+* Fix News Story names able to handle some special characters
+* Add a News Tip Button to the news pages
+* Add a Upload Press Release button to news pages (still needs to be tested)
 
 ## v0.9.3.7
 May 29, 2024

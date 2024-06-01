@@ -9,6 +9,7 @@
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-libxml": "*",
+        "ext-pdo": "*",
         "ext-simplexml": "*",
         "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
@@ -19,6 +20,8 @@
         "laravel/framework": "^11.0",
         "laravel/horizon": "^5.15",
         "laravel/jetstream": "^5.0",
+        "laravel/pulse": "^1.2",
+        "laravel/reverb": "@beta",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.7",
         "league/csv": "^9.14",
@@ -30,9 +33,7 @@
         "php-ffmpeg/php-ffmpeg": "^1.1",
         "pion/laravel-chunk-upload": "^1.5",
         "predis/predis": "^2.1",
-        "pusher/pusher-php-server": "^7.0",
-        "tightenco/ziggy": "^2.2",
-      "ext-pdo": "*"
+        "tightenco/ziggy": "^2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

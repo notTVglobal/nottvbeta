@@ -14,7 +14,10 @@
 
         <section>
 
-          <NewsCityShowContainer :newsCity="newsCity" :newsStories="newsStories" :filters="filters"/>
+          <NewsCityShowContainer :newsCity="newsCity"
+                                 :newsStories="newsStories"
+                                 :newsCategoryId="newsCategoryId"
+                                 :newsSubCategories="newsSubCategories"/>
 
         </section>
 
@@ -40,7 +43,8 @@ const videoPlayerStore = useVideoPlayerStore()
 const props = defineProps({
   newsCity: Object,
   newsStories: Object,
-  filters: Object,
+  newsSubCategories: Array,
+  newsCategoryId: Number
 })
 
 usePageSetup(`news.city.${props.newsCity.slug}`);

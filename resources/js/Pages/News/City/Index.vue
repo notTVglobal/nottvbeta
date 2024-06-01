@@ -10,7 +10,7 @@
     </header>
 
     <main class="flex-grow text-black mx-auto pb-64">
-      <div class="mx-auto px-4 border-b border-gray-800 flex justify-center">
+      <div class="mx-auto px-4 border-b border-gray-800 flex justify-center max-w-lg xl:max-w-7xl">
 
         <section>
 

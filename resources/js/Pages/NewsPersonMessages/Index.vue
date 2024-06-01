@@ -54,11 +54,11 @@
                       </div>
                     </div>
                     <div class="text-gray-600 dark:text-gray-300 mt-2 message-content">
-                      {{ message.message }}
+                      <span v-html="message.message"/>
                     </div>
                     <div v-if="message.sender" class="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                      <div>
-                        <img :src="message.sender.profile_photo_url" alt="Profile Photo"
+                      <div v-if="message.sender.name">
+                        <img v-if="message.sender.profile_photo_url" :src="message.sender.profile_photo_url" alt="Profile Photo"
                              class="w-10 h-10 rounded-full mr-2">
                         <span>{{ message.sender.name }}</span>
                       </div>

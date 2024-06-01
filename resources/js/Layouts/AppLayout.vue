@@ -108,6 +108,7 @@ let props = defineProps({
 // schedule updates.
 
 const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
+
 firstPlayVideoEcho.subscribed(() => {
   console.log('Subscribed to firstPlayVideo channel')
 }).listen('.changeFirstPlayVideo', (e) => {

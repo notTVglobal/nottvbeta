@@ -1,5 +1,10 @@
 const mix = require('laravel-mix');
 const path = require('path')
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
+
 // require('dotenv').config();
 // const Dotenv = require('dotenv-webpack');
 

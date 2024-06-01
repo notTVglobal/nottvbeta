@@ -5,6 +5,7 @@ import { router } from '@inertiajs/vue3'
 const initialState = () => ({
     messages: [],
     messageCount: 0,
+    newMessageCount: 0,
     newsPersons: [],
     searchInput: '',
     recipient: null,
@@ -34,6 +35,7 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
             try {
                 const response = await axios.get('/news-person-messages-count')
                 this.messageCount = response.data.count
+                this.newMessageCount = response.data.newMessageCount
                 if (response.data.newMessageCount >= 1) {
                     notificationStore.setToastNotification('You have ' + response.data.count + ' messages.', 'info')
                 }
@@ -98,7 +100,7 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
         computedMessageCount: (state) => {
             return state.messages.length > 99 ? '99+' : state.messages.length;
         },
-        newMessageCount: (state) => {
+        computedNewMessageCount: (state) => {
             return state.messages.filter(message => message.read_at === null).length;
         },
         filteredNewsPersons: (state) => {

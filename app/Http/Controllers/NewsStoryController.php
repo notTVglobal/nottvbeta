@@ -106,7 +106,50 @@ class NewsStoryController extends Controller {
     return NewsStoryResource::collection($paginatedNewsStories);
   }
 
+  public function fetchNewsStories(HttpRequest $request)
+    {
+      $categoryId = $request->query('news_category_id');
+      $subCategoryId = $request->query('news_category_sub_id');
+      $cityId = $request->query('city_id');
+      $federalDistrictId = $request->query('federal_district_id');
+      $subnationalDistrictId = $request->query('subnational_district_id');
+      $perPage = 10;
 
+      $query = NewsStory::with([
+          'image.appSetting',
+          'video.appSetting',
+          'newsPerson.user',
+      ]);
+
+      if ($categoryId) {
+        $query->where('news_category_id', $categoryId);
+      }
+
+      if ($subCategoryId) {
+        $query->where('news_category_sub_id', $subCategoryId);
+      }
+
+      if ($cityId) {
+        $query->where('city_id', $cityId);
+      }
+
+      if ($federalDistrictId) {
+        $query->where('news_federal_electoral_district_id', $federalDistrictId);
+      }
+
+      if ($subnationalDistrictId) {
+        $query->where('news_subnational_electoral_district_id', $subnationalDistrictId);
+      }
+
+      $newsStories = $query->paginate($perPage);
+
+      return response()->json([
+          'data' => NewsStoryResource::collection($newsStories)->items(),
+          'current_page' => $newsStories->currentPage(),
+          'last_page' => $newsStories->lastPage(),
+          'total' => $newsStories->total(),
+      ]);
+    }
 //
 //        ->paginate(10, ['*'], 'news')
 //        ->withQueryString()
@@ -291,12 +334,15 @@ class NewsStoryController extends Controller {
     // Sanitize the content using Mews\Purifier
     $sanitizedContent = Purifier::clean($validatedData['content']);
 
+    // Simply strip any unwanted tags from the title without encoding characters
+    $processedTitle = strip_tags($validatedData['title']);
+
     // Get the author's name for the newsStory.
     $user = Auth::user();
     $author = $user->name;
 
     $newsStory = new NewsStory([
-        'title'                              => htmlentities($validatedData['title']), // Sanitize the title
+        'title'                              => $processedTitle, // Sanitize the title
         'author'                             => e($author),
 //        'content_json'                       => $validatedData['content_json'],
         'content'                            => $sanitizedContent,
@@ -503,7 +549,7 @@ class NewsStoryController extends Controller {
     ]);
 
     // Log request data
-    Log::info('Request data: ', $request->all());
+//    Log::debug('Request data: ', $request->all());
 
     // Sanitize the content using Mews\Purifier
     $sanitizedContent = Purifier::clean($validatedData['content']);
@@ -514,15 +560,15 @@ class NewsStoryController extends Controller {
     }
 
     // Log sanitized content
-    Log::info('Sanitized content: ', ['content' => $sanitizedContent]);
+//    Log::debug('Sanitized content: ', ['content' => $sanitizedContent]);
 
-    // Sanitize the title using htmlentities
-    $sanitizedTitle = htmlentities($validatedData['title']);
+    // Simply strip any unwanted tags from the title without encoding characters
+    $processedTitle = strip_tags($validatedData['title']);
 
     // Update the news story
     $newsStory->news_person_id = $validatedData['news_person_id'];
-    $newsStory->title = $sanitizedTitle;
-    $newsStory->slug = \Str::slug($sanitizedTitle);
+    $newsStory->title = $processedTitle;
+    $newsStory->slug = \Str::slug($processedTitle);
     $newsStory->news_category_id = $validatedData['news_category_id'];
     $newsStory->news_category_sub_id = $validatedData['news_category_sub_id'] ?? null;
     $newsStory->content = $sanitizedContent ?? null;
@@ -534,7 +580,7 @@ class NewsStoryController extends Controller {
 //    $newsStory->content_json = $validatedData['content_json'];
 
     // Log news story before saving
-    Log::info('NewsStory before save: ', $newsStory->toArray());
+//    Log::debug('NewsStory before save: ', $newsStory->toArray());
 
     // Check if only the status has changed
     $onlyStatusChanged = $newsStory->isDirty('status') && $newsStory->getDirty() == ['status' => $validatedData['status']];

@@ -2,13 +2,18 @@
   <div class="pt-8 max-w-7xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Cities</h1>
 
+    <div class="flex flex-wrap justify-center mx-auto gap-3 pb-6">
+      <NewsTipButton />
+      <UploadPressReleaseButton />
+    </div>
+
     <!-- Search Box -->
-    <div class="mb-6">
+    <div class="flex mb-6 justify-center">
       <input
           v-model="searchQuery"
           type="text"
           placeholder="Search for a city..."
-          class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full max-w-lg p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
 
@@ -17,7 +22,7 @@
       <div
           v-for="province in filteredProvinces"
           :key="province.id"
-          class="mb-4 w-full xl:w-1/4 p-2 bg-gray-100 rounded-lg shadow-md"
+          class="mb-4 w-full xl:w-1/4 min-w-[200px] p-2 bg-gray-100 rounded-lg shadow-md"
       >
         <div @click="toggleProvince(province.id)" class="cursor-pointer bg-blue-600 text-white p-3 rounded-md">
           <h2 class="text-xl font-semibold">{{ province.name }}</h2>
@@ -53,9 +58,12 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { defineProps } from 'vue'
+import NewsTipButton from '@/Components/Global/News/NewsTipButton.vue'
+import UploadPressReleaseButton from '@/Components/Global/News/UploadPressReleaseButton.vue'
 
 const props = defineProps({
   newsProvinces: {
@@ -86,12 +94,16 @@ const filteredProvinces = computed(() => {
     return provincesWithState.value
   }
 
-  return provincesWithState.value.map(province => ({
-    ...province,
-    cities: province.cities.filter(city =>
+  return provincesWithState.value.map(province => {
+    const filteredCities = province.cities.filter(city =>
         city.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    ),
-  })).filter(province => province.cities.length > 0)
+    )
+    return {
+      ...province,
+      cities: filteredCities,
+      isOpen: filteredCities.length > 0 // Open province if it has matching cities
+    }
+  }).filter(province => province.cities.length > 0)
 })
 
 // Toggle province section
@@ -114,13 +126,18 @@ const toggleExpand = id => {
 }
 </script>
 
+
 <style scoped>
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
-{
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
+
+.min-w-[200px] {
+  min-width: 200px;
+}
 </style>
+
