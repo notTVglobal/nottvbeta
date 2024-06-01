@@ -53,7 +53,7 @@ window.Echo = new Echo({
     //
     // enabledTransports: ['ws', 'wss'],
 
-    broadcaster: 'pusher',
+    broadcaster: 'reverb',
     key: process.env.MIX_REVERB_APP_KEY,
     wsHost: process.env.MIX_REVERB_HOST,
     wsPort: process.env.MIX_REVERB_PORT ?? 80,
