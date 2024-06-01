@@ -64,7 +64,7 @@
 <body>
 <div class="content">
     <div class="logo">
-        <img src="https://not.tv/storage/images/logo_black_311.png" alt="notTV Logo">
+        <img src="https://not.tv/storage/images/logo_white.svg" alt="notTV Logo">
     </div>
     <h1>Quick Intermission!</h1>
     <div>
