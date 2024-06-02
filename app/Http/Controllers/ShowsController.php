@@ -1356,6 +1356,11 @@ class ShowsController extends Controller {
     }
 
     try {
+      $releaseDateTime = null;
+      $releaseYear = null;
+      $formattedUtcDatetime = null;
+      $isPublished = 0;
+
       if ($newStatusId === 6) { // 6 is 'scheduled'
         // validate the request
         $request->validate([
@@ -1369,18 +1374,13 @@ class ShowsController extends Controller {
         // Convert to UTC
         $utcDatetime = $carbonDatetime->utc();
 
-        // Format $utcDatetime as a string in ISO 8601 format:
-        $formattedUtcDatetime = $utcDatetime->toIso8601String();
+        // Convert to UTC and format as MySQL datetime string
+        $formattedUtcDatetime = $carbonDatetime->utc()->format('Y-m-d H:i:s');
 
       } else if ($newStatusId === 7) { // 7 is 'published'
-        $releaseDateTime = Carbon::now();
+        $releaseDateTime = Carbon::now()->format('Y-m-d H:i:s');
         $releaseYear = Carbon::now()->year;
-        $formattedUtcDatetime = null;
         $isPublished = 1;
-      } else if ($newStatusId > 7) {
-        $releaseDateTime = null;
-        $releaseYear = null;
-        $formattedUtcDatetime = null;
       }
 
       if (!$episode) {
@@ -1389,14 +1389,20 @@ class ShowsController extends Controller {
 
       // Update the episode's status
       $episode->show_episode_status_id = $newStatusId;
-      $episode->release_dateTime = $releaseDateTime ?? null;
-      $episode->release_year = $releaseYear ?? null;
-      $episode->scheduled_release_dateTime = $formattedUtcDatetime ?? null;
-      $episode->isPublished = $isPublished ?? 0;
+      $episode->release_dateTime = $releaseDateTime;
+      $episode->release_year = $releaseYear;
+      $episode->scheduled_release_dateTime = $formattedUtcDatetime;
+      $episode->isPublished = $isPublished;
       $episode->save();
 
-      // If successful, return a success response
-      return response()->json(['message' => 'Episode status updated successfully']);
+
+      // Return the updated episode details
+      return response()->json([
+          'message' => 'Episode status updated successfully',
+          'episode_id' => $episode->id,
+          'episode_status_id' => $episode->show_episode_status_id,
+          'scheduled_release_dateTime' => $episode->scheduled_release_dateTime,
+      ]);
 
       // If successful, you can return a success message
 //            return Redirect::back()->with('success', 'Episode status changed successfully');

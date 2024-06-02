@@ -60,7 +60,7 @@
         </dialog>
 
         <dialog :id="`adminChangeStatusModal.${episodeId}`" class="modal">
-            <div class="modal-box">
+            <div class="modal-box bg-gray-100 text-black">
                 <h3 class="text-center font-bold text-lg">Change Status (Admin Only)</h3>
                 <p class="text-center py-4">This is the Admin Override to change the episode status. If the episode is already published and you un-publish it the episode will be reverted to "Review" and become inaccessible to the public.</p>
                 <div class="w-full flex justify-center mt-2 pb-4">
@@ -86,6 +86,7 @@ import { format } from "date-fns"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
+import { useNotificationStore } from "@/Stores/NotificationStore"
 import DateTimePicker from "@/Components/Global/Calendar/DateTimePicker"
 import DateTimePickerSelect from "@/Components/Global/Calendar/DateTimePickerSelect"
 import dayjs from 'dayjs';
@@ -96,6 +97,7 @@ import utc from 'dayjs/plugin/utc'; // Required for timezone support
 const teamStore = useTeamStore()
 const showStore = useShowStore()
 const userStore = useUserStore()
+const notificationStore = useNotificationStore()
 
 // Extend Day.js with the plugins
 dayjs.extend(relativeTime);
@@ -173,9 +175,9 @@ const openAdminChangeStatusModal = () => {
 const handleScheduledDateTime = (newDate) => {
     selectedScheduledDateTime.value = newDate;
     scheduledDateTime = newDate.date;
-    console.log(scheduledDateTime)
-    updateScheduledDateTime()
-    console.log(formattedScheduledDateTime)
+    // console.log(scheduledDateTime)
+    updateScheduledDateTime(scheduledDateTime)
+    // console.log(formattedScheduledDateTime)
 }
 
 console.log('we already have the user timezone: ' + userStore.timezone)
@@ -192,14 +194,14 @@ const convertToTimeZone = (dateTime, userTimezone) => {
     return format(dateTime, 'yyyy-MM-dd HH:mm:ssXXX', { userTimezone });
 };
 
-const updateScheduledDateTime = () => {
+const updateScheduledDateTime = (scheduledDateTime) => {
     if (selectedScheduledDateTime.value) {
         // Convert the selected date and time to the desired time zone
         // const timeZone = 'UTC'; // Change this to your desired time zone
         formattedScheduledDateTime.value = convertToTimeZone(
-            new Date(scheduledDateTime),
-            userTimezone
+            new dayjs(scheduledDateTime).tz(userStore.timezone).format()
         );
+        // console.log('updated ScheduleDateTime to timezone: ' + formattedScheduledDateTime.value)
     } else {
         formattedScheduledDateTime.value = '';
     }
@@ -213,15 +215,30 @@ async function changeEpisodeStatus(episodeId, statusId) {
             scheduled_release_dateTime: formattedScheduledDateTime.value
         });
         // Handle success response as needed
-        // ...
+        notificationStore.setToastNotification(response.data.message, 'success')
         // Check if the response contains an "alert" message
         if (response.data.alert) {
             // Display the alert message
             alert(response.data.alert);
+        } else
+        {
+          // Update the showStore.episodes with the new data
+          const updatedEpisode = response.data;
+          const episodeIndex = showStore.episodes.data.findIndex(ep => ep.id === updatedEpisode.episode_id);
+          if (episodeIndex !== -1) {
+            showStore.episodes.data[episodeIndex].episodeStatusId = updatedEpisode.episode_status_id;
+            showStore.episodes.data[episodeIndex].scheduledReleaseDateTime = updatedEpisode.scheduled_release_dateTime;
+            // Update episodeStatus using episodeStatuses array from the store
+            const status = showStore.episodeStatuses.find(status => status.id === updatedEpisode.episode_status_id);
+            if (status) {
+              showStore.episodes.data[episodeIndex].episodeStatus = status.name;
+            }
+          }
         }
     } catch (error) {
         if (error.response) {
-            showStore.errorMessage = error.response.data.error
+          notificationStore.setToastNotification(error.response.data, 'error')
+          showStore.errorMessage = error.response.data.error
         } else {
             // console.error(error);
         }
