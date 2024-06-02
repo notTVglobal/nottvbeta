@@ -16,7 +16,7 @@
                 Create New Message
               </button>
               <button
-                  @click="showModal = true"
+                  @click="prepareDeleteAll"
                   :disabled="isDeleteAllDisabled"
                   :class="[
                     'text-white font-semibold py-2 px-4 rounded-lg transition',
@@ -131,6 +131,12 @@ function deleteMessage(messageId) {
 const isDeleteAllDisabled = computed(() => {
   return newsPersonMessageStore.messages.length === 0;
 });
+
+const prepareDeleteAll = () => {
+  newsPersonMessageStore.setDeleteAllTimestamp();
+  showModal.value = true;
+};
+
 
 const deleteAllMessages = async () => {
   await newsPersonMessageStore.deleteAllMessages()

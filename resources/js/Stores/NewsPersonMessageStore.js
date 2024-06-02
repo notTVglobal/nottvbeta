@@ -10,6 +10,7 @@ const initialState = () => ({
     searchInput: '',
     recipient: null,
     subject: null,
+    deleteAllTimestamp: null,
 })
 
 export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
@@ -51,9 +52,12 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
                 console.error('Error fetching news persons:', error);
             }
         },
+        setDeleteAllTimestamp() {
+            this.deleteAllTimestamp = new Date().toISOString();
+        },
         async deleteMessage(messageId) {
             try {
-                await router.delete(`/news-person-messages/${messageId}`);
+                await router.delete('/news-person-messages-delete-all')
                 await this.fetchMessages();
                 await this.fetchMessageCount();
             } catch (error) {
@@ -62,11 +66,15 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
         },
         async deleteAllMessages() {
             try {
-                await router.delete('/news-person-messages-delete-all');
+                await router.delete('/news-person-messages-delete-all', {
+                    deleteAllTimestamp: this.deleteAllTimestamp,
+                });
                 await this.fetchMessages();
                 await this.fetchMessageCount();
+                this.deleteAllTimestamp = null;
             } catch (error) {
                 console.error('Error deleting all messages:', error);
+                this.deleteAllTimestamp = null;
             }
         },
         updateMessage(updatedMessage) {
