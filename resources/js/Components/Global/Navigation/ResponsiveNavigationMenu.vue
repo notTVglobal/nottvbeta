@@ -204,7 +204,7 @@
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
-              v-if="userStore.hasAccount"
+              v-if="$page.props.user.hasAccount"
               @click="billingPortal">
             Account
           </JetResponsiveNavLink>

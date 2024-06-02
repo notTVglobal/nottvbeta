@@ -156,6 +156,9 @@ export const useShopStore = defineStore('shopStore', {
             return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'})
         },
         formattedPrice: () => (price) => {
+            if (price == null) {
+                return '';
+            }
             return price.endsWith('.00') ? price.slice(0, -3) : price;
         },
         formattedMonthlySubscriptionPrice() {

@@ -91,7 +91,7 @@
 
         <!-- {/* Show any error or success messages */}-->
         <div v-if="error" id="payment-error" class="text-red-600 font-semibold w-full my-2"> {{ error }}</div>
-        <div v-if="message" id="payment-message" class="mt-1 text-white">{{ message }}</div>
+<!--        <div v-if="message" id="payment-message" class="mt-1 text-white">{{ message }}</div>-->
       </div>
 
 
@@ -142,29 +142,47 @@ StripeAPIKey = process.env.MIX_STRIPE_KEY
 watch(
     () => userStore.hasConsentedToCookies,
     (newVal) => {
-      appSettingStore.showCookieBanner = !newVal
-      showPaymentForm()
+      try {
+        appSettingStore.showCookieBanner = !newVal
+        showPaymentForm()
+      } catch (error) {
+        notificationStore.setToastNotification('Cookie error', 'error')
+        console.error("Error in watcher for hasConsentedToCookies:", error)
+      }
     },
-    {immediate: true}, // Execute immediately on load
+    { immediate: true }, // Execute immediately on load
 )
 
 watch(
     () => userStore.hasConsentedToCookies,
     async (newVal) => {
-      appSettingStore.showCookieBanner = !newVal
-      if (newVal) {
-        // Dynamically import Stripe library only after consent is given
-        const {loadStripe} = await import('@stripe/stripe-js')
-        stripe = await loadStripe(StripeAPIKey)
-        initialize()
-        shopStore.showPaymentForm = true
-        document
-            .querySelector('#payment-form')
+      try {
+        appSettingStore.showCookieBanner = !newVal
+        if (newVal) {
+          // Dynamically import Stripe library only after consent is given
+          const { loadStripe } = await import('@stripe/stripe-js')
+
+          if (!StripeAPIKey) {
+            notificationStore.setToastNotification('Stripe API key is missing', 'error')
+          }
+
+          stripe = await loadStripe(StripeAPIKey)
+
+          if (!stripe) {
+            notificationStore.setToastNotification('Failed to load Stripe', 'error')
+          }
+
+          initialize()
+          shopStore.showPaymentForm = true
+          document.querySelector('#payment-form')
+        }
+      } catch (error) {
+        notificationStore.setToastNotification('Cookie error: ' + error, 'error')
+        console.error("Error in watcher for hasConsentedToCookies:", error)
       }
     },
-    {immediate: false}, // Do not execute immediately on load
+    { immediate: false }, // Do not execute immediately on load
 )
-
 
 onMounted(async () => {
       shopStore.loadSubscriptionSettings(props.subscriptionSettings)
