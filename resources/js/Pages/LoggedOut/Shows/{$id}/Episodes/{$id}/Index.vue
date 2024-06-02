@@ -26,60 +26,25 @@
       <PublicResponsiveNavigationMenu/>
 
       <div class="flex flex-col justify-center mx-auto max-w-5xl">
+
+
         <header class="p-5 mb-6">
-          <div class="flex flex-col md:flex-row flex-wrap justify-between px-5">
-            <div class="w-full md:w-3/4">
-              <div class="mb-4">
-                <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
+
+          <ShowShowEpisodeHeader :show="show" :episode="episode" :team="team" />
 
 
-                  {{ episode.name }}
-
-
-                </h3>
-                <div class="mb-1">
-                  <span class="font-semibold text-xl hover:text-blue-400 text-blue-500 hover:cursor-pointer">
-                      <Link :href="`/shows/${show.slug}/`">{{ show.name }}</Link>
-                  </span>
-                </div>
-                <Link :href="`/teams/${team.slug}`" class="text-blue-300 hover:text-blue-500"><span
-                    class="text-sm uppercase font-semibold">{{ team.name }}</span></Link>
-                <div class="text-xs space-y-1">
-
-                </div>
-              </div>
-              <div v-if="episode.release_dateTime" class="text-yellow-500">
-                {{ formatDate(episode.release_dateTime) }}
-              </div>
-              <ConvertDateTimeToTimeAgo v-if="episode.scheduled_release_dateTime"
-                                        :dateTime="episode.scheduled_release_dateTime" :class="`text-green-400`"/>
-
-
-              <div class="text-gray-500 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
-              <div class="text-gray-500 mt-1" v-if="episode.episode_number">Episode {{
-                  episode.episode_number
-                }}
-              </div>
-            </div>
-
-            <div class="flex flex-col text-left md:text-right w-full md:w-1/4">
-            <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{
-                show?.category?.name
-              }}</span>
-              <span class="tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
-            </div>
-            <div class="my-6">
+            <div class="my-6 px-10">
               <ShareButton/>
             </div>
 
             <LoginToWatch />
-          </div>
+
 
 
 
         </header>
 
-        <div class="my-6 py-5 px-8">
+        <div class="my-6 py-5 px-4 xl:px-16">
           <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
           <!--          <div class="description">{{ episode.description }}</div>-->
           <ExpandableDescription :description="episode.description" :hideTitle="true"/>
@@ -180,6 +145,7 @@ import Footer from '@/Components/Global/Layout/Footer.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import LoginToWatch from '@/Components/Global/Banners/LoginToWatch.vue'
+import ShowShowEpisodeHeader from '@/Components/Pages/ShowEpisodes/Layout/ShowShowEpisodeHeader.vue'
 
 const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
