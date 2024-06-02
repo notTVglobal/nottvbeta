@@ -17,9 +17,9 @@ window.axios = axios;
  */
 
 import Echo from 'laravel-echo';
-// import Pusher from 'pusher-js';
+import Pusher from 'pusher-js';
 
-window.Pusher = require('pusher-js');
+window.Pusher = Pusher;
 
 // const echoKey = process.env.MIX_REVERB_APP_KEY;
 // const echoHost = process.env.MIX_REVERB_HOST;

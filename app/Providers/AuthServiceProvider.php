@@ -47,13 +47,13 @@ class AuthServiceProvider extends ServiceProvider
                 ->action('Verify Email Address', $url);
         });
 
-        Gate::define('viewWebSocketsDashboard', function ($user = null) {
-            return in_array($user->email, [
-                'travis@not.tv',
-                'admin@not.tv'
-            ]);
-
-        });
+//        Gate::define('viewWebSocketsDashboard', function ($user = null) {
+//            return in_array($user->email, [
+//                'travis@not.tv',
+//                'admin@not.tv'
+//            ]);
+//
+//        });
 
         // this can be used later when we
       Gate::define('send-chat-message', function ($user, $channelId) {
