@@ -7799,10 +7799,6 @@ hr {
   margin-top: -1.5rem;
 }
 
-.-mt-px {
-  margin-top: -1px;
-}
-
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -8679,10 +8675,6 @@ hr {
   max-width: 16rem;
 }
 
-.max-w-6xl {
-  max-width: 72rem;
-}
-
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -9401,10 +9393,6 @@ hr {
 
 .border-l-4 {
   border-left-width: 4px;
-}
-
-.border-r {
-  border-right-width: 1px;
 }
 
 .border-r-2 {
@@ -13008,10 +12996,6 @@ hr {
 
   .sm\:items-center {
     align-items: center;
-  }
-
-  .sm\:justify-start {
-    justify-content: flex-start;
   }
 
   .sm\:justify-center {
