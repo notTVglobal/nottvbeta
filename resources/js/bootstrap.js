@@ -32,8 +32,14 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: process.env.MIX_PUSHER_APP_TLS,
-    encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
+    encrypted: true,
+    forceTLS: true,
+    authEndpoint: '/broadcasting/auth', // Ensure this endpoint is correct
+    auth: {
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    }
 
 
 

@@ -33,12 +33,18 @@ let props = defineProps({
 let channels = ref([])
 
 const channel = Echo.private('chat.' + '1')
-channel.subscribed(() => {
-}).listen('.chat', (event) => {
-  const tempId = Date.now(); // or another method to generate a unique temporary ID
-  const newMessage = {...event.message, id: tempId};
-  chatStore.newMessages.push(newMessage)
-})
+    .subscribed(() => {
+      console.log('Successfully subscribed to the channel.');
+    })
+    .error((error) => {
+      console.error('Subscription error:', error);
+    })
+    .listen('.chat', (event) => {
+      console.log('Event received:', event);
+      const tempId = Date.now();
+      const newMessage = {...event.message, id: tempId};
+      chatStore.newMessages.push(newMessage);
+    });
 
 // onBeforeMount(async () => {
 //
