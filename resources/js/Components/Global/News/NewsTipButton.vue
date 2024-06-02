@@ -7,6 +7,7 @@
     <div v-if="showForm" :class="modalClass">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 lg:mx-0">
         <h2 class="text-xl font-bold mb-4">Submit a News Tip</h2>
+        <p class="text-sm text-gray-600 mb-4">This is an encrypted message that does not go through email.</p>
         <form @submit.prevent="submitForm">
           <div class="mb-4">
             <label for="name" class="block text-gray-700">Your Name</label>
@@ -17,11 +18,11 @@
             <input type="email" id="email" v-model="form.email" class="w-full p-2 border border-gray-300 rounded-md">
           </div>
           <div class="mb-4">
-            <label for="phone" class="block text-gray-700">Your Phone</label>
+            <label for="phone" class="block text-gray-700">Your Phone <span class="text-gray-500">(optional)</span></label>
             <input type="tel" id="phone" v-model="form.phone" class="w-full p-2 border border-gray-300 rounded-md">
           </div>
           <div class="mb-4">
-            <label for="postalCode" class="block text-gray-700">Your Postal Code</label>
+            <label for="postalCode" class="block text-gray-700">Your Postal Code <span class="text-gray-500">(optional)</span></label>
             <input type="text" id="postalCode" v-model="form.postalCode" class="w-full p-2 border border-gray-300 rounded-md">
           </div>
           <div class="mb-4">
@@ -41,6 +42,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+import { useNotificationStore } from '@/Stores/NotificationStore'
+
+const notificationStore = useNotificationStore()
 
 const showForm = ref(false)
 const form = ref({
@@ -71,11 +75,11 @@ const closeForm = () => {
 const submitForm = async () => {
   try {
     await axios.post('/news-tip', form.value)
-    alert('Your news tip has been submitted successfully.')
+    notificationStore.setGeneralServiceNotification('Success', 'Your news tip has been submitted successfully.')
     closeForm()
   } catch (error) {
-    console.error('Failed to submit news tip:', error)
-    alert('There was an error submitting your news tip. Please try again.')
+    console.error('Failed to submit news tip.')
+    notificationStore.setGeneralServiceNotification('Error', 'There was an error submitting your news tip. Please try again.')
   }
 }
 

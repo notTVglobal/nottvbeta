@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class NewsPersonMessageController extends Controller {
@@ -63,7 +64,7 @@ class NewsPersonMessageController extends Controller {
         ->count();
 
     return response()->json([
-        'count' => $count,
+        'count'           => $count,
         'newMessageCount' => $newMessageCount
     ]);
   }
@@ -83,9 +84,9 @@ class NewsPersonMessageController extends Controller {
     // Custom messages
     $messages = [
         'recipient_id.required' => 'Oops! Looks like you forgot to select a recipient. Please choose a news person to send your message to.',
-        'recipient_id.exists' => 'Hmm, that recipient doesn’t seem to exist. Please select a valid news person.',
-        'subject.required' => 'The subject field is required.',
-        'message.required' => 'The message field is required.',
+        'recipient_id.exists'   => 'Hmm, that recipient doesn’t seem to exist. Please select a valid news person.',
+        'subject.required'      => 'The subject field is required.',
+        'message.required'      => 'The message field is required.',
     ];
 
     // Validate the request data with custom messages
@@ -121,8 +122,7 @@ class NewsPersonMessageController extends Controller {
   /**
    * Display the specified resource.
    */
-  public function show(NewsPersonMessage $newsPersonMessage): \Inertia\Response
-  {
+  public function show(NewsPersonMessage $newsPersonMessage): \Inertia\Response {
     $this->authorize('view', $newsPersonMessage);
 
     if (is_null($newsPersonMessage->read_at)) {
@@ -169,17 +169,33 @@ class NewsPersonMessageController extends Controller {
         ->with('success', 'Message deleted successfully');
   }
 
-  public function deleteAll(Request $request)
-  {
+  public function deleteAll(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse {
+
+    $request->validate([
+        'deleteAllTimestamp' => 'required|date_format:Y-m-d\TH:i:s.u\Z',
+    ]);
+
+    $deleteAllTimestamp = $request->input('deleteAllTimestamp');
+
     $user = Auth::user();
 
     $this->authorize('deleteAll', NewsPersonMessage::class);
 
     $newsPersonId = $user->newsPerson->id;
-    NewsPersonMessage::where('recipient_id', $newsPersonId)->delete();
 
-    return redirect()->route('news-person-messages.index')
-        ->with('success', 'Message deleted successfully');
+    try {
+      // Delete messages received before the timestamp
+      NewsPersonMessage::where('recipient_id', $newsPersonId)
+          ->where('created_at', '<=', $deleteAllTimestamp)
+          ->delete();
+
+      return redirect()->route('news-person-messages.index')
+          ->with('success', 'Message deleted successfully');
+    } catch (\Exception $e) {
+      Log::error('Error deleting messages: ', ['exception' => $e]);
+
+      return response()->json(['error' => 'An error occurred while deleting messages. Please try again later.'], 500);
+    }
   }
 
   public function restore($id): \Illuminate\Http\RedirectResponse {

@@ -1,9 +1,16 @@
 <template>
   <div>
-    <button @click="openForm" class="flex items-center justify-center bg-green-500 text-white p-4 rounded-lg shadow-md hover:bg-green-600 transition">
+    <button
+        @click="openForm"
+        :disabled="isButtonDisabled"
+        :class="[
+      'flex items-center justify-center p-4 rounded-lg shadow-md transition',
+      isButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white'
+    ]"
+    >
       📤 Upload Press Release
     </button>
-
+    <span class="text-orange-500">Press release feature coming soon.</span>
     <div v-if="showForm" :class="modalClass">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 lg:mx-0">
         <h2 class="text-xl font-bold mb-4">Upload Press Release</h2>
@@ -47,6 +54,7 @@ const form = ref({
   file: null
 })
 const errors = ref([])
+const isButtonDisabled = ref(true);
 
 const page = usePage().props
 
@@ -69,21 +77,23 @@ const handleFileUpload = (event) => {
 }
 
 const submitForm = async () => {
-  const formData = new FormData()
-  formData.append('name', form.value.name)
-  formData.append('email', form.value.email)
-  formData.append('file', form.value.file)
+  if (!isButtonDisabled.value) {
+    const formData = new FormData()
+    formData.append('name', form.value.name)
+    formData.append('email', form.value.email)
+    formData.append('file', form.value.file)
 
-  try {
-    await axios.post('/upload-press-release', formData)
-    alert('Your press release has been uploaded successfully.')
-    closeForm()
-  } catch (error) {
-    // console.error('Failed to upload press release:', error)
-    if (error.response && error.response.data && error.response.data.errors) {
-      errors.value = Object.values(error.response.data.errors).flat()
-    } else {
-      alert('There was an error uploading your press release. Please try again.')
+    try {
+      await axios.post('/upload-press-release', formData)
+      alert('Your press release has been uploaded successfully.')
+      closeForm()
+    } catch (error) {
+      // console.error('Failed to upload press release:', error)
+      if (error.response && error.response.data && error.response.data.errors) {
+        errors.value = Object.values(error.response.data.errors).flat()
+      } else {
+        alert('There was an error uploading your press release. Please try again.')
+      }
     }
   }
 }
