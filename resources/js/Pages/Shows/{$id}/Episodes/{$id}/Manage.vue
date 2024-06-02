@@ -40,12 +40,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import { useShowStore } from '@/Stores/ShowStore'
+import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 
 import ShowEpisodeManageEpisodeDescription from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeDescription'
@@ -65,6 +66,7 @@ usePageSetup('showEpisodesManage')
 const appSettingStore = useAppSettingStore()
 const goLiveStore = useGoLiveStore()
 const showStore = useShowStore()
+const showEpisodeStore = useShowEpisodeStore()
 const teamStore = useTeamStore()
 
 let props = defineProps({
@@ -89,6 +91,14 @@ teamStore.can = props.can
 const goLive = computed(() => ({
   'border-4 border-red-500': teamStore.goLiveDisplay,
 }))
+
+onMounted(() => {
+  showEpisodeStore.initializeShowEpisode(props.episode, props.show, props.team)
+})
+
+onUnmounted(() => {
+  showEpisodeStore.reset()
+})
 
 </script>
 

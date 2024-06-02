@@ -26,7 +26,7 @@ export const useShowEpisodeStore = defineStore('showEpisodeStore', {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
         },
-        initializeShowEpisode(showEpisode, show, team, creativeCommons) {
+        initializeShowEpisode(showEpisode, show = null, team = null, creativeCommons = null) {
             // console.log('initializeShow')
 
             let meta = {};
