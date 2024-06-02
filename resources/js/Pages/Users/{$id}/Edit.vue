@@ -78,6 +78,29 @@
           </div>
         </div>
 
+
+        <!-- Subscription and Account Details Panel -->
+        <div class="mt-6 p-4 bg-gray-900 dark:bg-gray-900 text-white rounded-lg">
+          <h2 class="text-lg font-bold mb-4">Subscription and Account Details</h2>
+          <div class="mb-2">
+            <span class="text-xs uppercase">Has Subscription: </span>
+            <span class="font-semibold">{{ hasSubscription ? 'Yes' : 'No' }}</span>
+          </div>
+          <div class="mb-2" v-if="hasSubscription">
+            <span class="text-xs uppercase">Subscription Active: </span>
+            <span class="font-semibold">{{ isSubscriptionActive ? 'Yes' : 'No' }}</span>
+          </div>
+          <div class="mb-2">
+            <span class="text-xs uppercase">Has Account: </span>
+            <span class="font-semibold">{{ hasAccount ? 'Yes' : 'No' }}</span>
+          </div>
+          <div class="mb-2">
+            <span class="text-xs uppercase">Is Subscriber: </span>
+            <span class="font-semibold">{{ isSubscriber ? 'Yes' : 'No' }}</span>
+          </div>
+        </div>
+        <!-- End of Subscription and Account Details Panel -->
+
         <form @submit.prevent="submit" class="mt-6">
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
@@ -322,8 +345,9 @@ let props = defineProps({
   newsPersonId: Number,
   isVip: Number,
   isSubscriber: Boolean,
-  hasSubscription: null,
-  subscriptionStatus: String,
+  hasSubscription: Boolean,
+  isSubscriptionActive: String,
+  hasAccount: String,
 })
 
 let form = useForm({

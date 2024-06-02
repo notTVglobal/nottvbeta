@@ -85,7 +85,7 @@
 
           <div class="flex flex-row space-x-4 pt-2">
             <div>
-              <div v-if="userStore.isSubscriber && !userStore.isCreator" class="text-fuchsia-700">PREMIUM</div>
+              <div v-if="$page.props.user.isSubscriber && !userStore.isCreator" class="text-fuchsia-700">PREMIUM</div>
               <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
               <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
             </div>
@@ -97,7 +97,7 @@
             <div v-if="userStore.isCreator"
                  class="flex-item align-self-center text-yellow-600 uppercase hidden md:block text-xs w-fit">
               <div class="flex flex-row">
-                <div v-if="userStore.isSubscriber && userStore.isCreator" class="text-fuchsia-700">PREMIUM &nbsp;</div>
+                <div v-if="$page.props.user.isSubscriber && userStore.isCreator" class="text-fuchsia-700">PREMIUM &nbsp;</div>
                 <div class="text-fuchsia-700">CREATOR</div>
               </div>
               <div>GOAL <span class="text-sm font-semibold">100</span> subscribers</div>

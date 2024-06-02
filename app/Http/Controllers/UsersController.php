@@ -208,7 +208,10 @@ class UsersController extends Controller {
         'isNewsPerson'       => $isNewsPerson,
         'newsPersonId'       => $user->newsPerson?->id,
         'isVip'              => $user->isVip,
-        'hasSubscription'    => $user->subscription() ?? null,
+        'hasSubscription'    => $user->subscription('default') ?? null,
+        'isSubscriptionActive' => (bool) optional($user->subscription('default'))->active(),
+        'hasAccount'           => $user->hasAccount(),
+        'isSubscriber'         => $user->subscribed('default')
     ]);
   }
 
