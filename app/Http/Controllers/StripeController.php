@@ -152,8 +152,6 @@ class StripeController extends Controller {
 
     $stripeSecret = $settings->subscription_settings['stripe_secret_key'];
 
-    Log::info('Stripe secret key is set: ' . $stripeSecret);
-
     Stripe::setApiKey($stripeSecret);
     $user = auth()->user();
 
