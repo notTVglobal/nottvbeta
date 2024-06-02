@@ -37,7 +37,8 @@ const initialState = () => ({
             yearly: {
                 price: '',
                 api_id: ''
-            }
+            },
+            stripe_secret_key: '',
         },
     },
     bannedUsers: [],

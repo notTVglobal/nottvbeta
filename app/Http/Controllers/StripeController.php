@@ -143,14 +143,18 @@ class StripeController extends Controller {
   }
 
   public function createPaymentIntent(Request $request) {
-    $stripeSecret = env('STRIPE_SECRET');
-    if (!$stripeSecret) {
-      Log::error('Stripe secret key is not set');
-      return response()->json(['error' => 'Stripe secret key is not set'], 500);
+    // Retrieve settings from the database
+    $settings = AppSetting::first();
+    if (!$settings || !isset($settings->subscription_settings['stripe_secret_key'])) {
+      Log::error('Stripe secret key is not set in the database');
+      return response()->json(['error' => 'Stripe secret key is not set in the database'], 500);
     }
 
-    Stripe::setApiKey($stripeSecret);
+    $stripeSecret = $settings->subscription_settings['stripe_secret_key'];
 
+    Log::info('Stripe secret key is set: ' . $stripeSecret);
+
+    Stripe::setApiKey($stripeSecret);
     $user = auth()->user();
 
     // Check if the user already has a Stripe customer ID
