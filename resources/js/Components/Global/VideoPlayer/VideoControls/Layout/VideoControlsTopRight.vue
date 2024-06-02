@@ -90,7 +90,7 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import VideoControlsButtons from "@/Components/Global/VideoPlayer/VideoControls/Elements/VideoControlsButtons"
+import VideoControlsButtons from "@/Components/Global/VideoPlayer/VideoControls/Elements/VideoControlsButtons.vue"
 
 const videoPlayerStore = useVideoPlayerStore()
 const chatStore = useChatStore()

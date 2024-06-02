@@ -194,7 +194,7 @@ watch(
       if (newVal) {
         // Dynamically import Stripe library only after consent is given
         const { loadStripe } = await import('@stripe/stripe-js');
-        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
+        const stripePromise = loadStripe(import.meta.env.MIX_STRIPE_KEY);
         stripe = await stripePromise;
         initialize();
         shopStore.showPaymentForm = true
@@ -211,7 +211,7 @@ onMounted(async () => {
       } else {
         // Dynamically import Stripe library if user has already consented
         const { loadStripe } = await import('@stripe/stripe-js');
-        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
+        const stripePromise = loadStripe(import.meta.env.MIX_STRIPE_KEY);
         stripe = await stripePromise;
         initialize();
         shopStore.showPaymentForm = true;

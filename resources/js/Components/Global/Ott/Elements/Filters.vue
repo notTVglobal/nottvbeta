@@ -58,7 +58,7 @@
 import { computed } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
-import Upgrade from '@/Components/Global/Ott/Elements/Upgrade'
+import Upgrade from '@/Components/Global/Ott/Elements/Upgrade.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()

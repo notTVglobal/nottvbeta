@@ -95,9 +95,9 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 // import { useStreamStore } from "@/Stores/StreamStore"
 // import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import ChannelsList from "@/Components/Global/Channels/ChannelsList"
-import Upgrade from "@/Components/Global/Ott/Elements/Upgrade"
-import ScrollDownIndicator from "@/Components/Global/UserHints/ScrollDownIndicator"
+import ChannelsList from "@/Components/Global/Channels/ChannelsList.vue"
+import Upgrade from "@/Components/Global/Ott/Elements/Upgrade.vue"
+import ScrollDownIndicator from "@/Components/Global/UserHints/ScrollDownIndicator.vue"
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

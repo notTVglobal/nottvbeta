@@ -35,10 +35,12 @@
         <!-- Fonts -->
 
         <!-- Styles -->
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <link rel="stylesheet" href="{{ mix('css/liveStreamGuide.css') }}">
+{{--        <link rel="stylesheet" href="{{ mix('css/app.css') }}">--}}
+{{--        <link rel="stylesheet" href="{{ mix('css/liveStreamGuide.css') }}">--}}
 {{--        <style nonce="{{ csp_nonce() }}"></style>--}}
 {{--        <link rel="stylesheet" href="css/emojionearea.min.css">--}}
+
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/manifest.js', 'resources/js/vendor.js', 'resources/js/ssr.mjs'])
 
         <!-- Favicon -->
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" >
@@ -95,9 +97,9 @@
         @routes
 
 
-        <script src="{{ mix('js/manifest.js') }}" defer></script>
-        <script src="{{ mix('js/vendor.js') }}" defer></script>
-        <script src="{{ mix('js/app.js') }}" defer></script>
+{{--        <script src="{{ mix('js/manifest.js') }}" defer></script>--}}
+{{--        <script src="{{ mix('js/vendor.js') }}" defer></script>--}}
+{{--        <script src="{{ mix('js/app.js') }}" defer></script>--}}
 {{--        <script nonce="{{ csp_nonce() }}"></script>--}}
 
 

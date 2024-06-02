@@ -62,25 +62,25 @@ import { useChannelStore } from '@/Stores/ChannelStore'
 import { useOttStore } from '@/Stores/OttStore'
 import { useSocialShareStore } from '@/Stores/SocialShareStore'
 
-import ResponsiveNavigationMenu from '@/Components/Global/Navigation/ResponsiveNavigationMenu'
-import NavigationMenu from '@/Components/Global/Navigation/NavigationMenu'
+import ResponsiveNavigationMenu from '@/Components/Global/Navigation/ResponsiveNavigationMenu.vue'
+import NavigationMenu from '@/Components/Global/Navigation/NavigationMenu.vue'
 
 const Login = defineAsyncComponent(() =>
-    import('@/Components/Pages/Welcome/Login'))
+    import('@/Components/Pages/Welcome/Login.vue'))
 
-import VideoPlayerMain from '@/Components/Global/VideoPlayer/VideoPlayerMain'
+import VideoPlayerMain from '@/Components/Global/VideoPlayer/VideoPlayerMain.vue'
 import OttContentFullPageDesktop from '@/Components/Global/Ott/Content/OttContentFullPageDesktop.vue'
 
 import GeneralServiceNotification from '@/Components/Global/Modals/GeneralServiceNotification.vue'
 import OrangeFeedbackBox from '@/Components/Global/Feedback/OrangeFeedbackBox.vue'
 import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
-import NotificationModal from '@/Components/Global/Notifications/NotificationModal'
-import DialogNotification from '@/Components/Global/Modals/DialogNotification'
+import NotificationModal from '@/Components/Global/Notifications/NotificationModal.vue'
+import DialogNotification from '@/Components/Global/Modals/DialogNotification.vue'
 import ImageLightboxModal from '@/Components/Global/Modals/ImageLightboxModal.vue'
 import CookieBanner from '@/Components/Global/Banners/CookieBanner.vue'
 import ConfirmNotificationModal from '@/Components/Global/Modals/ConfirmNotificationModal.vue'
 import SocialSharingModal from '@/Components/Global/Modals/SocialSharingModal.vue'
-import useEchoListeners from '@/Utilities/EchoListeners'
+import useEchoListeners from '@/Utilities/EchoListeners.js'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()

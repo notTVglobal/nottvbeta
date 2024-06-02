@@ -323,17 +323,17 @@
 
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
-import JetApplicationMark from '@/Jetstream/ApplicationMark'
-import JetDropdownLink from '@/Jetstream/DropdownLink'
-import JetDropdown from '@/Jetstream/Dropdown'
-import JetNavLink from '@/Jetstream/NavLink'
+import JetApplicationMark from '@/Jetstream/ApplicationMark.vue'
+import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
+import JetDropdown from '@/Jetstream/Dropdown.vue'
+import JetNavLink from '@/Jetstream/NavLink.vue'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
-import AppVersion from "@/Components/Global/AppVersion/AppVersion"
-import NotificationButton from "@/Components/Global/Notifications/NotificationButton"
+import AppVersion from "@/Components/Global/AppVersion/AppVersion.vue"
+import NotificationButton from "@/Components/Global/Notifications/NotificationButton.vue"
 // import NotificationsButton from "@/Components/Global/Navigation/NotificationsButton"
 import { useStoreReset } from "@/Utilities/StoreReset"
 import PublicNavLink from '@/Components/Global/Buttons/PublicNavLink.vue'

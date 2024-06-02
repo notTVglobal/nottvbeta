@@ -1,8 +1,10 @@
-import './bootstrap'
+import './bootstrap.js'
+import '../css/app.css'
+import '../css/liveStreamGuide.css'
 
 import {createApp, h} from 'vue'
 import {createInertiaApp, Head, Link} from '@inertiajs/vue3'
-import AppLayout from "./Layouts/AppLayout"
+import AppLayout from "./Layouts/AppLayout.vue"
 import {createPinia} from "pinia"
 import { ZiggyVue } from 'ziggy-js'
 import { Ziggy } from "./ziggy.js"
@@ -128,7 +130,7 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async name => {
 
-        let page = await import(`./Pages/${name}`);
+        let page = await import(`./Pages/${name}.vue`);
 
         page = page.default;
 

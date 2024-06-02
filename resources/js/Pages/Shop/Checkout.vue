@@ -256,7 +256,7 @@ export default {
     }
   },
   async mounted() {
-    this.stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
+    this.stripe = await loadStripe(import.meta.env.MIX_STRIPE_KEY);
 
     const elements = this.stripe.elements();
     this.cardElement = elements.create('card', {

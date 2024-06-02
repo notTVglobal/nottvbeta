@@ -36,8 +36,8 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
-import MyShowsHeader from "@/Components/Pages/Dashboard/Elements/MyShows/MyShowsHeader"
-import MyShowsFooter from "@/Components/Pages/Dashboard/Elements/MyShows//MyShowsFooter"
+import MyShowsHeader from "@/Components/Pages/Dashboard/Elements/MyShows/MyShowsHeader.vue"
+import MyShowsFooter from "@/Components/Pages/Dashboard/Elements/MyShows//MyShowsFooter.vue"
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 defineProps({

@@ -34,7 +34,6 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Global/Paginators/Pagination"
 import PaginationDark from '@/Components/Global/Paginators/PaginationDark.vue'
 
 defineProps({

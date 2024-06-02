@@ -35,9 +35,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useDashboardStore } from "@/Stores/DashboardStore"
-import TeamTransferAlert from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Alerts/TeamTransferAlert"
-import PromotionalPoster from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Promotions/PromotionalPoster"
-import WeatherWidget from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Widgets/WeatherWidget"
+import TeamTransferAlert from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Alerts/TeamTransferAlert.vue"
+import PromotionalPoster from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Promotions/PromotionalPoster.vue"
+import WeatherWidget from "@/Components/Pages/Dashboard/Elements/DashboardNotification/Widgets/WeatherWidget.vue"
 
 const dashboardStore = useDashboardStore()
 

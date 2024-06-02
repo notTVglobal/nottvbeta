@@ -1,7 +1,10 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme')
+// const defaultTheme = require('tailwindcss/defaultTheme')
+import defaultTheme from 'tailwindcss/defaultTheme'
+import forms from '@tailwindcss/forms'
 
-module.exports = {
+// module.exports = {
+export default {
     darkMode: 'class',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
@@ -32,24 +35,26 @@ module.exports = {
                     dark: '#1e1e1e', // Dark gray variation
                 },
 
+            },
+            maxHeight: {
+                '1/2screen': '50vh',
+                '80vh': '80vh',
+                '50': '12.5rem', // Assuming 1 unit in Tailwind is 0.25rem, adjust accordingly.
+            },
+            maxWidth: {
+                '80vw': '80vw',
+            },
         },
-        maxHeight: {
-            '1/2screen': '50vh',
-            '80vh': '80vh',
-            '50': '12.5rem', // Assuming 1 unit in Tailwind is 0.25rem, adjust accordingly.
-        },
-        maxWidth: {
-            '80vw': '80vw',
+        listStyleType: {
+            disc: 'disc',
+            // ... other styles
         },
     },
-    listStyleType: {
-        disc: 'disc',
-        // ... other styles
-    },
-},
 
-    plugins
-:
-[require('@tailwindcss/forms'), require('@tailwindcss/typography'), require('daisyui')],
+    plugins:
+        [
+            [forms],
+            // require('@tailwindcss/forms'),
+            require('@tailwindcss/typography'), require('daisyui')],
 }
 

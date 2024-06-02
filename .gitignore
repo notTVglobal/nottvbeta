@@ -27,3 +27,5 @@ test.http
 /.vscode
 /public/js/node_modules_babel-loader_lib_index_js_clonedRuleSet-5_use_0_node_modules_vue-loader_dist_ind-af5a08.js
 composer-setup.sig
+/public/build
+/bootstrap/ssr

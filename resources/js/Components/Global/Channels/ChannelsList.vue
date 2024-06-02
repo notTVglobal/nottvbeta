@@ -36,7 +36,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
 import { useChannelStore } from "@/Stores/ChannelStore"
-import ChannelFooter from "@/Components/Global/Channels/ChannelFooter"
+import ChannelFooter from "@/Components/Global/Channels/ChannelFooter.vue"
 import ScrollDownIndicator from '@/Components/Global/UserHints/ScrollDownIndicator.vue'
 
 const videoPlayerStore = useVideoPlayerStore()

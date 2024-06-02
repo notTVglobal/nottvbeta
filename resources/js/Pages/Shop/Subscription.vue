@@ -136,7 +136,7 @@ let elements
 let emailAddress
 
 let StripeAPIKey = ''
-StripeAPIKey = process.env.MIX_STRIPE_KEY
+StripeAPIKey = import.meta.env.MIX_STRIPE_KEY
 
 // Watch for changes in userStore.hasConsentedToCookies
 watch(
@@ -173,7 +173,7 @@ onMounted(async () => {
       } else {
         // Dynamically import Stripe library if user has already consented
         const {loadStripe} = await import('@stripe/stripe-js')
-        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY)
+        const stripePromise = loadStripe(import.meta.env.MIX_STRIPE_KEY)
         stripe = await stripePromise
         initialize()
         shopStore.showPaymentForm = true

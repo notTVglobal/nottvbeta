@@ -15,7 +15,7 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import { useUserStore } from "@/Stores/UserStore"
-import NotificationsContainer from "@/Components/Global/Notifications/NotificationsContainer"
+import NotificationsContainer from "@/Components/Global/Notifications/NotificationsContainer.vue"
 
 const userStore = useUserStore()
 

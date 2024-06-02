@@ -32,7 +32,7 @@
 <script setup>
 import { computed, ref } from "vue"
 import { useUserStore } from "@/Stores/UserStore"
-import NotificationCard from "@/Components/Global/Notifications/NotificationCard"
+import NotificationCard from "@/Components/Global/Notifications/NotificationCard.vue"
 
 const userStore = useUserStore()
 

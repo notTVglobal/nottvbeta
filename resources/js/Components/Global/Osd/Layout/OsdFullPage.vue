@@ -42,7 +42,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { useUserStore } from '@/Stores/UserStore'
-import OsdCurrentViewers from '@/Components/Global/Osd/Elements/OsdCurrentViewers'
+import OsdCurrentViewers from '@/Components/Global/Osd/Elements/OsdCurrentViewers.vue'
 import OsdNowPlaying from '@/Components/Global/Osd/Elements/OsdNowPlaying.vue'
 import OsdIsLive from '@/Components/Global/Osd/Elements/OsdIsLive.vue'
 import VideoVolumeIndicatorVertical

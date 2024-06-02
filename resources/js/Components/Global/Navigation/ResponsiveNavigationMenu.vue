@@ -304,15 +304,15 @@
 <script setup>
 import { router, Link, usePage } from '@inertiajs/vue3'
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
-import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
+import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useStoreReset } from "@/Utilities/StoreReset"
-import JetApplicationMark from "@/Jetstream/ApplicationMark"
-import AppVersion from "@/Components/Global/AppVersion/AppVersion"
-import NotificationButton from "@/Components/Global/Notifications/NotificationButton"
+import JetApplicationMark from "@/Jetstream/ApplicationMark.vue"
+import AppVersion from "@/Components/Global/AppVersion/AppVersion.vue"
+import NotificationButton from "@/Components/Global/Notifications/NotificationButton.vue"
 import PublicNavLink from '@/Components/Global/Buttons/PublicNavLink.vue'
 import { route } from "ziggy-js";
 import JetNavLink from "@/Jetstream/NavLink.vue";

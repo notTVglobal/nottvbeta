@@ -22,7 +22,7 @@ usePageSetup('payment2')
 // const stripePromise = loadStripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');
 
 const stripePromise = loadStripe(
-    process.env.STRIPE_KEY
+    import.meta.env.STRIPE_KEY
 );
 
 // const stripe = Stripe(process.env.STRIPE_SECRET_KEY);

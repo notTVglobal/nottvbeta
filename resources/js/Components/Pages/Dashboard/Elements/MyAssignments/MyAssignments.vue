@@ -11,6 +11,6 @@
 </template>
 
 <script setup>
-import MyAssignmentsHeader from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignmentsHeader"
-import MyAssignmentsFooter from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignmentsFooter"
+import MyAssignmentsHeader from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignmentsHeader.vue"
+import MyAssignmentsFooter from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignmentsFooter.vue"
 </script>

@@ -20,7 +20,7 @@ import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import MessageItem from "@/Components/Global/Chat/ChatMessage"
+import MessageItem from "@/Components/Global/Chat/ChatMessage.vue"
 
 const appSettingStore = useAppSettingStore()
 const chatStore = useChatStore()

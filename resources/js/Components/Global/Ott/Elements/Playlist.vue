@@ -59,7 +59,7 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from "@/Stores/UserStore"
 // import { useStreamStore } from "@/Stores/StreamStore"
 // import { useChatStore } from "@/Stores/ChatStore"
-import Upgrade from "@/Components/Global/Ott/Elements/Upgrade"
+import Upgrade from "@/Components/Global/Ott/Elements/Upgrade.vue"
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()

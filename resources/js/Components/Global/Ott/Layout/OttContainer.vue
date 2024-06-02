@@ -15,13 +15,13 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from "@/Stores/UserStore"
-import ButtonsFullPage from "@/Components/Global/Ott/Elements/ButtonsFullPage"
-import ButtonsTopRight from "@/Components/Global/Ott/Elements/ButtonsTopRight"
-import NowPlayingInfo from "@/Components/Global/Ott/Elements/NowPlayingInfo"
-import Playlist from "@/Components/Global/Ott/Elements/Playlist"
-import Channels from "@/Components/Global/Ott/Elements/Channels"
-import Filters from "@/Components/Global/Ott/Elements/Filters"
-import ChatContainer from '@/Components/Global/Ott/Elements/Chat'
+import ButtonsFullPage from "@/Components/Global/Ott/Elements/ButtonsFullPage.vue"
+import ButtonsTopRight from "@/Components/Global/Ott/Elements/ButtonsTopRight.vue"
+import NowPlayingInfo from "@/Components/Global/Ott/Elements/NowPlayingInfo.vue"
+import Playlist from "@/Components/Global/Ott/Elements/Playlist.vue"
+import Channels from "@/Components/Global/Ott/Elements/Channels.vue"
+import Filters from "@/Components/Global/Ott/Elements/Filters.vue"
+import ChatContainer from '@/Components/Global/Ott/Elements/Chat.vue'
 import Upgrade from '@/Components/Global/Ott/Elements/Upgrade.vue'
 import { computed } from 'vue'
 

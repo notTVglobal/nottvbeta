@@ -39,7 +39,7 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
 //                'encrypted' => env('PUSHER_APP_ENCRYPTED'),
                 'useTLS'  => env('PUSHER_APP_TLS'), true,
-//                'host' => env('WEBSOCKET_HOST'),
+                'host' => env('WEBSOCKET_HOST'),
 //                'port' => env('WEBSOCKET_PORT'),
 //                'scheme' => env('WEBSOCKET_SCHEME')
 //                'host' => 'socket.not.tv',
