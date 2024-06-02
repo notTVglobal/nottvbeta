@@ -474,6 +474,14 @@ Route::middleware([
 
   Route::post('/shop/purchase', [StripeController::class, 'purchase']);
 
+  Route::get('/test-env', function () {
+    $stripeSecret = env('STRIPE_SECRET');
+    if (!$stripeSecret) {
+      return response('Stripe secret key is not set', 500);
+    }
+    return response('Stripe secret key is set: ' . $stripeSecret, 200);
+  });
+
   // tec21: We may have to re-evaluate this...
   // can the setup intent happen on the payment page?
   // the user still has a choice here about doing a
