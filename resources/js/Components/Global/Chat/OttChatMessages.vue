@@ -32,20 +32,21 @@ let props = defineProps({
 
 let channels = ref([])
 
-const channel = window.Echo.private('chat.' + '1')
-    channel
-    .subscribed(() => {
-      console.log('Successfully subscribed to the channel.');
-    })
-    .error((error) => {
-      console.error('Subscription error:', error);
-    })
-    .listen('.chat', (event) => {
-      console.log('Event received:', event);
-      const tempId = Date.now();
-      const newMessage = {...event.message, id: tempId};
-      chatStore.newMessages.push(newMessage);
-    });
+// const channel = window.Echo.private('chat.' + '1')
+//     channel
+//     .subscribed(() => {
+//       console.log('Successfully subscribed to the channel.');
+//     })
+//     .error((error) => {
+//       console.error('Subscription error:', error);
+//     })
+
+// window.Echo.private('chat.' + '1').listen('.chat', (event) => {
+//       console.log('Event received:', event);
+//       const tempId = Date.now();
+//       const newMessage = {...event.message, id: tempId};
+//       chatStore.newMessages.push(newMessage);
+//     });
 
 // onBeforeMount(async () => {
 //
