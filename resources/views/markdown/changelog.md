@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: May 30, 2024\
+Last Update: June 2, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.9
+June 2, 2024
+
+* Style changes to some of the pages.
+* Fixing the payment process... one-time contribution needs some work.
+* Fixed the Schedule Episode date bug.
 
 ## v0.9.3.8
 May 29, 2024

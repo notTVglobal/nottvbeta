@@ -1,117 +1,42 @@
 <template>
   <Head :title="pageTitle">
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" :content="ogUrl" />
-    <meta property="og:type" :content="ogType" />
-    <meta property="og:title" :content="ogTitle" />
-    <meta property="og:description" :content="ogDescription" />
-    <meta property="og:image" :content="ogImage" />
-    <meta property="og:image:alt" :content="twitterImageAlt" /> <!-- Optional: for better accessibility -->
+    <meta property="og:url" :content="ogUrl"/>
+    <meta property="og:type" :content="ogType"/>
+    <meta property="og:title" :content="ogTitle"/>
+    <meta property="og:description" :content="ogDescription"/>
+    <meta property="og:image" :content="ogImage"/>
+    <meta property="og:image:alt" :content="twitterImageAlt"/> <!-- Optional: for better accessibility -->
 
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" :content="twitterCard" />
-    <meta name="twitter:site" :content="twitterSite" />
-    <meta name="twitter:creator" :content="twitterCreator" />
-    <meta name="twitter:title" :content="ogTitle" />
-    <meta name="twitter:description" :content="ogDescription" />
-    <meta name="twitter:image" :content="ogImage" />
-    <meta name="twitter:image:alt" :content="twitterImageAlt" />
+    <meta name="twitter:card" :content="twitterCard"/>
+    <meta name="twitter:site" :content="twitterSite"/>
+    <meta name="twitter:creator" :content="twitterCreator"/>
+    <meta name="twitter:title" :content="ogTitle"/>
+    <meta name="twitter:description" :content="ogDescription"/>
+    <meta name="twitter:image" :content="ogImage"/>
+    <meta name="twitter:image:alt" :content="twitterImageAlt"/>
   </Head>
 
 
   <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
     <div id="topDiv" class="text-white bg-gray-900 rounded py-5 min-h-screen">
-
+<div class="flex flex-col justify-center max-w-7xl mx-auto">
+  <div class="w-full">
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <div v-if="can.editShow || can.manageShow"
-           class="flex justify-end">
-
-        <div class="flex flex-col">
-          <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-4">
-            <button
-                @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
-                class="px-4 py-2 h-fit text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-            >Back to<br/>
-              Team Page
-            </button>
-            <button
-                v-if="can.manageShow"
-                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Back to<br/>
-              Manage Show
-            </button>
-            <button
-                v-if="can.manageShow"
-                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/manage`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Back to<br/>
-              Manage Episode
-            </button>
-          </div>
-          <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
-            <button
-                v-if="can.editShow"
-                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/edit`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Edit
-            </button>
-          </div>
-        </div>
-      </div>
+      <ShowEpisodeHeaderCreatorNavButtons :can="can" :team="team" :show="show" :episode="episode"/>
 
       <header class="p-5 mb-6">
-        <div class="flex flex-col md:flex-row flex-wrap justify-between px-5">
-          <div class="w-full md:w-3/4">
-            <div class="mb-4">
-              <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
 
-
-                {{ episode.name }}
-
-
-              </h3>
-              <div class="mb-1">
-                  <span class="font-semibold text-xl hover:text-blue-400 text-blue-500 hover:cursor-pointer">
-                      <Link :href="`/shows/${show.slug}/`">{{ show.name }}</Link>
-                  </span>
-              </div>
-              <Link :href="`/teams/${team.slug}`" class="text-blue-300 hover:text-blue-500"><span
-                  class="text-sm uppercase font-semibold">{{ team.name }}</span></Link>
-              <div class="text-xs space-y-1">
-
-              </div>
-            </div>
-            <div v-if="episode.release_dateTime" class="text-yellow-500">
-              {{ formatDate(episode.release_dateTime) }}
-            </div>
-            <ConvertDateTimeToTimeAgo v-if="episode.scheduled_release_dateTime"
-                                      :dateTime="episode.scheduled_release_dateTime" :class="`text-green-400`"/>
-
-
-            <div class="text-gray-500 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
-            <div class="text-gray-500 mt-1" v-if="episode.episode_number">Episode {{
-                episode.episode_number
-              }}
-            </div>
-          </div>
-
-          <div class="flex flex-col text-left md:text-right w-full md:w-1/4">
-            <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{
-                show?.category?.name
-              }}</span>
-            <span class="tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
-          </div>
-
-        </div>
+        <ShowShowEpisodeHeader :show="show" :episode="episode" :team="team"/>
 
         <p v-if="episode.video.upload_status === 'processing' && !episode.video.video_url"
            class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
           The episode video is currently processing. Please check back later.
         </p>
 
-        <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
+        <div class="flex flex-wrap px-10 mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
           <div></div>
           <button v-if="episode.video.isAvailable"
                   class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
@@ -136,7 +61,7 @@
 
       </header>
 
-      <div class="my-6 py-5 px-8">
+      <div class="my-6 py-5 px-4 xl:px-16">
         <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
         <!--          <div class="description">{{ episode.description }}</div>-->
         <ExpandableDescription :description="episode.description" :hideTitle="true"/>
@@ -208,7 +133,8 @@
           </div>
         </div>
       </div>
-
+  </div>
+</div>
     </div>
   </div>
 
@@ -226,11 +152,13 @@ import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import Message from '@/Components/Global/Modals/Messages'
-import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
+import ShowShowEpisodeHeader from '@/Components/Pages/ShowEpisodes/Layout/ShowShowEpisodeHeader.vue'
+import ShowEpisodeHeaderCreatorNavButtons
+  from '@/Components/Pages/ShowEpisodes/Elements/ShowEpisodeHeaderCreatorNavButtons.vue'
 
 usePageSetup('showEpisodesShow')
 
@@ -416,12 +344,12 @@ const ogImage = computed(() => {
   }
   return null
 })
-const twitterCard = computed(() => 'summary_large_image'); // Type of Twitter card
-const twitterSite = computed(() => '@notTV'); // Your Twitter handle
+const twitterCard = computed(() => 'summary_large_image') // Type of Twitter card
+const twitterSite = computed(() => '@notTV') // Your Twitter handle
 const twitterCreator = computed(() => {
-  return props?.show?.socialMediaLinks?.twitter_handle || '';
-});
-const twitterImageAlt = computed(() => props.episode.name + ' Poster'); // Alt text for the image
+  return props?.show?.socialMediaLinks?.twitter_handle || ''
+})
+const twitterImageAlt = computed(() => props.episode.name + ' Poster') // Alt text for the image
 
 
 </script>

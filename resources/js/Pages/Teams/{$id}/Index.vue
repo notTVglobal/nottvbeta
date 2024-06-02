@@ -11,6 +11,9 @@
     <div
         class="min-h-screen w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow">
 
+      <div class="flex flex-col justify-center max-w-7xl mx-auto">
+        <div class="w-full">
+
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <TeamIdIndexHeader />
@@ -31,6 +34,9 @@
       </div>
 
       <div class="spacer min-h-32"></div>
+    </div>
+
+      </div>
     </div>
 
   </div>
