@@ -34,13 +34,6 @@ window.Echo = new Echo({
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     encrypted: true,
     forceTLS: true,
-    authEndpoint: '/broadcasting/auth', // Ensure this endpoint is correct
-    auth: {
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    }
-
 
 
     // wsHost: process.env.MIX_WEBSOCKET_HOST,
@@ -125,4 +118,4 @@ console.log('Echo initialized:', window.Echo);
  * allow your team to quickly build robust real-time web applications.
  */
 
-import './echo';
+// import './echo';
