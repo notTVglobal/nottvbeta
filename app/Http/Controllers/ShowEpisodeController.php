@@ -116,6 +116,13 @@ class ShowEpisodeController extends Controller {
 
   public function store(HttpRequest $request) {
 
+    // Add a default value for copyrightYear if it's missing
+    $currentYear = date('Y');
+    $request->merge(['copyrightYear' => $request->input('copyrightYear', $currentYear)]);
+
+    // Log the request data for debugging purposes
+    Log::debug('Request Data:', $request->all());
+
     $rules = [
         'name'                => [
             'required',
@@ -134,7 +141,17 @@ class ShowEpisodeController extends Controller {
         'notes'               => 'nullable|string|max:2000',
       // 'youtube_url'         => 'active_url', // Commented out
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
-      // The 'copyrightYear' validation is conditionally added below
+        'copyrightYear'       => [
+            'sometimes',
+            'integer',
+            'min:1900',
+            'max:' . date('Y'),
+            function($attribute, $value, $fail) use ($request) {
+              if ($request->input('creative_commons_id') != 8 && !$value) {
+                $fail('The copyright year is required when not Public Domain.');
+              }
+            }
+        ],
 
     ];
 
@@ -159,6 +176,7 @@ class ShowEpisodeController extends Controller {
       return $input->creative_commons_id != 8;
     });
 
+
     // Perform validation
     if ($validator->fails()) {
       return redirect()->back()->withErrors($validator)->withInput();
@@ -166,6 +184,7 @@ class ShowEpisodeController extends Controller {
 
     // Retrieve the validated data
     $validatedData = $validator->validated();
+
 
     // Clean the description
     $sanitizedDescription = Purifier::clean($validatedData['description'], 'customNoCss');
@@ -211,7 +230,8 @@ class ShowEpisodeController extends Controller {
       $showEpisode->slug = \Str::slug($validatedData['name']);
       $showEpisode->notes = e($validatedData['notes']);
       $showEpisode->release_year = Carbon::now()->format('Y');
-      $showEpisode->copyrightYear = e($validatedData['copyrightYear']);
+      // Set copyrightYear to null if it's not required
+      $showEpisode->copyrightYear = $validatedData['creative_commons_id'] == 8 ? null : e($validatedData['copyrightYear']);
       $showEpisode->creative_commons_id = $validatedData['creative_commons_id'];
       $showEpisode->video_embed_code = e($validatedData['video_embed_code']);
 

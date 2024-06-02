@@ -3,6 +3,11 @@
 Last Update: June 2, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.10
+June 2, 2024
+
+* Fix the problem with creating an episode with as public domain.
+
 ## v0.9.3.9
 June 2, 2024
 

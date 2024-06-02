@@ -254,6 +254,7 @@ import LicensingExplained from '@/Components/Global/CreativeCommonsLicensing/Lic
 import CreateEpisodeSetDescription from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeSetDescription.vue'
 import CreativeCommonsAboutTheLicenses
   from '@/Components/Pages/ShowEpisodes/Elements/CreativeCommonsAboutTheLicenses.vue'
+import dayjs from 'dayjs'
 
 usePageSetup('shows/slug/episodes/create')
 
@@ -278,9 +279,9 @@ let props = defineProps({
 //     teamStore.setActiveTeam(props.team);
 // }
 
-let selectedCreativeCommons = ref(null);
-let selectedCopyrightYear = ref(null);
-const currentYear = new Date().getFullYear();
+let selectedCreativeCommons = ref();
+let selectedCopyrightYear = ref();
+const currentYear = dayjs().year();
 
 let form = useForm({
   name: '',
@@ -344,13 +345,28 @@ onMounted(() => {
 
 let submit = () => {
   if (form.video_embed_code && form.video_url) {
-    notificationStore.setConfirmNotification('Confirm', 'Are you sure you want to add this embed code? It will override the video url.')
-    return
-  } else
-    form.creative_commons_id = selectedCreativeCommons.value
-    form.copyrightYear = selectedCopyrightYear.value
-    form.description = showEpisodeStore.episode.description
-    form.post(route('showEpisodes.store', props.show.slug));
+    notificationStore.setConfirmNotification('Confirm', 'Are you sure you want to add this embed code? It will override the video url.');
+    return;
+  }
+
+  form.creative_commons_id = selectedCreativeCommons.value;
+  form.copyrightYear = selectedCopyrightYear.value || dayjs().year();
+  form.description = showEpisodeStore.episode.description;
+
+  form.post(route('showEpisodes.store', props.show.slug), {
+    onError: (errors) => {
+      // Handle validation errors
+      console.error(errors);
+      notificationStore.setToastNotification('Failed to create the episode. Please correct the errors and try again.', 'error');
+    },
+    onSuccess: () => {
+      // Handle success case if needed
+      notificationStore.setToastNotification('Episode created successfully.', 'success');
+    },
+    onFinish: () => {
+      // Reset form or perform other actions if needed
+    }
+  });
 };
 
 // let submit = () => {
