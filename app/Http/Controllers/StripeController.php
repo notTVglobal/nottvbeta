@@ -101,11 +101,20 @@ class StripeController extends Controller {
       }
     }
 
-    // If the user does not have a Stripe customer ID, create a new customer
+    // If the user does not have a Stripe customer ID, attempt to fetch it
     if (!$user->stripe_id) {
-      $user->createAsStripeCustomer();
-    }
+      // Search for an existing customer by email
+      $customers = Customer::all(['email' => $user->email]);
 
+      if (count($customers->data) > 0) {
+        // Use the existing customer ID
+        $user->stripe_id = $customers->data[0]->id;
+        $user->save();
+      } else {
+        // Create a new customer if none exist
+        $user->createAsStripeCustomer();
+      }
+    }
     // Create a setup intent
     $intent = $user->createSetupIntent();
 

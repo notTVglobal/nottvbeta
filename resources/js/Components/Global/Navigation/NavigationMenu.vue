@@ -202,7 +202,7 @@
                       </JetDropdownLink>
 
                       <JetDropdownLink
-                          v-if="userStore.hasAccount"
+                          v-if="$page.props.user.hasAccount"
                           @click.prevent="billingPortal"
                       >
                         Account
