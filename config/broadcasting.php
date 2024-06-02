@@ -55,22 +55,22 @@ return [
             ],
         ],
 //
-//        'reverb' => [
-//            'driver'    => 'reverb',
-//            'app_id'    => env('REVERB_APP_ID'),
-//            'key'       => env('REVERB_APP_KEY'),
-//            'secret'    => env('REVERB_APP_SECRET'),
-//            'options'   => [
-//                'host'   => env('REVERB_HOST'),
-//                'port'   => env('REVERB_PORT'),
-//                'scheme' => env('REVERB_SCHEME'),
-//                'tls'    => [
-//                    'local_cert' => env('REVERB_SERVER_CERT'),
-//                    'local_pk'   => env('REVERB_SERVER_PK'),
-//                ],
-//            ],
-//            'encrypted' => true,
-//        ],
+        'reverb' => [
+            'driver'    => 'reverb',
+            'app_id'    => env('REVERB_APP_ID'),
+            'key'       => env('REVERB_APP_KEY'),
+            'secret'    => env('REVERB_APP_SECRET'),
+            'options'   => [
+                'host'   => env('REVERB_HOST'),
+                'port'   => env('REVERB_PORT'),
+                'scheme' => env('REVERB_SCHEME'),
+                'tls'    => [
+                    'local_cert' => env('REVERB_SERVER_CERT'),
+                    'local_pk'   => env('REVERB_SERVER_PK'),
+                ],
+            ],
+            'encrypted' => true,
+        ],
 
         'ably' => [
             'driver' => 'ably',
