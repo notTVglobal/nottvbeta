@@ -119,8 +119,8 @@ const shopStore = useShopStore()
 let props = defineProps({
   user: Object,
   error: String,
-  intent: Object,
-  elements: {},
+  // intent: Object,
+  // elements: Object,
 })
 
 const paymentMessage = ref('')
@@ -129,13 +129,11 @@ let stripe
 let elements
 
 
-
 // const showPaymentForm = () => {
 //
 // }
 
-const initialize = () => {
-  const clientSecret = props.intent.client_secret
+const initialize = (clientSecret) => {
   const appearance = {
     theme: 'stripe',
     variables: {
@@ -163,7 +161,7 @@ const initialize = () => {
   const paymentElement = elements.create('payment', paymentElementOptions)
   paymentElement.mount('#payment-element')
   document.getElementById('payment-form').style.display = 'block'
-  // shopStore.showPaymentForm = true
+  shopStore.showPaymentForm = true
 
 }
 
@@ -190,38 +188,47 @@ const createPaymentIntent = async () => {
 watch(
     () => userStore.hasConsentedToCookies,
     async (newVal) => {
-      appSettingStore.showCookieBanner = !newVal;
+      appSettingStore.showCookieBanner = !newVal
       if (newVal) {
-        // Dynamically import Stripe library only after consent is given
-        const { loadStripe } = await import('@stripe/stripe-js');
-        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
-        stripe = await stripePromise;
-        initialize();
-        shopStore.showPaymentForm = true
+        try {
+          // Dynamically import Stripe library only after consent is given
+          const {loadStripe} = await import('@stripe/stripe-js')
+          stripe = await loadStripe(process.env.MIX_STRIPE_KEY)
+
+          // Create payment intent and initialize Stripe
+          const clientSecret = await createPaymentIntent()
+          initialize(clientSecret)
+        } catch (error) {
+          console.error('Error initializing payment:', error)
+        }
       }
     },
-    { immediate: false } // Do not execute immediately on load
-);
-
-
-
-onMounted(async () => {
-      if (!userStore.hasConsentedToCookies) {
-        appSettingStore.showCookieBanner = true
-      } else {
-        // Dynamically import Stripe library if user has already consented
-        const { loadStripe } = await import('@stripe/stripe-js');
-        const stripePromise = loadStripe(process.env.MIX_STRIPE_KEY);
-        stripe = await stripePromise;
-        initialize();
-        shopStore.showPaymentForm = true;
-      }
-      shopStore.customer = props.user
-    },
+    {immediate: false}, // Do not execute immediately on load
 )
 
 
+onMounted(async () => {
+  if (!userStore.hasConsentedToCookies) {
+    appSettingStore.showCookieBanner = true
+  } else {
+    try {
+      // Dynamically import Stripe library if user has already consented
+      const {loadStripe} = await import('@stripe/stripe-js')
+      stripe = await loadStripe(process.env.MIX_STRIPE_KEY)
+
+      // Create payment intent and initialize Stripe
+      const clientSecret = await createPaymentIntent()
+      initialize(clientSecret)
+    } catch (error) {
+      console.error('Error initializing payment:', error)
+    }
+  }
+  shopStore.customer = props.user
+})
+
+
 const submit = async () => {
+  processing.value = true
   setLoading(true)
   paymentMessage.value = ''
 

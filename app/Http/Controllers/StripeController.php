@@ -137,13 +137,19 @@ class StripeController extends Controller {
 
     return Inertia::render('Shop/OneTimeContribution', [
       // TODO: list customer's payment methods:
-        'payment_method' => $user->defaultPaymentMethod(),
-        'intent'         => $user->createSetupIntent(),
+//        'payment_method' => $user->defaultPaymentMethod(),
+//        'intent'         => $user->createSetupIntent(),
     ]);
   }
 
   public function createPaymentIntent(Request $request) {
-    Stripe::setApiKey(env('STRIPE_SECRET'));
+    $stripeSecret = env('STRIPE_SECRET');
+    if (!$stripeSecret) {
+      Log::error('Stripe secret key is not set');
+      return response()->json(['error' => 'Stripe secret key is not set'], 500);
+    }
+
+    Stripe::setApiKey($stripeSecret);
 
     $user = auth()->user();
 
