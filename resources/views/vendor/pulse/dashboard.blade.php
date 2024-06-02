@@ -9,9 +9,6 @@
 
     <livewire:pulse.slow-queries cols="8" />
 
-    <livewire:reverb.connections cols="full" />
-    <livewire:reverb.messages cols="full" />
-
     <livewire:pulse.exceptions cols="6" />
 
     <livewire:pulse.slow-requests cols="6" />
@@ -19,4 +16,8 @@
     <livewire:pulse.slow-jobs cols="6" />
 
     <livewire:pulse.slow-outgoing-requests cols="6" />
+
+    <livewire:reverb.connections cols="full" />
+    <livewire:reverb.messages cols="full" />
+
 </x-pulse>
