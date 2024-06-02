@@ -1,12 +1,15 @@
 <template>
   <div class="h-1/2 scrollbar-hide w-full">
 
-    <div class="overflow-y-auto overflow-ellipsis" :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
+    <div class="overflow-y-auto overflow-ellipsis"
+         :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
 
-      <div class="oldMessage hyphens-auto" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">
+      <div class="oldMessage hyphens-auto" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()"
+           :key="index">
         <message-item :id="oldMessage.id" :message="oldMessage"/>
       </div>
-      <div class="newMessage hyphens-auto" v-for="(newMessage, index) in chatStore.newMessages.slice()" :key="newMessage.id">
+      <div class="newMessage hyphens-auto" v-for="(newMessage, index) in chatStore.newMessages.slice()"
+           :key="newMessage.id">
         <message-item :id="newMessage.id" :message="newMessage"/>
       </div>
       <div id="scrollToMe"></div>
@@ -16,11 +19,11 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from "vue"
+import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { useChatStore } from "@/Stores/ChatStore"
-import { useUserStore } from "@/Stores/UserStore"
-import MessageItem from "@/Components/Global/Chat/ChatMessage"
+import { useChatStore } from '@/Stores/ChatStore'
+import { useUserStore } from '@/Stores/UserStore'
+import MessageItem from '@/Components/Global/Chat/ChatMessage'
 
 const appSettingStore = useAppSettingStore()
 const chatStore = useChatStore()
@@ -32,28 +35,28 @@ let props = defineProps({
 
 let channels = ref([])
 
-// const channel = window.Echo.private('chat.' + '1')
-//     channel
-//     .subscribed(() => {
-//       console.log('Successfully subscribed to the channel.');
-//     })
-//     .error((error) => {
-//       console.error('Subscription error:', error);
-//     })
-
-// window.Echo.private('chat.' + '1').listen('.chat', (event) => {
-//       console.log('Event received:', event);
-//       const tempId = Date.now();
-//       const newMessage = {...event.message, id: tempId};
-//       chatStore.newMessages.push(newMessage);
-//     });
+const channel = window.Echo.private('chat.' + '1')
+channel
+    .subscribed(() => {
+      console.log('Successfully subscribed to the channel.')
+    })
+    .error((error) => {
+      console.error('Subscription error:', error)
+    })
+    .listen('.chat', (event) => {
+      console.log('Event received:', event)
+      const tempId = Date.now()
+      const newMessage = {...event.message, id: tempId}
+      chatStore.newMessages.push(newMessage)
+      0
+    })
 
 // onBeforeMount(async () => {
 //
 // });
 
 onMounted(() => {
-  connect();
+  connect()
 })
 
 //
@@ -75,49 +78,49 @@ onUpdated(() => {
   // }
 })
 onBeforeUnmount(() => {
-  chatStore.newMessages = [];
-  chatStore.oldMessages = [];
-  disconnect();
-});
+  chatStore.newMessages = []
+  chatStore.oldMessages = []
+  disconnect()
+})
 
 // dayjs.extend(relativeTime)
 
 function connect() {
-  console.log('STREAM CHAT CONNECTED');
-  getChannels();
+  console.log('STREAM CHAT CONNECTED')
+  getChannels()
 }
 
 function getChannels() {
   axios.get('/chat/channels')
       .then(response => {
-        channels = response;
-        setChannel(channels.data[0]);
+        channels = response
+        setChannel(channels.data[0])
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       })
 }
 
 function setChannel(channel) {
-  chatStore.currentChannel = channel;
-  console.log('Joined Chat Channel: ' + chatStore.currentChannel.name);
-  getMessages();
+  chatStore.currentChannel = channel
+  console.log('Joined Chat Channel: ' + chatStore.currentChannel.name)
+  getMessages()
 }
 
 function getMessages() {
   axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
       .then(response => {
-        chatStore.oldMessages = response.data;
+        chatStore.oldMessages = response.data
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       })
-  console.log('LOAD MESSAGES');
+  console.log('LOAD MESSAGES')
 }
 
 function disconnect() {
-  window.Echo.leave("chat." + chatStore.currentChannel.id);
-  console.log('STREAM CHAT DISCONNECTED');
+  window.Echo.leave('chat.' + chatStore.currentChannel.id)
+  console.log('STREAM CHAT DISCONNECTED')
 }
 
 
@@ -126,12 +129,12 @@ function disconnect() {
 
 // scrollToMe button:
 function scrollTo(selector) {
-  document.querySelector(selector).scrollIntoView({behavior: 'smooth'});
+  document.querySelector(selector).scrollIntoView({behavior: 'smooth'})
 }
 
 const pipChatModeChangeHeight = computed(() => {
-  return appSettingStore.pipChatMode ? 'videoOTTChatMessagesChangeHeightForPipChatMode' : '';
-});
+  return appSettingStore.pipChatMode ? 'videoOTTChatMessagesChangeHeightForPipChatMode' : ''
+})
 
 
 // tec21: this is for setting a timer to update the timestamps on the messages.
@@ -145,15 +148,15 @@ const pipChatModeChangeHeight = computed(() => {
 export default {
   name: 'messages',
   data() {
-    return {messages: []};
+    return {messages: []}
   },
   mounted() {
-    this.getMessages();
-    this.$nextTick(() => this.scrollToEnd());
+    this.getMessages()
+    this.$nextTick(() => this.scrollToEnd())
   },
   updated() {
     // whenever data changes and the component re-renders, this is called.
-    this.$nextTick(() => this.scrollToEnd());
+    this.$nextTick(() => this.scrollToEnd())
   },
   methods: {
     async getMessages() {
@@ -161,8 +164,8 @@ export default {
     },
     scrollToEnd: function () {
       // scroll to the start of the last message
-      this.$el.scrollTop = this.$el.lastElementChild.offsetTop;
-    }
-  }
+      this.$el.scrollTop = this.$el.lastElementChild.offsetTop
+    },
+  },
 }
 </script>
