@@ -32,6 +32,8 @@
         <img :src="props.userSelected.profile_photo_url" class="rounded-full h-20 w-20 object-cover"/>
       </p>
 
+
+
       <h2 class="text-2xl pb-2">
         {{ props.userSelected.name }}
       </h2>

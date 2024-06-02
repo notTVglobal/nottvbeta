@@ -4,6 +4,13 @@
 /public/ThirdEyeSpies.mp4
 /storage/app/public/images/logo_black_311.png
 /storage/app/public/images/logo_white_512.png
+/storage/app/public/images/logo_white.svg
+/storage/app/public/images/EBU_Colorbars.svg.png
+/storage/app/public/images/Ping.png
+/storage/app/profile-photos/*
+/storage/app/temp-files/*
+/storage/app/temp-videos/*
+/storage/app/local-video-chunks/*
 /storage/*.key
 /storage/app
 /storage/app/csv/invite_codes.csv
