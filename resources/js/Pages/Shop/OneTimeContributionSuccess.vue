@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, getCurrentInstance, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useUserStore } from "@/Stores/UserStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -62,5 +62,23 @@ let props = defineProps({
 onMounted(async () => {
 
 });
+
+// Access the global properties
+const {proxy} = getCurrentInstance()
+
+// Start the confetti
+proxy.$confetti.start();
+
+// Stop the confetti after 5 seconds
+setTimeout(() => {
+  proxy.$confetti.stop(); // Replace `stop` with the actual method name to stop the confetti
+}, 5000); // 5000 milliseconds = 5 seconds
+
+let exploreChannelsDisplay = ref(false)
+
+const openChannelsOtt = () => {
+  appSettingStore.toggleOtt(2)
+  exploreChannelsDisplay.value = true
+}
 
 </script>
