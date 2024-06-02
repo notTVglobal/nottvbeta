@@ -204,10 +204,19 @@ class AdminController extends Controller {
 
     // Process subscription settings if they exist
     if ($request->has('subscription_settings')) {
-      $subscriptionSettings = SubscriptionHelper::processSubscriptionSettings($validatedData['subscription_settings'], false);
-      $settings->subscription_settings = $subscriptionSettings;
+      $subscriptionSettings = $validatedData['subscription_settings'];
+      $settings->subscription_settings = [
+          'monthly' => [
+              'price' => $subscriptionSettings['monthly']['price'],
+              'api_id' => $subscriptionSettings['monthly']['api_id'],
+          ],
+          'yearly' => [
+              'price' => $subscriptionSettings['yearly']['price'],
+              'api_id' => $subscriptionSettings['yearly']['api_id'],
+          ],
+          'stripe_secret_key' => $subscriptionSettings['stripe_secret_key'], // Add this line
+      ];
     }
-
     $settings->public_stats_url = $validatedData['public_stats_url'];
 
     $settings->save();
