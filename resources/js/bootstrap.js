@@ -29,13 +29,12 @@ window.Pusher = require('pusher-js');
 // console.log('Echo Host:', echoHost); // Debug log to verify host
 
 window.Echo = new Echo({
-    // broadcaster: 'pusher',
-    // key: process.env.MIX_PUSHER_APP_KEY,
-    // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    // forceTLS: process.env.MIX_PUSHER_APP_TLS,
-    // encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
-    // // broadcaster: 'reverb',
-    // key: process.env.MIX_PUSHER_APP_KEY,
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: process.env.MIX_PUSHER_APP_TLS,
+    encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
+
 
 
     // wsHost: process.env.MIX_WEBSOCKET_HOST,
@@ -53,15 +52,15 @@ window.Echo = new Echo({
     //
     // enabledTransports: ['ws', 'wss'],
 
-    broadcaster: 'reverb',
-    key: process.env.MIX_REVERB_APP_KEY,
-    wsHost: process.env.MIX_REVERB_HOST,
-    wsPort: process.env.MIX_REVERB_PORT ?? 80,
-    wssPort: process.env.MIX_REVERB_PORT ?? 443,
-    disableStats: true,
-    encrypted: true,
-    forceTLS: (process.env.MIX_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
+    // broadcaster: 'reverb',
+    // key: process.env.MIX_REVERB_APP_KEY,
+    // wsHost: process.env.MIX_REVERB_HOST,
+    // wsPort: process.env.MIX_REVERB_PORT ?? 80,
+    // wssPort: process.env.MIX_REVERB_PORT ?? 443,
+    // disableStats: true,
+    // encrypted: true,
+    // forceTLS: (process.env.MIX_REVERB_SCHEME ?? 'https') === 'https',
+    // enabledTransports: ['ws', 'wss'],
 
     // broadcaster: 'reverb',
     // key: import.meta.env.VITE_REVERB_APP_KEY,
@@ -113,3 +112,11 @@ console.log('Echo initialized:', window.Echo);
  */
 
 
+
+/**
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allow your team to quickly build robust real-time web applications.
+ */
+
+import './echo';
