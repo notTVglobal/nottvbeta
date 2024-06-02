@@ -32,9 +32,8 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: process.env.MIX_PUSHER_APP_TLS,
-    encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
-
+    encrypted: true,
+    forceTLS: true,
 
 
     // wsHost: process.env.MIX_WEBSOCKET_HOST,
@@ -119,4 +118,4 @@ console.log('Echo initialized:', window.Echo);
  * allow your team to quickly build robust real-time web applications.
  */
 
-import './echo';
+// import './echo';
