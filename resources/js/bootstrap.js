@@ -16,10 +16,10 @@ window.axios = axios;
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
-// import Pusher from 'pusher-js';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
-// window.Pusher = Pusher;
+window.Pusher = Pusher;
 
 // const echoKey = process.env.MIX_REVERB_APP_KEY;
 // const echoHost = process.env.MIX_REVERB_HOST;
@@ -28,12 +28,12 @@ window.axios = axios;
 // console.log('Echo Key:', echoKey); // Debug log to verify key
 // console.log('Echo Host:', echoHost); // Debug log to verify host
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true,
-//     forceTLS: true,
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    forceTLS: true,
 
 
     // wsHost: process.env.MIX_WEBSOCKET_HOST,
@@ -101,7 +101,7 @@ window.axios = axios;
     // disableStats: process.env.MIX_WEBSOCKET_DISABLE_STATS,
     // encrypted: process.env.MIX_WEBSOCKET_ENCRYPTED,
     // enabledTransports: process.env.MIX_WEBSOCKET_ENABLED_TRANSPORTS,
-// });
+});
 
 console.log('Echo initialized:', window.Echo);
 /**
@@ -118,4 +118,4 @@ console.log('Echo initialized:', window.Echo);
  * allow your team to quickly build robust real-time web applications.
  */
 
-import './echo';
+// import './echo';

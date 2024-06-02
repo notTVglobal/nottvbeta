@@ -32,7 +32,7 @@ let props = defineProps({
 
 let channels = ref([])
 
-const channel = Echo.private('chat.' + '1')
+const channel = window.Echo.private('chat.' + '1')
     channel
     .subscribed(() => {
       console.log('Successfully subscribed to the channel.');
