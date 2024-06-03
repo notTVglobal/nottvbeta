@@ -4676,6 +4676,10 @@ details.collapse summary::-webkit-details-marker {
   border-radius: 9999px;
   padding: 0px;
 }
+[type="checkbox"].checkbox-md {
+  height: 1.5rem;
+  width: 1.5rem;
+}
 [type="checkbox"].checkbox-lg {
   height: 2rem;
   width: 2rem;

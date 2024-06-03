@@ -7,13 +7,19 @@
         <li>File Types accepted: <span class="text-orange-400">{{ fileTypes }}</span></li>
       </ul>
 
+      <div class="checkbox-container mb-4">
+        <input type="checkbox" id="removeExif" v-model="removeExif" class="checkbox checkbox-md">
+        <label for="removeExif" class="checkbox-label">Remove EXIF data</label>
+      </div>
+
+
       <file-pond
           name="image"
           ref="pond"
           class-name="my-pond"
           allow-multiple="false"
           label-idle="Click to choose file, or drag here..."
-          :server="`/upload?modelType=${props.modelType}&modelId=${props.modelId}`"
+          :server="`/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif}`"
           accepted-file-types="image/jpeg, image/png"
           @init="handleFilePondInit"
           @processfile="handleProcessedFile"
@@ -57,7 +63,7 @@ const FilePond = vueFilePond(
 )
 
 // Define reactive variables
-
+const removeExif = ref(false);
 const maxSize = ref('30MB');
 const fileTypes = ref(['image/png', 'image/jpeg']);
 // const modelType = 'yourModelType'; // Replace with your actual model type
@@ -96,3 +102,14 @@ function handleProcessedFile(error, file) {
 
 
 </script>
+
+<style scoped>
+.checkbox-container {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+.checkbox {
+  margin-right: 8px; /* Space between the checkbox and the label */
+}
+</style>

@@ -334,9 +334,7 @@ class ImageController extends Controller {
 //      return response()->json(['errors' => ['image' => 'The file contains a virus and cannot be uploaded.']], 422);
 //    }
 
-    // Remove all metadata from the image
-//    $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
-//    Log::info("ExifTool result: $exifResult");
+
 
     // Proceed with file upload and record creation
     // Check the MIME type of the file
@@ -346,6 +344,12 @@ class ImageController extends Controller {
     }
 
     Log::info($mimeType);
+
+    if ($request->input('removeExif')) {
+      // Remove all metadata from the image
+    $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
+    Log::info("ExifTool result: $exifResult");
+    }
 
     $modelType = $request->input('modelType', null); // Default to null if not provided
     $modelId = $request->input('modelId', null); // Default to null if not provided
