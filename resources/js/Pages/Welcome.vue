@@ -30,6 +30,11 @@
             <div class="flex gap-2">
               <Button
                   class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  v-if="!$page.props.auth.user" @click="router.visit('/news')">
+                News
+              </Button>
+              <Button
+                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                   v-if="!$page.props.auth.user" @click="router.visit('/schedule')">
                 Schedule
               </Button>

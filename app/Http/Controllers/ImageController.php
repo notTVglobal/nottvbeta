@@ -335,8 +335,8 @@ class ImageController extends Controller {
 //    }
 
     // Remove all metadata from the image
-    $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
-    Log::info("ExifTool result: $exifResult");
+//    $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
+//    Log::info("ExifTool result: $exifResult");
 
     // Proceed with file upload and record creation
     // Check the MIME type of the file

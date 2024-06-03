@@ -91,7 +91,7 @@
 
 
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { useUserStore } from '@/Stores/UserStore'
 import { useNewsStore } from '@/Stores/NewsStore'
@@ -140,6 +140,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   newsStore.reset()
 })
+
+
 
 const handleSelectChange = (event) => {
   const subCategoryId = Number(event.target.value)
