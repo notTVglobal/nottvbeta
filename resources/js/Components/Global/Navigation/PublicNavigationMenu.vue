@@ -84,7 +84,7 @@
 
           </div>
           <div v-if="$page.props.auth.user && !isVerificationNoticeRoute" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
-            <h3 v-if="$page.props.auth.user.isCreator" class="inline-flex items-center relative">
+            <h3 v-if="$page.props.user.isCreator" class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/dashboard`">
                 Dashboard</JetNavLink>

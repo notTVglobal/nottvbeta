@@ -8,6 +8,8 @@ June 3, 2024
 
 * Fix the image upload problem.
 * Make removing image EXIF data optional.
+* Add Documentary category to Movies Categories.
+* Create a video upload preview/download page. 
 
 ## v0.9.3.10
 June 2, 2024

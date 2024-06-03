@@ -145,6 +145,8 @@ Route::get('/home', function () {
   return redirect('/');
 });
 
+Route::get('/video/{video}', [VideoController::class, 'show'])->name('video.show');
+
 Route::get('/public/register', function () {
   return Inertia::render('Register');
 })->name('public.register');

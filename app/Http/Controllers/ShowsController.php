@@ -924,7 +924,7 @@ class ShowsController extends Controller {
       $encodedFilename = rawurlencode($filename);
 
       // Construct the stream name by appending the encoded filename to the prefix
-      $playableStreamName = $streamPrefix . $encodedFilename . '.mp4';
+      $playableStreamName = $streamPrefix . $encodedFilename . (str_ends_with($encodedFilename, '.mkv') ? '.mp4' : '');
 
 //      // here's where we want to use the filename again.. rawurlencoded:
 //      // Encode the entire path to ensure it's safe for URL usage
@@ -945,7 +945,7 @@ class ShowsController extends Controller {
 //      $streamName = $streamPrefix . $encodedPath . '.mp4';
 
       $formattedStartTime = optional($recording->start_dateTime)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
-      $downloadFileName = rawurlencode($show->name . $formattedStartTime . '.mp4');
+      $downloadFileName = rawurlencode($show->name . $formattedStartTime . (str_ends_with($show->name . $formattedStartTime, '.mkv') ? '.mp4' : ''));
       $downloadUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '?dl=1&filename=' . $downloadFileName;
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $streamPrefix . $encodedFilename . '.html';
 

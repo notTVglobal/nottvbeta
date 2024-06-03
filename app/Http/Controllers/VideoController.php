@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Services\DigitalOceanService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Storage;
 
 //use Pion\Laravel\ChunkUpload\Storage;
 
+use Inertia\Response;
+use Inertia\ResponseFactory;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
@@ -29,8 +32,11 @@ use Inertia\Inertia;
 
 class VideoController extends Controller {
 
-  public function __construct() {
+  protected DigitalOceanService $digitalOceanService;
 
+  public function __construct(DigitalOceanService $digitalOceanService) {
+
+    $this->digitalOceanService = $digitalOceanService;
     $this->middleware('auth')->except(['index', 'show']);
   }
 
@@ -224,17 +230,39 @@ class VideoController extends Controller {
   /**
    * Display the specified resource.
    *
-   * @param \App\Models\Video $video
-   * @return \Illuminate\Http\Response
+   * @param Video $video
+   * @return Response|ResponseFactory
    */
-  public function show(Video $video) {
-    //
+  public function show(Video $video): Response|ResponseFactory {
+
+    // Eager load the appSetting relationship
+    $video->load('appSetting', 'user');
+
+    $videoSource = $this->digitalOceanService->getPreSignedUrl(
+        config('filesystems.disks.spaces.bucket'),
+        $video->cloud_private_folder . $video->folder . '/' . $video->file_name
+    );
+
+    return inertia('VideoPlayerPage', [
+        'video'       => [
+            'id'       => $video->id,
+            'filename' => $video->filename,
+            'user'     => [
+                'name'               => $video->user->name,
+                'profile_photo_path' => $video->user->profile_photo_path,
+                'profile_photo_url'  => $video->user->profile_photo_url,
+            ],
+        ],
+        'ulid'        => $video->ulid,
+        'videoSource' => $videoSource,
+        'videoType'   => $video->type,
+    ]);
   }
 
   /**
    * Show the form for editing the specified resource.
    *
-   * @param \App\Models\Video $video
+   * @param Video $video
    * @return \Illuminate\Http\Response
    */
   public function edit(Video $video) {
@@ -245,7 +273,7 @@ class VideoController extends Controller {
    * Update the specified resource in storage.
    *
    * @param \Illuminate\Http\Request $request
-   * @param \App\Models\Video $video
+   * @param Video $video
    * @return \Illuminate\Http\Response
    */
   public function update(Request $request, Video $video) {

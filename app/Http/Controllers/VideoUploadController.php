@@ -81,6 +81,7 @@ class VideoUploadController extends Controller {
             ->paginate(10, ['*'], 'videos')
             ->through(fn($video) => [
                 'id'                   => $video->id,
+                'ulid'                 => $video->ulid,
                 'user_id'              => $video->user->name,
                 'file_name'            => $video->file_name,
                 'extension'            => $video->extension,
