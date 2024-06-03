@@ -221,7 +221,7 @@
               v-if="userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/videoupload')"
-              :active="appSettingStore.currentPage === 'videoUpload'">
+              :active="appSettingStore.currentPage === 'videoupload'">
             Video Upload
           </JetResponsiveNavLink>
 

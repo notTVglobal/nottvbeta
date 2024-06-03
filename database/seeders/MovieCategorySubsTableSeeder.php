@@ -199,7 +199,12 @@ class MovieCategorySubsTableSeeder extends Seeder
               ['name' => 'Educational Documentary', 'description' => 'Aimed at providing educational content on various subjects, often used in academic or training contexts.'],
               ['name' => 'Experimental Documentary', 'description' => 'Utilizes experimental filmmaking techniques, often challenging traditional documentary forms and narratives.'],
               ['name' => 'Advocacy Documentary', 'description' => 'Created to advocate for a particular cause or viewpoint, often aiming to raise awareness or inspire action on specific issues.'],
-              ['name' => 'Personal Documentary', 'description' => 'Centers on the filmmaker\'s personal stories, experiences, or perspectives, often blending the personal with the universal.']
+              ['name' => 'Personal Documentary', 'description' => 'Centers on the filmmaker\'s personal stories, experiences, or perspectives, often blending the personal with the universal.'],
+              ['name' => 'Crime and Justice Documentary', 'description' => 'Investigates criminal cases, law enforcement, and the justice system.'],
+              ['name' => 'Food and Cuisine Documentary', 'description' => 'Focuses on culinary arts, cooking, and the cultural significance of food.'],
+              ['name' => 'Art and Design Documentary', 'description' => 'Focuses on visual arts, architecture, and design, exploring creativity and artistic expression.'],
+              ['name' => 'Human Interest Documentary', 'description' => 'Focuses on compelling human stories, often highlighting personal struggles and triumphs.'],
+              ['name' => 'Lifestyle Documentary', 'description' => 'Covers various aspects of daily living, including fashion, hobbies, and personal development.'],
           ],
           'Experimental' => [
               ['name' => 'Abstract Film', 'description' => 'Focuses on visual and auditory experiences without a narrative structure, often using shapes, colors, and textures for artistic expression.'],

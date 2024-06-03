@@ -96,9 +96,7 @@ onMounted(() => {
   showEpisodeStore.initializeShowEpisode(props.episode, props.show, props.team)
 })
 
-onUnmounted(() => {
-  showEpisodeStore.reset()
-})
+
 
 </script>
 

@@ -59,7 +59,7 @@ const initialState = () => ({
     newsStories: [],
     currentPage: 1,
     totalPages: 1,
-    selectedSubCategoryId: null,
+    selectedSubCategoryId: '',
     selectedSubCategoryName: '',
     selectedSubCategoryDescription: '',
     selectedCategoryId: null,

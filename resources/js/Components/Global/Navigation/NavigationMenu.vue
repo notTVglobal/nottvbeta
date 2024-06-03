@@ -219,10 +219,10 @@
 
                       <JetDropdownLink
                           v-if="userStore.isCreator"
-                          v-touch="()=>(router.visit('/videoUpload'))"
+                          v-touch="()=>(router.visit('/videoupload'))"
                           :href="`#`"
-                          @click.prevent="router.visit('/videoUpload')"
-                          :active="appSettingStore.currentPage === 'videoUpload'">
+                          @click.prevent="router.visit('/videoupload')"
+                          :active="appSettingStore.currentPage === 'videoupload'">
                         Video Upload
                       </JetDropdownLink>
 

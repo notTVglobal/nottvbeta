@@ -1,6 +1,6 @@
 <template>
 
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <div class="relative min-h-96 overflow-x-auto shadow-md sm:rounded-lg">
     <div
         class="table w-full text-sm text-left text-gray-500 dark:text-gray-400"
     >
@@ -40,7 +40,7 @@
 
             >
               <template #content>
-                <div class="text-xs" id="tooltip">
+                <div class="text-xs z-999" id="tooltip">
                   <div v-if="video.file_name">Filename: {{ video.file_name ? video.file_name : 'No File Name' }}</div>
                   <div>ID: {{ video.id }}</div>
                   <div>Type: {{ video.type }}</div>
@@ -102,14 +102,31 @@
           <div class="table-cell px-6 py-4">
             <span>{{ formatDate(video.created_at) }}</span>
           </div>
-          <div>
-            <Link :href="`#`">
+          <div class="flex gap-2">
+            <div>
               <button
                   @click.prevent="deleteVideo(video)"
-                  class="px-3 py-2 mb-2 mr-4 font-xs text-white bg-red-600 hover:bg-red-500 rounded-lg"
+                  class="px-3 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+              >Download
+              </button>
+            </div>
+            <div>
+              <!-- Button Mode with Custom Text and Color -->
+              <CopyClipboard
+                  :text="videoShareUrl(video)"
+                  :id="video.id"
+                  mode="button"
+                  buttonText="Share"
+                  buttonClass="px-3 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+              />
+            </div>
+            <div>
+              <button
+                  @click.prevent="deleteVideo(video)"
+                  class="px-3 py-2 font-xs text-white bg-red-600 hover:bg-red-500 rounded-lg"
               >Delete
               </button>
-            </Link>
+            </div>
           </div>
 
         </div>
@@ -122,7 +139,7 @@
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -130,15 +147,25 @@ const appSettingStore = useAppSettingStore()
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useUserStore } from "@/Stores/UserStore"
 import Pagination from "@/Components/Global/Paginators/Pagination"
+import CopyClipboard from '@/Components/Global/Text/CopyClipboard.vue'
+import { ref } from 'vue'
 
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()
 
+const page = usePage().props
+
 let props = defineProps({
   videos: Object,
   can: Object,
 })
+
+const videoShareUrl = (video) => {
+  return page.appUrl + '/video/' + video.ulid
+  // return video.cdn_endpoint + video.cloud_private_folder + video.folder + video.file_name
+}
+
 
 const playVideo = (video) => {
   nowPlayingStore.reset()

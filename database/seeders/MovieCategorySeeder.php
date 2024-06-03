@@ -31,6 +31,10 @@ class MovieCategorySeeder extends Seeder
             'name' => 'Crime',
             'description' => 'The crime genre deals with both sides of the criminal justice system but does not focus on legislative matters or civil suits and legal actions. The best crime movies often occupy moral gray areas where heroes and villains are much harder to define. Many of Martin Scorsese\'s best movies or Quentin Tarantino\'s movies fall within the crime genre.',
         ]);
+      MovieCategory::create([
+          'name' => 'Documentary',
+          'description' => 'Documentaries are non-fictional films intended to document reality, primarily for the purposes of instruction, education, or maintaining a historical record.',
+      ]);
         MovieCategory::create([
             'name' => 'Drama',
             'description' => 'The drama genre is defined by conflict and often looks to reality rather than sensationalism. Emotions and intense situations are the focus, but where other genres might use unique or exciting moments to create a feeling, movies in the drama genre focus on common occurrences. Drama is a very broad category and untethered to any era — from movies based on Shakespeare to contemporary narratives.',

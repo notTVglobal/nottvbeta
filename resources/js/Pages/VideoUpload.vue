@@ -81,7 +81,7 @@ const VideoUpload = defineAsyncComponent(() =>
 import Message from "@/Components/Global/Modals/Messages";
 import BackButton from "@/Components/Global/Buttons/BackButton.vue";
 
-usePageSetup('videoUpload')
+usePageSetup('videoupload')
 
 const appSettingStore = useAppSettingStore()
 

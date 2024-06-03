@@ -60,6 +60,10 @@ class Video extends Model {
 
   ];
 
+  public function getRouteKeyName(): string {
+    return 'ulid';
+  }
+
   public function mistStream() {
     return $this->belongsTo(MistStream::class, 'mist_stream_id');
   }
