@@ -469,7 +469,7 @@ export const useNewsStore = defineStore('newsStore', {
             this.selectedSubCategoryId = subCategoryId
             this.selectedSubCategoryName = subCategoryName
             this.selectedSubCategoryDescription = subCategoryDescription
-            this.fetchNewsStories(this.selectedCategoryId, subCategoryId, this.selectedCityId, 1)
+            this.fetchNewsStories(this.selectedCategoryId, subCategoryId, this.selectedCityId, this.selectedFederalDistrictId, this.selectedSubnationalDistrictId, 1)
         },
         resetFilter() {
             this.selectedSubCategoryId = null

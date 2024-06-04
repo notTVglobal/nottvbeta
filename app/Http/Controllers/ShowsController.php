@@ -945,7 +945,16 @@ class ShowsController extends Controller {
 //      $streamName = $streamPrefix . $encodedPath . '.mp4';
 
       $formattedStartTime = optional($recording->start_dateTime)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
-      $downloadFileName = rawurlencode($show->name . $formattedStartTime . (str_ends_with($show->name . $formattedStartTime, '.mkv') ? '.mp4' : ''));
+//      $downloadFileName = rawurlencode($show->name . $formattedStartTime . (str_ends_with($show->name . $formattedStartTime, '.mkv') ? '.mp4' : ''));
+      $originalFileName = $show->name . $formattedStartTime;
+      $extension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+
+// Check if the filename ends with .mkv
+      if (strtolower($extension) === 'mkv') {
+        $downloadFileName = rawurlencode($originalFileName . '.mp4');
+      } else {
+        $downloadFileName = rawurlencode($originalFileName);
+      }
       $downloadUrl = rtrim($mistServerUri, '/') . '/' . $playableStreamName . '?dl=1&filename=' . $downloadFileName;
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $streamPrefix . $encodedFilename . '.html';
 
@@ -1484,7 +1493,7 @@ class ShowsController extends Controller {
           'updatedBy'          => 'nullable|string',
       ]);
 
-      Log::debug('Validated data', ['validatedData' => $validatedData]);
+//      Log::debug('Validated data', ['validatedData' => $validatedData]);
 
       // Since the 'meta' field is cast to JSON, it will be automatically decoded to an array
       $meta = $show->meta ?? [];
@@ -1495,7 +1504,7 @@ class ShowsController extends Controller {
 
       // Check if someone else is already updating the schedule
       if (isset($meta['isUpdatingSchedule']) && $meta['isUpdatingSchedule'] && isset($meta['updatedBy']) && $meta['updatedBy'] !== $validatedData['updatedBy']) {
-        Log::info('Schedule update conflict: currently being updated by ' . $meta['updatedBy']);
+//        Log::debug('Schedule update conflict: currently being updated by ' . $meta['updatedBy']);
 
         return response()->json(['message' => '', 'notificationType' => 'silent']);
       }
@@ -1505,13 +1514,13 @@ class ShowsController extends Controller {
       $meta['updatedBy'] = $validatedData['isUpdatingSchedule'] ? ($validatedData['updatedBy'] ?? null) : null;
       $meta['triggeredBy'] = 'ShowsController updateMeta()';
 
-      Log::debug('Updated meta data', ['meta' => $meta]);
+//      Log::debug('Updated meta data', ['meta' => $meta]);
 
       // Assign the array directly to the 'meta' attribute
       $show->meta = $meta;
       $show->save();
 
-      Log::debug('Meta saved successfully for show', ['show_id' => $show->id, 'meta' => $meta]);
+//      Log::debug('Meta saved successfully for show', ['show_id' => $show->id, 'meta' => $meta]);
 
       broadcast(new CreatorContentStatusUpdated('show', $show->id, $meta));
 
@@ -1540,7 +1549,7 @@ class ShowsController extends Controller {
       $meta['updatedBy'] = null;
       $meta['triggeredBy'] = 'ShowsController updateMetaInternally()';
 
-      Log::debug('Updated meta data', ['meta' => $meta]);
+//      Log::debug('Updated meta data', ['meta' => $meta]);
 
       // Encode the meta array back to JSON and save it
       $show->meta = json_encode($meta);
@@ -1548,7 +1557,7 @@ class ShowsController extends Controller {
 
       broadcast(new CreatorContentStatusUpdated('show', $show->id, $meta));
 
-      Log::info('Show meta updated successfully internally.');
+//      Log::debug('Show meta updated successfully internally.');
     } catch (\Exception $e) {
       Log::error('Error updating meta for show internally', [
           'show_id' => $show->id,
@@ -1563,7 +1572,7 @@ class ShowsController extends Controller {
     $channel = $request->input('channel');
     $showSlug = $request->input('showSlug'); // Assuming you pass the show slug
 
-    Log::info('User left the channel', ['user' => $user, 'channel' => $channel]);
+//    Log::debug('User left the channel', ['user' => $user, 'channel' => $channel]);
 
     // Find the show based on the slug
     $show = Show::where('slug', $showSlug)->first();

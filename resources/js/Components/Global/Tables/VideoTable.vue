@@ -105,7 +105,7 @@
           <div class="flex gap-2">
             <div>
               <button
-                  @click.prevent="deleteVideo(video)"
+                  @click.prevent="beginDownload(video)"
                   class="px-3 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
               >Download
               </button>
@@ -213,6 +213,34 @@ const playVideo = (video) => {
 
 };
 
+const beginDownload = async (video) => {
+  const url = props.videoSource
+
+  try {
+    // Fetch the file from the URL
+    const response = await fetch(url)
+    const blob = await response.blob()
+
+    // Create a link element
+    const downloadLink = document.createElement('a')
+    downloadLink.href = URL.createObjectURL(blob)
+    downloadLink.download = video.file_name || 'downloaded_video'
+
+    // Append the link to the document body
+    document.body.appendChild(downloadLink)
+
+    // Trigger the download
+    downloadLink.click()
+
+    // Remove the link from the document
+    document.body.removeChild(downloadLink)
+
+    // Revoke the object URL
+    URL.revokeObjectURL(downloadLink.href)
+  } catch (error) {
+    console.error('Download failed', error)
+  }
+}
 
 function reload() {
   router.reload({

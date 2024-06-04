@@ -275,7 +275,6 @@ class AdminController extends Controller {
       ], 404);
     }
 
-
     // Prepare the common settings to be updated
     $updateData = [
         'first_play_settings'   => [
@@ -319,7 +318,6 @@ class AdminController extends Controller {
     $jsonFilePath = 'json/firstPlayData.json';
     Cache::forget('firstPlayData');
     Storage::disk('local')->put($jsonFilePath, json_encode($cacheDataToUpdate, JSON_PRETTY_PRINT));
-
 
     // Check if custom video should be used
     if ($cacheDataToUpdate['use_custom_video']) {

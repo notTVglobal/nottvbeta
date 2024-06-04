@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel {
     $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('archive:rssFeeds')->hourly();
+//    $schedule->command('schedule:check-and-update-channels')->everyThirtyMinutes();
     $schedule->command('schedule:update')->everyThirtyMinutes();
 
     // Purge cache files older than 1 hour every hour

@@ -113,7 +113,7 @@ const formattedDate = computed(() => {
 })
 
 const formattedTime = computed(() => {
-  if (!teamStore.nextBroadcast.value) return null
+  if (!teamStore.nextBroadcast) return null
   return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('h:mm a')
 })
 

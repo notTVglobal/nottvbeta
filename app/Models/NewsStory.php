@@ -42,6 +42,12 @@ class NewsStory extends Model {
     return 'slug';
   }
 
+  // Define a scope to filter published news stories
+  public function scopePublished($query)
+  {
+    return $query->where('status', 6);
+  }
+
   public function newsCategory() {
     return $this->belongsTo(NewsCategory::class);
   }

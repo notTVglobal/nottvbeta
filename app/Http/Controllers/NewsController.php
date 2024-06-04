@@ -70,6 +70,7 @@ class NewsController extends Controller {
         'newsPerson.user',
     ])
         ->where('city_id', $newsCity->id)
+        ->published()
         ->latest()
         ->limit(100)
         ->get();
@@ -80,11 +81,15 @@ class NewsController extends Controller {
 
     $newsSubCategories = NewsCategorySub::where('news_categories_id', 3)->get();
 
+    // Get the news category ID where the name is "Local News"
+    $localNewsCategory = NewsCategory::where('name', 'Local News')->first();
+    $newsCategoryId = $localNewsCategory ? $localNewsCategory->id : null;
+
     return Inertia::render($component, [
         'newsCity'          => $newsCity,
         'newsStories'       => $newsStories,
         'newsSubCategories' => $newsSubCategories,
-        'newsCategoryId'    => 4, // hard coded Local News Category id: 4 --> just for MVP.
+        'newsCategoryId'    => $newsCategoryId,
     ]);
   }
 
@@ -110,6 +115,7 @@ class NewsController extends Controller {
         'newsPerson.user',
     ])
         ->where('news_category_id', $newsCategory->id)
+        ->published()
         ->latest()
         ->limit(100)
         ->get();

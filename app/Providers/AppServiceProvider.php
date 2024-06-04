@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\FirstPlayService;
 use App\Services\MistServer\MistServerService;
 use App\Services\SearchService;
 use Illuminate\Support\Facades\Gate;
@@ -29,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
         return new SearchService();
         // Add any dependencies if your SearchService constructor requires them
       });
+
+      $this->app->singleton(FirstPlayService::class, function ($app) {
+        return new FirstPlayService();
+      });
+
     }
 
     /**

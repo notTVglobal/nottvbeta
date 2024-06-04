@@ -315,6 +315,9 @@ Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class,
 Route::get('/schedule', [SchedulesController::class, 'index'])
     ->name('schedule');
 
+// Public Creator Pages
+Route::get('/creator/{creator}', [CreatorsController::class, 'show'])->name('creator.show');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/api/user', [UsersController::class, 'getUserData']);
 
 // BEGIN ROUTES FOR
