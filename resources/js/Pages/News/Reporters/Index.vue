@@ -23,12 +23,12 @@
             <div v-for="person in newsPeople" :key="person.id" class="text-center px-8 py-3">
               <div class="hover:bg-gray-300 rounded-lg cursor-pointer pb-8">
                 <header class="pt-8 pb-6">
-                  <Link v-if="person && person.id" :href="`/news/reporter/${person.id}`">
+                  <Link v-if="person && person.slug" :href="`/news/reporter/${person.slug}`">
                     <h3>{{ person.name }}</h3>
                   </Link>
                 </header>
                 <main class="flex justify-center">
-                  <Link v-if="person && person.id" :href="`/news/reporter/${person.id}`">
+                  <Link v-if="person && person.id" :href="`/news/reporter/${person.slug}`">
                     <img :src="person.profile_photo_url" alt="Profile Photo" class="w-32 h-32 rounded-full object-cover">
                   </Link>
                 </main>
