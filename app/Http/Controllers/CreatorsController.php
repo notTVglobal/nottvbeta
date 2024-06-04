@@ -27,6 +27,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -654,7 +655,10 @@ class CreatorsController extends Controller {
    * @param Creator $creator
    * @return Response
    */
-  public function show(Creator $creator): Response {
+  public function show(Creator $creator): Response
+  {
+    $user = Auth::user();
+    $component = $user ? 'Creators/{$id}/Index' : 'LoggedOut/Creators/{$id}/Index';
 
     $settings = $creator->settings;
 
@@ -662,20 +666,31 @@ class CreatorsController extends Controller {
       abort(404, 'Creator profile is not public.');
     }
 
-    $creator->load(['teams.image.appSetting', 'teams.shows.image.appSetting', 'user.newsPerson.newsStories' => function ($query) {
-      $query->published();
-    }]);
+    $creator->load(['user']);
 
-    $newsStories = null;
-    if ($creator->user && $creator->user->newsPerson) {
-      $newsStories = NewsStoryResource::collection($creator->user->newsPerson->newsStories)->resolve();
-    }
-
-    return Inertia::render('Creators/{$id}/Index', [
+    return Inertia::render($component, [
         'creator' => (new CreatorResource($creator))->resolve() ?? null,
-        'teams' => TeamResourceWithShows::collection($creator->teams)->resolve(),
-        'newsStories' => $newsStories,
     ]);
+  }
+
+  public function fetchTeams(Creator $creator): JsonResponse {
+    $teams = Cache::remember("creator_{$creator->id}_teams", 60 * 10, function () use ($creator) {
+      $creator->load(['teams.image.appSetting', 'teams.shows.image.appSetting']);
+      return TeamResourceWithShows::collection($creator->teams)->resolve();
+    });
+
+    return response()->json($teams);
+  }
+
+  public function fetchNewsStories(Creator $creator): JsonResponse {
+    $newsStories = Cache::remember("creator_{$creator->id}_news_stories", 60 * 10, function () use ($creator) {
+      if ($creator->user && $creator->user->newsPerson) {
+        return NewsStoryResource::collection($creator->user->newsPerson->newsStories()->published()->with('image.appSetting')->get())->resolve();
+      }
+      return [];
+    });
+
+    return response()->json($newsStories);
   }
 
   /**

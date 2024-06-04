@@ -1,54 +1,35 @@
 <template>
-  <tr class="hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer">
-    <td v-if="story.category.id" class="px-6 py-4 whitespace-normal align-top">
-      <span class="block font-semibold uppercase text-gray-700" v-if="story.city.id">
-        {{ story.city.name }}<br><span class="uppercase font-thin text-gray-500">{{ story.province.name }}</span>
-      </span>
-      <div v-if="story.province.id && !story.city.id && !story.federalElectoralDistrict.id && !story.subnationalElectoralDistrict.id">
-        <span class="block uppercase font-semibold text-gray-700">{{ story.province.name }}</span>
-        <span class="block text-sm uppercase font-thin text-gray-500">Province</span>
+  <div class="news-item-card p-4 mb-4 rounded-lg shadow-md hover:shadow-lg transition duration-150 ease-in-out cursor-pointer bg-white">
+    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+      <div class="image-container">
+        <SingleImage v-if="story.image" :image="story.image" alt="News Story Image" class="h-24 w-24 md:h-32 md:w-32 rounded-lg object-cover"/>
+        <div v-else class="h-24 w-24 md:h-32 md:w-32 rounded-lg bg-gray-200 flex items-center justify-center text-gray-500">
+          No Image
+        </div>
       </div>
-      <div v-if="story.federalElectoralDistrict.id">
-        <span class="block uppercase font-semibold text-gray-700">{{ story.federalElectoralDistrict.name }}</span>
-        <span class="block text-sm uppercase font-thin text-gray-500">Federal Electoral District</span>
-      </div>
-      <div v-if="story.subnationalElectoralDistrict.id">
-        <span class="block uppercase font-semibold text-gray-700">{{ story.subnationalElectoralDistrict.name }}</span>
-        <span class="block text-sm uppercase font-thin text-gray-500">Subnational Electoral District</span>
-      </div>
-      <span class="block text-lg font-semibold text-orange-800 mt-2">{{ story.category.name }}</span>
-      <span class="block text-wrap text-gray-600" v-if="story.subCategory.id">{{ story.subCategory.name }}</span>
-    </td>
-    <td class="px-6 py-4 whitespace-normal align-top" v-if="story.title">
-      <div class="flex items-center space-x-4">
-        <button @click="btnRedirect(`/news/story/${story.slug}`)" class="text-blue-500 hover:text-blue-700">
-          <SingleImage :image="story.image" alt="News Story Image" class="hidden md:block h-20 w-20 rounded-full"/>
+      <div class="flex flex-col flex-1">
+        <button @click="btnRedirect(`/news/story/${story.slug}`)" class="text-left text-xl font-semibold text-blue-500 hover:text-blue-700 uppercase">
+          {{ story.title }}
         </button>
-        <div class="flex flex-col">
-          <button @click="btnRedirect(`/news/story/${story.slug}`)" class="text-left text-xl font-semibold text-blue-500 hover:text-blue-700 uppercase">
-            {{ story.title }}
-          </button>
-          <div class="text-gray-600 text-sm">
-            <span class="uppercase font-semibold">By</span> {{ story.newsPerson.name ? story.newsPerson.name : 'Unknown' }}
-          </div>
+        <div class="text-gray-600 text-sm">
+          <span class="uppercase font-semibold">By</span> {{ story.newsPerson.name ? story.newsPerson.name : 'Unknown' }}
         </div>
+        <NewsStoryItemCategoryCity :story="story" class="mt-2"/>
       </div>
-    </td>
-    <td class="h-full pb-4 align-bottom pr-6 text-right">
-      <div class="flex justify-end mt-4">
-        <div v-if="story.status === 'Creators Only'" class="text-gray-700 italic">
-          {{ story.status }}
-        </div>
-        <div v-if="story.published_at" class="flex flex-col justify-end">
-          <div class="text-xs uppercase font-semibold text-gray-500">Published</div>
-          <div class="text-gray-600">
-            <ConvertDateTimeToTimeAgo :dateTime="story.published_at" :timezone="timezone"/>
-          </div>
-          <div class="text-gray-500">{{ formatDateTimeWithYearFromUtcToUserTimezone(story.published_at) }}</div>
-        </div>
+    </div>
+    <div class="flex justify-end mt-4">
+      <div v-if="story.status === 'Creators Only'" class="text-gray-700 italic">
+        {{ story.status }}
       </div>
-    </td>
-  </tr>
+      <div v-if="story.published_at" class="flex flex-col justify-end">
+        <div class="text-xs uppercase font-semibold text-gray-500">Published</div>
+        <div class="text-gray-600">
+          <ConvertDateTimeToTimeAgo :dateTime="story.published_at" :timezone="timezone"/>
+        </div>
+        <div class="text-gray-500">{{ formatDateTimeWithYearFromUtcToUserTimezone(story.published_at) }}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -56,6 +37,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import { useUserStore } from '@/Stores/UserStore'
+import NewsStoryItemCategoryCity from '@/Components/Pages/News/Stories/NewsStoryItemCategoryCity.vue'
 
 const props = defineProps({
   story: Object
@@ -75,7 +57,68 @@ const formatDateTimeWithYearFromUtcToUserTimezone = (dateTime) => {
 </script>
 
 <style scoped>
-.hover\:bg-gray-100:hover {
-  background-color: #f7fafc; /* Light gray background on hover */
+.news-item-card {
+  background-color: #ffffff; /* White background for the card */
+  transition: transform 0.2s ease-in-out;
 }
+
+.news-item-card:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.text-gray-600 {
+  color: #4b5563; /* Text color */
+}
+
+.text-gray-500 {
+  color: #6b7280; /* Lighter text color */
+}
+
+.text-blue-500 {
+  color: #3b82f6; /* Blue text color */
+}
+
+.text-blue-500:hover {
+  color: #2563eb; /* Darker blue text color on hover */
+}
+
+.text-gray-700 {
+  color: #374151; /* Darker gray text color */
+}
+
+.uppercase {
+  text-transform: uppercase; /* Uppercase text */
+}
+
+.font-semibold {
+  font-weight: 600; /* Semi-bold font weight */
+}
+
+.rounded-lg {
+  border-radius: 0.5rem; /* Large rounded corners */
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Medium shadow */
+}
+
+.hover\:shadow-lg:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Larger shadow on hover */
+}
+
+.image-container {
+  width: 6rem; /* 24 pixels for both height and width */
+  height: 6rem; /* 24 pixels for both height and width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .image-container {
+    width: 8rem; /* 32 pixels for both height and width */
+    height: 8rem; /* 32 pixels for both height and width */
+  }
+}
+
 </style>

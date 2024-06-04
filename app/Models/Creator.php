@@ -9,6 +9,26 @@ use Illuminate\Support\Str;
 class Creator extends Model {
   use HasFactory;
 
+  protected static function boot(): void {
+    parent::boot();
+
+    static::creating(function ($creator) {
+      $creator->slug = static::generateUniqueSlug($creator->user->name);
+
+      // Automatically set default settings when a new creator is created
+      $defaultSettings = [
+          'profile_is_public' => false
+      ];
+      $creator->settings = array_merge($defaultSettings, $creator->settings ?? []);
+    });
+
+    static::updating(function ($creator) {
+      if ($creator->isDirty('name')) {
+        $creator->slug = static::generateUniqueSlug($creator->user->name, $creator->id);
+      }
+    });
+  }
+
   /**
    * The attributes that are mass assignable.
    *
@@ -17,42 +37,40 @@ class Creator extends Model {
   protected $fillable = [
       'user_id',
       'slug',
+      'description',
       'status_id',
       'first_time',
-      'settings'
+      'settings',
+      'social_links'
   ];
 
+  /**
+   * The attributes that should be cast.
+   *
+   * @var array
+   */
   protected $casts = [
       'settings' => 'json',
+      'social_links' => 'json',
   ];
 
-  protected static function boot() {
-    parent::boot();
-
-    static::creating(function ($creator) {
-      $creator->slug = static::generateUniqueSlug($creator->user->name);
-    });
-
-    static::updating(function ($creator) {
-      if ($creator->isDirty('name')) {
-        $creator->slug = static::generateUniqueSlug($creator->user->name, $creator->id);
-      }
-    });
-
-    // Automatically set default settings when a new creator is created
-    static::creating(function ($creator) {
-      $defaultSettings = [
-          'profile_is_public' => false
-      ];
-      $creator->settings = array_merge($defaultSettings, $creator->settings ?? []);
-    });
-  }
-
+  /**
+   * Get the route key for the model.
+   *
+   * @return string
+   */
   public function getRouteKeyName(): string {
     return 'slug';
   }
 
-  public static function generateUniqueSlug($name, $excludeId = null) {
+  /**
+   * Generate a unique slug for the creator.
+   *
+   * @param string $name
+   * @param int|null $excludeId
+   * @return string
+   */
+  public static function generateUniqueSlug(string $name, int $excludeId = null): string {
     $slug = Str::slug($name);
     $originalSlug = $slug;
     $counter = 1;
@@ -65,30 +83,57 @@ class Creator extends Model {
     return $slug;
   }
 
+  /**
+   * Get the user that owns the creator.
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
   public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(User::class);
   }
 
-  public function teams() {
+  /**
+   * The teams that the creator belongs to.
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
     return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id');
   }
 
-  // team leader
+  /**
+   * The teams led by the creator.
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
   public function teamsLed(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Team::class, 'team_leader');
   }
 
-  // show runner
+  /**
+   * The shows run by the creator.
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
   public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Show::class);
   }
 
+  /**
+   * Get the status of the creator.
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
   public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(CreatorStatus::class, 'status_id');
   }
 
-  public function receivedMessages()
-  {
+  /**
+   * Get the messages received by the creator.
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function receivedMessages(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(CreatorMessage::class, 'recipient_id');
   }
 }

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
-use App\Services\DigitalOceanService;
+use App\Traits\HandlesDigitalOceanUrls;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
@@ -32,11 +34,10 @@ use Inertia\Inertia;
 
 class VideoController extends Controller {
 
-  protected DigitalOceanService $digitalOceanService;
+  use HandlesDigitalOceanUrls;
 
-  public function __construct(DigitalOceanService $digitalOceanService) {
+  public function __construct() {
 
-    $this->digitalOceanService = $digitalOceanService;
     $this->middleware('auth')->except(['index', 'show']);
   }
 
@@ -85,16 +86,16 @@ class VideoController extends Controller {
   /**
    * Store a newly created resource in storage.
    *
-   * @param \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @param HttpRequest $request
+   * @return JsonResponse
    */
-  public function store(Request $request) {
+  public function store(Request $request): JsonResponse {
 
     $file = $request->file('video');
-    dd($file);
+
     $filename = $request->file('video')->getFilename();
-//        $path = Storage::disk('local-video-chunks')->put($filename, $file);
-    Storage::disk('local-video-chunks')->put('example.txt', $file);
+        $path = Storage::disk('local-video-chunks')->put($filename, $file);
+//    Storage::disk('local-video-chunks')->put('example.txt', $file);
 
     File::append($path, $file->get());
 
@@ -113,13 +114,13 @@ class VideoController extends Controller {
    *
    * @param FileReceiver $receiver
    *
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    *
    * @throws UploadMissingFileException
    *
    */
-  public function uploadFile(FileReceiver $receiver) {
-    dd($receiver);
+  public function uploadFile(FileReceiver $receiver): JsonResponse {
+//    dd($receiver);
     // check if the upload is success, throw exception or return response you need
     if ($receiver->isUploaded() === false) {
       throw new UploadMissingFileException();
@@ -135,7 +136,6 @@ class VideoController extends Controller {
     }
 
     // we are in chunk mode, lets send the current progress
-    /** @var AbstractHandler $handler */
     $handler = $save->handler();
 
     return response()->json([
@@ -143,16 +143,20 @@ class VideoController extends Controller {
     ]);
   }
 
-  public function newUploader(Request $request) {
+  /**
+   * @throws UploadMissingFileException
+   * @throws UploadFailedException
+   */
+  public function newUploader(Request $request): JsonResponse {
     /**
      * Handles the file upload
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      * @throws UploadMissingFileException
-     * //         * @throws \Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException
+     * //         * @throws UploadFailedException
      */
 
     // create the file receiver
@@ -175,7 +179,6 @@ class VideoController extends Controller {
     }
 
     // we are in chunk mode, lets send the current progress
-    /** @var AbstractHandler $handler */
     $handler = $save->handler();
 
     return response()->json([
@@ -188,7 +191,7 @@ class VideoController extends Controller {
    *
    * @param UploadedFile $file
    *
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   protected function saveFile(UploadedFile $file) {
     $fileName = $this->createFilename($file);
@@ -236,17 +239,17 @@ class VideoController extends Controller {
   public function show(Video $video): Response|ResponseFactory {
 
     // Eager load the appSetting relationship
-    $video->load('appSetting', 'user');
+    $video->load('appSetting', 'user.creator');
 
-    $videoSource = $this->digitalOceanService->getPreSignedUrl(
-        config('filesystems.disks.spaces.bucket'),
-        $video->cloud_private_folder . $video->folder . '/' . $video->file_name
-    );
+    $videoSource = $this->getPreSignedUrl($video);
 
     return inertia('VideoPlayerPage', [
         'video'       => [
             'id'       => $video->id,
             'filename' => $video->filename,
+            'creator' => [
+                'slug' => $video->user->creator->slug,
+            ],
             'user'     => [
                 'name'               => $video->user->name,
                 'profile_photo_path' => $video->user->profile_photo_path,
@@ -272,7 +275,7 @@ class VideoController extends Controller {
   /**
    * Update the specified resource in storage.
    *
-   * @param \Illuminate\Http\Request $request
+   * @param HttpRequest $request
    * @param Video $video
    * @return \Illuminate\Http\Response
    */
