@@ -79,7 +79,7 @@ class Creator extends Model {
   }
 
   // show runner
-  public function show(): \Illuminate\Database\Eloquent\Relations\HasMany {
+  public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Show::class);
   }
 

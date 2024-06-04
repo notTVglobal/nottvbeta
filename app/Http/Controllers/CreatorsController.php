@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Events\CreatorRegistrationCompleted;
 use App\Http\Resources\CreatorResource;
+use App\Http\Resources\NewsStoryResource;
+use App\Http\Resources\TeamResource;
+use App\Http\Resources\TeamResourceWithShows;
 use App\Mail\InviteExistingCreatorMail;
 use App\Models\Creator;
 use App\Models\InviteCode;
@@ -653,8 +656,25 @@ class CreatorsController extends Controller {
    */
   public function show(Creator $creator): Response {
 
+    $settings = $creator->settings;
+
+    if (!isset($settings['profile_is_public']) || !$settings['profile_is_public']) {
+      abort(404, 'Creator profile is not public.');
+    }
+
+    $creator->load(['teams.image.appSetting', 'teams.shows.image.appSetting', 'user.newsPerson.newsStories' => function ($query) {
+      $query->published();
+    }]);
+
+    $newsStories = null;
+    if ($creator->user && $creator->user->newsPerson) {
+      $newsStories = NewsStoryResource::collection($creator->user->newsPerson->newsStories)->resolve();
+    }
+
     return Inertia::render('Creators/{$id}/Index', [
-        'creator' => $creator,
+        'creator' => (new CreatorResource($creator))->resolve() ?? null,
+        'teams' => TeamResourceWithShows::collection($creator->teams)->resolve(),
+        'newsStories' => $newsStories,
     ]);
   }
 

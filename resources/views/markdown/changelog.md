@@ -3,6 +3,12 @@
 Last Update: June 2, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.12
+June 3, 2024
+
+* Fix the download button on the video upload page.
+* Start working on Channel Playlists, and a command to auto update the FirstPlay settings.
+
 ## v0.9.3.11
 June 3, 2024
 

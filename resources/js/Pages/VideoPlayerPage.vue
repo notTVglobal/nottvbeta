@@ -5,8 +5,8 @@
     <PublicNavigationMenu/>
     <PublicResponsiveNavigationMenu/>
 
-    <div class="video-player-page flex flex-col items-center justify-center bg-black text-white relative mb-24">
-      <div class="fixed top-20 left-10 px-3 py-2 z-50">
+    <div class="video-player-page relative mx-auto items-center justify-center bg-black text-white mb-24 max-w-7xl ">
+      <div class="absolute top-20 left-0 px-3 py-2 z-50">
         <div class="flex flex-col gap-2">
           <div>{{ video.filename }}</div>
           <div class="flex gap-2 items-center">
@@ -21,7 +21,7 @@
 
         </div>
       </div>
-      <div class="fixed top-20 right-10 px-3 py-2 z-50">
+      <div class="absolute top-20 right-0 px-3 py-2 z-50">
         <div class="flex gap-2">
           <button @click="beginDownload"
                   class="flex bg-orange-500 text-white font-semibold px-4 py-2 hover:bg-orange-400 rounded transition ease-in-out duration-150 items-center">

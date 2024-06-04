@@ -114,7 +114,6 @@ const props = defineProps({
   newsCategory: Object,
   newsSubCategories: Array,
   newsStories: Array,
-  newsCategoryId: Number,
 })
 
 const {
@@ -134,7 +133,7 @@ const {
 
 onMounted(() => {
   newsStore.reset()
-  initializeLatestStories(page.newsStories, props.newsCategoryId, null)
+  initializeLatestStories(page.newsStories, props.newsCategory.id, null)
 })
 
 onBeforeUnmount(() => {
