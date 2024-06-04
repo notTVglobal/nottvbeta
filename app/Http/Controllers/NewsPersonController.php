@@ -7,6 +7,7 @@ use App\Models\NewsPerson;
 use App\Models\Notification;
 use App\Models\User;
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -14,9 +15,11 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class NewsPersonController extends Controller {
@@ -140,10 +143,9 @@ class NewsPersonController extends Controller {
    * Store a newly created resource in storage.
    *
    * @param Request $request
-   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse
+   * @return Application|Redirector|RedirectResponse
    */
-  public function store(Request $request)
-  {
+  public function store(Request $request): Redirector|Application|RedirectResponse {
     $validated = $request->validate([
         'id'         => 'required|exists:users,id', // Ensure the user exists
         'name'       => 'required|string', // Ensure the user exists
@@ -155,7 +157,7 @@ class NewsPersonController extends Controller {
 
     try {
       $newsPerson = $this->createOrRestoreNewsPerson($validated);
-      $isUpdating = $newsPerson->wasRecentlyCreated ? false : true;
+      $isUpdating = !$newsPerson->wasRecentlyCreated;
       $this->assignRolesToNewsPerson($newsPerson, $validated['role_ids']);
       $this->sendNotificationForNewsPerson($newsPerson, $validated['name'], $validated['role_ids'], $isUpdating);
 
@@ -183,11 +185,19 @@ class NewsPersonController extends Controller {
         $newsPerson->restore();
         $wasRecentlyRestored = true;
       }
-      $newsPerson->update(['name' => $validated['name']]);
+      // Check if the slug exists, if not generate a unique slug
+      if (empty($newsPerson->slug)) {
+        $slug = $this->generateUniqueSlug($validated['name']);
+        $newsPerson->update(['name' => $validated['name'], 'slug' => $slug]);
+      } else {
+        $newsPerson->update(['name' => $validated['name']]);
+      }
     } else {
+      $slug = $this->generateUniqueSlug($validated['name']);
       $newsPerson = NewsPerson::create([
           'user_id' => $validated['id'],
-          'name' => $validated['name']
+          'name' => $validated['name'],
+          'slug' => $slug
       ]);
     }
 
@@ -197,8 +207,20 @@ class NewsPersonController extends Controller {
     return $newsPerson;
   }
 
-  private function assignRolesToNewsPerson($newsPerson, $roleIds)
-  {
+  private function generateUniqueSlug($name): string {
+    $slug = Str::slug($name);
+    $originalSlug = $slug;
+    $counter = 1;
+
+    while (NewsPerson::class::where('slug', $slug)->exists()) {
+      $slug = $originalSlug . '-' . $counter;
+      $counter++;
+    }
+
+    return $slug;
+  }
+
+  private function assignRolesToNewsPerson($newsPerson, $roleIds): void {
     $newsPerson->roles()->sync($roleIds);
 
     foreach ($roleIds as $roleId) {
@@ -206,8 +228,7 @@ class NewsPersonController extends Controller {
     }
   }
 
-  private function sendNotificationForNewsPerson($newsPerson, $name, $roleIds, $isUpdating)
-  {
+  private function sendNotificationForNewsPerson($newsPerson, $name, $roleIds, $isUpdating): void {
     $roleNames = $newsPerson->roles()->whereIn('news_people_roles.id', $roleIds)->pluck('name')->implode(', ');
     $message = '';
 
@@ -226,8 +247,7 @@ class NewsPersonController extends Controller {
     );
   }
 
-  private function sendNotification($userId, $title, $message)
-  {
+  private function sendNotification($userId, $title, $message): void {
     $notification = new Notification;
     $notification->user_id = $userId;
     $notification->image_id = null; // No image needed
@@ -240,7 +260,7 @@ class NewsPersonController extends Controller {
     event(new NewNotificationEvent($notification));
   }
 
-  public function fetchRoles($id) {
+  public function fetchRoles($id): JsonResponse {
     $newsPerson = NewsPerson::with('roles')->find($id);
 
     if (!$newsPerson) {
@@ -250,7 +270,7 @@ class NewsPersonController extends Controller {
     return response()->json($newsPerson->roles);
   }
 
-  public function updateRoles(Request $request) {
+  public function updateRoles(Request $request): JsonResponse {
     $request->validate([
         'id'         => 'required|exists:news_people,user_id',
         'role_ids'   => 'required|array',
