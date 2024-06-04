@@ -343,11 +343,12 @@ let props = defineProps({
   userEdit: Object,
   isNewsPerson: Boolean,
   newsPersonId: Number,
+  newsPersonSlug: String,
   isVip: Number,
   isSubscriber: Boolean,
   hasSubscription: Boolean,
-  isSubscriptionActive: String,
-  hasAccount: String,
+  isSubscriptionActive: Boolean,
+  hasAccount: Boolean,
 })
 
 let form = useForm({
@@ -418,6 +419,7 @@ function addUserToNewsroom() {
 function updateUserNewsRoles() {
   router.post('/newsroom/newsPerson/updateRoles', {
     id: props.userEdit.id,
+    slug: props.newsPersonSlug,
     role_ids: selectedRoles.value, // Send an array of selected role IDs
   })
 }

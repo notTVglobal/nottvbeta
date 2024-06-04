@@ -90,6 +90,7 @@ class NewsPersonController extends Controller {
     })->with('user')->get()->map(function ($newsPerson) {
       return [
           'id'                 => $newsPerson->user->id,
+          'slug'                 => $newsPerson->slug,
           'name'               => $newsPerson->user->name,
           'profile_photo_path' => $newsPerson->user->profile_photo_path,
           'profile_photo_url'  => $newsPerson->user->profile_photo_url,
@@ -159,7 +160,7 @@ class NewsPersonController extends Controller {
       $newsPerson = $this->createOrRestoreNewsPerson($validated);
       $isUpdating = !$newsPerson->wasRecentlyCreated;
       $this->assignRolesToNewsPerson($newsPerson, $validated['role_ids']);
-      $this->sendNotificationForNewsPerson($newsPerson, $validated['name'], $validated['role_ids'], $isUpdating);
+      $this->sendNotificationForNewsPerson($newsPerson, $validated, $isUpdating);
 
       DB::commit();
 
@@ -178,31 +179,58 @@ class NewsPersonController extends Controller {
   private function createOrRestoreNewsPerson($validated)
   {
     $newsPerson = NewsPerson::withTrashed()->where('user_id', $validated['id'])->first();
-    $wasRecentlyRestored = false;
 
     if ($newsPerson) {
-      if ($newsPerson->trashed()) {
-        $newsPerson->restore();
-        $wasRecentlyRestored = true;
-      }
-      // Check if the slug exists, if not generate a unique slug
-      if (empty($newsPerson->slug)) {
-        $slug = $this->generateUniqueSlug($validated['name']);
-        $newsPerson->update(['name' => $validated['name'], 'slug' => $slug]);
-      } else {
-        $newsPerson->update(['name' => $validated['name']]);
-      }
+      return $this->handleExistingNewsPerson($newsPerson, $validated);
     } else {
+      return $this->createNewsPerson($validated);
+    }
+  }
+
+  private function handleExistingNewsPerson($newsPerson, $validated)
+  {
+    $wasRecentlyRestored = false;
+
+    if ($newsPerson->trashed()) {
+      $this->restoreNewsPerson($newsPerson);
+      $wasRecentlyRestored = true;
+    }
+
+    // Check if the slug exists, if not generate a unique slug
+    if (empty($newsPerson->slug)) {
       $slug = $this->generateUniqueSlug($validated['name']);
-      $newsPerson = NewsPerson::create([
-          'user_id' => $validated['id'],
-          'name' => $validated['name'],
-          'slug' => $slug
-      ]);
+      $newsPerson->update(['name' => $validated['name'], 'slug' => $slug]);
+    } else {
+      $newsPerson->update(['name' => $validated['name']]);
     }
 
     // Attach the custom property to indicate restoration
     $newsPerson->wasRecentlyRestored = $wasRecentlyRestored;
+
+    // Send notification
+    $this->sendNotificationForNewsPerson($newsPerson, $validated, false);
+
+    return $newsPerson;
+  }
+
+  private function restoreNewsPerson($newsPerson): void {
+    $newsPerson->restore();
+  }
+
+  private function createNewsPerson($validated)
+  {
+    $slug = $this->generateUniqueSlug($validated['name']);
+    $newsPerson = NewsPerson::create([
+        'user_id' => $validated['id'],
+        'name' => $validated['name'],
+        'slug' => $slug
+    ]);
+
+    // Attach the custom property to indicate restoration
+    $newsPerson->wasRecentlyRestored = false;
+
+    // Send notification
+    $this->sendNotificationForNewsPerson($newsPerson, $validated,  false);
 
     return $newsPerson;
   }
@@ -228,9 +256,10 @@ class NewsPersonController extends Controller {
     }
   }
 
-  private function sendNotificationForNewsPerson($newsPerson, $name, $roleIds, $isUpdating): void {
-    $roleNames = $newsPerson->roles()->whereIn('news_people_roles.id', $roleIds)->pluck('name')->implode(', ');
+  private function sendNotificationForNewsPerson($newsPerson, $validated, $isUpdating): void {
+    $roleNames = $newsPerson->roles()->whereIn('news_people_roles.id', $validated['role_ids'])->pluck('name')->implode(', ');
     $message = '';
+    $name =  $validated['name'];
 
     if ($newsPerson->wasRecentlyRestored) {
       $message = '<span class="text-green-500">' . $name . ' has been restored to the News Team with roles: ' . $roleNames . '.</span>';
@@ -273,18 +302,19 @@ class NewsPersonController extends Controller {
   public function updateRoles(Request $request): JsonResponse {
     $request->validate([
         'id'         => 'required|exists:news_people,user_id',
+        'slug'       => 'required|exists:news_people,slug',
         'role_ids'   => 'required|array',
         'role_ids.*' => 'exists:news_people_roles,id',
     ]);
 
-    $newsPerson = NewsPerson::find($request->id);
+    $newsPerson = NewsPerson::where('user_id', $request->id);
 
     if (!$newsPerson) {
       return response()->json(['message' => 'News Person not found'], 404);
     }
 
     // Sync roles without detaching to update the roles while maintaining existing ones not included in the request
-    $newsPerson->roles()->sync($request->role_ids);
+    $newsPerson->roles()->syncWithoutDetaching($request->role_ids);
 
     return response()->json(['message' => 'Roles updated successfully']);
   }

@@ -23,12 +23,12 @@
 
               <table class="min-w-full divide-y divide-gray-200">
                 <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="creator in creators.data" :key="creator.id">
+                <tr v-if="creators" v-for="creator in creators.data" :key="creator.id">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div>
                         <div class="text-sm font-medium text-gray-900">
-                          <Link :href="`/creators/${creator.id}`" class="text-indigo-600 hover:text-indigo-900">
+                          <Link :href="`/creators/${creator.slug}`" class="text-indigo-600 hover:text-indigo-900">
                             {{ creator.name }}
                           </Link>
                         </div>
@@ -37,7 +37,7 @@
                   </td>
 
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link :href="`/creators/edit/${creator.id}`" class="text-indigo-600 hover:text-indigo-900">Edit
+                    <Link :href="`/creators/edit/${creator.slug}`" class="text-indigo-600 hover:text-indigo-900">Edit
                     </Link>
                   </td>
                 </tr>
@@ -45,7 +45,7 @@
               </table>
 
               <!-- Paginator -->
-              <Pagination :links="creators.links" class="mt-6"/>
+              <Pagination :data="creators" class="mt-6"/>
 
             </div>
           </div>

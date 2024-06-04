@@ -41,6 +41,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Services\InviteCodeService;
 use Laravel\Jetstream\Jetstream;
+use function Laravel\Prompts\error;
 
 class CreatorsController extends Controller {
 
@@ -50,6 +51,9 @@ class CreatorsController extends Controller {
 
   public function __construct(InviteCodeService $inviteCodeService) {
     $this->inviteCodeService = $inviteCodeService;
+
+    $this->middleware('can:viewAdmin,'.Creator::class)->only(['index']);
+    $this->middleware('can:viewAdmin,'.Creator::class)->only(['create']);
   }
 
   public function invite(): Response {
@@ -523,6 +527,7 @@ class CreatorsController extends Controller {
             ->withQueryString()
             ->through(fn($creator) => [
                 'id'   => $creator->id,
+                'slug'   => $creator->slug,
                 'name' => $creator->name
             ]),
         'filters'  => Request::only(['search'])

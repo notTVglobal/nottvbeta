@@ -207,6 +207,7 @@ class UsersController extends Controller {
         'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
         'isNewsPerson'       => $isNewsPerson,
         'newsPersonId'       => $user->newsPerson?->id,
+        'newsPersonSlug'       => $user->newsPerson?->slug,
         'isVip'              => $user->isVip,
         'hasSubscription'    => $user->subscription('default') ?? null,
         'isSubscriptionActive' => (bool) optional($user->subscription('default'))->active(),

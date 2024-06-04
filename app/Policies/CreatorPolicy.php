@@ -29,6 +29,16 @@ class CreatorPolicy
 
     }
 
+  public function viewAdmin(User $user)
+  {
+    if ($user->isAdmin) {
+      return true;
+    }
+
+    return false;
+
+  }
+
     public function viewDashboard(User $user)
     {
         if ($user->creator && $user->creator->status_id === 1) {
