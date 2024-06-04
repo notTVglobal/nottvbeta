@@ -9,7 +9,7 @@
       <div class="absolute top-20 left-0 px-3 py-2 z-50">
         <div class="flex flex-col gap-2">
           <div>{{ video.filename }}</div>
-          <div class="flex gap-2 items-center">
+          <div @click.prevent="appSettingStore.btnRedirect(`/creator/${video.creator.slug}`)" class="flex gap-2 items-center hover:cursor-pointer">
             <div class="min-w-[2rem]">
               <img v-if="video.user.profile_photo_path"
                    :src="'/storage/' + video.user.profile_photo_path" class="rounded-full h-8 w-8 object-cover">
@@ -25,7 +25,7 @@
         <div class="flex gap-2">
           <button @click="beginDownload"
                   class="flex bg-orange-500 text-white font-semibold px-4 py-2 hover:bg-orange-400 rounded transition ease-in-out duration-150 items-center">
-            <font-awesome-icon icon="fa-share" class="mr-2"/>
+            <font-awesome-icon icon="fa-download" class="mr-2"/>
             Download
           </button>
           <ShareButton :model="video"/>
@@ -42,7 +42,7 @@
                         height="500"/>
       </div>
 
-      <div v-if="!$page.props.auth.user" class="signup-box-container flex items-center justify-center">
+      <div v-if="showSignup" class="signup-box-container flex items-center justify-center">
         <div class="signup-box p-4 bg-gray-800 text-white rounded-lg shadow-lg">
           <div class="flex w-full justify-center mb-2">
             <img :src="`/storage/images/Ping.png`" alt="notTV's Ping" class="w-10 h-10"/>
@@ -52,9 +52,13 @@
           <form @submit.prevent="handleSignup" class="mt-4 flex flex-col">
             <input type="email" v-model="email" placeholder="Enter your email"
                    class="p-2 rounded bg-gray-900 text-white" required>
+            <input type="text" v-model="hpname" placeholder="HP Name" class="hidden" />
             <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Sign Up
             </button>
           </form>
+          <button @click="dismissSignup" class="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded">No
+            Thanks
+          </button>
         </div>
       </div>
     </div>
@@ -72,6 +76,7 @@ import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/Publi
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+
 const appSettingStore = useAppSettingStore()
 
 const page = usePage().props
@@ -86,12 +91,44 @@ const props = defineProps({
 const title = ref('Your Video Title')
 const shareUrl = `${page.appUrl}/video/${props.ulid}`
 const email = ref('')
+const hpname = ref('') // honeypot input to circumvent spam/robots
+const showSignup = ref(true) // control the visibility of the signup modal
 
-const handleSignup = () => {
-  // Handle signup logic
-  alert('Thank you for signing up!')
+
+
+const handleSignup = async () => {
+  try {
+    const response = await fetch('/newsletter/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({ email: email.value })
+    })
+
+    // Check if honeypot field is filled
+    if (hpname.value) {
+      // console.warn('Honeypot field filled, likely a bot');
+      return;
+    }
+
+    const data = await response.json()
+    if (response.ok) {
+      alert(data.message)
+      showSignup.value = false
+    } else {
+      console.error(data)
+      alert('Signup failed')
+    }
+  } catch (error) {
+    console.error('Signup failed', error)
+  }
 }
 
+const dismissSignup = () => {
+  showSignup.value = false
+}
 
 const beginDownload = async () => {
   const url = props.videoSource
@@ -122,6 +159,12 @@ const beginDownload = async () => {
   }
 }
 appSettingStore.pageReload = true
+
+onMounted(() => {
+  if(!page.auth.user) {
+    showSignup.value = true
+  }
+})
 
 </script>
 

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Jobs\UploadVideoToSpacesJob;
 use App\Models\VideoUploadJob;
 
+use App\Traits\HandlesDigitalOceanUrls;
 use Carbon\Carbon;
 use Dotenv\Exception\InvalidFileException;
 use Illuminate\Http\UploadedFile;
@@ -38,6 +39,8 @@ use App\Models\Image;
 
 
 class VideoUploadController extends Controller {
+
+  use HandlesDigitalOceanUrls;
 
   protected $video;
 
@@ -71,7 +74,7 @@ class VideoUploadController extends Controller {
             ->sum('size')),
         'notTvTotalStorageUsed' => formatBytes(Video::where('storage_location', '=', 'spaces')
             ->sum('size')),
-        'videos'                => Video::with('showEpisode.show', 'movie', 'movieTrailer', 'newsStory')
+        'videos'                => Video::with('showEpisode.show', 'movie', 'movieTrailer', 'newsStory', 'appSetting')
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('file_name', 'like', "%{$search}%");
             })
@@ -84,6 +87,7 @@ class VideoUploadController extends Controller {
                 'ulid'                 => $video->ulid,
                 'user_id'              => $video->user->name,
                 'file_name'            => $video->file_name,
+                'download_filename'    => $this->getPreSignedUrl($video),
                 'extension'            => $video->extension,
                 'storage_location'     => $video->storage_location,
                 'folder'               => $video->folder,
@@ -115,7 +119,7 @@ class VideoUploadController extends Controller {
       // to reduce load on the server ... replace it with a more
       // efficient query.
       //
-        'allVideos'             => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsStory')
+        'allVideos'             => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsStory', 'appSetting')
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('file_name', 'like', "%{$search}%");
             })
@@ -127,6 +131,7 @@ class VideoUploadController extends Controller {
                 'id'                   => $video->id,
                 'user_id'              => $video->user->name,
                 'file_name'            => $video->file_name,
+                'download_filename'    => $this->getPreSignedUrl($video),
                 'extension'            => $video->extension,
                 'storage_location'     => $video->storage_location,
                 'folder'               => $video->folder,

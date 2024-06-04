@@ -13,6 +13,7 @@ use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistStreamPushDestinationController;
 use App\Http\Controllers\NewsFederalElectoralDistrictController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsPersonMessageController;
 use App\Http\Controllers\NewsPersonRoleController;
 use App\Http\Controllers\NewsPressReleaseController;
@@ -296,6 +297,8 @@ Route::post('/news-tip', [NewsTipController::class, 'submitNewsTip'])->name('new
 
 Route::post('/upload-press-release', [NewsPressReleaseController::class, 'submitPressRelease'])->name('upload-press-release');
 
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
+
 // Public view .. Teams/{team}/Index
 Route::resource('teams', TeamsController::class);
 
@@ -317,6 +320,9 @@ Route::get('/schedule', [SchedulesController::class, 'index'])
 
 // Public Creator Pages
 Route::get('/creator/{creator}', [CreatorsController::class, 'show'])->name('creator.show');
+
+Route::get('/creator/{creator}/teams', [CreatorsController::class, 'fetchTeams']);
+Route::get('/creator/{creator}/news-stories', [CreatorsController::class, 'fetchNewsStories']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/api/user', [UsersController::class, 'getUserData']);
 

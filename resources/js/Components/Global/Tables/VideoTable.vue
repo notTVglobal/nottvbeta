@@ -214,31 +214,44 @@ const playVideo = (video) => {
 };
 
 const beginDownload = async (video) => {
-  const url = props.videoSource
+  const url = video.download_filename;
 
   try {
     // Fetch the file from the URL
-    const response = await fetch(url)
-    const blob = await response.blob()
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      }
+    });
+
+    // Ensure the response is OK
+    if (!response.ok) {
+      console.log('Network response was not ok');
+      return;
+    }
+
+    // Get the response as a Blob
+    const blob = await response.blob();
 
     // Create a link element
-    const downloadLink = document.createElement('a')
-    downloadLink.href = URL.createObjectURL(blob)
-    downloadLink.download = video.file_name || 'downloaded_video'
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = video.download_filename || 'downloaded_video.mp4'; // Ensure the filename has an extension
 
     // Append the link to the document body
-    document.body.appendChild(downloadLink)
+    document.body.appendChild(downloadLink);
 
     // Trigger the download
-    downloadLink.click()
+    downloadLink.click();
 
     // Remove the link from the document
-    document.body.removeChild(downloadLink)
+    document.body.removeChild(downloadLink);
 
     // Revoke the object URL
-    URL.revokeObjectURL(downloadLink.href)
+    URL.revokeObjectURL(downloadLink.href);
   } catch (error) {
-    console.error('Download failed', error)
+    console.error('Download failed', error);
   }
 }
 

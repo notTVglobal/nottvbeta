@@ -25,7 +25,7 @@
             <img :src="socialShareStore.media" :alt="`image`" class="max-h-48 w-24 object-contain"/>
             <div class="flex flex-col px-6 xl:px-0 text-center xl:text-left space-y-2">
               <h4 class="text-orange-500 text-lg">{{ socialShareStore.title }}</h4>
-              <h5 class="font-light">{{ shortDescription }}</h5>
+              <h5 class="font-light text-white">{{ shortDescription }}</h5>
               <h5 class="text-xs tracking-wider text-gray-400">{{ socialShareStore.hashtags }}</h5>
             </div>
           </div>

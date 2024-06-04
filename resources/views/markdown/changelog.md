@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: June 2, 2024\
+Last Update: June 4, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.13
+June 4, 2024
+
+* Building the creator page with a fundraising option. Work in progress.
 
 ## v0.9.3.12
 June 3, 2024
