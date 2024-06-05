@@ -112,7 +112,7 @@ onMounted(() => {
 })
 
 const defaultTeamId = computed(() => {
-  return teamStore.id || (props.teams.length > 0 ? props.teams[0].id : null)
+  return teamStore.team.id || (props.teams.length > 0 ? props.teams[0].id : null)
 })
 
 // const defaultShowRunnerId = computed(() => {

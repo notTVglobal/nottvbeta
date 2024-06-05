@@ -144,7 +144,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  teamStore.reset()
+
 })
 
 </script>

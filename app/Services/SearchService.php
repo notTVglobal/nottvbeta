@@ -63,7 +63,7 @@ class SearchService {
       $dateB = $b->release_dateTime ?? $b->scheduled_release_dateTime ?? $b->updated_at;
       return $dateB <=> $dateA;
     });
-    
+
 //    Log::debug('Episodes fetched', ['Model Type' => $modelType, 'ID' => $id, 'Count' => $filteredEpisodes->count()]);
     return ShowEpisodeResource::collection($sortedEpisodes->values()->all());
   }
