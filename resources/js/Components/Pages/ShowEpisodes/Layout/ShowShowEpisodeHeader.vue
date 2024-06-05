@@ -5,7 +5,7 @@
       <!-- Image Section -->
       <div class="flex-shrink-0 max-w-xs sm:max-w-md md:max-w-lg xl:max-w-xl mb-4 xl:mb-0 mx-auto">
         <Link :href="`/shows/${show.slug}/`">
-          <SingleImageWithModal
+          <SingleImage
               :image="show.image"
               :alt="`Show Poster`"
               :class="`w-full h-auto max-h-96 object-contain hover:opacity-80 transition-opacity duration-300`"
@@ -55,6 +55,7 @@
 import { useUserStore } from '@/Stores/UserStore'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 const userStore = useUserStore()
 
