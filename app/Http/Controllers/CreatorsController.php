@@ -696,9 +696,17 @@ class CreatorsController extends Controller {
       // Combine the teams the creator belongs to and the teams owned by the creator
       $allTeams = $creator->teams->merge($ownedTeams);
 
-      return TeamResourceWithShows::collection($allTeams)->resolve();
-    });
+      // Sort teams so that owned teams come first
+      $sortedTeams = $allTeams->sortBy(function ($team) use ($creator) {
+        return $team->user_id === $creator->user_id ? 0 : 1;
+      });
 
+
+      return TeamResourceWithShows::collection($sortedTeams)->resolve();
+    });
+    // Extract team names for logging
+    $teamNames = collect($teams)->pluck('name');
+    Log::debug('Team Names: ', $teamNames->toArray());
     return response()->json($teams);
   }
 

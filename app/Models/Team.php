@@ -68,9 +68,8 @@ class Team extends Model {
   }
 
   // Define relationship with creators
-  public function creators()
-  {
-    return $this->belongsToMany(Creator::class, 'team_members', 'team_id', 'user_id');
+  public function creators() {
+    return $this->hasManyThrough(Creator::class, User::class, 'id', 'user_id', 'id', 'id');
   }
 
   public function members(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
