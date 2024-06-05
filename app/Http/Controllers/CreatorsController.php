@@ -681,11 +681,13 @@ class CreatorsController extends Controller {
   public function fetchTeams(Creator $creator): JsonResponse {
     $teams = Cache::remember("creator_{$creator->id}_teams", 60 * 10, function () use ($creator) {
       // Load the teams the creator belongs to
-      $creator->load(['teams' => function ($query) {
-        $query->with(['image.appSetting', 'shows' => function ($query) {
-          $query->active()->with('image.appSetting'); // Apply the active scope
-        }]);
-      }]);
+      $creatorTeams = Team::whereHas('members', function ($query) use ($creator) {
+        $query->where('user_id', $creator->user_id);
+      })
+          ->with(['image.appSetting', 'shows' => function ($query) {
+            $query->active()->with('image.appSetting'); // Apply the active scope
+          }])
+          ->get();
 
       // Load the teams owned by the creator
       $ownedTeams = Team::where('user_id', $creator->user_id)
@@ -694,21 +696,53 @@ class CreatorsController extends Controller {
           }])->get();
 
       // Combine the teams the creator belongs to and the teams owned by the creator
-      $allTeams = $creator->teams->merge($ownedTeams);
+      $allTeams = $creatorTeams->merge($ownedTeams);
 
       // Sort teams so that owned teams come first
       $sortedTeams = $allTeams->sortBy(function ($team) use ($creator) {
         return $team->user_id === $creator->user_id ? 0 : 1;
       });
 
-
       return TeamResourceWithShows::collection($sortedTeams)->resolve();
     });
+
     // Extract team names for logging
     $teamNames = collect($teams)->pluck('name');
     Log::debug('Team Names: ', $teamNames->toArray());
     return response()->json($teams);
   }
+//  public function fetchTeams(Creator $creator): JsonResponse {
+//    $teams = Cache::remember("creator_{$creator->id}_teams", 60 * 10, function () use ($creator) {
+//      // Load the teams the creator belongs to
+//      $creator->load(['teams' => function ($query) {
+//        $query->with(['image.appSetting', 'shows' => function ($query) {
+//          $query->active()->with('image.appSetting'); // Apply the active scope
+//        }]);
+//      }]);
+//
+//      // Load the teams owned by the creator
+//      $ownedTeams = Team::where('user_id', $creator->user_id)
+//          ->with(['image.appSetting', 'shows' => function ($query) {
+//            $query->active()->with('image.appSetting'); // Apply the active scope
+//          }])->get();
+//
+//      // Combine the teams the creator belongs to and the teams owned by the creator
+//      $allTeams = $creator->teams->merge($ownedTeams);
+//
+//      // Sort teams so that owned teams come first
+//      $sortedTeams = $allTeams->sortBy(function ($team) use ($creator) {
+//        return $team->user_id === $creator->user_id ? 0 : 1;
+//      });
+//
+//      return TeamResourceWithShows::collection($sortedTeams)->resolve();
+//    });
+//
+//    // Extract team names for logging
+//    $teamNames = collect($teams)->pluck('name');
+//    Log::debug('Team Names: ', $teamNames->toArray());
+//    return response()->json($teams);
+//  }
+
 
   public function fetchNewsStories(Creator $creator): JsonResponse {
     $newsStories = Cache::remember("creator_{$creator->id}_news_stories", 60 * 10, function () use ($creator) {
