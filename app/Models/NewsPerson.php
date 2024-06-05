@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class NewsPerson extends Model {
@@ -30,6 +31,10 @@ class NewsPerson extends Model {
 
   public function user() {
     return $this->belongsTo(User::class);
+  }
+
+  public function image(): BelongsTo {
+    return $this->belongsTo(Image::class);
   }
 
   public function roles() {

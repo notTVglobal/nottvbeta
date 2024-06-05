@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewNewsPersonMessage;
+use App\Mail\NewsMessageMailer;
 use App\Mail\NewsTipMailer;
 use App\Models\NewsPerson;
 use App\Models\NewsPersonMessage;
@@ -16,61 +17,64 @@ use Illuminate\Validation\ValidationException;
 
 class NewsTipController extends Controller {
   public function submitNewsTip(Request $request) {
-
     try {
-    // Validate the request input
-    $validatedData = $request->validate([
-        'name'           => 'required|string|max:255',
-        'email'          => 'required|email|max:255',
-        'phone'          => 'nullable|string|max:255',
-        'postalCode'     => 'nullable|string|max:255',
-        'message'        => 'required|string|max:5000',
-        'news_person_id' => 'nullable|exists:news_people,id',
-    ]);
+      // Validate the request input
+      $validatedData = $request->validate([
+          'name'           => 'required|string|max:255',
+          'email'          => 'required|email|max:255',
+          'phone'          => 'nullable|string|max:255',
+          'postalCode'     => 'nullable|string|max:255',
+          'message'        => 'required|string|max:5000',
+          'news_person_id' => 'nullable|exists:news_people,id',
+      ]);
 
-    // Escape and Encrypt the input data
-    $escapedName = e($validatedData['name']);
-    $escapedEmail = e($validatedData['email']);
-    $escapedPhone = e($validatedData['phone']) ? e($validatedData['phone']) : null;
-    $escapedMessage = e($validatedData['message']);
-    $escapedPostalCode = isset($validatedData['postalCode']) ? e($validatedData['postalCode']) : null;
+      // Escape and Encrypt the input data
+      $escapedName = e($validatedData['name']);
+      $escapedEmail = e($validatedData['email']);
+      $escapedPhone = $validatedData['phone'] ? e($validatedData['phone']) : '';
+      $escapedMessage = e($validatedData['message']);
+      $escapedPostalCode = isset($validatedData['postalCode']) ? e($validatedData['postalCode']) : '';
 
-    $encryptedName = Crypt::encryptString($escapedName);
-    $encryptedEmail = Crypt::encryptString($escapedEmail);
-    $encryptedPhone = $escapedPhone ? Crypt::encryptString($escapedPhone) : null;
-    $encryptedMessage = Crypt::encryptString($escapedMessage);
-    $encryptedPostalCode = $escapedPostalCode ? Crypt::encryptString($escapedPostalCode) : null;
+      $encryptedName = Crypt::encryptString($escapedName);
+      $encryptedEmail = Crypt::encryptString($escapedEmail);
+      $encryptedPhone = $escapedPhone ? Crypt::encryptString($escapedPhone) : '';
+      $encryptedMessage = Crypt::encryptString($escapedMessage);
+      $encryptedPostalCode = $escapedPostalCode ? Crypt::encryptString($escapedPostalCode) : '';
 
-    // Prepare the validated data for creating the news tip
-    $validatedData['name'] = $encryptedName;
-    $validatedData['email'] = $encryptedEmail;
-    $validatedData['phone'] = $encryptedPhone;
-    $validatedData['message'] = $encryptedMessage;
-    $validatedData['postalCode'] = $encryptedPostalCode;
+      // Prepare the validated data for creating the news tip
+      $validatedData['name'] = $encryptedName;
+      $validatedData['email'] = $encryptedEmail;
+      $validatedData['phone'] = $encryptedPhone;
+      $validatedData['message'] = $encryptedMessage;
+      $validatedData['postalCode'] = $encryptedPostalCode;
 
+      // Create the news tip in the database
+      $newsTip = NewsTip::create($validatedData);
 
-    // Create the news tip in the database
-    $newsTip = NewsTip::create($validatedData);
-
-    // Fetch all news_people with roles 8 or 11 if news_person_id is null
-    if (isset($validatedData['news_person_id'])) {
-      $newsPeople = [NewsPerson::find($validatedData['news_person_id'])];
-    } else {
-      $newsPeople = NewsPerson::whereHas('roles', function ($query) {
-        $query->whereIn('news_people_roles.id', [8, 11]);
-      })->get();
-    }
-
-    foreach ($newsPeople as $newsPerson) {
-      $recipientEmail = $newsPerson->user->email ?? null;
-      if ($recipientEmail) {
-        $this->createAndBroadcastNewsPersonMessage(array_merge($validatedData, ['news_person_id' => $newsPerson->id]), $newsTip);
-        // Send notification email
-        Mail::send(new NewsTipMailer($newsTip, $recipientEmail));
+      // Fetch all news_people with roles 8 or 11 if news_person_id is null
+      if (isset($validatedData['news_person_id'])) {
+        $newsPeople = [NewsPerson::find($validatedData['news_person_id'])];
+      } else {
+        $newsPeople = NewsPerson::whereHas('roles', function ($query) {
+          $query->whereIn('news_people_roles.id', [8, 11]);
+        })->get();
       }
-    }
 
-    return redirect()->back()->with('message', 'Your news tip has been submitted successfully.');
+      foreach ($newsPeople as $newsPerson) {
+        $recipientEmail = $newsPerson->user->email ?? null;
+
+        if ($recipientEmail) {
+          if (isset($validatedData['news_person_id'])) {
+            $this->createAndBroadcastNewsPersonMessage(array_merge($validatedData, ['news_person_id' => $newsPerson->id]), $newsTip, true);
+            Mail::send(new NewsMessageMailer($recipientEmail));
+          } else {
+            $this->createAndBroadcastNewsPersonMessage(array_merge($validatedData, ['news_person_id' => $newsPerson->id]), $newsTip, false);
+            Mail::send(new NewsTipMailer($newsTip, $recipientEmail));
+          }
+        }
+      }
+
+      return redirect()->back()->with('message', 'Your news tip has been submitted successfully.');
     } catch (ValidationException $e) {
       // Log the validation error
       Log::error('Validation Error: ', ['errors' => $e->errors()]);
@@ -95,27 +99,35 @@ class NewsTipController extends Controller {
   /**
    * Create and broadcast a message for a NewsPerson.
    */
-  protected function createAndBroadcastNewsPersonMessage(array $data, NewsTip $newsTip): void {
-
+  protected function createAndBroadcastNewsPersonMessage(array $data, NewsTip $newsTip, bool $isDirectMessage): void {
     try {
-    // Prepare the combined message in HTML
-    $combinedMessage = "<strong>Name:</strong> " . Crypt::decryptString($newsTip->name) . "<br>" .
-        "<strong>Email:</strong> " . Crypt::decryptString($newsTip->email) . "<br>" .
-        "<strong>Phone:</strong> " . Crypt::decryptString($newsTip->phone) . "<br>" .
-        "<strong>Message:</strong> " . nl2br(Crypt::decryptString($newsTip->message)) . "<br><br>" .
-        "<strong>Postal Code:</strong> " . Crypt::decryptString($newsTip->postalCode);
+      // Prepare the combined message in HTML
+      $combinedMessage = "<strong>Name:</strong> " . Crypt::decryptString($newsTip->name) . "<br>" .
+          "<strong>Email:</strong> " . Crypt::decryptString($newsTip->email) . "<br>" .
+          "<strong>Phone:</strong> " . Crypt::decryptString($newsTip->phone) . "<br>" .
+          "<strong>Message:</strong> " . nl2br(Crypt::decryptString($newsTip->message)) . "<br><br>" .
+          "<strong>Postal Code:</strong> " . Crypt::decryptString($newsTip->postalCode);
 
-    $data['recipient_id'] = $data['news_person_id'];
+      // Add a line to the message if it came from the public reporter page
+      if ($isDirectMessage) {
+        $combinedMessage .= "<br><br>This message came from your public reporter page.";
+        $subject = 'Message Received';
+      } else {
+        $combinedMessage .= "<br><br>This message came from the public news tip button and has been sent to all producers and assignment editors.";
+        $subject = 'News Tip Received';
+      }
 
-    // Encrypt the subject and message
-    $data['subject'] = Crypt::encryptString('News Tip Received');
-    $data['message'] = Crypt::encryptString($combinedMessage);
+      $data['recipient_id'] = $data['news_person_id'];
 
-    // Create the message
-    NewsPersonMessage::create($data);
+      // Encrypt the subject and message
+      $data['subject'] = Crypt::encryptString($subject);
+      $data['message'] = Crypt::encryptString($combinedMessage);
 
-    // Broadcast the event
-    broadcast(new NewNewsPersonMessage($data['news_person_id']))->toOthers();
+      // Create the message
+      NewsPersonMessage::create($data);
+
+      // Broadcast the event
+      broadcast(new NewNewsPersonMessage($data['news_person_id']))->toOthers();
     } catch (DecryptException $e) {
       // Log the decryption error
       Log::error('Decryption Error: ', ['exception' => $e]);

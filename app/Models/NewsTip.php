@@ -12,6 +12,7 @@ class NewsTip extends Model {
   protected $fillable = [
       'name',
       'email',
+      'phone',
       'postalCode',
       'message',
       'news_person_id',

@@ -54,10 +54,11 @@ class NewsPersonPolicy
      * @param  \App\Models\NewsPerson  $newsPerson
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, NewsPerson $newsPerson)
-    {
-        //
-    }
+  public function update(User $user, NewsPerson $newsPerson)
+  {
+    // Define your authorization logic here
+    return $user->id === $newsPerson->user_id;
+  }
 
     /**
      * Determine whether the user can delete the model.

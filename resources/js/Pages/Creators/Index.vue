@@ -1,70 +1,67 @@
 <template>
   <Head title="Creators"/>
 
-  <div class="place-self-center flex flex-col gap-y-3">
-    <div id="topDiv" class="bg-white text-black p-5 mb-10">
-
+  <div class="container mx-auto py-12 px-6">
+    <div id="topDiv" class="bg-white text-black p-6 rounded-lg shadow-lg">
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <div class="flex justify-between mb-6">
-        <div class="flex items-center">
-          <h1 class="text-3xl font-semibold">Creators</h1>
-
-          <Link href="/creators/create" class="text-blue-500 text-sm ml-2">New Creator</Link>
-        </div>
-        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-4xl font-bold text-gray-800">Creators</h1>
+        <input v-model="search" type="search" placeholder="Search..." class="border px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
       </div>
 
-      <div class="flex flex-col">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+      <div class="overflow-hidden border border-gray-200 rounded-lg shadow-md">
+        <table class="min-w-full bg-white">
+          <tbody class="divide-y divide-gray-200">
+          <tr v-for="creator in filteredCreators" :key="creator.id">
+            <td class="px-6 py-4 whitespace-nowrap hover:bg-gray-100">
+              <div v-if="creator.profile_is_public" class="flex items-center">
+                <Link :href="`/creators/${creator.slug}`" class="flex items-center w-full h-full">
+                  <div class="flex-shrink-0 h-12 w-12">
+                    <img v-if="creator.profile_photo_path"
+                         :src="'/storage/' + creator.profile_photo_path"
+                         class="h-12 w-12 rounded-full object-cover">
+                    <img v-else
+                         :src="creator.profile_photo_url"
+                         class="h-12 w-12 rounded-full object-cover bg-gray-300">
+                  </div>
+                  <div class="ml-4">
+                      <span class="text-lg font-semibold text-indigo-600 hover:text-indigo-900">
+                        {{ creator.name }}
+                      </span>
+                  </div>
+                </Link>
+              </div>
+              <div v-else class="flex items-center">
+                <div class="flex-shrink-0 h-12 w-12">
+                  <img v-if="creator.profile_photo_path"
+                       :src="'/storage/' + creator.profile_photo_path"
+                       class="h-12 w-12 rounded-full object-cover">
+                  <img v-else
+                       :src="creator.profile_photo_url"
+                       class="h-12 w-12 rounded-full object-cover bg-gray-300">
+                </div>
+                <div class="ml-4">
+                    <span class="text-lg font-semibold text-gray-600">
+                      {{ creator.name }}
+                    </span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-
-              <table class="min-w-full divide-y divide-gray-200">
-                <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-if="creators" v-for="creator in creators.data" :key="creator.id">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                      <div>
-                        <div class="text-sm font-medium text-gray-900">
-                          <Link :href="`/creators/${creator.slug}`" class="text-indigo-600 hover:text-indigo-900">
-                            {{ creator.name }}
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link :href="`/creators/edit/${creator.slug}`" class="text-indigo-600 hover:text-indigo-900">Edit
-                    </Link>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-
-              <!-- Paginator -->
-              <Pagination :data="creators" class="mt-6"/>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="flex items-center">
-        <!--               <Link :href="`/shows/${show.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a show</Link>-->
-
+        <!-- Paginator -->
+        <Pagination :data="creators" class="mt-6"/>
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
 import { router } from '@inertiajs/vue3'
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -75,20 +72,28 @@ usePageSetup('creators')
 
 const appSettingStore = useAppSettingStore()
 
-let props = defineProps({
+const props = defineProps({
   creators: Object,
   filters: Object,
+  auth: Object, // assuming auth is passed as a prop containing user information
 })
 
-let search = ref(props.filters.search)
+const search = ref(props.filters.search)
+
+const isAdmin = computed(() => {
+  return props.auth.user?.isAdmin || false
+})
+
+const filteredCreators = computed(() => {
+  return props.creators.data.filter(creator => {
+    return creator.profile_is_public || isAdmin.value
+  })
+})
 
 watch(search, throttle(function (value) {
-  router.get('/shows', {search: value}, {
+  router.get('/creators', { search: value }, {
     preserveState: true,
     replace: true,
   })
 }, 300))
-
 </script>
-
-

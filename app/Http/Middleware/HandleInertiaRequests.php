@@ -148,6 +148,7 @@ class HandleInertiaRequests extends Middleware {
                 'subscription'         => $user->subscription('default'),
                 'isSubscriptionActive' => (bool) optional($user->subscription('default'))->active(),
                 'newsPersonId'         => $user->newsPerson ? $user->newsPerson->id : null, // Only return the newsPerson ID if the user is a newsPerson
+                'newsPersonSlug'         => $user->newsPerson ? $user->newsPerson->slug : null, // Only return the newsPerson Slug if the user is a newsPerson
             ]) : null;
           }
 

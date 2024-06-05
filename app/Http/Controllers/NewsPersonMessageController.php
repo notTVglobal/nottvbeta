@@ -10,13 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class NewsPersonMessageController extends Controller {
 
   public function __construct() {
 //    $this->authorizeResource(NewsPersonMessage::class, 'newsPersonMessage');
-//    $this->middleware('can:fetch,App\Models\NewsPersonMessage')->only(['fetchMessages']);
+//    $this->middleware('can:deleteAll')->only(['deleteAll']);
   }
 
   /**
@@ -161,7 +162,7 @@ class NewsPersonMessageController extends Controller {
    */
   public function destroy(NewsPersonMessage $newsPersonMessage): \Illuminate\Http\RedirectResponse {
 
-    $this->authorize('delete', $newsPersonMessage);
+    $this->authorize('destroy', $newsPersonMessage);
 
     $newsPersonMessage->delete();
 
@@ -170,33 +171,51 @@ class NewsPersonMessageController extends Controller {
   }
 
   public function deleteAll(Request $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse {
+//    Log::info('deleteAll method called');
 
-    $request->validate([
-        'deleteAllTimestamp' => 'required|date_format:Y-m-d\TH:i:s.u\Z',
-    ]);
-
-    $deleteAllTimestamp = $request->input('deleteAllTimestamp');
-
-    $user = Auth::user();
-
-    $this->authorize('deleteAll', NewsPersonMessage::class);
-
-    $newsPersonId = $user->newsPerson->id;
+    // Authorization check
+    try {
+      $this->authorize('deleteAll', NewsPersonMessage::class);
+    } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+      Log::error('Authorization Error: ', ['exception' => $e]);
+      return back()->with('error', 'This action is unauthorized.');
+    }
 
     try {
+      $validatedData = $request->validate([
+          'deleteAllTimestamp' => 'required|date_format:Y-m-d H:i:s',
+      ]);
+    } catch (ValidationException $e) {
+      Log::error('Validation Error: ', ['errors' => $e->errors()]);
+      return back()->withErrors($e->errors())->with('error', 'Validation failed.');
+    }
+
+    $deleteAllTimestamp = $validatedData['deleteAllTimestamp'];
+//    Log::debug('Delete All Timestamp: ', ['timestamp' => $deleteAllTimestamp]);
+
+    try {
+      $user = Auth::user();
+//      Log::info('Authenticated User: ', ['user' => $user]);
+
+      $newsPersonId = $user->newsPerson->id;
+//      Log::debug('News Person ID: ', ['newsPersonId' => $newsPersonId]);
+
       // Delete messages received before the timestamp
-      NewsPersonMessage::where('recipient_id', $newsPersonId)
+      $deletedRows = NewsPersonMessage::where('recipient_id', $newsPersonId)
           ->where('created_at', '<=', $deleteAllTimestamp)
           ->delete();
+//      Log::debug('Deleted Rows Count: ', ['deletedRows' => $deletedRows]);
 
       return redirect()->route('news-person-messages.index')
-          ->with('success', 'Message deleted successfully');
+          ->with('success', 'Messages deleted successfully');
     } catch (\Exception $e) {
       Log::error('Error deleting messages: ', ['exception' => $e]);
-
-      return response()->json(['error' => 'An error occurred while deleting messages. Please try again later.'], 500);
+      return back()->with('error', 'An error occurred while deleting messages. Please try again later.');
     }
   }
+
+
+
 
   public function restore($id): \Illuminate\Http\RedirectResponse {
     $newsPersonMessage = NewsPersonMessage::withTrashed()->findOrFail($id);

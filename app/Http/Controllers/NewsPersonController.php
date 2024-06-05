@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
+use App\Http\Resources\ImageResource;
+use App\Http\Resources\NewsPersonResource;
+use App\Http\Resources\NewsStoryResource;
 use App\Models\NewsPerson;
 use App\Models\Notification;
 use App\Models\User;
@@ -44,16 +47,16 @@ class NewsPersonController extends Controller {
     // Transform the newsPersons collection
     $newsPersons->transform(function ($newsPerson) {
       return [
-          'id' => $newsPerson->id,
-          'name' => $newsPerson->user->name,
-          'roles' => $newsPerson->roles->map(function ($role) {
+          'id'                 => $newsPerson->id,
+          'name'               => $newsPerson->user->name,
+          'roles'              => $newsPerson->roles->map(function ($role) {
             return [
-                'id' => $role->id,
+                'id'   => $role->id,
                 'name' => $role->name,
             ];
           }),
           'profile_photo_path' => $newsPerson->user->profile_photo_path,
-          'profile_photo_url' => $newsPerson->user->profile_photo_url,
+          'profile_photo_url'  => $newsPerson->user->profile_photo_url,
       ];
     });
 
@@ -90,7 +93,7 @@ class NewsPersonController extends Controller {
     })->with('user')->get()->map(function ($newsPerson) {
       return [
           'id'                 => $newsPerson->user->id,
-          'slug'                 => $newsPerson->slug,
+          'slug'               => $newsPerson->slug,
           'name'               => $newsPerson->user->name,
           'profile_photo_path' => $newsPerson->user->profile_photo_path,
           'profile_photo_url'  => $newsPerson->user->profile_photo_url,
@@ -116,16 +119,18 @@ class NewsPersonController extends Controller {
     $user = Auth::user();
     $canViewNewsroom = optional($user)->can('viewAny', NewsPerson::class);
 
+    // Eager load the image and its appSetting relationship along with roles
+    $newsPerson->load(['image.appSetting', 'roles', 'user']);
+
+    // Apply the published scope on the newsStories relationship
+    $publishedNewsStories = $newsPerson->newsStories()->with('image.appSetting')->published()->limit(10)->latest()->get();
+
     $component = $user ? 'News/Reporters/{$id}/Index' : 'LoggedOut/News/Reporters/{$id}/Index';
 
     return Inertia::render($component, [
-        'newsPerson' => [
-            'id'                 => $newsPerson->user->id,
-            'name'               => $newsPerson->user->name,
-            'profile_photo_path' => $newsPerson->user->profile_photo_path,
-            'profile_photo_url'  => $newsPerson->user->profile_photo_url,
-        ],
-        'can'        => [
+        'newsPerson'  => (new NewsPersonResource($newsPerson))->resolve(),
+        'newsStories' => NewsStoryResource::collection($publishedNewsStories)->resolve() ?? null,
+        'can'         => [
             'viewNewsroom' => $canViewNewsroom
         ]
     ]);
@@ -176,8 +181,7 @@ class NewsPersonController extends Controller {
     }
   }
 
-  private function createOrRestoreNewsPerson($validated)
-  {
+  private function createOrRestoreNewsPerson($validated) {
     $newsPerson = NewsPerson::withTrashed()->where('user_id', $validated['id'])->first();
 
     if ($newsPerson) {
@@ -187,8 +191,7 @@ class NewsPersonController extends Controller {
     }
   }
 
-  private function handleExistingNewsPerson($newsPerson, $validated)
-  {
+  private function handleExistingNewsPerson($newsPerson, $validated) {
     $wasRecentlyRestored = false;
 
     if ($newsPerson->trashed()) {
@@ -217,20 +220,19 @@ class NewsPersonController extends Controller {
     $newsPerson->restore();
   }
 
-  private function createNewsPerson($validated)
-  {
+  private function createNewsPerson($validated) {
     $slug = $this->generateUniqueSlug($validated['name']);
     $newsPerson = NewsPerson::create([
         'user_id' => $validated['id'],
-        'name' => $validated['name'],
-        'slug' => $slug
+        'name'    => $validated['name'],
+        'slug'    => $slug
     ]);
 
     // Attach the custom property to indicate restoration
     $newsPerson->wasRecentlyRestored = false;
 
     // Send notification
-    $this->sendNotificationForNewsPerson($newsPerson, $validated,  false);
+    $this->sendNotificationForNewsPerson($newsPerson, $validated, false);
 
     return $newsPerson;
   }
@@ -259,7 +261,7 @@ class NewsPersonController extends Controller {
   private function sendNotificationForNewsPerson($newsPerson, $validated, $isUpdating): void {
     $roleNames = $newsPerson->roles()->whereIn('news_people_roles.id', $validated['role_ids'])->pluck('name')->implode(', ');
     $message = '';
-    $name =  $validated['name'];
+    $name = $validated['name'];
 
     if ($newsPerson->wasRecentlyRestored) {
       $message = '<span class="text-green-500">' . $name . ' has been restored to the News Team with roles: ' . $roleNames . '.</span>';
@@ -343,15 +345,64 @@ class NewsPersonController extends Controller {
     //
   }
 
+  public function fetchNewsPersonSettings(NewsPerson $newsPerson): JsonResponse {
+    $this->authorize('update', $newsPerson);
+
+    // Eager load the image and its appSetting relationship along with roles
+    $newsPerson->load(['image.appSetting', 'roles']);
+
+    // Assuming $newsPerson->social_media contains the JSON data with the necessary fields
+    return response()->json([
+        'image'         => $newsPerson->image ? (new ImageResource($newsPerson->image))->resolve() : null,
+        'biography'     => $newsPerson->biography,
+        'contact_info'  => $newsPerson->contact_info,
+        'other_details' => $newsPerson->other_details,
+        'social_media'  => $newsPerson->social_media,
+        'roles'         => $newsPerson->roles->map(function ($role) {
+          return [
+              'id'   => $role->id,
+              'name' => $role->name,
+          ];
+        }),
+    ]);
+  }
+
   /**
    * Update the specified resource in storage.
    *
    * @param Request $request
    * @param NewsPerson $newsPerson
-   * @return Response
+   * @return RedirectResponse
+   * @throws AuthorizationException
    */
   public function update(Request $request, NewsPerson $newsPerson) {
-    //
+    $this->authorize('update', $newsPerson);
+
+    Log::info('update');
+
+    $validated = $request->validate([
+        'biography'              => 'nullable|string',
+        'contact_info'           => 'nullable|string',
+        'other_details'          => 'nullable|string',
+        'social_media.facebook'  => 'nullable|string',
+        'social_media.twitter'   => 'nullable|string',
+        'social_media.instagram' => 'nullable|string',
+        'social_media.linkedin'  => 'nullable|string',
+        'social_media.snapchat'  => 'nullable|string',
+        'social_media.discord'   => 'nullable|string',
+        'social_media.substack'  => 'nullable|string',
+    ]);
+
+    $validated['social_media'] = $validated['social_media'] ?? [];
+
+    $newsPerson->update([
+        'biography'     => e($validated['biography']),
+        'contact_info'  => e($validated['contact_info']),
+        'other_details' => e($validated['other_details']),
+        'social_media'  => array_map('e', $validated['social_media']),
+    ]);
+
+    return back()->with('message', 'NewsPerson updated successfully.');
   }
 
   /**

@@ -335,7 +335,6 @@ class ImageController extends Controller {
 //    }
 
 
-
     // Proceed with file upload and record creation
     // Check the MIME type of the file
     $mimeType = $file->getMimeType();
@@ -347,8 +346,8 @@ class ImageController extends Controller {
 
     if ($request->input('removeExif')) {
       // Remove all metadata from the image
-    $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
-    Log::info("ExifTool result: $exifResult");
+      $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
+      Log::info("ExifTool result: $exifResult");
     }
 
     $modelType = $request->input('modelType', null); // Default to null if not provided
@@ -389,10 +388,12 @@ class ImageController extends Controller {
 
   protected function updateModelWithImageId($modelType, $modelId, $imageId): void {
     $model = match ($modelType) {
+      'creator' => \App\Models\Creator::find($modelId),
       'team' => \App\Models\Team::find($modelId),
       'show' => \App\Models\Show::find($modelId),
       'showEpisode' => \App\Models\ShowEpisode::find($modelId),
       'newsStory' => \App\Models\NewsStory::find($modelId),
+      'newsPerson' => \App\Models\NewsPerson::find($modelId),
       'newsRssFeedItem' => \App\Models\NewsRssFeedItemArchive::find($modelId),
       'movie' => \App\Models\Movie::find($modelId),
       'otherContent' => \App\Models\OtherContent::find($modelId),
@@ -425,6 +426,8 @@ class ImageController extends Controller {
       // Get all models that might reference the image
       $referencingModels = [
           'NewsStory',
+          'NewsPerson',
+          'Creator',
           'Movie',
           'Show',
           'ShowEpisode',

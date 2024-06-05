@@ -48,6 +48,7 @@ import {
     faHandsHelping,
     faHeart,
     faLeaf,
+    faLink,
     faList,
     faLock,
     faPaperPlane,
@@ -72,7 +73,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {  } from '@fortawesome/free-regular-svg-icons';
 import {
-    faBuffer, faEvernote, faFacebookF, faFlipboard, faHackerNews,
+    faBuffer, faEvernote, faFacebookF, faFlipboard, faHackerNews, faInstagram, faSnapchat, faDiscord,
     faLinkedin, faFacebookMessenger, faPinterest, faGetPocket, faQuora,
     faRedditAlien, faSkype, faStumbleupon, faTelegramPlane, faTumblr, faTwitter, faXTwitter, faViber,
     faVk, faWhatsapp, faWordpress, faYammer
@@ -178,7 +179,7 @@ createInertiaApp({
 library.add(
     fa1, fa2, fa3, fa4, fa5, fa6, fa7, fa8, fa9,
     faAngleLeft, faArrowRightArrowLeft, faBookOpen, faCheck, faCircle, faCircleDown, faCopy, faCircleExclamation, faCircleInfo, faClipboard, faClipboardList, faClapperboard, faComments, faEye, faFilter, faFlagUsa, faGem, faHandsHelping, faHeart, faLeaf, faList, faLock, faPaperPlane, faPencil, faPlay, faPlayCircle, faQuestion, faRepeat, faRocket, faRss, faShare, faStar, faTrashCan, faUser, faUsers, faUserGroup, faUserSecret, faVideo, faVolumeMute, faVolumeUp, faWrench,
-    faBuffer, faDonate, faDownload, faEnvelope, faEvernote, faFacebookF, faFlipboard, faHackerNews, faLinkedin, faFacebookMessenger, faPinterest, faGetPocket, faQuora, faRedditAlien, faSkype, faStumbleupon, faCommentDots, faTelegramPlane, faTumblr, faTwitter, faXTwitter, faViber, faVk, faWhatsapp, faWordpress, faYammer,
+    faBuffer, faDonate, faDownload, faEnvelope, faInstagram, faLink, faSnapchat, faDiscord, faEvernote, faFacebookF, faFlipboard, faHackerNews, faLinkedin, faFacebookMessenger, faPinterest, faGetPocket, faQuora, faRedditAlien, faSkype, faStumbleupon, faCommentDots, faTelegramPlane, faTumblr, faTwitter, faXTwitter, faViber, faVk, faWhatsapp, faWordpress, faYammer,
     faEnvelope, faCommentDots
 );
 

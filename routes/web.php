@@ -604,10 +604,13 @@ Route::middleware([
 
   Route::get('/api/news/persons', [NewsPersonController::class, 'fetchNewsPersons']);
 
+  Route::get('/api/news/news-person-fetch-settings/{newsPerson}', [NewsPersonController::class, 'fetchNewsPersonSettings']);
+
 // News Person Messages
 /////////////
 
   Route::resource('news-person-messages', NewsPersonMessageController::class);
+  Route::post('news-person-messages/{newsPersonMessage}', [NewsPersonMessageController::class, 'destroy']);
 
 //  Route::post('/news-person-messages/store', [NewsPersonMessageController::class, 'store']);
 
@@ -623,7 +626,7 @@ Route::middleware([
 //  Route::delete('news-person-messages/{id}/force-delete', [NewsPersonMessageController::class, 'forceDelete'])
 //      ->name('news-person-messages.forceDelete');
 
-  Route::delete('/news-person-messages-delete-all', [NewsPersonMessageController::class, 'deleteAll'])
+  Route::post('/news-person-messages-delete-all', [NewsPersonMessageController::class, 'deleteAll'])
       ->name('news-person-messages-deleteAll');
 
 

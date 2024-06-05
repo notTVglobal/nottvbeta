@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\CreatorContentStatusUpdated;
-use App\Events\UserLeftCreatorContentChannel;
 use App\Factories\MistServerServiceFactory;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\ShowResource;
