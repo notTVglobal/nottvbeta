@@ -206,15 +206,15 @@ onMounted(async () => {
   });
 
   // Check the flag in meta on page load
-  console.log('show.meta:', props.show.meta);
+  // console.log('show.meta:', props.show.meta);
 
   const meta = props.show.meta
-  console.log('isUpdatingSchedule:', meta.isUpdatingSchedule);
-  console.log('updatedBy:', meta.updatedBy);
-  console.log('current user:', page.user.name);
+  // console.log('isUpdatingSchedule:', meta.isUpdatingSchedule);
+  // console.log('updatedBy:', meta.updatedBy);
+  // console.log('current user:', page.user.name);
 
   if (meta.isUpdatingSchedule && meta.updatedBy === page.user.name) {
-    console.log('Resetting isUpdatingSchedule and updatedBy');
+    // console.log('Resetting isUpdatingSchedule and updatedBy');
     await showStore.setUpdatingStatus(false, page.user.name, props.show.slug);
   }
 });

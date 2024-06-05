@@ -64,11 +64,6 @@
         </div>
       </header>
 
-
-      <!--            <div class="my-6 ml-10 w-3/4">-->
-      <!--                {{ teamStore.activeShow.description }}-->
-      <!--            </div>-->
-
       <div class="my-6 text-gray-100">
         <span class="uppercase text-xs font-semibold text-black">SHOW NOTES: </span>
         <span class="text-black light:text-black dark:text-white">{{ props.show.notes }}</span>
@@ -78,18 +73,7 @@
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8 space-y-4">
-            <!--          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">-->
-            <!--            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
 
-            <!-- This code doesn't work .. it's meant to become a header button that collapses/expands each section -->
-            <!--                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button"-->
-            <!--                                    data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true"-->
-            <!--                                    aria-controls="collapseExample">Episodes-->
-            <!--                            </button>-->
-
-            <!--                            <div class="collapse" id="collapseExample">-->
-            <!--              <div>-->
-            <!--                <div class="bg-blue-100 p-2 font-bold text-black">Episodes</div>-->
             <div @click="toggleComponent('showEpisodes')"
                  :class="{'rounded-t-lg': showStore.openComponent === 'showEpisodes', 'rounded-lg': showStore.openComponent !== 'showEpisodes'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
@@ -101,37 +85,7 @@
                 <ManageShowEpisodesList />
               </div>
             </div>
-            <!--              </div>-->
 
-            <!--                            <table class="min-w-full divide-y divide-gray-200">-->
-            <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
-            <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
-            <!--                                    <td class="px-6 py-4 whitespace-nowrap">-->
-            <!--                                        <div class="flex items-center">-->
-            <!--                                            <div>-->
-            <!--                                                <div class="text-sm font-medium text-gray-900">-->
-            <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-            <!--                                                </div>-->
-            <!--                                            </div>-->
-            <!--                                        </div>-->
-            <!--                                    </td>-->
-
-            <!--                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">-->
-            <!--                                        <Link :href="`/admin/users/edit/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>-->
-            <!--                                    </td>-->
-            <!--                                </tr>-->
-            <!--                                </tbody>-->
-            <!--                            </table>-->
-
-            <!--                            &lt;!&ndash; Paginator &ndash;&gt;-->
-            <!--                            <Pagination :links="episode.links" class="mt-6"/>-->
-
-            <!--            </div>-->
-
-            <!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
-            <!--              <div class="bg-blue-100 p-2 font-bold text-black">Credits</div>-->
-            <!--              -->
-            <!--              -->
             <div @click="toggleComponent('showCredits')"
                  :class="{'rounded-t-lg': showStore.openComponent === 'showCredits', 'rounded-lg': showStore.openComponent !== 'showCredits'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-auto shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
@@ -156,10 +110,7 @@
                 <ShowCreditsList/>
               </div>
             </div>
-            <!--            </div>-->
 
-            <!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
-            <!--              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>-->
             <div @click="toggleComponent('showRecordings')"
                  :class="{'rounded-t-lg': showStore.openComponent === 'showRecordings', 'rounded-lg': showStore.openComponent !== 'showRecordings'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-auto shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
@@ -228,15 +179,6 @@ teamStore.can = props.can
 
 const currentUsers = ref([]);
 
-// let search = ref(props.filters.search);
-//
-// watch(search, throttle(function (value) {
-//     router.get('/shows', { search: value }, {
-//         preserveState: true,
-//         replace: true
-//     });
-// }, 300));
-
 const goLive = () => {
   goLiveStore.reset()
   goLiveStore.preSelectedShowId = props.show.id
@@ -246,23 +188,6 @@ const goLive = () => {
 onMounted(() => {
   showStore.initializeShow(props.show, props.episodes, props.episodeStatuses)
   console.log(`Subscribing to channel creator.show.${props.show.id}`)
-
-  // Echo.private(`creator.show.${props.show.id}`)
-  //     .subscribed(() => {
-  //       console.log(`Successfully subscribed to channel creator.show.${props.show.id}`);
-  //     })
-  //     .listen('.CreatorContentStatusUpdated', (event) => {
-  //       // console.log('CreatorContentStatusUpdated event received', event);
-  //       showStore.$patch({
-  //         isSaving: event.meta.isSaving,
-  //         isUpdatingSchedule: event.meta.isUpdatingSchedule,
-  //         updatedBy: event.meta.updatedBy,
-  //       });
-  //       // console.log('showStore.isSaving:', showStore.isSaving); // Log to verify update
-  //     })
-  //     .error((error) => {
-  //       console.error('Error subscribing to channel:', error);
-  //     });
 
   Echo.join(`creator.show.${props.show.id}`)
       .here(async (users) => {
@@ -286,9 +211,6 @@ onMounted(() => {
             });
             console.log('isUpdatingSchedule and updatedBy fields reset');
 
-            // Update the showStore accordingly
-            // showStore.isUpdatingSchedule = false;
-            // showStore.updatedBy = null;
           } catch (error) {
             console.error('Error updating meta:', error);
           }
