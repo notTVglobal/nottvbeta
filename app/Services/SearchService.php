@@ -35,14 +35,14 @@ class SearchService {
     $episodes = Cache::remember($cacheKey, 300, function () use ($modelType, $id) {
       if ($modelType === 'team') {
         $team = Team::with(['shows.showEpisodes' => function ($query) {
-          $query->where('show_episode_status_id', 7)  // Filter for published episodes
+          $query->where('show_episode_status_id', [6, 7, 8])  // Filter for scheduled, published, or archived episodes
           ->with('image.appSetting');
         },
             'shows.category', 'shows.subCategory', 'shows.image.appSetting'])->find($id);
         return $team ? $team->shows->flatMap->showEpisodes : collect();
       } elseif ($modelType === 'show') {
         $show = Show::with(['showEpisodes' => function ($query) {
-          $query->where('show_episode_status_id', 7)  // Filter for published episodes
+          $query->where('show_episode_status_id', [6, 7, 8])  // Filter for scheduled, published, or archived episodes
           ->with('image.appSetting');
         },
             'category', 'subCategory', 'image.appSetting'])->find($id);
@@ -58,7 +58,12 @@ class SearchService {
     });
 
     // Sort globally by date across all fetched episodes
-    $sortedEpisodes = $filteredEpisodes->sortByDesc('release_dateTime');
+    $sortedEpisodes = $filteredEpisodes->sort(function ($a, $b) {
+      $dateA = $a->release_dateTime ?? $a->scheduled_release_dateTime ?? $a->updated_at;
+      $dateB = $b->release_dateTime ?? $b->scheduled_release_dateTime ?? $b->updated_at;
+      return $dateB <=> $dateA;
+    });
+
 //    Log::debug('Episodes fetched', ['Model Type' => $modelType, 'ID' => $id, 'Count' => $filteredEpisodes->count()]);
     return ShowEpisodeResource::collection($sortedEpisodes->values()->all());
   }

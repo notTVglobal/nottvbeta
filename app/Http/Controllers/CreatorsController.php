@@ -680,10 +680,23 @@ class CreatorsController extends Controller {
 
   public function fetchTeams(Creator $creator): JsonResponse {
     $teams = Cache::remember("creator_{$creator->id}_teams", 60 * 10, function () use ($creator) {
-      $creator->load(['teams.image.appSetting', 'teams.shows' => function ($query) {
-        $query->active()->with('image.appSetting'); // Apply the active scope
+      // Load the teams the creator belongs to
+      $creator->load(['teams' => function ($query) {
+        $query->with(['image.appSetting', 'shows' => function ($query) {
+          $query->active()->with('image.appSetting'); // Apply the active scope
+        }]);
       }]);
-      return TeamResourceWithShows::collection($creator->teams)->resolve();
+
+      // Load the teams owned by the creator
+      $ownedTeams = Team::where('user_id', $creator->user_id)
+          ->with(['image.appSetting', 'shows' => function ($query) {
+            $query->active()->with('image.appSetting'); // Apply the active scope
+          }])->get();
+
+      // Combine the teams the creator belongs to and the teams owned by the creator
+      $allTeams = $creator->teams->merge($ownedTeams);
+
+      return TeamResourceWithShows::collection($allTeams)->resolve();
     });
 
     return response()->json($teams);

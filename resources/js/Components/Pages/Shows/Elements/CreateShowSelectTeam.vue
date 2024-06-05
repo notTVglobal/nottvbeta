@@ -7,7 +7,7 @@
     </label>
     <select
         class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
-        v-model="teamStore.id"
+        v-model="teamStore.team.id"
         required
     >
       <option disabled value="">Select Team</option>
@@ -44,7 +44,7 @@ const selectedTeamId = ref(null)
 
 // Watcher to update the teamStore.id when selectedTeamId changes
 watch(selectedTeamId, (newId) => {
-  teamStore.id = newId
+  teamStore.team.id = newId
   showStore.selectedTeamId = newId
 })
 </script>
