@@ -47,7 +47,7 @@
         :class="rowClass(recording.id)"
     >
       <td class="px-6 py-4 whitespace-nowrap">
-        <div>{{ userStore.formatDateInUserTimezone(recording.start_time) }}</div>
+        <div>{{ userStore.formatDateInUserTimezone(dayjs(recording.start_time)) }}</div>
         <div v-if="recording.comment" class="text-xs uppercase text-orange-700 font-semibold break-words">
           <span :class="{ 'text-indigo-600': recording.comment !== 'automated recording' }">{{
               recording.comment
@@ -55,10 +55,10 @@
         </div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        {{ userStore.formatTimeFromDateInUserTimezone(recording.start_time) }}
+        {{ userStore.formatTimeFromDateInUserTimezone(dayjs(recording.start_time)) }}
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        {{ userStore.formatTimeFromDateInUserTimezone(recording.end_time) }}
+        {{ userStore.formatTimeFromDateInUserTimezone(dayjs(recording.end_time)) }}
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
         {{ formatDuration(recording.total_milliseconds_recorded) }}
@@ -89,7 +89,7 @@
   </table>
 
   <div class="flex flex-row flex-wrap w-full justify-center">
-    <Pagination :data="showRecordings" class="" />
+    <Pagination :data="showRecordings" class="" @update="handlePageChange"/>
   </div>
 
   <dialog id="confirmRecordingPlaybackModal" class="modal">
@@ -192,14 +192,17 @@ import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useUserStore } from '@/Stores/UserStore'
+import { useShowStore } from '@/Stores/ShowStore'
 import { computed, reactive, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import Pagination from '@/Components/Global/Paginators/Pagination.vue'
+import dayjs from 'dayjs'
 
 const videoPlayerStore = useVideoPlayerStore()
 const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()
+const showStore = useShowStore()
 
 const shareClip = useClipboard()
 
@@ -229,6 +232,11 @@ const formatDuration = (totalMilliseconds) => {
 const state = reactive({
   hoveredRow: null,
 })
+
+const handlePageChange = () => {
+  // Keep the current open component
+  showStore.openComponent = 'showRecordings';
+};
 
 const selectedRecording = ref(null)
 const selectedRecordingDate = ref('')

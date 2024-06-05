@@ -4,6 +4,8 @@
       <p class="px-2 font-bold">{{ now }}</p>
     </div>
 
+
+
     <div class="flex flex-col items-center mb-6 pt-4">
       <h1 class="w-full text-center text-3xl font-bold text-black">Dashboard for Creators</h1>
       <p class="flex flex-wrap justify-center items-center w-full text-center">
@@ -13,7 +15,9 @@
 
     </div>
 
-    <div class="w-full flex flex-wrap-reverse justify-center mx-auto gap-2 mb-6">
+    <TimezoneClocks />
+
+    <div class="w-full flex flex-wrap-reverse justify-center mx-auto gap-2 my-6">
       <button
           v-if="can.viewAdmin"
           @click="appSettingStore.btnRedirect(`/admin/settings`)"
@@ -56,6 +60,7 @@
 import { useNow } from '@vueuse/core'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from "@/Stores/UserStore"
+import TimezoneClocks from '@/Components/Global/Time/TimezoneClocks.vue'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()

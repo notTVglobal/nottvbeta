@@ -129,6 +129,7 @@ class VideoUploadController extends Controller {
             ->withQueryString()
             ->through(fn($video) => [
                 'id'                   => $video->id,
+                'ulid'                 => $video->ulid,
                 'user_id'              => $video->user->name,
                 'file_name'            => $video->file_name,
                 'download_filename'    => $this->getPreSignedUrl($video),

@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*.not.tv', 'mist.nottv.io', 'https://nottvbeta.sfo3.digitaloceanspaces.com'],
+    'allowed_origins' => ['*.not.tv', 'mist.nottv.io', '*.digitaloceanspaces.com'],
 //    'allowed_origins' => ['*.not.tv', 'https://nottvbeta.sfo3.cdn.digitaloceanspaces.com/*', 'mist.nottv.io'],
 
     'allowed_origins_patterns' => [],

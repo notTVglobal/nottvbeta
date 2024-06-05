@@ -1,54 +1,37 @@
 <template>
-  <tr v-if="showStore.episodeIsBeingDeleted !== episode.id" class="bg-yellow-100">
-    <td class="px-6 py-4 text-sm">
-
-      <!-- If there is no episode number set by the user
-             the episode number defaults to the episode id           -->
+  <div v-if="showStore.episodeIsBeingDeleted !== episode.id" class="bg-gray-50 grid grid-cols-1 md:grid-cols-5 gap-4 p-4 mb-4 rounded-lg shadow">
+    <div class="flex items-center text-sm w-16">
       <div v-if="!episode.episodeNumber">{{ episode.id }}</div>
-      <div v-if="episode.episodeNumber">{{ episode.episodeNumber }}</div>
-
-    </td>
-    <td class="text-xl font-medium align-center my-auto justify-center gap-x-4 px-6 py-4 uppercase h-full">
-      <!-- Example image and link setup, uncomment or adjust as needed -->
-<!--       <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
-      <div @click="router.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)"
-           class="flex flex-row items-center break-words gap-x-2 gap-y-2 hover:cursor-pointer">
-        <SingleImage :image="episode.image" :alt="episode.name" :class="`rounded-xl min-w-16 min-h-16 max-w-16 max-h-16`" />
-        <span class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200 text-left">
-          {{ episode.name }}
-        </span>
-      </div>
-    </td>
-
-
-    <!--        <td class="text-gray-500 px-6 py-4 text-sm">-->
-    <!--            {{episode.notes}}-->
-    <!--        </td>-->
-    <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm w-full min-w-[16rem]">
-      <span v-if="!episode.notes" v-show="showStore.noteEdit !== props.episode.id" class="italic" @click="editNote">Click here to add/edit a note.</span>
-      <span v-if="episode.notes" v-show="showStore.noteEdit !== props.episode.id" :key="componentKey" @click="editNote">{{
-          episode.notes
-        }}</span>
-      <div v-if="showStore.noteEdit === props.episode.id">
-
-        <EpisodeNoteEdit :episode="props.episode" v-on:saveNoteProcessing="reloadNote"/>
+      <div v-else>{{ episode.episodeNumber }}</div>
+    </div>
+    <div @click="router.visit(`/shows/${showSlug}/episode/${episode.slug}/manage`)" class="hover:cursor-pointer flex items-center space-x-2">
+      <SingleImage :image="episode.image" :alt="episode.name" class="rounded-xl min-w-16 w-16 h-16 object-cover" />
+      <span class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200">
+        {{ episode.name }}
+      </span>
+    </div>
+    <div class="light:text-gray-600 dark:text-gray-100 text-sm flex justify-center items-center">
+      <span v-if="!episode.notes" v-show="showStore.noteEdit !== episode.id" class="italic" @click="editNote">Click here to add/edit a note.</span>
+      <span v-if="episode.notes" v-show="showStore.noteEdit !== episode.id" :key="componentKey" @click="editNote">{{ episode.notes }}</span>
+      <div v-if="showStore.noteEdit === episode.id">
+        <EpisodeNoteEdit :episode="episode" @saveNoteProcessing="reloadNote" />
         <div v-if="showStore.saveNoteProcessing">Saving...</div>
       </div>
-
-    </td>
-    <td class="px-6 py-4 text-right">
+    </div>
+    <div class="text-right">
       <div class="dropdown dropdown-left">
-        <!--                <button tabindex="0" :class="episodeStatus" @click="openEpisodeStatuses">{{ episode.episodeStatus }}</button>-->
-        <ManageShowEpisodeStatuses :episodeStatus="props.episode.episodeStatus"
-                             :episodeStatusId="props.episode.episodeStatusId"
-                             :episodeStatuses="props.episodeStatuses"
-                             :episodeId="props.episode.id"
-                             :episodeUlid="props.episode.ulid"
-                             :episodeName="props.episode.name"
-                             :episodeSlug="props.episode.slug"
-                             :showSlug="props.showSlug"
-                             :showName="props.showName"
-                             :scheduledDateTime="props.episode.scheduledReleaseDateTime"/>
+        <ManageShowEpisodeStatuses
+            :episodeStatus="episode.episodeStatus"
+            :episodeStatusId="episode.episodeStatusId"
+            :episodeStatuses="episodeStatuses"
+            :episodeId="episode.id"
+            :episodeUlid="episode.ulid"
+            :episodeName="episode.name"
+            :episodeSlug="episode.slug"
+            :showSlug="showSlug"
+            :showName="showName"
+            :scheduledDateTime="episode.scheduledReleaseDateTime"
+        />
       </div>
       <div v-if="episode.episodeStatusId === 6">
         Scheduled for: <br />
@@ -58,66 +41,60 @@
         Released on: <br/>
         {{ releaseDateTime }}
       </div>
-
-    </td>
-    <td>
-      <div class="flex flex-row justify-start mr-2">
-        <div>
-          <button
-              v-if="teamStore.can.editShow"
-              @click="appSettingStore.btnRedirect(`/shows/${showSlug}/episode/${episode.slug}/edit`)"
-              class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg mr-2"
-          >Edit
-          </button>
-        </div>
-        <button
-            v-if="teamStore.can.manageShow && !props.episode.isPublished"
-            @click="deleteShowEpisode"
-            class="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
-        >
-          <font-awesome-icon icon="fa-trash-can"/>
-        </button>
-      </div>
-    </td>
-  </tr>
-  <tr v-else>
-    <td class="w-full text-center">
-      <span class="loading loading-infinity loading-lg"></span><span class="ml-3">The episode is being deleted...</span>
-    </td>
-  </tr>
+    </div>
+    <div class="flex flex-row justify-end items-center">
+      <button
+          v-if="teamStore.can.editShow"
+          @click="appSettingStore.btnRedirect(`/shows/${showSlug}/episode/${episode.slug}/edit`)"
+          class="px-2 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg mr-2 w-16 h-10"
+      >
+        Edit
+      </button>
+      <button
+          v-if="teamStore.can.manageShow && !episode.isPublished"
+          @click="deleteShowEpisode"
+          class="px-2 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg w-10 h-10"
+      >
+        <font-awesome-icon icon="fa-trash-can" />
+      </button>
+    </div>
+  </div>
+  <div v-else class="w-full text-center p-4">
+    <span class="loading loading-infinity loading-lg"></span>
+    <span class="ml-3">The episode is being deleted...</span>
+  </div>
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'
-import { useForm } from "@inertiajs/vue3"
-import { computed, ref } from "vue"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import ManageShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses"
-import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEditNote"
-import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
+import { router } from '@inertiajs/vue3';
+import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+import { useAppSettingStore } from "@/Stores/AppSettingStore";
+import { useTeamStore } from "@/Stores/TeamStore";
+import { useShowStore } from "@/Stores/ShowStore";
+import { useUserStore } from "@/Stores/UserStore";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import ManageShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses";
+import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEditNote";
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue';
 
-const appSettingStore = useAppSettingStore()
-const teamStore = useTeamStore()
-const showStore = useShowStore()
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore();
+const teamStore = useTeamStore();
+const showStore = useShowStore();
+const userStore = useUserStore();
 
-let props = defineProps({
+const props = defineProps({
   episode: Object,
   episodeStatuses: Object,
   showSlug: String,
   showName: String,
 });
 
-let showEpisodeStatuses = ref(false)
+const showEpisodeStatuses = ref(false);
+const releaseDateTime = userStore.formatDateInUserTimezone(props.episode.releaseDateTime, 'ddd DD MMM YYYY');
+const scheduledReleaseDateTime = userStore.formatDateInUserTimezone(props.episode.scheduledReleaseDateTime, 'ddd DD MMM YYYY, hh:mm A' + ' ' + userStore.timezoneAbbreviation);
 
-const releaseDateTime = userStore.formatDateInUserTimezone(props.episode.releaseDateTime, 'ddd DD MMM YYYY')
-const scheduledReleaseDateTime = userStore.formatDateInUserTimezone(props.episode.scheduledReleaseDateTime, 'ddd DD MMM YYYY, hh:mm A' + ' ' + userStore.timezoneAbbreviation)
-
-showStore.noteEdit = 0
+showStore.noteEdit = 0;
 const componentKey = ref(0);
 
 function reloadNote() {
@@ -130,64 +107,66 @@ let form = useForm({
 });
 
 function editNote() {
-  showStore.noteEdit = props.episode.id
+  showStore.noteEdit = props.episode.id;
 }
 
 function openEpisodeStatuses() {
-  document.getElementById('episodeStatuses').showModal()
+  document.getElementById('episodeStatuses').showModal();
 }
 
 const deleteShowEpisode = async () => {
-
-  // episode is being deleted
-
-
   const confirmation = confirm('Are you sure you want to delete this show episode?');
 
   if (confirmation) {
     try {
       showStore.episodeIsBeingDeleted = props.episode.id;
-      // Make the DELETE request to delete the show episode
       await axios.delete(`/shows/${props.showSlug}/episode/${props.episode.slug}`)
           .then((response) => {
-            // Handle the response
             if (response.status === 200) {
-              // Display the JSON message from the response
-              showStore.errorMessage = response.data.message
-              // alert(response.data.message);
-              // Update the UI
-              router.reload()
+              showStore.errorMessage = response.data.message;
+              router.reload();
               showStore.episodeIsBeingDeleted = 0;
-              // For example, you can use Inertia's visit method to navigate to a new page:
-              // await router.visit(route('some.route'));
             } else {
-              // Handle other response statuses if needed
-              showStore.errorMessage = response.statusText
+              showStore.errorMessage = response.statusText;
               console.error('Delete request failed:', response.statusText);
               showStore.episodeIsBeingDeleted = 0;
-              router.reload()
+              router.reload();
             }
           })
           .catch((error) => {
             console.error('Error deleting show episode:', error);
-            showStore.errorMessage = error
+            showStore.errorMessage = error;
             showStore.episodeIsBeingDeleted = 0;
-            router.reload()
+            router.reload();
           });
-
-
-      // await router.delete(route('shows.showEpisodes.destroy', [props.showSlug, props.episode.slug]));
-      console.log("it should've been deleted");
-      // Redirect to a different page or update the UI as needed
-
-      console.log('inertia reload');
-      // For example, you can use Inertia's visit method to navigate to a new page:
-      // await router.visit(route('some.route'));
     } catch (error) {
       console.error('Error deleting show episode:', error);
     }
   }
 };
-
-
 </script>
+
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 4rem 1fr 1fr 1fr 1fr;
+  }
+}
+
+.min-w-16 {
+  min-width: 4rem;
+}
+
+.max-w-16 {
+  max-width: 4rem;
+}
+
+.max-h-16 {
+  max-height: 4rem;
+}
+</style>
