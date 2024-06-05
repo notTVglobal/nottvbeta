@@ -299,7 +299,7 @@ class NewsPersonController extends Controller {
     return response()->json($newsPerson->roles);
   }
 
-  public function updateRoles(Request $request): JsonResponse {
+  public function updateRoles(Request $request): RedirectResponse {
     $request->validate([
         'id'         => 'required|exists:news_people,user_id',
         'slug'       => 'required|exists:news_people,slug',
@@ -307,16 +307,19 @@ class NewsPersonController extends Controller {
         'role_ids.*' => 'exists:news_people_roles,id',
     ]);
 
-    $newsPerson = NewsPerson::where('user_id', $request->id);
+    $newsPerson = NewsPerson::where('user_id', $request->id)->first();
 
     if (!$newsPerson) {
-      return response()->json(['message' => 'News Person not found'], 404);
+      return back()->with('message', 'News Person not found');
+//      return response()->json(['message' => 'News Person not found'], 404);
     }
 
     // Sync roles without detaching to update the roles while maintaining existing ones not included in the request
-    $newsPerson->roles()->syncWithoutDetaching($request->role_ids);
+    $newsPerson->roles()->sync($request->role_ids);
 
-    return response()->json(['message' => 'Roles updated successfully']);
+//    return response()->json(['message' => 'Roles updated successfully']);
+    return back()->with('message', 'Roles updated successfully');
+
   }
 
 
