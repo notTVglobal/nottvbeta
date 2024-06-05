@@ -131,6 +131,10 @@ class Creator extends Model {
   public function teamsLed(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Team::class, 'team_leader');
   }
+
+  public function teamsOwned(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(Team::class, 'user_id');
+  }
   
   /**
    * The shows run by the creator.
