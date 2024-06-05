@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class Creator extends Model {
@@ -26,6 +27,18 @@ class Creator extends Model {
       if ($creator->isDirty('name')) {
         $creator->slug = static::generateUniqueSlug($creator->user->name, $creator->id);
       }
+    });
+
+    static::saved(function ($creator) {
+      // Clear the cache when the creator is saved
+      Cache::forget("creator_{$creator->id}_teams");
+      Cache::forget("creator_{$creator->id}_news_stories");
+    });
+
+    static::deleted(function ($creator) {
+      // Clear the cache when the creator is deleted
+      Cache::forget("creator_{$creator->id}_teams");
+      Cache::forget("creator_{$creator->id}_news_stories");
     });
   }
 
@@ -118,7 +131,7 @@ class Creator extends Model {
   public function teamsLed(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Team::class, 'team_leader');
   }
-
+  
   /**
    * The shows run by the creator.
    *

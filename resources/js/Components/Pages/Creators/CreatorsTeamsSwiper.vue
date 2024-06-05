@@ -47,21 +47,16 @@
   </div>
 </template>
 <script setup>
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { onMounted, ref } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
-
-// Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue'
-
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
-
-// Import Swiper core and required modules
 import { Navigation } from 'swiper/modules'
-
-// Install Swiper modules
 import SwiperCore from 'swiper'
+
+const appSettingStore = useAppSettingStore()
 
 SwiperCore.use([Navigation])
 

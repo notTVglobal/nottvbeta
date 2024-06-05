@@ -7606,16 +7606,8 @@ hr {
   margin: 1rem;
 }
 
-.m-6 {
-  margin: 1.5rem;
-}
-
 .m-auto {
   margin: auto;
-}
-
-.m-2 {
-  margin: 0.5rem;
 }
 
 .-mx-2 {
@@ -8055,10 +8047,6 @@ hr {
   margin-top: 2rem;
 }
 
-.-mt-px {
-  margin-top: -1px;
-}
-
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -8170,6 +8158,10 @@ hr {
   height: 8rem;
 }
 
+.h-36 {
+  height: 9rem;
+}
+
 .h-4 {
   height: 1rem;
 }
@@ -8275,10 +8267,6 @@ hr {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-36 {
-  height: 9rem;
 }
 
 .max-h-1\/2screen {
@@ -8675,6 +8663,10 @@ hr {
   max-width: 42rem;
 }
 
+.max-w-32 {
+  max-width: 8rem;
+}
+
 .max-w-3xl {
   max-width: 48rem;
 }
@@ -8775,14 +8767,6 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
-}
-
-.max-w-6xl {
-  max-width: 72rem;
-}
-
-.max-w-32 {
-  max-width: 8rem;
 }
 
 .flex-1 {
@@ -9441,10 +9425,6 @@ hr {
 
 .border-t-2 {
   border-top-width: 2px;
-}
-
-.border-r {
-  border-right-width: 1px;
 }
 
 .border-none {
@@ -13062,10 +13042,6 @@ hr {
     align-items: center;
   }
 
-  .sm\:justify-start {
-    justify-content: flex-start;
-  }
-
   .sm\:justify-center {
     justify-content: center;
   }
@@ -13532,10 +13508,6 @@ hr {
     margin-bottom: 7rem;
   }
 
-  .lg\:ml-0 {
-    margin-left: 0px;
-  }
-
   .lg\:ml-10 {
     margin-left: 2.5rem;
   }
@@ -13800,14 +13772,14 @@ hr {
     margin-right: 0px;
   }
 
-  .xl\:my-0 {
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
   .xl\:mx-4 {
     margin-left: 1rem;
     margin-right: 1rem;
+  }
+
+  .xl\:my-0 {
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 
   .xl\:mb-0 {
@@ -13840,14 +13812,6 @@ hr {
 
   .xl\:mt-2 {
     margin-top: 0.5rem;
-  }
-
-  .xl\:ml-8 {
-    margin-left: 2rem;
-  }
-
-  .xl\:mr-4 {
-    margin-right: 1rem;
   }
 
   .xl\:block {
