@@ -4,7 +4,7 @@
         @click="goToInbox"
         :class="buttonClass"
     >
-      Inbox ({{ newsPersonMessageStore.newMessageCount }})
+      Inbox ({{ newsPersonMessageStore.computedNewMessageCount }})
     </button>
   </div>
 </template>
@@ -24,7 +24,7 @@ onMounted(() => {
 });
 
 const messageCount = computed(() => newsPersonMessageStore.computedMessageCount);
-const newMessageCount = computed(() => newsPersonMessageStore.newMessageCount);
+const newMessageCount = computed(() => newsPersonMessageStore.computedNewMessageCount);
 
 const buttonClass = computed(() => {
   return newMessageCount.value > 0

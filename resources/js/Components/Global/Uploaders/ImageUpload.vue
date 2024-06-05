@@ -19,7 +19,7 @@
           class-name="my-pond"
           allow-multiple="false"
           label-idle="Click to choose file, or drag here..."
-          :server="`/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif}`"
+          :server="serverOptions"
           accepted-file-types="image/jpeg, image/png"
           @init="handleFilePondInit"
           @processfile="handleProcessedFile"
@@ -42,7 +42,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 import { ref } from 'vue'
 
 let props = defineProps({
-  image: Object,
+  // image: Object,
   name: String,
   metadataKey: String,
   metadataValue: String,
@@ -52,7 +52,7 @@ let props = defineProps({
   fileTypes: String,
 })
 
-const myFiles = ref(['']);
+const myFiles = ref([''])
 
 const emit = defineEmits(['reloadImage', 'imageUploaded'])
 
@@ -63,22 +63,23 @@ const FilePond = vueFilePond(
 )
 
 // Define reactive variables
-const removeExif = ref(false);
-const maxSize = ref('30MB');
-const fileTypes = ref(['image/png', 'image/jpeg']);
+const removeExif = ref(false)
+const maxSize = ref('30MB')
+const fileTypes = ref(['image/png', 'image/jpeg'])
 // const modelType = 'yourModelType'; // Replace with your actual model type
 // const modelId = 'yourModelId'; // Replace with your actual model ID
 
 const serverOptions = ref({
   process: {
-    url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}`,
+    url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif}`,
     method: 'POST',
     withCredentials: false,
     // headers: {},
+    onload: (response) => response,
     // onload: (response) => response.key,
     // onerror: (response) => response.data,
   },
-});
+})
 
 
 // function filepondInitialized() {
@@ -86,7 +87,7 @@ const serverOptions = ref({
 // }
 
 function handleFilePondInit() {
-  console.log('FilePond has initialized');
+  console.log('FilePond has initialized')
 }
 
 function handleProcessedFile(error, file) {
@@ -96,8 +97,11 @@ function handleProcessedFile(error, file) {
     console.log(file)
     return
   }
-
+  // console.log(file)
   emit('reloadImage')
+
+  const response = JSON.parse(file.serverId)
+  emit('imageUploaded', response)
 }
 
 

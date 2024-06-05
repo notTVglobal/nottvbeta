@@ -1,12 +1,16 @@
 <template>
   <div>
     <button @click="openForm" class="flex items-center justify-center bg-indigo-500 text-white p-4 rounded-lg shadow-md hover:bg-indigo-600 transition">
-      📝 Have a News Tip?
+      <span v-if="!newsPersonId">📝 Have a News Tip?</span>
+      <span v-else>✉️ Send {{ newsPersonName }}<br/>a Message</span>
     </button>
 
     <div v-if="showForm" :class="modalClass">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 lg:mx-0">
-        <h2 class="text-xl font-bold mb-4">Submit a News Tip</h2>
+        <h2 class="text-xl font-bold mb-4">
+          <span v-if="!newsPersonId">Submit a News Tip</span>
+          <span v-else>Send {{ newsPersonName }} a Message</span>
+        </h2>
         <p class="text-sm text-gray-600 mb-4">This is an encrypted message that does not go through email.</p>
         <form @submit.prevent="submitForm">
           <div class="mb-4">
@@ -46,19 +50,28 @@ import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const notificationStore = useNotificationStore()
 
+const props = defineProps({
+  newsPersonId: Number || null,
+  newsPersonName: String || null,
+})
+
 const showForm = ref(false)
 const form = ref({
   name: '',
   email: '',
   phone: '',
   postalCode: '',
-  message: ''
+  message: '',
+  news_person_id: null,
 })
 
 const page = usePage().props
 
 const openForm = () => {
   showForm.value = true
+  if (props.newsPersonId) {
+    form.value.news_person_id = props.newsPersonId
+  }
 }
 
 const closeForm = () => {
@@ -68,18 +81,26 @@ const closeForm = () => {
     email: '',
     phone: '',
     postalCode: '',
-    message: ''
+    message: '',
+    news_person_id: null
   }
 }
 
 const submitForm = async () => {
+  let messageType = 'news tip'
+  if (props.newsPersonId) {
+    form.news_person_id = props.newsPersonId
+    messageType = 'message'
+  }
+
   try {
     await axios.post('/news-tip', form.value)
-    notificationStore.setGeneralServiceNotification('Success', 'Your news tip has been submitted successfully.')
+    console.log(form.value)
+    notificationStore.setGeneralServiceNotification('Success', 'Your ' + messageType + ' has been submitted successfully.')
     closeForm()
   } catch (error) {
     console.error('Failed to submit news tip.')
-    notificationStore.setGeneralServiceNotification('Error', 'There was an error submitting your news tip. Please try again.')
+    notificationStore.setGeneralServiceNotification('Error', 'There was an error submitting your ' + messageType + '. Please try again.')
   }
 }
 

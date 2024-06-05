@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\CreatorContentStatusUpdated;
-use App\Events\UserLeftCreatorContentChannel;
 use App\Factories\MistServerServiceFactory;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\ShowResource;
@@ -803,14 +802,19 @@ class ShowsController extends Controller {
     $team = Team::with(['members' => function ($query) {
       // Adjust the select fields as needed
       $query->select(['users.id', 'users.name', 'users.profile_photo_path'])
-          ->withPivot('active', 'created_at', 'updated_at');
+          ->withPivot('active', 'created_at', 'updated_at')
+          ->with('creator'); // Eager load the creator relationship
     }])->findOrFail($teamId);
 
     // Transform team members (users) for presentation
-    return $team->members->map(function ($user) {
+    return $team->members->filter(function ($user) {
+      // Access the creator's profile to check if it's public
+      return $user->creator->is_public ?? false;
+    })->map(function ($user) {
       // Access pivot data like $user->pivot->active if needed
       return [
           'id'                 => $user->id,
+          'slug'               => $user->creator->slug,
           'name'               => $user->name,
           'profile_photo_path' => $user->profile_photo_path,
           'profile_photo_url'  => $user->profile_photo_url,
@@ -1407,9 +1411,9 @@ class ShowsController extends Controller {
 
       // Return the updated episode details
       return response()->json([
-          'message' => 'Episode status updated successfully',
-          'episode_id' => $episode->id,
-          'episode_status_id' => $episode->show_episode_status_id,
+          'message'                    => 'Episode status updated successfully',
+          'episode_id'                 => $episode->id,
+          'episode_status_id'          => $episode->show_episode_status_id,
           'scheduled_release_dateTime' => $episode->scheduled_release_dateTime,
       ]);
 

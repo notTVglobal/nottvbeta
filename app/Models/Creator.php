@@ -84,6 +84,15 @@ class Creator extends Model {
   }
 
   /**
+   * Determine if the creator's profile is public.
+   *
+   * @return bool
+   */
+  public function getIsPublicAttribute(): bool {
+    return isset($this->settings['profile_is_public']) && $this->settings['profile_is_public'];
+  }
+
+  /**
    * Get the user that owns the creator.
    *
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

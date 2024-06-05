@@ -317,7 +317,7 @@
           <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
         </select>
 
-        <button class="btn btn-primary mt-4" @click="addUserToNewsroom">Change User Role(s)</button>
+        <button class="btn btn-primary mt-4" @click="updateUserNewsRoles">Change User Role(s)</button>
 
       </div>
     </dialog>
@@ -343,11 +343,12 @@ let props = defineProps({
   userEdit: Object,
   isNewsPerson: Boolean,
   newsPersonId: Number,
+  newsPersonSlug: String,
   isVip: Number,
   isSubscriber: Boolean,
   hasSubscription: Boolean,
-  isSubscriptionActive: String,
-  hasAccount: String,
+  isSubscriptionActive: Boolean,
+  hasAccount: Boolean,
 })
 
 let form = useForm({
@@ -418,9 +419,21 @@ function addUserToNewsroom() {
 function updateUserNewsRoles() {
   router.post('/newsroom/newsPerson/updateRoles', {
     id: props.userEdit.id,
+    slug: props.newsPersonSlug,
     role_ids: selectedRoles.value, // Send an array of selected role IDs
-  })
+  }, {
+    onSuccess: (response) => {
+      // Handle success
+      document.getElementById('changeNewsPersonRoleModal').close();
+    },
+    onError: (error) => {
+      // Handle errors
+      document.getElementById('changeNewsPersonRoleModal').close();
+      console.error('Error updating roles:', error.response || error.message);
+    }
+  });
 }
+
 
 function removeUserFromNewsroom() {
   if (confirm('Are you sure you want to remove this person from the news team?')) {

@@ -34,6 +34,7 @@ class CreatorResource extends JsonResource
         'teams' => $teams,
         'profile_photo_path' => $user->profile_photo_path ?? '',
         'profile_photo_url' => $user->profile_photo_url ?? '',
+        'profile_is_public' => $this->settings['profile_is_public'] ?? false,
     ];
   }
 }

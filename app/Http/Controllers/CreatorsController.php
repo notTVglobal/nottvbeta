@@ -41,6 +41,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Services\InviteCodeService;
 use Laravel\Jetstream\Jetstream;
+use function Laravel\Prompts\error;
 
 class CreatorsController extends Controller {
 
@@ -50,6 +51,9 @@ class CreatorsController extends Controller {
 
   public function __construct(InviteCodeService $inviteCodeService) {
     $this->inviteCodeService = $inviteCodeService;
+
+    $this->middleware('can:viewAny,'.Creator::class)->only(['index']);
+    $this->middleware('can:viewAdmin,'.Creator::class)->only(['create']);
   }
 
   public function invite(): Response {
@@ -513,19 +517,20 @@ class CreatorsController extends Controller {
    * @return Response
    */
   public function index(): Response {
+    $creators = Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
+        ->select('creators.*', 'user.name AS name')
+        ->when(Request::input('search'), function ($query, $search) {
+          $query->where('name', 'like', "%{$search}%");
+        })
+        ->paginate(10)
+        ->withQueryString();
+
+    // Load the user relationship for each creator
+    $creators->getCollection()->load('user');
+
     return Inertia::render('Creators/Index', [
-        'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
-            ->select('creators.*', 'user.name AS name')
-            ->when(Request::input('search'), function ($query, $search) {
-              $query->where('name', 'like', "%{$search}%");
-            })
-            ->paginate(10, ['*'], 'creators')
-            ->withQueryString()
-            ->through(fn($creator) => [
-                'id'   => $creator->id,
-                'name' => $creator->name
-            ]),
-        'filters'  => Request::only(['search'])
+        'creators' => $creators->through(fn($creator) => (new CreatorResource($creator))->resolve()),
+        'filters' => Request::only(['search']),
     ]);
   }
 

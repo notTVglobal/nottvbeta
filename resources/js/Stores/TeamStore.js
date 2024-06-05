@@ -122,7 +122,7 @@ export const useTeamStore = defineStore('teamStore', {
             this.activeShow = episode
         },
         addMember(member) {
-            this.members.push(member)
+            this.team.members.push(member)
         },
         removeMember(memberId) {
             this.team.members = this.team.members.filter(member => member.id !== memberId)

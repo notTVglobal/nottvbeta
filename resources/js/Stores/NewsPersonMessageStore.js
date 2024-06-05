@@ -53,28 +53,35 @@ export const useNewsPersonMessageStore = defineStore('newsPersonMessageStore', {
             }
         },
         setDeleteAllTimestamp() {
-            this.deleteAllTimestamp = new Date().toISOString();
+            const date = new Date();
+            this.deleteAllTimestamp = date.toISOString().slice(0, 19).replace('T', ' ');
         },
         async deleteMessage(messageId) {
+            const notificationStore = useNotificationStore()
             try {
-                await router.delete('/news-person-messages-delete-all')
+                await router.post(`/news-person-messages/${messageId}`)
                 await this.fetchMessages();
                 await this.fetchMessageCount();
+                notificationStore.setToastNotification('Message deleted.', 'warning')
             } catch (error) {
                 console.error('Error deleting message:', error);
+                notificationStore.setToastNotification(error, 'error')
             }
         },
         async deleteAllMessages() {
+            const notificationStore = useNotificationStore()
             try {
-                await router.delete('/news-person-messages-delete-all', {
+                await axios.post('/news-person-messages-delete-all', {
                     deleteAllTimestamp: this.deleteAllTimestamp,
                 });
                 await this.fetchMessages();
                 await this.fetchMessageCount();
                 this.deleteAllTimestamp = null;
+                notificationStore.setToastNotification('All messages deleted.', 'warning')
             } catch (error) {
                 console.error('Error deleting all messages:', error);
                 this.deleteAllTimestamp = null;
+                notificationStore.setToastNotification(error, 'error')
             }
         },
         updateMessage(updatedMessage) {

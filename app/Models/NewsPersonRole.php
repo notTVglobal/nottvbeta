@@ -11,6 +11,6 @@ class NewsPersonRole extends Model {
   protected $table = 'news_people_roles';
 
   public function newsPeople() {
-    return $this->belongsToMany(NewsPerson::class, 'news_person_role_user', 'role_id', 'news_person_id');
+    return $this->belongsToMany(NewsPerson::class, 'news_person_role_user', 'news_person_id', 'role_id');
   }
 }

@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col">
       <div id="topDiv" class="bg-white min-h-screen text-black dark:bg-gray-900 dark:text-gray-50">
         <NewsHeader>Newsroom</NewsHeader>
-        <div class="w-full max-w-7xl px-8 bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50 pb-24">
+        <div class="w-full max-w-7xl mx-auto rounded-lg px-8 bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50 pb-24">
           <div class="py-8 px-4 lg:px-16">
             <h1 class="text-3xl font-bold mb-6">Your Personal News Inbox</h1>
             <div class="mb-6 flex space-x-4">

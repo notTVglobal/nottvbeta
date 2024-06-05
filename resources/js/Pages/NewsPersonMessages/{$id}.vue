@@ -5,12 +5,12 @@
     <div class="place-self-center flex flex-col">
       <div id="topDiv" class="bg-white h-screen text-black dark:bg-gray-900 dark:text-gray-50">
         <NewsHeader>Newsroom</NewsHeader>
-        <div class="w-full max-w-7xl px-8 bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
+        <div class="w-full max-w-7xl mx-auto px-8 rounded-lg bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
           <div class="py-8 px-4 lg:px-16">
             <h1 class="text-3xl font-bold mb-6">Message Details</h1>
             <div class="mb-6">
               <h2 class="text-2xl font-semibold mb-4">{{ newsPersonMessage.subject || 'No Subject' }}</h2>
-              <div v-if="newsPersonMessage.sender" class="text-lg mb-2">
+              <div v-if="newsPersonMessage.sender_id" class="text-lg mb-2">
                 <div class="flex items-center">
                   <img v-if="newsPersonMessage.sender.profile_photo_url" :src="newsPersonMessage.sender.profile_photo_url" alt="Profile Photo"
                        class="w-12 h-12 rounded-full mr-4">

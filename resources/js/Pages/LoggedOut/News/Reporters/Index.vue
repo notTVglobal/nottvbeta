@@ -69,6 +69,11 @@ appSettingStore.setPrevUrl()
 
 const { props } = usePage();
 
+defineProps({
+  newsPeople: Array,
+  can: Object,
+})
+
 onMounted(() => {
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
@@ -100,10 +105,7 @@ onMounted(() => {
 //   // immediate: true // This ensures the watcher runs immediately on setup
 // });
 
-defineProps({
-  newsPeople: Array,
-  can: Object,
-})
+
 
 </script>
 <script>

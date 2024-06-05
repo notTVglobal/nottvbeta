@@ -30,7 +30,7 @@ class AssignUlidToVideos extends Command {
 
     // Loop through each video and assign a ULID
     foreach ($videosWithoutUlid as $video) {
-      $video->ulid = Str::ulid()->toString();
+      $video->ulid = Str::ulid();
       $video->save();
       $this->info("Assigned ULID to video ID: {$video->id}");
     }

@@ -221,8 +221,8 @@ class TeamsController extends Controller {
 //    ];
 
     return Inertia::render($component, [
-        'team'          => (new TeamResource($team))->resolve(),
-        'shows'         => Show::with('team', 'image.appSetting')
+        'team'         => (new TeamResource($team))->resolve(),
+        'shows'        => Show::with('team', 'image.appSetting')
             ->where('team_id', $team->id)
             ->where(function ($query) {
               if (auth()->check() && auth()->user()->creator) {
@@ -257,22 +257,22 @@ class TeamsController extends Controller {
                 'categorySubName' => $show->getCachedSubCategory()->name ?? null,
                 'statusId'        => $show->status->id,
             ]),
-        'contributors'      => TeamMember::where('team_id', $team->id)
+        'contributors' => TeamMember::where('team_id', $team->id)
             ->join('users', 'team_members.user_id', '=', 'users.id')
             ->join('creators', 'creators.user_id', '=', 'users.id') // Assuming there's a creators table linked to users
             ->whereJsonContains('creators.settings->profile_is_public', true)
-            ->select('users.*', 'team_members.user_id')
-            ->latest()
+            ->select('users.id', 'users.name', 'users.profile_photo_path', 'creators.slug', 'team_members.user_id', 'team_members.created_at as team_member_created_at')
+            ->orderBy('team_member_created_at', 'desc') // Specify the alias for the created_at column
             ->paginate(15, ['*'], 'creator')
-//                ->withQueryString()
             ->through(fn($user) => [
                 'id'                 => $user->id,
+                'slug'               => $user->slug,
                 'name'               => $user->name,
                 'profile_photo_path' => $user->profile_photo_path,
                 'profile_photo_url'  => $user->profile_photo_url,
             ]),
-        'filters'       => Request::only(['team_id']),
-        'can'     => $this->getUserPermissions($team),
+        'filters'      => Request::only(['team_id']),
+        'can'          => $this->getUserPermissions($team),
 //        'can'           => [
 //            'viewTeam'   => optional($user)->can('view', $team),
 //            'manageTeam' => optional($user)->can('viewTeamManagePage', $team),
@@ -367,10 +367,10 @@ class TeamsController extends Controller {
 
     // Prepare the response data using TeamDetailedResource
     return Inertia::render('Teams/{$id}/Manage', [
-        'team'    => (new TeamDetailedResource($team))->resolve(),
-        'shows'   => $shows,
-        'filters' => Request::only(['team_id']),
-        'can'     => $this->getUserPermissions($team),
+        'team'        => (new TeamDetailedResource($team))->resolve(),
+        'shows'       => $shows,
+        'filters'     => Request::only(['team_id']),
+        'can'         => $this->getUserPermissions($team),
     ]);
   }
 
@@ -954,7 +954,7 @@ class TeamsController extends Controller {
 
     // Save the public message
     $sanitizedMessage = Purifier::clean($validatedData['public_message'], [
-        'HTML.Allowed' => 'p,br,b,u,i,strong,em,sub,sup', // Allow subscript and superscript tags
+        'HTML.Allowed'          => 'p,br,b,u,i,strong,em,sub,sup', // Allow subscript and superscript tags
         'CSS.AllowedProperties' => [] // Specify allowed CSS properties, empty array means none allowed
     ]);
 

@@ -1,12 +1,9 @@
 <template>
   <div class="w-full overflow-x-hidden shadow-sm sm:rounded-lg">
     <div class="p-6 border-b border-gray-200">
-      <div
-          class="relative overflow-x-auto shadow-md sm:rounded-lg"
-      >
-
-        <div class="table w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <div class="table-row-group w-full">
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <div class="w-full">
             <div
                 v-for="(newsStory, index) in newsStories.data"
                 :key="newsStory.id"
@@ -21,7 +18,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <!-- Paginator -->
@@ -33,6 +29,7 @@
     />
   </div>
 </template>
+
 <script setup>
 import { ref } from 'vue'
 import { useNewsStore } from '@/Stores/NewsStore'
@@ -68,5 +65,4 @@ const publishNewsStory = () => {
     closeConfirmDialog();
   }
 };
-
 </script>

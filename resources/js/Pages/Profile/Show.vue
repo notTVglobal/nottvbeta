@@ -24,11 +24,19 @@
               <JetSectionBorder/>
             </div>
 
-            <div >
+            <div v-if="$page.props.user.isCreator">
               <UpdateCreatorSettings class="pt-10" />
 
               <JetSectionBorder/>
             </div>
+
+            <div v-if="$page.props.user.newsPersonId">
+              <UpdateNewsPersonSettings class="pt-10" />
+
+              <JetSectionBorder/>
+            </div>
+
+
 
             <div>
               <UpdateContactInformationForm class="pt-10"/>
@@ -71,6 +79,7 @@ import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
 import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm'
 import UpdateCreatorSettings from '@/Pages/Profile/Partials/UpdateCreatorSettings.vue'
+import UpdateNewsPersonSettings from '@/Pages/Profile/Partials/UpdateNewsPersonSettings.vue'
 
 const userStore = useUserStore()
 

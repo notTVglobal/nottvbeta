@@ -10,15 +10,14 @@
       <CreatorsFundraisingGoal :creator="creator"/>
       <CreatorsNewsStories :creator="creator"/>
       <CreatorsTeamsSwiper :creator="creator"/>
-
-
     </div>
+
   </div>
 </template>
 
 <script setup>
-import { useAppSettingStore } from '@/Stores/AppSettingStore';
-import Message from '@/Components/Global/Modals/Messages';
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Message from '@/Components/Global/Modals/Messages'
 import CreatorsNewsStories from '@/Components/Pages/Creators/CreatorsNewsStories.vue'
 import CreatorsTeamsSwiper from '@/Components/Pages/Creators/CreatorsTeamsSwiper.vue'
 import CreatorsFundraisingGoal from '@/Components/Pages/Creators/CreatorsFundraisingGoal.vue'
@@ -26,9 +25,9 @@ import CreatorsFundraisingGoal from '@/Components/Pages/Creators/CreatorsFundrai
 import ShowCreatorsHeader from '@/Components/Pages/Creators/ShowCreatorsHeader.vue'
 
 
-const appSettingStore = useAppSettingStore();
+const appSettingStore = useAppSettingStore()
 
 const props = defineProps({
   creator: Object,
-});
+})
 </script>

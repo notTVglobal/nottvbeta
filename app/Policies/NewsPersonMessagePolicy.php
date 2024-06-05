@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\NewsPersonMessage;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Log;
 
 class NewsPersonMessagePolicy {
 
@@ -28,12 +29,11 @@ class NewsPersonMessagePolicy {
     return $user->newsPerson && $user->newsPerson->id === $newsPersonMessage->recipient_id;
   }
 
-  public function delete(User $user, NewsPersonMessage $newsPersonMessage) {
-    return $user->newsPerson && $user->newsPerson->id === $newsPersonMessage->recipient_id;
+  public function destroy(User $user, NewsPersonMessage $newsPersonMessage) {
+    return $user->newsPerson()->exists() && $user->newsPerson->is($newsPersonMessage->recipient);
   }
 
-  public function deleteAll(User $user)
-  {
+  public function deleteAll(User $user) {
     return $user->newsPerson()->exists();
   }
 
