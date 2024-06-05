@@ -952,10 +952,11 @@ class SchedulesController extends Controller {
 //      }
 
       // Update the meta column to include isSaving: true
-      $meta = json_decode($content->meta, true);
+      $meta = is_string($content->meta) ? json_decode($content->meta, true) : [];
       if (!is_array($meta)) {
         $meta = [];
       }
+
       $meta['isScheduled'] = false;
       $meta['isSaving'] = false;
       $meta['isUpdatingSchedule'] = null;
