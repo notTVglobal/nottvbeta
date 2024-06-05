@@ -37,8 +37,8 @@ class TeamDetailedResource extends JsonResource {
     });
 
     // Check if the team is loaded and not null
-    $teamOwnerData = $this->team ? $this->getTeamUserData($this->team->user) : $this->getEmptyTeamUserData();
-    $teamLeaderData = $this->team && $this->team->teamLeader ? $this->getTeamUserData($this->team->teamLeader->user) : $this->getEmptyTeamUserData();
+    $teamOwnerData = $this->user ? $this->getTeamUserData($this->user) : $this->getEmptyTeamUserData();
+    $teamLeaderData = $this->teamLeader ? $this->getTeamUserData($this->teamLeader->user) : $this->getEmptyTeamUserData();
 
     return [
         'id'               => $this->id,

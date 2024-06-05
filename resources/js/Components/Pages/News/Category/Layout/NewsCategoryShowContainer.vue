@@ -51,9 +51,14 @@
                class="relative flex flex-col lg:flex-row bg-white p-4 rounded-lg shadow-md news-card">
 
             <div class="news-card-image lg:w-1/4 mb-4 lg:mb-0">
-              <SingleImage :image="newsStory.image" :alt="newsStory.name"
+              <SingleImage v-if="newsStory.image"
+                           :image="newsStory.image" :alt="newsStory.name"
                            class="w-full max-h-36 rounded-lg object-cover"/>
+              <div v-else class="w-full max-h-36 rounded-lg object-cover bg-gray-300 flex items-center justify-center">
+                <span class="text-gray-500 h-36">No Image</span>
+              </div>
             </div>
+
             <div class="lg:w-3/4 lg:pl-4">
               <h3 class="text-xl font-bold mb-2">{{ newsStory.title }}</h3>
               <p class="text-gray-600 mb-2">{{ newsStory.summary }}</p>

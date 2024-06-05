@@ -12,7 +12,7 @@
     <template #form>
       <!-- List Profile Roles -->
       <div class="col-span-6 sm:col-span-4">
-        <h3 class="text-lg font-semibold mb-2">Roles</h3>
+        <h3 class="text-lg font-semibold mb-2">Your News Roles</h3>
         <ul class="list-disc list-inside">
           <li v-for="role in roles" :key="role.id">
             {{ role.name }}

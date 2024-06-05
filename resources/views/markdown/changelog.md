@@ -3,6 +3,11 @@
 Last Update: June 4, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.14
+June 5, 2024
+
+* Improvements to page layouts, added settings for News People.
+
 ## v0.9.3.13
 June 4, 2024
 

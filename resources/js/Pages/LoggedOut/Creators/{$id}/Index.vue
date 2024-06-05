@@ -18,12 +18,19 @@ import ShowCreators from '@/Components/Pages/Creators/ShowCreators.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
-import { defineProps } from 'vue'
+import { defineProps, onMounted } from 'vue'
 
 const props = defineProps({
   creator: Object,
 })
 
+onMounted(() => {
+  // Only scroll into view if there are no query strings
+  const topDiv = document.getElementById('topDiv')
+  if (topDiv) {
+    topDiv.scrollIntoView()
+  }
+})
 </script>
 <script>
 import NoLayout from '@/Layouts/NoLayout'

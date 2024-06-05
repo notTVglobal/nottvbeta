@@ -302,6 +302,10 @@ class NewsPersonController extends Controller {
   }
 
   public function updateRoles(Request $request): RedirectResponse {
+
+    $newsPerson = NewsPerson::where('user_id', Auth::id())->first();
+    $this->authorize('update', $newsPerson);
+
     $request->validate([
         'id'         => 'required|exists:news_people,user_id',
         'slug'       => 'required|exists:news_people,slug',

@@ -15,10 +15,10 @@
             {{ formattedTime }} {{ userStore.timezoneAbbreviation }}
           </p>
           <!-- Enhanced broadcast name display -->
-          <a @click="goToBroadcast(teamStore.nextBroadcast)"
-             class="block mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
-            {{ teamStore.nextBroadcast.name }}
-          </a>
+          <div @click="goToBroadcast(teamStore.nextBroadcast)"
+             class="broadcast-hover flex items-center justify-center mx-auto mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
+            <SingleImage :image="teamStore.nextBroadcast.image" :alt="`Image`" :class="`max-w-32 max-h-24 object-cover rounded-lg`"/>
+          </div>
         </div>
         <div v-else class="px-4 text-gray-800 dark:text-gray-200">
           No broadcasts are currently scheduled.
@@ -87,6 +87,7 @@ import utc from 'dayjs/plugin/utc'
 import { computed, ref } from 'vue'
 import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
 import TeamIdIndexUpcomingBroadcasts from '@/Components/Pages/Teams/Elements/TeamIdIndexUpcomingBroadcasts.vue'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -146,5 +147,16 @@ const goToBroadcast = (broadcast) => {
 
 .accordion-button svg {
   transition: transform 0.3s ease;
+}
+
+.broadcast-hover:hover {
+  transform: translateY(-5px);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.broadcast-hover img:hover {
+  transform: scale(1.05); /* Slightly enlarge the image on hover */
+  transition: transform 0.2s;
 }
 </style>

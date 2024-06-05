@@ -26,12 +26,12 @@
               <span>{{ creator.name }}</span>
             </button>
             <div v-for="team in creator.teams" :key="team.id">
-              <span v-if="team.id === teamStore.id && team.is_manager"
+              <span v-if="team.id === teamStore.team.id && team.is_manager"
                     class="text-xs text-white bg-blue-800 uppercase justify-center items-center ml-3 top-1.5
                            font-semibold inline-block h-1/2 py-0.5 px-1 rounded last:mr-0 mr-1">
                 manager
               </span>
-              <span v-else-if="team.id === teamStore.id"
+              <span v-else-if="team.id === teamStore.team.id"
                     class="text-xs text-white bg-green-800 uppercase justify-center items-center ml-3 top-1.5
                            font-semibold inline-block h-1/2 py-0.5 px-1 rounded last:mr-0 mr-1">
                 team member
@@ -152,10 +152,10 @@ const clearMessages = () => {
 const sendInvite = async () => {
   console.log('Send Invite Function Called'); // Debugging log
   console.log(`Sending invite to: ${inviteEmail.value}`); // Debugging log
-  console.log(`Endpoint: /teams/${teamStore.slug}/invite`); // Debugging log
+  console.log(`Endpoint: /teams/${teamStore.team.slug}/invite`); // Debugging log
 
   try {
-    const response = await axios.post(`/teams/${teamStore.slug}/invite`, {
+    const response = await axios.post(`/teams/${teamStore.team.slug}/invite`, {
       email: inviteEmail.value,
     });
 
@@ -196,7 +196,7 @@ function closeModal() {
 }
 
 function isUserOnTeam(creator) {
-  return creator.teams.some(team => team.id === teamStore.id)
+  return creator.teams.some(team => team.id === teamStore.team.id)
 }
 
 async function addTeamMember(creator) {
@@ -207,7 +207,7 @@ async function addTeamMember(creator) {
 
   const payload = {
     user_id: creator.id,
-    team_id: teamStore.id,
+    team_id: teamStore.team.id,
   }
 
   teamStore.showModal = false
@@ -216,7 +216,7 @@ async function addTeamMember(creator) {
     const response = await axios.post(route('teams.addTeamMember'), payload)
     if (response.status === 200) {
       teamStore.addMember(response.data.member)
-      teamStore.updateCreatorTeams(creator.id, teamStore.id) // Update the creator's teams in the store
+      teamStore.updateCreatorTeams(creator.id, teamStore.team.id) // Update the creator's teams in the store
       notificationStore.setToastNotification(creator.name + ' has been added to the team.', 'success')
     } else {
       notificationStore.setToastNotification('Failed to add ' + creator.name + ' to the team.', 'warning')

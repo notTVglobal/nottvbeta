@@ -16,16 +16,14 @@
           </div>
           <ShowEpisodesList v-if="episodes.length" :episodes="episodes" :show="show"/>
 
-          <div hidden class="container mx-auto px-4 mb-12">
+          <div v-if="creators.length > 0" class="container mx-auto px-4 mb-12">
             <div class="w-full bg-gray-800 text-2xl p-4 mb-4">CREDITS</div>
 
             <div class="flex flex-row flex-wrap justify-start">
               <div v-for="creator in creators" :key="creator.id" class="pb-8 mx-auto lg:mx-0">
-                <div class="flex flex-col items-center max-w-[8rem] px-3 py-4 font-medium break-words">
-                  <img v-if="!creator.profile_photo_path" :src="creator.profile_photo_url"
-                       class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
-                  <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
-                       class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                <div @click.prevent="appSettingStore.btnRedirect(`/creator/${creator.slug}`)" class="creator-item flex flex-col items-center max-w-[8rem] px-3 py-4 font-medium break-words">
+                  <img v-if="!creator.profile_photo_path" :src="creator.profile_photo_url" class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                  <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path" class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
                   <span class="text-gray-200 text-center text-sm">{{ creator.name }}</span>
                 </div>
               </div>
@@ -72,3 +70,13 @@ defineProps({
   creators: Object,
 })
 </script>
+<style scoped>
+.creator-item {
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.creator-item:hover {
+  transform: translateY(-5px);
+}
+</style>

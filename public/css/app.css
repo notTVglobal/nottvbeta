@@ -8277,6 +8277,10 @@ hr {
   height: 100vh;
 }
 
+.h-36 {
+  height: 9rem;
+}
+
 .max-h-1\/2screen {
   max-height: 50vh;
 }
@@ -8775,6 +8779,10 @@ hr {
 
 .max-w-6xl {
   max-width: 72rem;
+}
+
+.max-w-32 {
+  max-width: 8rem;
 }
 
 .flex-1 {
@@ -9279,6 +9287,10 @@ hr {
 .hyphens-auto {
   -webkit-hyphens: auto;
           hyphens: auto;
+}
+
+.whitespace-normal {
+  white-space: normal;
 }
 
 .whitespace-nowrap {
@@ -13060,6 +13072,10 @@ hr {
 
   .sm\:justify-between {
     justify-content: space-between;
+  }
+
+  .sm\:gap-4 {
+    gap: 1rem;
   }
 
   .sm\:rounded-lg {

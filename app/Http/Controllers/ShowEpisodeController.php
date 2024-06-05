@@ -146,7 +146,7 @@ class ShowEpisodeController extends Controller {
             'integer',
             'min:1900',
             'max:' . date('Y'),
-            function($attribute, $value, $fail) use ($request) {
+            function ($attribute, $value, $fail) use ($request) {
               if ($request->input('creative_commons_id') != 8 && !$value) {
                 $fail('The copyright year is required when not Public Domain.');
               }
@@ -530,7 +530,7 @@ class ShowEpisodeController extends Controller {
 //    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     // Eager load relationships for the Show model
-    $show->load(['team', 'image.appSetting', 'showRunner.user']);
+    $show->load(['team.image.appSetting', 'image.appSetting', 'showRunner.user']);
 
     // Eager load relationships for the ShowEpisode model
     $showEpisode->load(['creativeCommons', 'video.appSetting', 'image.appSetting', 'showEpisodeStatus', 'mistStreamWildcard']);
@@ -543,12 +543,13 @@ class ShowEpisodeController extends Controller {
             'showRunner'    => [
                 'name' => $show->showRunner->user->name ?? null,
             ],
-            'image'         => $this->transformImage($show->image),
+            'image'         => $show->image ? (new ImageResource($show->image))->resolve() : null,
             'copyrightYear' => $show->created_at->format('Y'),
         ],
         'team'              => [
             'name' => $show->team->name,
             'slug' => $show->team->slug,
+            'image'              => $show->team->image ? (new ImageResource($show->team->image))->resolve() : null,
         ],
         'episode'           => [
             'id'                         => $showEpisode->id,
@@ -570,17 +571,9 @@ class ShowEpisodeController extends Controller {
             'video_id'                   => $showEpisode->video_id,
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,
-            'video'                      => [
-                'file_name'        => $showEpisode->video->file_name ?? '',
-                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-                'folder'           => $showEpisode->video->folder ?? '',
-                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
-                'upload_status'    => $showEpisode->video->upload_status ?? '',
-                'video_url'        => $showEpisode->video->video_url ?? '',
-                'type'             => $showEpisode->video->type ?? '',
-                'storage_location' => $showEpisode->video->storage_location ?? '',
-            ],
-            'image'                      => $this->transformImage($showEpisode->image),
+            'video'                      => (new VideoResource($showEpisode->video))->resolve(),
+            'image'                      => $showEpisode->image ? (new ImageResource($showEpisode->image))->resolve() : null,
+
         ],
         'releaseDateTime'   => $this->formattedReleaseDateTime ?? null,
         'scheduledDateTime' => $this->formattedScheduledDateTime ?? null,
