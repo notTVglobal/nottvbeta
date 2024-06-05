@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -68,11 +69,11 @@ class Team extends Model {
   }
 
   // Define relationship with creators
-  public function creators() {
-    return $this->hasManyThrough(Creator::class, User::class, 'id', 'user_id', 'id', 'id');
+  public function creators(): BelongsToMany {
+    return $this->belongsToMany(Creator::class, 'team_members', 'team_id', 'user_id');
   }
 
-  public function members(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
+  public function members(): BelongsToMany {
     return $this->belongsToMany(User::class, 'team_members', 'team_id', 'user_id')
         ->using(TeamMember::class)
         ->as('teamMembers')
