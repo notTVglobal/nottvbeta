@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ActiveShowScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,108 +14,108 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Uid\Ulid;
 
-class Show extends Model
-{
-    use SoftDeletes;
-    use HasFactory;
+class Show extends Model {
+  use SoftDeletes;
+  use HasFactory;
 
-  protected static function booted()
-  {
+  protected static function booted() {
     static::creating(function ($model) {
       $model->ulid = (string) Ulid::generate();
     });
   }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'mist_stream_wildcard_id',
-        'user_id',
-        'team_id',
-        'image_id',
-        'name',
-        'description',
-        'meta',
-        'slug',
-        'isBeingEditedByUser_id',
-        'show_status_id',
-        'show_runner',
-        'www_url',
-        'instagram_name',
-        'telegram_url',
-        'twitter_handle',
-        'notes',
-        'first_release_year',
-        'last_release_year',
-        'show_category_id',
-        'show_category_sub_id',
-        'episode_play_order',
-    ];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var string[]
+   */
+  protected $fillable = [
+      'mist_stream_wildcard_id',
+      'user_id',
+      'team_id',
+      'image_id',
+      'name',
+      'description',
+      'meta',
+      'slug',
+      'isBeingEditedByUser_id',
+      'show_status_id',
+      'show_runner',
+      'www_url',
+      'instagram_name',
+      'telegram_url',
+      'twitter_handle',
+      'notes',
+      'first_release_year',
+      'last_release_year',
+      'show_category_id',
+      'show_category_sub_id',
+      'episode_play_order',
+  ];
 
   protected $casts = [
       'ulid' => 'string',
       'meta' => 'json',
   ];
 
-    public function getRouteKeyName(): string {
-        return 'slug';
-    }
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
 
-    // tec21: I want to use episodes to make the Eloquent call easier to read.
-    public function showEpisodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
-        return $this->hasMany(ShowEpisode::class);
-    }
-    // showEpisodes is required for showEpisode.show to display
+  public function scopeActive($query) {
+    return $query->where('show_status_id', 2);
+  }
 
-    public function status(): BelongsTo {
-        return $this->belongsTo(ShowStatus::class, 'show_status_id');
-    }
+  // tec21: I want to use episodes to make the Eloquent call easier to read.
+  public function showEpisodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(ShowEpisode::class);
+  }
 
-    public function team(): BelongsTo {
-        return $this->belongsTo(Team::class);
-    }
+  // showEpisodes is required for showEpisode.show to display
 
-    public function image(): BelongsTo {
-        return $this->belongsTo(Image::class);
-    }
+  public function status(): BelongsTo {
+    return $this->belongsTo(ShowStatus::class, 'show_status_id');
+  }
 
-    public function user(): BelongsTo {
-        return $this->belongsTo(User::class);
-    }
+  public function team(): BelongsTo {
+    return $this->belongsTo(Team::class);
+  }
 
-    public function showRunner(): BelongsTo {
-        return $this->belongsTo(Creator::class, 'show_runner');
-    }
+  public function image(): BelongsTo {
+    return $this->belongsTo(Image::class);
+  }
 
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(ShowCategory::class, 'show_category_id')->withDefault([
-            'name' => '',
-            'description' => ''
-        ]);
-    }
+  public function user(): BelongsTo {
+    return $this->belongsTo(User::class);
+  }
 
-    public function subCategory(): BelongsTo
-    {
-        return $this->belongsTo(ShowCategorySub::class, 'show_category_sub_id')->withDefault([
-            'name' => '',
-            'description' => ''
-            ]);
-    }
+  public function showRunner(): BelongsTo {
+    return $this->belongsTo(Creator::class, 'show_runner');
+  }
 
-    public function appSetting(): BelongsTo
-    {
-        return $this->belongsTo(AppSetting::class)->withDefault([
+  public function category(): BelongsTo {
+    return $this->belongsTo(ShowCategory::class, 'show_category_id')->withDefault([
+        'name'        => '',
+        'description' => ''
+    ]);
+  }
+
+  public function subCategory(): BelongsTo {
+    return $this->belongsTo(ShowCategorySub::class, 'show_category_sub_id')->withDefault([
+        'name'        => '',
+        'description' => ''
+    ]);
+  }
+
+  public function appSetting(): BelongsTo {
+    return $this->belongsTo(AppSetting::class)->withDefault([
 //            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
-        ]);
-    }
+    ]);
+  }
 
-    public function showNotes(): \Illuminate\Database\Eloquent\Relations\HasMany {
-        return $this->hasMany(ShowNote::class);
-    }
+  public function showNotes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(ShowNote::class);
+  }
 
   public function mistStreamWildcard(): BelongsTo {
     return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
@@ -156,8 +157,7 @@ class Show extends Model
   /**
    * @throws \Exception
    */
-  public static function generateStreamKey($showId)
-  {
+  public static function generateStreamKey($showId) {
     try {
       $show = self::where('id', $showId)->firstOrFail();
 
@@ -178,15 +178,15 @@ class Show extends Model
       $mistStream = MistStream::firstOrCreate([
           'name' => 'show',
       ], [
-          'comment' => 'Created for Show integration.',
+          'comment'   => 'Created for Show integration.',
           'mime_type' => 'application/vnd.apple.mpegurl',
       ]);
 
       $mistStreamWildcard = MistStreamWildcard::create([
-          'name' => 'show+' . $ulid,
-          'comment' => 'Automatically created with new show.', // We don't have a way to clarify if it was generated through the Generate Key button on the GoLive page because that is a one-off for DB:Seeders.
+          'name'           => 'show+' . $ulid,
+          'comment'        => 'Automatically created with new show.', // We don't have a way to clarify if it was generated through the Generate Key button on the GoLive page because that is a one-off for DB:Seeders.
           'mime_type'      => 'application/x-mpegURL',
-          'source' => 'push://',
+          'source'         => 'push://',
           'mist_stream_id' => $mistStream->id,
       ]);
 
@@ -206,22 +206,20 @@ class Show extends Model
   }
 
   // Retrieves the cached category or loads it if not cached
-  public function getCachedCategory()
-  {
+  public function getCachedCategory() {
     return Cache::rememberForever('show_category_' . $this->show_category_id, function () {
       return $this->category()->withDefault([
-          'name' => '',
+          'name'        => '',
           'description' => ''
       ])->first();  // Assuming the relationship could return null, handle it with a default.
     });
   }
 
   // Retrieves the cached subcategory or loads it if not cached
-  public function getCachedSubCategory()
-  {
+  public function getCachedSubCategory() {
     return Cache::rememberForever('show_subcategory_' . $this->show_category_sub_id, function () {
       return $this->subCategory()->withDefault([
-          'name' => '',
+          'name'        => '',
           'description' => ''
       ])->first();
     });
