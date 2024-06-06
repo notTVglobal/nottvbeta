@@ -8,6 +8,7 @@ import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore';
 import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore';
 import { useShowStore } from '@/Stores/ShowStore';
+import { useNotificationStore } from '@/Stores/NotificationStore';
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -61,21 +62,32 @@ export const useRecordingStore = defineStore('recordingStore', {
             }
         },
         async updateRecording(meta) {
+            const showStore = useShowStore();
+            const notificationStore = useNotificationStore();
             this.isLoading = true;
 
             try {
+                console.log('Updating recording with meta:', meta);
                 const response = await axios.patch(`/api/recordings/${this.selectedRecording.id}`, {
                     meta: meta,
+                    show_id: showStore.show.id
                 });
-                const updatedRecording = response.data;
+                const updatedRecording = response.data.recording;
+                notificationStore.setToastNotification('Recording updated successfully.', 'success');
 
                 // Update the recordings state with the updated recording
                 const index = this.recordings.findIndex(recording => recording.id === updatedRecording.id);
                 if (index !== -1) {
                     this.recordings[index] = updatedRecording;
                 }
+
+                // Update the selected recording if it matches the updated one
+                if (this.selectedRecording?.id === updatedRecording.id) {
+                    this.selectedRecording = updatedRecording;
+                }
             } catch (error) {
                 console.error("Failed to update recording:", error);
+                notificationStore.setToastNotification(error.message, 'error');
             } finally {
                 this.isLoading = false;
             }
@@ -147,15 +159,6 @@ export const useRecordingStore = defineStore('recordingStore', {
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
-        },
-        shareRecording(shareUrl) {
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                this.copyMessage = 'Video share URL copied!';
-                this.showCopyMessage = true;
-                setTimeout(() => {
-                    this.showCopyMessage = false;
-                }, 1000); // Hide after 1 second
-            });
         },
     },
     getters: {

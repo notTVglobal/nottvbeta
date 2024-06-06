@@ -5,8 +5,8 @@
       @mouseleave="state.hoveredRow = null"
       @click="selectRecording(recording)"
       :class="rowClass(recording.id)">
-
     <td class="px-6 py-4 whitespace-nowrap">
+      <div>{{ recording?.meta?.title }}</div>
       <div>{{ recording.start_date_local }}</div>
       <div v-if="recording.comment" class="text-xs uppercase text-orange-700 font-semibold break-words">
         <span :class="{ 'text-indigo-600': recording.comment !== 'automated recording' }">{{ recording.comment }}</span>
@@ -32,41 +32,46 @@
       <button @click.stop="confirmDownload(recording)"
               class="btn btn-xs btn-info">Download</button>
       <div @click.stop="confirmSaveToPremium" class="btn btn-xs">Save to Premium Storage</div>
+      <transition name="fade">
+        <div v-if="state.showCopyMessage" class="copy-message">
+          {{ state.copyMessage }}
+        </div>
+      </transition>
     </td>
   </tr>
-
-  <transition name="fade">
-    <div v-if="showCopyMessage" class="copy-message">
-      {{ copyMessage }}
-    </div>
-  </transition>
   </tbody>
 </template>
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useRecordingStore } from '@/Stores/RecordingStore';
-import { useClipboard } from '@vueuse/core';
 
 const recordingStore = useRecordingStore();
+const emit = defineEmits(['select-recording']);
 
-const shareClip = useClipboard();
-
-const showCopyMessage = ref(false);
-const copyMessage = ref('');
-
-const recordings = computed(() => recordingStore.formattedRecordings);
 const state = reactive({
   hoveredRow: null,
+  showCopyMessage: false,
+  copyMessage: '',
 });
+
+const recordings = computed(() => recordingStore.formattedRecordings);
 
 const selectRecording = (recording) => {
   recordingStore.setSelectedRecording(recording);
-  document.getElementById('confirmRecordingPlaybackModal').showModal();
+  emit('select-recording');
 };
 
 const shareRecording = (shareUrl) => {
-  recordingStore.shareRecording(shareUrl);
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    state.copyMessage = 'Video share URL copied!';
+    state.showCopyMessage = true;
+    setTimeout(() => {
+      state.showCopyMessage = false;
+    }, 1000); // Hide after 1 second
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+  });
 };
 
 const confirmAddToEpisode = () => {
@@ -96,7 +101,7 @@ const formatDuration = (totalMilliseconds) => {
 <style>
 .copy-message {
   position: fixed;
-  bottom: 20%;
+  bottom: 50%;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.75);

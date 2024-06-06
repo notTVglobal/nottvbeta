@@ -98,5 +98,6 @@ const beginDownload = () => {
 
 const play = () => {
   recordingStore.openVideo();
+  document.getElementById('confirmRecordingPlaybackModal').close()
 };
 </script>
