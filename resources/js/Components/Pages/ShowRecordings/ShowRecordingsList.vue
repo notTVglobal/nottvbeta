@@ -16,8 +16,8 @@
       />
     </div>
 
-    <div class="flex flex-col w-full justify-center mt-2">
-      <div v-if="recordingStore.selectedRecording" ref="recordingDetails">
+    <div class="flex flex-col w-full justify-center mt-2" id="recordingDetailsContainer">
+      <div v-if="selectedRecording">
         <SelectedRecordingMeta/>
       </div>
       <div v-else class="pl-6">
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRecordingStore } from '@/Stores/RecordingStore'
 import RecordingsListHeader from '@/Components/Pages/ShowRecordings/RecordingsListHeader.vue'
 import RecordingsListBody from '@/Components/Pages/ShowRecordings/RecordingsListBody.vue'
@@ -48,6 +48,7 @@ const handlePageChange = (page) => {
   recordingStore.fetchRecordings(page);
   recordingStore.clearSelectedRecording();
 }
+
 const pagination = computed(() => recordingStore.pagination)
 
 const selectedRecording = computed(() => recordingStore.selectedRecording)
@@ -66,12 +67,17 @@ const play = () => {
   recordingStore.openVideo()
 }
 
-const recordingDetailsRef = ref(null)
-
 const scrollToRecordingDetails = () => {
-  if (recordingDetailsRef.value) {
-    recordingDetailsRef.value.scrollIntoView({ behavior: 'smooth' });
-  }
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      const topDiv = document.getElementById('recordingDetailsContainer');
+      if (topDiv) {
+        topDiv.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
 }
 
 onMounted(() => {

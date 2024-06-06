@@ -13580,6 +13580,10 @@ hr {
     margin-left: 4rem;
   }
 
+  .lg\:ml-4 {
+    margin-left: 1rem;
+  }
+
   .lg\:ml-8 {
     margin-left: 2rem;
   }
@@ -13614,10 +13618,6 @@ hr {
 
   .lg\:mt-2 {
     margin-top: 0.5rem;
-  }
-
-  .lg\:ml-4 {
-    margin-left: 1rem;
   }
 
   .lg\:block {
