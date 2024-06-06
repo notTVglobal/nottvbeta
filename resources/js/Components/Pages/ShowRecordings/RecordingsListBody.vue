@@ -5,6 +5,7 @@
       @mouseleave="state.hoveredRow = null"
       @click="selectRecording(recording)"
       :class="rowClass(recording.id)">
+
     <td class="px-6 py-4 whitespace-nowrap">
       <div>{{ recording.start_date_local }}</div>
       <div v-if="recording.comment" class="text-xs uppercase text-orange-700 font-semibold break-words">
@@ -33,6 +34,7 @@
       <div @click.stop="confirmSaveToPremium" class="btn btn-xs">Save to Premium Storage</div>
     </td>
   </tr>
+
   <transition name="fade">
     <div v-if="showCopyMessage" class="copy-message">
       {{ copyMessage }}
