@@ -99,7 +99,7 @@ export const useRecordingStore = defineStore('recordingStore', {
             const source = {
                 mediaType: 'recording',
                 recording: {
-                    source: this.selectedRecording.stream_name+'.mp4',
+                    source: this.selectedRecording.playback_stream_name,
                     sourceType: 'video/mp4',
                 },
             };

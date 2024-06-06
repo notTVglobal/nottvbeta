@@ -83,6 +83,7 @@ const play = () => {
 };
 
 onMounted(() => {
+  recordingStore.reset()
   recordingStore.fetchRecordings();
 });
 </script>

@@ -401,10 +401,14 @@ class MistTriggerController extends Controller {
 
     // Construct a unique identifier for the recording.
     $uniqueFilePath = $parsedContent['filePath'];
-
+    $streamName = $parsedContent['streamName'];
+    $convertedStreamName = str_replace('+', '_', $streamName);
+    $recordingDate = (new \DateTime())->setTimestamp($parsedContent['startTime'])->format('Y.m.d.H.i.s'); // Convert unix time to yyyy.mm.dd.hh.mm.ss
+    // Initialize URLs and comment
     $download_url = '';
     $share_url = '';
     $playback_stream_name = '';
+    $comment = '';
 
     $settings = AppSetting::find(1);
 
@@ -418,31 +422,42 @@ class MistTriggerController extends Controller {
       return null;
     }
 
-    if (str_contains($uniqueFilePath, $userRecordingsPath)) {
-      // Example: '/media/recordings_user/16/user_show+wildcardId_2024.05.11.03.41.30.mkv';
+    // Get the full file name
+    $filename = basename($uniqueFilePath);
+
+    if (str_contains($uniqueFilePath, 'auto')) {
+      // Auto recordings
+      $prefix = 'recording_' . $convertedStreamName . '%2B';
+    } elseif (str_contains($uniqueFilePath, 'user')) {
+      // User recordings
       $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
-      $parts = explode('/', $relativePath, 2);
-      if (count($parts) < 2) return null; // Skip invalid paths
-      $userIdPart = 'recordings_user_' . $parts[0];
-      $filename = $parts[1];
-      $filenameTransformed = str_replace('+', '%2B', $filename);
-
-      $download_url = $mistServerUri . $userIdPart . '+' . $filenameTransformed . '.mp4?dl=1';
-      $share_url = $mistServerUri . $userIdPart . '+' . $filenameTransformed . '.html';
-      $playback_stream_name = $userIdPart . '+' . $filename;
-    } elseif (str_contains($uniqueFilePath, $autoRecordingsPath)) {
-      // Example: '/media/recordings_auto/show+wildcardId/show+wildcardId_2024.04.26.17.17.13.mkv';
-      $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
-      $parts = explode('/', $relativePath, 2);
-      if (count($parts) < 2) return null; // Skip invalid paths
-      $wildcardIdPart = 'recordings_' . str_replace('+', '_', $parts[0]); // Fix wildcard ID part
-      $filename = $parts[1];
-      $filenameTransformed = str_replace('+', '%2B', $filename);
-
-      $download_url = $mistServerUri . $wildcardIdPart . '+show+' . $filenameTransformed . '.mp4?dl=1';
-      $share_url = $mistServerUri . $wildcardIdPart . '+show+' . $filenameTransformed . '.html';
-      $playback_stream_name = $wildcardIdPart . '+show+' . $filename;
+      $parts = explode('/', $relativePath, 3);
+      if (count($parts) < 3) return null; // Skip invalid paths
+      $userIdPart = 'recordings_user_' . $parts[1];
+      $prefix = $userIdPart . '%2B';
+    } elseif (str_contains($uniqueFilePath, 'backup')) {
+      // Backup recordings
+      $prefix = 'recording_backup%2B';
+      $comment = 'backup recording';
+    } elseif (str_contains($uniqueFilePath, 'recording')) {
+      // General recordings
+      $prefix = 'recording%2B';
+    } else {
+      return null; // Invalid path
     }
+
+    // Append the prefix to the filename
+    $fileWithPrefix = $prefix . $filename;
+
+    // Generate URLs
+    $download_url = $mistServerUri . $fileWithPrefix . '?dl=' . $convertedStreamName . $recordingDate . '.mp4';
+    $share_url = $mistServerUri . $fileWithPrefix . '.html';
+    $playback_stream_name = $fileWithPrefix . '.mp4';
+
+    // Convert '+' to '%2B' in URLs
+    $download_url = str_replace('+', '%2B', $download_url);
+    $share_url = str_replace('+', '%2B', $share_url);
+    $playback_stream_name = str_replace('+', '%2B', $playback_stream_name);
 
 
     // First, check if a recording with the same unique identifier already exists.
@@ -453,9 +468,8 @@ class MistTriggerController extends Controller {
 
       // Only update the recording if the comment is not 'automated recording'
       if ($existingRecording->comment !== 'automated recording') {
-
         Log::info("Updating non-automated existing recording.", ['uniqueFilePath' => $uniqueFilePath]);
-        $existingRecording->update([
+        $updateData = [
             'stream_name'                    => $parsedContent['streamName'],
             'path'                           => $parsedContent['filePath'],
             'file_extension'                 => $parsedContent['fileExtension'],
@@ -472,9 +486,15 @@ class MistTriggerController extends Controller {
             'download_url'                   => $download_url,
             'share_url'                      => $share_url,
             'playback_stream_name'           => $playback_stream_name,
-        ]);
+        ];
+
+        if ($comment !== '') {
+          $updateData['comment'] = $comment;
+        }
+
+        $existingRecording->update($updateData);
       } else {
-//        Log::info("Automated recording found, no update performed.", ['uniqueId' => $uniqueId]);
+        Log::info("Automated recording found, no update performed.", ['uniqueFilePath' => $uniqueFilePath]);
       }
 
       return $existingRecording;
@@ -482,7 +502,7 @@ class MistTriggerController extends Controller {
 
     // No existing recording found, proceed to create a new entry.
     return Recording::create([
-        'comment'                        => 'automated recording',
+        'comment'                        => $comment !== '' ? $comment : 'automated recording',
         'stream_name'                    => $parsedContent['streamName'],
         'path'                           => $parsedContent['filePath'],
         'file_extension'                 => $parsedContent['fileExtension'],

@@ -14,6 +14,9 @@ class UpdateRecordingUrls extends Command {
     parent::__construct();
   }
 
+  /**
+   * @throws \Exception
+   */
   public function handle() {
     // Fetch the settings
     $settings = AppSetting::find(1);
@@ -31,7 +34,6 @@ class UpdateRecordingUrls extends Command {
 
     if (!$userRecordingsPath || !$autoRecordingsPath) {
       $this->error('Recording paths not found in settings.');
-
       return 1;
     }
 
@@ -40,57 +42,65 @@ class UpdateRecordingUrls extends Command {
 
     foreach ($recordings as $recording) {
       $uniqueFilePath = $recording->path;
+      $streamName = str_replace('+', '_', $recording->stream_name);
+      $recordingDate = (new \DateTime($recording->start_dateTime))->format('Y.m.d.H.i.s'); // Convert to yyyy.mm.dd.hh.mm.ss
       $download_url = '';
       $share_url = '';
       $playback_stream_name = '';
+      $comment = '';
 
-      if (str_contains($uniqueFilePath, $userRecordingsPath)) {
+      // Get the full file name
+      $filename = basename($uniqueFilePath);
+
+      if (str_contains($uniqueFilePath, 'auto')) {
+        // Auto recordings
+        $prefix = 'recording_' . $streamName . '%2B';
+      } elseif (str_contains($uniqueFilePath, 'user')) {
+        // User recordings
         $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
-        $parts = explode('/', $relativePath, 2);
-        if (count($parts) < 2) continue; // Skip invalid paths
-        $userIdPart = 'recordings_user_' . $parts[0];
-        $filename = $parts[1];
-        $filenameTransformed = str_replace('+', '%2B', $filename);
-
-        $download_url = $mistServerUri . $userIdPart . '+' . $filename . '.mp4?dl=1';
-        $share_url = $mistServerUri . $userIdPart . '+' . $filename . '.html';
-        $playback_stream_name = $userIdPart . '+' . $filename;
-      } elseif (str_contains($uniqueFilePath, $autoRecordingsPath)) {
-        $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
-        $parts = explode('/', $relativePath, 2);
-        if (count($parts) < 2) continue; // Skip invalid paths
-        $wildcardIdPart = 'recordings_' . str_replace('+', '_', $parts[0]); // Fix wildcard ID part
-        $filename = $parts[1];
-        $filenameTransformed = str_replace('+', '%2B', $filename);
-
-        $download_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.mp4?dl=1';
-        $share_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.html';
-        $playback_stream_name = $wildcardIdPart . '+' . $filename;
-      } elseif (str_contains($uniqueFilePath, $generalRecordingsPath)) {
-        // Handle general recordings like: '/media/recordings/show+wildcardId_dateTime.mkv'
-        $relativePath = substr($uniqueFilePath, strlen($generalRecordingsPath));
-        $parts = explode('/', $relativePath, 2);
-        if (count($parts) < 2) continue; // Skip invalid paths
-        $wildcardIdPart = 'recordings_show_' . str_replace('+', '_', $parts[0]);
-        $filename = $parts[1];
-        $filenameTransformed = str_replace('+', '%2B', $filename);
-
-        $download_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.mp4?dl=1';
-        $share_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.html';
-        $playback_stream_name = $wildcardIdPart . '+' . $filename;
+        $parts = explode('/', $relativePath, 3);
+        if (count($parts) < 3) continue; // Skip invalid paths
+        $userIdPart = 'recordings_user_' . $parts[1];
+        $prefix = $userIdPart . '%2B';
+      } elseif (str_contains($uniqueFilePath, 'backup')) {
+        // Backup recordings
+        $prefix = 'recording_backup%2B';
+        $comment = 'backup recording';
+      } elseif (str_contains($uniqueFilePath, 'recording')) {
+        // General recordings
+        $prefix = 'recording%2B';
       } else {
-        continue; // Skip recordings that don't match the expected structure
+        continue; // Invalid path
       }
 
-      $recording->update([
+      // Append the prefix to the filename
+      $fileWithPrefix = $prefix . $filename;
+
+      // Generate URLs
+      $download_url = $mistServerUri . $fileWithPrefix . '?dl=' . $streamName . $recordingDate . '.mp4';
+      $share_url = $mistServerUri . $fileWithPrefix . '.html';
+      $playback_stream_name = $fileWithPrefix . '.mp4';
+
+      // Convert '+' to '%2B' in URLs
+      $download_url = str_replace('+', '%2B', $download_url);
+      $share_url = str_replace('+', '%2B', $share_url);
+      $playback_stream_name = str_replace('+', '%2B', $playback_stream_name);
+
+      // Prepare the data for update
+      $updateData = [
           'download_url'         => $download_url,
           'share_url'            => $share_url,
           'playback_stream_name' => $playback_stream_name,
-      ]);
+      ];
+
+      if ($comment !== '') {
+        $updateData['comment'] = $comment;
+      }
+
+      $recording->update($updateData);
     }
 
     $this->info('Recording URLs updated successfully.');
-
     return 0;
   }
 }
