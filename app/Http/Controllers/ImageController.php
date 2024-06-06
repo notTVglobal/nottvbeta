@@ -326,7 +326,7 @@ class ImageController extends Controller {
 //      Log::error('Image upload validation failed', ['errors' => $errors->toArray()]);
 //      return response()->json(['error' => 'Image upload validation failed.', 'details' => $errors], 422);
 //    }
-
+    Log::debug($request->all());
     try {
       $file = $request->file('image');
       if (!$file->isValid()) {
