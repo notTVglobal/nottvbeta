@@ -29,7 +29,7 @@
               </div>
               <div class="form-control">
                 <label class="cursor-pointer label">
-                  <input type="checkbox" v-model="meta.ng" class="checkbox checkbox-info text-md"/>
+                  <input type="checkbox" v-model="meta.ng" class="checkbox checkbox-warning text-md"/>
                   <span class="label-text ml-2 block text-sm font-medium text-gray-700">NG</span>
                 </label>
               </div>

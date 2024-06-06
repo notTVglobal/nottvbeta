@@ -1676,6 +1676,11 @@ html {
     border-color: var(--fallback-a,oklch(var(--a)/var(--tw-border-opacity)));
   }
 
+  .checkbox-warning:hover {
+    --tw-border-opacity: 1;
+    border-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-border-opacity)));
+  }
+
   .checkbox-info:hover {
     --tw-border-opacity: 1;
     border-color: var(--fallback-in,oklch(var(--in)/var(--tw-border-opacity)));
@@ -3352,6 +3357,25 @@ input.tab:checked + .tab-content,
   background-color: var(--fallback-a,oklch(var(--a)/var(--tw-bg-opacity)));
   --tw-text-opacity: 1;
   color: var(--fallback-ac,oklch(var(--ac)/var(--tw-text-opacity)));
+}
+.checkbox-warning {
+  --chkbg: var(--fallback-wa,oklch(var(--wa)/1));
+  --chkfg: var(--fallback-wac,oklch(var(--wac)/1));
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-border-opacity)));
+}
+.checkbox-warning:focus-visible {
+  outline-color: var(--fallback-wa,oklch(var(--wa)/1));
+}
+.checkbox-warning:checked,
+    .checkbox-warning[checked="true"],
+    .checkbox-warning[aria-checked="true"] {
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-border-opacity)));
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-bg-opacity)));
+  --tw-text-opacity: 1;
+  color: var(--fallback-wac,oklch(var(--wac)/var(--tw-text-opacity)));
 }
 .checkbox-info {
   --chkbg: var(--fallback-in,oklch(var(--in)/1));

@@ -310,22 +310,22 @@ class ImageController extends Controller {
   public function upload(HttpRequest $request) {
     Log::info('image uploading...');
 
-    $rules = [
-        'image'     => 'required|file|image|max:30720', // Max 30MB
-        'modelType' => 'nullable|string', // Validate if present
-        'modelId'   => 'required|numeric', // Validate if present and should be numeric
-    ];
+//    $rules = [
+//        'image'     => 'required|file|image|max:30720', // Max 30MB
+//        'modelType' => 'nullable|string', // Validate if present
+//        'modelId'   => 'required|numeric', // Validate if present and should be numeric
+//    ];
 
-    $validator = Validator::make($request->all(), $rules);
+//    $validator = Validator::make($request->all(), $rules);
 
     // Commenting out the validation for debugging
     // $this->validateModelTypeAndId($validator, $request);
 
-    if ($validator->fails()) {
-      $errors = $validator->errors();
-      Log::error('Image upload validation failed', ['errors' => $errors->toArray()]);
-      return response()->json(['error' => 'Image upload validation failed.', 'details' => $errors], 422);
-    }
+//    if ($validator->fails()) {
+//      $errors = $validator->errors();
+//      Log::error('Image upload validation failed', ['errors' => $errors->toArray()]);
+//      return response()->json(['error' => 'Image upload validation failed.', 'details' => $errors], 422);
+//    }
 
     try {
       $file = $request->file('image');
