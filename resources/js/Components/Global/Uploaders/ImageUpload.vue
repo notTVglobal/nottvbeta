@@ -77,7 +77,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute
 
 const serverOptions = ref({
   process: {
-    url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
+    url: `/api/image-upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
     method: 'POST',
     headers: {
       'X-CSRF-TOKEN': csrfToken

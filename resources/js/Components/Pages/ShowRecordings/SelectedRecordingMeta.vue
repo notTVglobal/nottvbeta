@@ -118,6 +118,18 @@ watch(() => recordingStore.selectedRecording, (newRecording) => {
   }
 }, { immediate: true });
 
+// Watch for changes in meta.good and meta.ng to ensure only one can be true
+watch(() => meta.value.good, (newGood) => {
+  if (newGood) {
+    meta.value.ng = false;
+  }
+});
+
+watch(() => meta.value.ng, (newNg) => {
+  if (newNg) {
+    meta.value.good = false;
+  }
+});
 // Format dates using userStore
 const formatDate = (date) => {
   return userStore.formatDateInUserTimezone(date, 'YYYY-MM-DD HH:mm:ss');
