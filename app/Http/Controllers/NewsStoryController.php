@@ -536,7 +536,7 @@ class NewsStoryController extends Controller {
     // Validate the input data
     $validatedData = $request->validate([
         'title'                             => 'required|string|max:255|' . Rule::unique('news_stories')->ignore($newsStory->id),
-        'content'                           => 'required|string|max:5000',
+        'content'                           => 'required|string',
 //        'content_json'                      => 'nullable|json',
         'status'                            => 'required|exists:news_statuses,id',
         'news_category_id'                  => 'required|integer',

@@ -5,7 +5,7 @@
         class="tiptap hide-scrollbar h-auto overflow-y-auto min-h-[13rem] max-h-[96rem] mb-2 pb-2 bg-gray-50 border border-1 border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500">
       <editor-content :editor="editor" class="news-story"/>
       <div class="character-count" v-if="editor">
-        {{ editor.storage.characterCount.characters() }}/{{ limit }} characters
+        {{ editor.storage.characterCount.characters() }} characters
         <br>
         {{ editor.storage.characterCount.words() }} words
       </div>
@@ -93,9 +93,6 @@ const editorInstance = new Editor({
     }),
     Link.configure({
       openOnClick: true,
-    }),
-    CharacterCount.configure({
-      limit: 5000,
     }),
     Placeholder.configure({
       placeholder: 'Write something …',
