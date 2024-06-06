@@ -60,6 +60,26 @@ export const useRecordingStore = defineStore('recordingStore', {
                 this.isLoading = false;
             }
         },
+        async updateRecording(meta) {
+            this.isLoading = true;
+
+            try {
+                const response = await axios.patch(`/api/recordings/${this.selectedRecording.id}`, {
+                    meta: meta,
+                });
+                const updatedRecording = response.data;
+
+                // Update the recordings state with the updated recording
+                const index = this.recordings.findIndex(recording => recording.id === updatedRecording.id);
+                if (index !== -1) {
+                    this.recordings[index] = updatedRecording;
+                }
+            } catch (error) {
+                console.error("Failed to update recording:", error);
+            } finally {
+                this.isLoading = false;
+            }
+        },
         reset() {
             Object.assign(this, initialState());
         },
@@ -109,7 +129,7 @@ export const useRecordingStore = defineStore('recordingStore', {
                 appSettingStore.toggleOttInfo();
                 nowPlayingStore.setActiveMedia(source.mediaType, {
                     primaryName: show.name,
-                    secondaryName: `${this.formatDateInUserTimezone(this.selectedRecording.start_time)} ${this.formatTimeFromDateInUserTimezone(recording.start_time)} Recording`,
+                    secondaryName: `${this.formatDateInUserTimezone(this.selectedRecording.start_time)} ${this.formatTimeFromDateInUserTimezone(this.selectedRecording.start_time)} Recording`,
                     description: this.selectedRecording.comment || null,
                     primaryUrl: `shows/${show.slug}`,
                     image: show.image,
@@ -121,8 +141,7 @@ export const useRecordingStore = defineStore('recordingStore', {
         downloadRecording() {
             if (!this.selectedRecording) return;
 
-            const recording = this.selectedRecording;
-            const url = recording.download_url;
+            const url = this.selectedRecording.download_url;
             const downloadLink = document.createElement('a');
             downloadLink.href = url;
             document.body.appendChild(downloadLink);

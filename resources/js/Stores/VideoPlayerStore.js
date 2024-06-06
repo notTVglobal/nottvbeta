@@ -247,8 +247,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             })
             videoJs.ready(() => {
                 videoJs.play().catch(error => {
-                    useNotificationStore().setGeneralServiceNotification('Error', 'Code: 456. Playback initiation error: ' + error)
-                    console.error('Code: 456. Playback initiation error: ', error)
+                    useNotificationStore().setGeneralServiceNotification('Error', 'Code: 456A. Playback initiation error: ' + error)
+                    console.error('Code: 456A. Playback initiation error: ', error)
                 })
                 console.log('Player refreshed...')
             })
@@ -635,6 +635,15 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
                 // Example: Stopping and cleaning up the current video and audio setup
                 if (videoJs) {
+                    // Pause the current video if it's playing
+                    if (!videoJs.paused()) {
+                        videoJs.pause()
+                    }
+
+                    // Clear the current source
+                    videoJs.src('')
+
+                    // Set up the new source
                     videoJs.src({'src': videoSrc, 'type': videoSourceType})
 
                     videoJs.ready(() => {
@@ -645,8 +654,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
                             // Only attempt to play the video after ensuring the AudioContext is ready
                             videoJs.play().catch(error => {
-                                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 123. Playback initiation error: ' + error)
-                                console.error('Code 123. Playback initiation error: ', error)
+                                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 123A. Playback initiation error: ' + error)
+                                console.error('Code 123A. Playback initiation error: ', error)
 
                                 // Ensure videoSettings is initialized
                                 if (!userStore.videoSettings) {
@@ -667,8 +676,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 }
             } catch (error) {
                 // Log the error or perform any other error handling
-                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 789. Error loading new video: ' + error)
-                console.error('Code: 789. Error loading new video: ', error)
+                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 789A. Error loading new video: ' + error)
+                console.error('Code: 789A. Error loading new video: ', error)
             }
         },
 
@@ -841,6 +850,14 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
                     this.videoSourceType = 'application/vnd.apple.mpegURL';
 
+                    // Pause the current video if it's playing
+                    if (!videoJs.paused()) {
+                        videoJs.pause();
+                    }
+
+                    // Clear the current source
+                    videoJs.src('');
+
                     // Set the video source in video.js
                     videoJs.src({src: this.videoSource, type: this.videoSourceType});
                     this.unMute();
@@ -854,8 +871,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
                             // Attempt to play the video after ensuring the AudioContext is ready
                             videoJs.play().catch(error => {
-                                notificationStore.setGeneralServiceNotification('Error', 'Code: 123. Playback initiation error: ' + error);
-                                console.error('Code 123. Playback initiation error: ', error);
+                                notificationStore.setGeneralServiceNotification('Error', 'Code: 123B. Playback initiation error: ' + error);
+                                console.error('Code 123B. Playback initiation error: ', error);
 
                                 // Ensure videoSettings is initialized
                                 if (!userStore.videoSettings) {
@@ -872,8 +889,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                             // videoJs.muted(false);
                             // this.muted = false;
                         }).catch(error => {
-                            notificationStore.setGeneralServiceNotification('Error', 'Code: 456. Audio setup error: ' + error);
-                            console.error('Code 456. Audio setup error: ', error);
+                            notificationStore.setGeneralServiceNotification('Error', 'Code: 456B. Audio setup error: ' + error);
+                            console.error('Code 456B. Audio setup error: ', error);
                         });
                     });
                 } else {
@@ -882,8 +899,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             } catch (error) {
                 // Log the error or perform any other error handling
                 const notificationStore = useNotificationStore();
-                notificationStore.setGeneralServiceNotification('Error', 'Code: 789. Error loading new video: ' + error);
-                console.error('Code: 789. Error loading new video: ', error);
+                notificationStore.setGeneralServiceNotification('Error', 'Code: 789B. Error loading new video: ' + error);
+                console.error('Code: 789B. Error loading new video: ', error);
             }
         },
 

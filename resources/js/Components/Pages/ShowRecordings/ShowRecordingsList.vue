@@ -14,6 +14,10 @@
           @update="handlePageChange"
       />
     </div>
+
+    <SelectedRecordingMeta v-if="recordingStore.selectedRecording"/>
+
+
     <div class="flex flex-col w-full justify-center mt-2">
       <div v-if="recordingStore.selectedRecording">
         <div class="flex">
@@ -57,6 +61,7 @@ import RecordingsListHeader from '@/Components/Pages/ShowRecordings/RecordingsLi
 import RecordingsListBody from '@/Components/Pages/ShowRecordings/RecordingsListBody.vue';
 import RecordingsPaginator from '@/Components/Pages/ShowRecordings/RecordingsPaginator.vue';
 import ShowRecordingsModals from '@/Components/Pages/ShowRecordings/ShowRecordingsModals.vue';
+import SelectedRecordingMeta from '@/Components/Pages/ShowRecordings/SelectedRecordingMeta.vue'
 
 const recordingStore = useRecordingStore();
 

@@ -184,4 +184,41 @@ class RecordingController extends Controller
 
     return response()->json($recordings);
   }
+
+  public function update(Request $request, Recording $recording): JsonResponse
+  {
+    // Retrieve the show ID from the request
+    $showId = $request->input('show_id');
+
+    // Find the show or fail
+    $show = Show::findOrFail($showId);
+
+    // Authorize the action
+    $this->authorize('edit', $show);
+
+    // Validate the request input
+    $request->validate([
+        'meta.notes' => 'nullable|string',
+        'meta.updated_by' => 'nullable|string',
+        'meta.updated_at' => 'nullable|date',
+        'meta.good' => 'nullable|boolean',
+        'meta.ng' => 'nullable|boolean',
+    ]);
+
+    // Retrieve and update the meta data
+    $meta = $recording->meta ?? [];
+    $meta['notes'] = $request->input('meta.notes');
+    $meta['updated_by'] = $request->input('meta.updated_by');
+    $meta['updated_at'] = $request->input('meta.updated_at');
+    $meta['good'] = $request->input('meta.good');
+    $meta['ng'] = $request->input('meta.ng');
+
+    // Update the recording with new meta data
+    $recording->meta = $meta;
+    $recording->save();
+
+    // Return a successful response
+    return response()->json(['success' => 'Recording updated successfully.']);
+  }
+
 }

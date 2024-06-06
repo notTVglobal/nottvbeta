@@ -84,6 +84,7 @@ const confirmSaveToPremium = () => {
 
 const rowClass = computed(() => (recordingId) => ({
   'hover:bg-blue-100 cursor-pointer': state.hoveredRow === recordingId,
+  'bg-gray-100': recordingStore.selectedRecording?.id === recordingId,
   'bg-green-100': recordingStore.nowPlayingRecordingId === recordingId,
 }));
 
