@@ -422,24 +422,28 @@ class MistTriggerController extends Controller {
       // Example: '/media/recordings_user/16/user_show+wildcardId_2024.05.11.03.41.30.mkv';
       $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
       $parts = explode('/', $relativePath, 2);
+      if (count($parts) < 2) return null; // Skip invalid paths
       $userIdPart = 'recordings_user_' . $parts[0];
       $filename = $parts[1];
       $filenameTransformed = str_replace('+', '%2B', $filename);
 
-      $download_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
-      $share_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.html';
+      $download_url = $mistServerUri . $userIdPart . '+' . $filenameTransformed . '.mp4?dl=1';
+      $share_url = $mistServerUri . $userIdPart . '+' . $filenameTransformed . '.html';
+      $playback_stream_name = $userIdPart . '+' . $filename;
     } elseif (str_contains($uniqueFilePath, $autoRecordingsPath)) {
       // Example: '/media/recordings_auto/show+wildcardId/show+wildcardId_2024.04.26.17.17.13.mkv';
       $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
       $parts = explode('/', $relativePath, 2);
+      if (count($parts) < 2) return null; // Skip invalid paths
       $wildcardIdPart = 'recordings_' . str_replace('+', '_', $parts[0]); // Fix wildcard ID part
       $filename = $parts[1];
       $filenameTransformed = str_replace('+', '%2B', $filename);
 
-      $download_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
-      $share_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.html';
-      $playback_stream_name = $wildcardIdPart . '%2B' . $filenameTransformed;
+      $download_url = $mistServerUri . $wildcardIdPart . '+show+' . $filenameTransformed . '.mp4?dl=1';
+      $share_url = $mistServerUri . $wildcardIdPart . '+show+' . $filenameTransformed . '.html';
+      $playback_stream_name = $wildcardIdPart . '+show+' . $filename;
     }
+
 
     // First, check if a recording with the same unique identifier already exists.
     $existingRecording = Recording::where('path', $uniqueFilePath)->first();

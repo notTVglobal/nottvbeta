@@ -310,10 +310,24 @@ class ImageController extends Controller {
     $rules = [
         'image'     => 'required|image|max:30720', // Max 30MB
         'modelType' => 'nullable|string', // Validate if present
-        'modelId'   => 'nullable|regex:/^\d+$/', // Validate if present
+        'modelId'   => 'required|numeric', // Validate if present and should be numeric
     ];
 
     $validator = Validator::make($request->all(), $rules);
+
+    // Custom validation for modelType and modelId
+    $validator->after(function ($validator) use ($request) {
+      $modelType = $request->input('modelType');
+      $modelId = $request->input('modelId');
+
+      if ($modelType && $modelId) {
+        if (!class_exists($modelType)) {
+          $validator->errors()->add('modelType', 'The model type is invalid.');
+        } elseif (!$modelType::find($modelId)) {
+          $validator->errors()->add('modelId', 'The model ID does not exist.');
+        }
+      }
+    });
 
     if ($validator->fails()) {
       $errors = $validator->errors();
