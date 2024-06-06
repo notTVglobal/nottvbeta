@@ -3,7 +3,7 @@
     <!-- Conditional rendering for the video section -->
     <!-- Episode Video Label -->
     <div v-if="!episode.video?.id && !episode.video?.video_url"
-         class="mt-2 px-1 flex justify-center items-center w-full mx-auto bg-green-500">
+         class="mt-2 flex justify-center items-center w-full mx-auto bg-black">
       <div
           class="bg-black text-white text-center flex items-center justify-center uppercase font-bold text-xs p-5 mb-2 w-76 h-52">
         No Video

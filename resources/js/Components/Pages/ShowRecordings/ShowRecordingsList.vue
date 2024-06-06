@@ -14,6 +14,33 @@
           @update="handlePageChange"
       />
     </div>
+    <div class="flex flex-col w-full justify-center mt-2">
+      <div v-if="recordingStore.selectedRecording">
+        <div class="flex">
+          <span class="font-bold w-48">Path:</span>
+          <span>{{ recordingStore.selectedRecording.path }}</span>
+        </div>
+        <div class="flex">
+          <span class="font-bold w-48">Share URL:</span>
+          <span>{{ recordingStore.selectedRecording.share_url }}</span>
+        </div>
+        <div class="flex">
+          <span class="font-bold w-48">Download URL:</span>
+          <span>{{ recordingStore.selectedRecording.download_url }}</span>
+        </div>
+        <div class="flex">
+          <span class="font-bold w-48">Playback Stream Name:</span>
+          <span>{{ recordingStore.selectedRecording.playback_stream_name }}</span>
+        </div>
+        <div class="flex">
+          <span class="font-bold w-48">Input:</span>
+          <input class="w-full"></input>
+        </div>
+      </div>
+      <div v-else>
+        <span>No recording selected.</span>
+      </div>
+    </div>
     <ShowRecordingsModals
         :selectedRecording="selectedRecording"
         :nowPlayingRecordingId="nowPlayingRecordingId"

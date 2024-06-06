@@ -315,19 +315,7 @@ class ImageController extends Controller {
 
     $validator = Validator::make($request->all(), $rules);
 
-    // Custom validation for modelType and modelId
-    $validator->after(function ($validator) use ($request) {
-      $modelType = $request->input('modelType');
-      $modelId = $request->input('modelId');
-
-      if ($modelType && $modelId) {
-        if (!class_exists($modelType)) {
-          $validator->errors()->add('modelType', 'The model type is invalid.');
-        } elseif (!$modelType::find($modelId)) {
-          $validator->errors()->add('modelId', 'The model ID does not exist.');
-        }
-      }
-    });
+    $this->validateModelTypeAndId($validator, $request);
 
     if ($validator->fails()) {
       $errors = $validator->errors();
@@ -398,27 +386,34 @@ class ImageController extends Controller {
     }
   }
 
-  protected function updateModelWithImageId($modelType, $modelId, $imageId): void {
-    $model = match ($modelType) {
-      'creator' => \App\Models\Creator::find($modelId),
-      'team' => \App\Models\Team::find($modelId),
-      'show' => \App\Models\Show::find($modelId),
-      'showEpisode' => \App\Models\ShowEpisode::find($modelId),
-      'newsStory' => \App\Models\NewsStory::find($modelId),
-      'newsPerson' => \App\Models\NewsPerson::find($modelId),
-      'newsRssFeedItem' => \App\Models\NewsRssFeedItemArchive::find($modelId),
-      'movie' => \App\Models\Movie::find($modelId),
-      'otherContent' => \App\Models\OtherContent::find($modelId),
-      'subscriptionPlan' => \App\Models\SubscriptionPlan::find($modelId),
-      'product' => \App\Models\Product::find($modelId),
-      'video' => \App\Models\Video::find($modelId),
-      default => null,
-    };
+  protected function getValidModelTypes() {
+    return [
+        'creator' => \App\Models\Creator::class,
+        'team' => \App\Models\Team::class,
+        'show' => \App\Models\Show::class,
+        'showEpisode' => \App\Models\ShowEpisode::class,
+        'newsStory' => \App\Models\NewsStory::class,
+        'newsPerson' => \App\Models\NewsPerson::class,
+        'newsRssFeedItem' => \App\Models\NewsRssFeedItemArchive::class,
+        'movie' => \App\Models\Movie::class,
+        'otherContent' => \App\Models\OtherContent::class,
+        'subscriptionPlan' => \App\Models\SubscriptionPlan::class,
+        'product' => \App\Models\Product::class,
+        'video' => \App\Models\Video::class,
+    ];
+  }
 
-    if ($model) {
-      $model->update(['image_id' => $imageId]);
-    } else {
-      // Handle error: Model not found
+  protected function updateModelWithImageId($modelType, $modelId, $imageId): void {
+    $validModelTypes = $this->getValidModelTypes();
+    $modelClass = $validModelTypes[$modelType] ?? null;
+
+    if ($modelClass) {
+      $model = $modelClass::find($modelId);
+      if ($model) {
+        $model->update(['image_id' => $imageId]);
+      } else {
+        // Handle error: Model not found
+      }
     }
   }
 
