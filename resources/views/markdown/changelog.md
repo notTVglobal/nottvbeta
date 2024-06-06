@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: June 4, 2024\
+Last Update: June 5, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.17
+June 5, 2024
+
+* Fix the syntax for parsing recordings in the MistTriggerController.
+* Change the way we handle the ModelID for image uploads to work through the image upload error.
 
 ## v0.9.3.16
 June 5, 2024
