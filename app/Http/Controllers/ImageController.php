@@ -310,80 +310,78 @@ class ImageController extends Controller {
     $rules = [
         'image'     => 'required|image|max:30720', // Max 30MB
         'modelType' => 'nullable|string', // Validate if present
-        'modelId'   => 'nullable|string|',
+        'modelId'   => 'nullable|regex:/^\d+$/', // Validate if present
     ];
 
     $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()], 422);
+      $errors = $validator->errors();
+      Log::error('Image upload validation failed', ['errors' => $errors->toArray()]);
+      return response()->json(['error' => 'Image upload validation failed.', 'details' => $errors], 422);
     }
 
-    $file = $request->file('image');
-    $filePath = $file->getPathname();
+    try {
+      $file = $request->file('image');
+      $filePath = $file->getPathname();
 
-//    // Scan the file with ClamAV
-//    $scanResult = shell_exec("clamscan $filePath 2>&1");
-//    Log::info("ClamAV scan result: $scanResult");
-//
-//    if (str_contains($scanResult, 'FOUND')) {
-//      // If a virus is found, delete the file and send a notification
-//      unlink($filePath);
-//      SendUserNotificationJob::dispatch($request->user()->id, 'Virus Detected', 'A virus was detected in your uploaded image and the file has been deleted.', url('/')); // Dispatch the new job
-//
-//      return response()->json(['errors' => ['image' => 'The file contains a virus and cannot be uploaded.']], 422);
-//    }
+      // Proceed with file upload and record creation
+      // Check the MIME type of the file
+      $mimeType = $file->getMimeType();
+      if (!in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+        return response()->json(['error' => 'The file must be a valid image (jpeg, png, gif).'], 422);
+      }
 
+      Log::info($mimeType);
 
-    // Proceed with file upload and record creation
-    // Check the MIME type of the file
-    $mimeType = $file->getMimeType();
-    if (!in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
-      return response()->json(['errors' => ['image' => 'The file must be a valid image (jpeg, png, gif).']], 422);
+      if ($request->input('removeExif')) {
+        // Remove all metadata from the image
+        $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
+        Log::info("ExifTool result: $exifResult");
+      }
+
+      $modelType = $request->input('modelType', null); // Default to null if not provided
+      $modelId = $request->input('modelId', null); // Default to null if not provided
+
+      // Retrieve cloud_folder and cdn_endpoint from app_settings
+      $appSettings = AppSetting::where('id', 1)->first(['cloud_folder', 'cdn_endpoint']);
+      if (!$appSettings) {
+        throw new \Exception('App settings not found.');
+      }
+
+      $cloud_folder = $appSettings->cloud_folder;
+      $cdn_endpoint = $appSettings->cdn_endpoint;
+      $folder = Carbon::now()->format('/Y/m') . '/images';
+
+      Storage::disk('spaces')->putFile($cloud_folder . $folder, $file);
+
+      // Create the image record
+      $image = Image::create([
+          'name'             => $file->hashName(),
+          'extension'        => $file->extension(),
+          'size'             => $file->getSize(),
+          'folder'           => $folder,
+          'cloud_folder'     => $cloud_folder,
+          'storage_location' => 'do_spaces',
+          'created_at'       => Carbon::now(),
+          'updated_at'       => Carbon::now()
+      ]);
+
+      CheckImageHashAndHandleDuplicate::dispatch($image, $modelType, $modelId);
+
+      // Dynamically update the correct model with the image_id if modelType and modelId are provided
+      if (!is_null($modelType) && !is_null($modelId)) {
+        $this->updateModelWithImageId($modelType, $modelId, $image->id);
+      }
+
+      // Append the CDN endpoint to the image data
+      $image->cdn_endpoint = $cdn_endpoint;
+
+      return response()->json(['success' => 'Image uploaded successfully.', 'image' => $image]);
+    } catch (\Exception $e) {
+      Log::error('Image upload failed', ['exception' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+      return response()->json(['error' => 'An error occurred during image upload. Please try again later.'], 500);
     }
-
-    Log::info($mimeType);
-
-    if ($request->input('removeExif')) {
-      // Remove all metadata from the image
-      $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
-      Log::info("ExifTool result: $exifResult");
-    }
-
-    $modelType = $request->input('modelType', null); // Default to null if not provided
-    $modelId = $request->input('modelId', null); // Default to null if not provided
-
-    // Retrieve cloud_folder and cdn_endpoint from app_settings
-    $appSettings = AppSetting::where('id', 1)->first(['cloud_folder', 'cdn_endpoint']);
-    $cloud_folder = $appSettings->cloud_folder;
-    $cdn_endpoint = $appSettings->cdn_endpoint;
-    $folder = Carbon::now()->format('/Y/m') . '/images';
-
-    Storage::disk('spaces')->putFile($cloud_folder . $folder, $file);
-
-    // Create the image record
-    $image = Image::create([
-        'name'             => $file->hashName(),
-        'extension'        => $file->extension(),
-        'size'             => $file->getSize(),
-        'folder'           => $folder,
-        'cloud_folder'     => $cloud_folder,
-        'storage_location' => 'do_spaces',
-        'created_at'       => Carbon::now(),
-        'updated_at'       => Carbon::now()
-    ]);
-
-    CheckImageHashAndHandleDuplicate::dispatch($image, $modelType, $modelId);
-
-    // Dynamically update the correct model with the image_id if modelType and modelId are provided
-    if (!is_null($modelType) && !is_null($modelId)) {
-      $this->updateModelWithImageId($modelType, $modelId, $image->id);
-    }
-
-    // Append the CDN endpoint to the image data
-    $image->cdn_endpoint = $cdn_endpoint;
-
-    return $image;
   }
 
   protected function updateModelWithImageId($modelType, $modelId, $imageId): void {

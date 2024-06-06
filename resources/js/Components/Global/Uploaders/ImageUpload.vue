@@ -40,6 +40,9 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import { ref } from 'vue'
+import { useNotificationStore } from '@/Stores/NotificationStore'
+
+const notificationStore  = useNotificationStore()
 
 let props = defineProps({
   // image: Object,
@@ -69,15 +72,25 @@ const fileTypes = ref(['image/png', 'image/jpeg'])
 // const modelType = 'yourModelType'; // Replace with your actual model type
 // const modelId = 'yourModelId'; // Replace with your actual model ID
 
+
 const serverOptions = ref({
   process: {
     url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
     method: 'POST',
     withCredentials: false,
-    // headers: {},
-    onload: (response) => response,
-    // onload: (response) => response.key,
-    // onerror: (response) => response.data,
+    onload: (response) => {
+      const jsonResponse = JSON.parse(response);
+      if (jsonResponse.error) {
+        throw new Error(jsonResponse.error);
+      }
+      return jsonResponse;
+    },
+    onerror: (response) => {
+      const error = JSON.parse(response);
+      console.error('FilePond error:', error);
+      notificationStore.setGeneralServiceNotification('Error', response);
+      return error.error || 'Upload failed';
+    },
   },
 })
 
@@ -88,24 +101,16 @@ const serverOptions = ref({
 
 function handleFilePondInit() {
   console.log('FilePond has initialized')
-  console.log(removeExif)
-  console.log(removeExif.value)
-
 }
 
 function handleProcessedFile(error, file) {
   if (error) {
-    console.log('Filepond processed file')
-    console.log(error)
-    console.log(file)
-    return
+    console.log('FilePond processed file error:', error);
+    return;
   }
-  console.log('reload image')
-  // console.log(file)
   emit('reloadImage')
 
   const response = JSON.parse(file.serverId)
-  console.log(response)
   emit('imageUploaded', response)
 }
 

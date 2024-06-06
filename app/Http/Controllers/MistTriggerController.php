@@ -403,7 +403,8 @@ class MistTriggerController extends Controller {
     $uniqueFilePath = $parsedContent['filePath'];
 
     $download_url = '';
-    $share_url= '';
+    $share_url = '';
+    $playback_stream_name = '';
 
     $settings = AppSetting::find(1);
 
@@ -413,6 +414,7 @@ class MistTriggerController extends Controller {
 
     if (!$userRecordingsPath || !$autoRecordingsPath) {
       Log::warning('No user recording path and no auto recording path found. MistTriggerController.');
+
       return null;
     }
 
@@ -436,6 +438,7 @@ class MistTriggerController extends Controller {
 
       $download_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
       $share_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.html';
+      $playback_stream_name = $wildcardIdPart . '%2B' . $filenameTransformed;
     }
 
     // First, check if a recording with the same unique identifier already exists.
@@ -464,6 +467,7 @@ class MistTriggerController extends Controller {
             'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
             'download_url'                   => $download_url,
             'share_url'                      => $share_url,
+            'playback_stream_name'           => $playback_stream_name,
         ]);
       } else {
 //        Log::info("Automated recording found, no update performed.", ['uniqueId' => $uniqueId]);
@@ -490,6 +494,7 @@ class MistTriggerController extends Controller {
         'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
         'download_url'                   => $download_url,
         'share_url'                      => $share_url,
+        'playback_stream_name'           => $playback_stream_name,
     ]);
 
   }
