@@ -1543,7 +1543,7 @@ class ShowsController extends Controller {
   // Internal method to update meta without request validation
   protected function updateMetaInternally(Show $show): void {
     try {
-      $meta = json_decode($show->meta, true);
+      $meta = is_string($show->meta) ? json_decode($show->meta, true) : [];
       if (!is_array($meta)) {
         $meta = [];
       }
@@ -1582,7 +1582,7 @@ class ShowsController extends Controller {
     $show = Show::where('slug', $showSlug)->first();
 
     if ($show) {
-      $meta = json_decode($show->meta, true);
+      $meta = is_string($show->meta) ? json_decode($show->meta, true) : [];
       if (!is_array($meta)) {
         $meta = [];
       }

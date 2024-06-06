@@ -134,7 +134,7 @@ class SchedulesController extends Controller {
     $content = $modelClass::findOrFail($data['contentId']);  // Using primary key 'id'
 
     // Update the meta column to include isSaving: true
-    $meta = json_decode($content->meta, true);
+    $meta = is_string($content->meta) ? json_decode($content->meta, true) : [];
     if (!is_array($meta)) {
       $meta = [];
     }
