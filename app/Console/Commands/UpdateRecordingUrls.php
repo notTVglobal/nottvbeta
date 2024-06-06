@@ -58,7 +58,7 @@ class UpdateRecordingUrls extends Command
         $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
         $parts = explode('/', $relativePath, 2);
         if (count($parts) < 2) continue; // Skip invalid paths
-        $wildcardIdPart = 'recordings_' . str_replace('/', '_', $parts[0]);
+        $wildcardIdPart = 'recordings_' . str_replace('+', '_', $parts[0]); // Fix wildcard ID part
         $filename = $parts[1];
         $filenameTransformed = str_replace('+', '%2B', $filename);
 
@@ -80,7 +80,6 @@ class UpdateRecordingUrls extends Command
           'share_url' => $share_url,
       ]);
     }
-
 
     $this->info('Recording URLs updated successfully.');
     return 0;
