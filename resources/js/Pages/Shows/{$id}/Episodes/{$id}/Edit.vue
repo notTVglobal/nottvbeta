@@ -219,14 +219,11 @@ let submit = () => {
     form.patch(route('showEpisodes.update', props.episode.slug))
 }
 
-
 const reloadImageHandler = () => {
   router.reload({
     only: ['image'],
   })
 }
-
-
 
 onMounted(() => {
   showEpisodeStore.initializeShowEpisode(props.episode, props.show, props.team, props.creative_commons)

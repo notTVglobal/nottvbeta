@@ -402,12 +402,42 @@ class MistTriggerController extends Controller {
     // Construct a unique identifier for the recording.
     $uniqueFilePath = $parsedContent['filePath'];
 
+    $download_url = '';
+    $share_url= '';
+
     $settings = AppSetting::find(1);
 
     $mistServerUri = $settings->mist_server_uri;
+    $userRecordingsPath = $settings->mist_server_settings['mist_server_user_recording_folder'] ?? null;
+    $autoRecordingsPath = $settings->mist_server_settings['mist_server_automated_recording_folder'] ?? null;
 
-    $download_url = rtrim($mistServerUri, '/') . $uniqueFilePath . '.mp4?dl=1';
-    $share_url = rtrim($mistServerUri, '/') . $uniqueFilePath . '.html';
+    if (!$userRecordingsPath || !$autoRecordingsPath) {
+      Log::warning('No user recording path and no auto recording path found. MistTriggerController.');
+      return null;
+    }
+
+    if (str_contains($uniqueFilePath, $userRecordingsPath)) {
+      // Example: '/media/recordings_user/16/user_show+wildcardId_2024.05.11.03.41.30.mkv';
+      $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
+      $parts = explode('/', $relativePath, 2);
+      $userIdPart = 'recordings_user_' . $parts[0];
+      $filename = $parts[1];
+      $filenameTransformed = str_replace('+', '%2B', $filename);
+
+      $download_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
+      $share_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.html';
+    } elseif (str_contains($uniqueFilePath, $autoRecordingsPath)) {
+      // Example: '/media/recordings_auto/show+wildcardId/show+wildcardId_2024.05.11.03.41.30.mkv';
+      $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
+      $parts = explode('/', $relativePath, 2);
+      $wildcardIdPart = 'recordings_' . str_replace('/', '_', $parts[0]);
+      $filename = $parts[1];
+      $filenameTransformed = str_replace('+', '%2B', $filename);
+
+      $download_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
+      $share_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.html';
+    }
+
 
     // First, check if a recording with the same unique identifier already exists.
     $existingRecording = Recording::where('path', $uniqueFilePath)->first();

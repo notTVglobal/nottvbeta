@@ -28,6 +28,7 @@ class Recording extends Model {
       'model_type',
       'model_id',
       'download_url',
+      'share_url'
   ];
 
   protected $dates = [
