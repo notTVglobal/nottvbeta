@@ -427,7 +427,7 @@ class MistTriggerController extends Controller {
 
     if (str_contains($uniqueFilePath, 'auto')) {
       // Auto recordings
-      $prefix = 'recording_' . $convertedStreamName . '%2B';
+      $prefix = 'recordings_' . $convertedStreamName . '%2B';
     } elseif (str_contains($uniqueFilePath, 'user')) {
       // User recordings
       $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
@@ -437,11 +437,11 @@ class MistTriggerController extends Controller {
       $prefix = $userIdPart . '%2B';
     } elseif (str_contains($uniqueFilePath, 'backup')) {
       // Backup recordings
-      $prefix = 'recording_backup%2B';
+      $prefix = 'recordings_backup%2B';
       $comment = 'backup recording';
     } elseif (str_contains($uniqueFilePath, 'recording')) {
       // General recordings
-      $prefix = 'recording%2B';
+      $prefix = 'recordings%2B';
     } else {
       return null; // Invalid path
     }
@@ -450,7 +450,7 @@ class MistTriggerController extends Controller {
     $fileWithPrefix = $prefix . $filename;
 
     // Generate URLs
-    $download_url = $mistServerUri . $fileWithPrefix . '?dl=' . $convertedStreamName . $recordingDate . '.mp4';
+    $download_url = $mistServerUri . $fileWithPrefix . '.mp4?dl=' . $convertedStreamName . $recordingDate . '.mp4';
     $share_url = $mistServerUri . $fileWithPrefix . '.html';
     $playback_stream_name = $fileWithPrefix . '.mp4';
 

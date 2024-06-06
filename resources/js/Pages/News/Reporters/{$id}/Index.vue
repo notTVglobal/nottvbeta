@@ -7,7 +7,7 @@
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
 
       <ShowNewsReporterHeader />
-      <ShowNewsReporter />
+      <ShowNewsReporter :newsPerson="newsPerson" :newsStories="newsStories"/>
 
       <Footer v-if="!userStore.loggedIn"/>
     </div>
@@ -37,6 +37,8 @@ appSettingStore.currentPage = 'news.reporter.id'
 appSettingStore.setPrevUrl()
 
 defineProps({
+  newsPerson: Object,
+  newsStories: Array,
   can: Object,
 })
 

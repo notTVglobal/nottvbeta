@@ -17,7 +17,8 @@ class NewsPersonResource extends JsonResource {
     return [
         'id'                 => $this->id,
         'name'               => $this->user->name,
-        'image'            => $this->whenLoaded('image', function () {
+        'slug'               => $this->slug,
+        'image'              => $this->whenLoaded('image', function () {
           // Directly return the array representation of the ImageResource
           return (new ImageResource($this->image))->resolve() ?? null;
         }),

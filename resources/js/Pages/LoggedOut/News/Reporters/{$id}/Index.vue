@@ -1,5 +1,5 @@
 <template>
-  <Head :title="$page.props.newsPerson.name" />
+  <Head :title="newsPerson.name" />
   <div id="topDiv" ></div>
   <div class="mt-16">
     <PublicNavigationMenu class="fixed top-0 w-full nav-mask" />
@@ -7,7 +7,7 @@
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
 
       <ShowNewsReporterHeader />
-      <ShowNewsReporter />
+      <ShowNewsReporter :newsPerson="newsPerson" :newsStories="newsStories"/>
 
       <Footer />
     </div>
@@ -30,6 +30,11 @@ const videoPlayerStore = useVideoPlayerStore()
 
 appSettingStore.currentPage = 'news.reporter.id'
 appSettingStore.setPrevUrl()
+
+const props = defineProps({
+  newsPerson: Object,
+  newsStories: Array
+})
 
 onMounted(() => {
   const topDiv = document.getElementById("topDiv")
