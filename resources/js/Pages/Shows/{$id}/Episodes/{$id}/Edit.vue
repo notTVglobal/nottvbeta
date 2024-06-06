@@ -76,7 +76,7 @@
                     <CreateEpisodeUploadVideo />
 
 
-                    <CreateEpisodeChangeImage :image="image" @reloadImage="reloadImageHandler" :errors="form.errors"/>
+                    <CreateEpisodeChangeImage :image="image" :episode="episode" @reloadImage="reloadImageHandler" :errors="form.errors"/>
 
 
                   </div>
