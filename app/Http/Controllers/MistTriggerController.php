@@ -151,7 +151,7 @@ class MistTriggerController extends Controller {
 
         Log::debug($fullAutoRecordingsPath);
         AddOrUpdateMistStreamJob::dispatch([
-            'name' => $newMistStreamName,
+            'name'   => $newMistStreamName,
             'source' => $fullAutoRecordingsPath
         ], $newMistStreamName);
       }
@@ -402,6 +402,13 @@ class MistTriggerController extends Controller {
     // Construct a unique identifier for the recording.
     $uniqueFilePath = $parsedContent['filePath'];
 
+    $settings = AppSetting::find(1);
+
+    $mistServerUri = $settings->mist_server_uri;
+
+    $download_url = rtrim($mistServerUri, '/') . $uniqueFilePath . '.mp4?dl=1';
+    $share_url = rtrim($mistServerUri, '/') . $uniqueFilePath . '.html';
+
     // First, check if a recording with the same unique identifier already exists.
     $existingRecording = Recording::where('path', $uniqueFilePath)->first();
 
@@ -410,14 +417,15 @@ class MistTriggerController extends Controller {
 
       // Only update the recording if the comment is not 'automated recording'
       if ($existingRecording->comment !== 'automated recording') {
+
         Log::info("Updating non-automated existing recording.", ['uniqueFilePath' => $uniqueFilePath]);
         $existingRecording->update([
             'stream_name'                    => $parsedContent['streamName'],
             'path'                           => $parsedContent['filePath'],
             'file_extension'                 => $parsedContent['fileExtension'],
             'mime_type'                      => $parsedContent['fileType'],
-            'start_dateTime'                     => $parsedContent['startTime'],
-            'end_dateTime'                       => $parsedContent['endTime'],
+            'start_dateTime'                 => $parsedContent['startTime'],
+            'end_dateTime'                   => $parsedContent['endTime'],
             'bytes_recorded'                 => $parsedContent['bytesRecorded'],
             'seconds_spent_recording'        => $parsedContent['secondsSpentRecording'],
             'total_milliseconds_recorded'    => $parsedContent['totalMillisecondsRecorded'],
@@ -425,10 +433,13 @@ class MistTriggerController extends Controller {
             'milliseconds_last_packet'       => $parsedContent['millisecondsLastPacket'],
             'reason_for_exit'                => $parsedContent['machineReadableReason'],
             'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
+            'download_url'                   => $download_url,
+            'share_url'                      => $share_url,
         ]);
       } else {
 //        Log::info("Automated recording found, no update performed.", ['uniqueId' => $uniqueId]);
       }
+
       return $existingRecording;
     }
 
@@ -439,8 +450,8 @@ class MistTriggerController extends Controller {
         'path'                           => $parsedContent['filePath'],
         'file_extension'                 => $parsedContent['fileExtension'],
         'mime_type'                      => $parsedContent['fileType'],
-        'start_dateTime'                     => $parsedContent['startTime'],
-        'end_dateTime'                       => $parsedContent['endTime'],
+        'start_dateTime'                 => $parsedContent['startTime'],
+        'end_dateTime'                   => $parsedContent['endTime'],
         'bytes_recorded'                 => $parsedContent['bytesRecorded'],
         'seconds_spent_recording'        => $parsedContent['secondsSpentRecording'],
         'total_milliseconds_recorded'    => $parsedContent['totalMillisecondsRecorded'],
@@ -448,6 +459,8 @@ class MistTriggerController extends Controller {
         'milliseconds_last_packet'       => $parsedContent['millisecondsLastPacket'],
         'reason_for_exit'                => $parsedContent['machineReadableReason'],
         'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
+        'download_url'                   => $download_url,
+        'share_url'                      => $share_url,
     ]);
 
   }

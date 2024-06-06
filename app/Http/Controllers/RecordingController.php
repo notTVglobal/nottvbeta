@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Factories\MistServerServiceFactory;
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Models\AppSetting;
+use App\Models\Recording;
 use App\Models\Show;
 use App\Services\MistServer\MistServerService;
 use Carbon\Carbon;
@@ -165,5 +166,22 @@ class RecordingController extends Controller
 //      ]);
 //      return response()->json(['error' => 'An error occurred while attempting to stop recording.'], 500);
 //    }
+  }
+
+  public function fetchRecordings(Request $request)
+  {
+    $showId = $request->input('show_id');
+    $show = Show::findOrFail($showId);
+
+    // Authorize the action
+    $this->authorize('edit', $show);
+
+    // Fetch recordings associated with the show
+    $recordings = Recording::where('model_type', Show::class)
+        ->where('model_id', $showId)
+        ->orderBy('start_dateTime', 'desc') // Order by start_dateTime descending
+        ->paginate(10);
+
+    return response()->json($recordings);
   }
 }

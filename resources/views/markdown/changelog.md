@@ -3,6 +3,11 @@
 Last Update: June 4, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.15
+June 5, 2024
+
+* Refactor Recordings table on Show Manage page.
+
 ## v0.9.3.14
 June 5, 2024
 
