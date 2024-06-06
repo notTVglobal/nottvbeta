@@ -119,7 +119,7 @@
             </div>
             <div v-if="showStore.openComponent === 'showRecordings'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
-                <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showSlug="show.slug"
+                <ShowRecordingsList :showRecordings="show.recordings" :showName="show.name" :showSlug="show.slug"
                                 :showImage="show.image"/>
 
                 <!--            </div>-->
@@ -148,7 +148,7 @@ import ManageShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShow
 import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCreditsList'
 import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
-import ShowRecordings from '@/Components/Pages/Shows/Elements/ShowRecordings.vue'
+import ShowRecordingsList from '@/Components/Pages/ShowRecordings/ShowRecordingsList.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 usePageSetup('shows/slug/manage')

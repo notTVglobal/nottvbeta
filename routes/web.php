@@ -1379,6 +1379,11 @@ Route::middleware([
       ->can('viewAdmin', 'App\Models\User');
 
 
+// Recordings
+/////////////
+
+  Route::get('/api/recordings', [RecordingController::class, 'fetchRecordings']);
+
 // Extra Functions
 //////////////////
 ///
