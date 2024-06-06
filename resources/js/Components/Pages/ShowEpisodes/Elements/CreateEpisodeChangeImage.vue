@@ -9,7 +9,7 @@
 
       <ImageUpload :image="image"
                    :modelType="'showEpisode'"
-                   :modelId="showEpisodeStore.episode.id"
+                   :modelId="episode.id"
                    :name="'Upload Image'"
                    :maxSize="'20MB'"
                    :fileTypes="'image/jpg, image/jpeg, image/png'"
@@ -27,21 +27,23 @@
   </div>
 </template>
 <script setup>
-import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
 import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
-
-const showEpisodeStore = useShowEpisodeStore()
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
   image: Object,
+  episode: Object,
   errors: Object,
 })
 
 const emit = defineEmits(['reloadImage'])
 
 const handleReloadImage = () => {
-  emit('reloadImage')
+  router.reload({
+    only: ['image'],
+  })
+  // emit('reloadImage')
 }
 
 </script>
