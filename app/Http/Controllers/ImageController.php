@@ -11,6 +11,7 @@ use App\Models\NewsStory;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
+use App\Traits\AuthorizeModelTrait;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,8 @@ use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller {
+
+  use AuthorizeModelTrait;
 
   // This is the /image index page.
   public function index() {
@@ -315,7 +318,8 @@ class ImageController extends Controller {
 
     $validator = Validator::make($request->all(), $rules);
 
-    $this->validateModelTypeAndId($validator, $request);
+    // Commenting out the validation for debugging
+    // $this->validateModelTypeAndId($validator, $request);
 
     if ($validator->fails()) {
       $errors = $validator->errors();
@@ -348,6 +352,12 @@ class ImageController extends Controller {
 
       $modelType = $request->input('modelType', null); // Default to null if not provided
       $modelId = $request->input('modelId', null); // Default to null if not provided
+
+      // Authorize the user to edit the model
+      if (!$this->authorizeModel($modelType, $modelId, 'edit')) {
+        Log::error('User is not authorized to edit this model.');
+        return response()->json(['error' => 'Unauthorized.'], 403);
+      }
 
       // Retrieve cloud_folder and cdn_endpoint from app_settings
       $appSettings = AppSetting::where('id', 1)->first(['cloud_folder', 'cdn_endpoint']);

@@ -55,10 +55,10 @@
               <p><strong>Path:</strong> {{ selectedRecording.path }}</p>
               <p><strong>File Extension:</strong> {{ selectedRecording.file_extension }}</p>
               <p><strong>Mime Type:</strong> {{ selectedRecording.mime_type }}</p>
-              <p><strong>Start DateTime:</strong> {{ selectedRecording.start_dateTime }}</p>
-              <p><strong>End DateTime:</strong> {{ selectedRecording.end_dateTime }}</p>
-              <p><strong>Bytes Recorded:</strong> {{ selectedRecording.bytes_recorded }}</p>
-              <p><strong>Seconds Spent Recording:</strong> {{ selectedRecording.seconds_spent_recording }}</p>
+              <p><strong>Start DateTime:</strong> {{ formatDate(selectedRecording.start_dateTime) }}</p>
+              <p><strong>End DateTime:</strong> {{ formatDate(selectedRecording.end_dateTime) }}</p>
+              <p><strong>Bytes Recorded:</strong> {{ selectedRecording.bytes_recorded }} ({{ formatBytes(selectedRecording.bytes_recorded) }})</p>
+              <p><strong>Seconds Spent Recording:</strong> {{ selectedRecording.seconds_spent_recording }} ({{ formatSeconds(selectedRecording.seconds_spent_recording) }})</p>
               <p><strong>Total Milliseconds Recorded:</strong> {{ selectedRecording.total_milliseconds_recorded }}</p>
               <p><strong>Milliseconds First Packet:</strong> {{ selectedRecording.milliseconds_first_packet }}</p>
               <p><strong>Milliseconds Last Packet:</strong> {{ selectedRecording.milliseconds_last_packet }}</p>
@@ -117,4 +117,27 @@ watch(() => recordingStore.selectedRecording, (newRecording) => {
     }
   }
 }, { immediate: true });
+
+// Format dates using userStore
+const formatDate = (date) => {
+  return userStore.formatDateInUserTimezone(date, 'YYYY-MM-DD HH:mm:ss');
+};
+
+// Format seconds to HH:MM:SS
+const formatSeconds = (seconds) => {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
+// Format bytes to human readable format
+const formatBytes = (bytes, decimals = 2) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
 </script>

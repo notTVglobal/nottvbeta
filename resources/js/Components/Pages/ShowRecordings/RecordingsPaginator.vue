@@ -12,7 +12,6 @@
 </template>
 
 <script setup>
-
 const props = defineProps({
   totalPages: {
     type: Number,
@@ -37,7 +36,33 @@ const goToPage = (page) => {
   justify-content: center;
   gap: 4px;
 }
+
+.btn {
+  transition: background-color 0.3s ease;
+}
+
+/* Default hover effect */
+.btn:hover {
+  background-color: #ff6347; /* Example hover color */
+}
+
 .btn-active {
-  background-color: #ff7f50; /* Example active color */
+  background-color: #ff7f50; /* Active color in dark mode */
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .btn {
+    color: #ffffff;
+    background-color: #333333;
+  }
+
+  .btn:hover {
+    background-color: #555555; /* Example dark mode hover color */
+  }
+
+  .btn-active {
+    background-color: #ff7f50; /* Active color in dark mode */
+  }
 }
 </style>

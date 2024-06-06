@@ -404,6 +404,10 @@ class MistTriggerController extends Controller {
     $streamName = $parsedContent['streamName'];
     $convertedStreamName = str_replace('+', '_', $streamName);
     $recordingDate = $parsedContent['startTime']->format('Y.m.d.H.i.s'); // Convert to yyyy.mm.dd.hh.mm.ss
+
+    // Extract mistWildcardId from streamName
+    $mistWildcardId = explode('+', $streamName)[1] ?? '';
+
     // Initialize URLs and comment
     $download_url = '';
     $share_url = '';
@@ -486,6 +490,7 @@ class MistTriggerController extends Controller {
             'download_url'                   => $download_url,
             'share_url'                      => $share_url,
             'playback_stream_name'           => $playback_stream_name,
+            'mist_stream_wildcard_id'        => $mistWildcardId,
         ];
 
         if ($comment !== '') {
@@ -519,6 +524,7 @@ class MistTriggerController extends Controller {
         'download_url'                   => $download_url,
         'share_url'                      => $share_url,
         'playback_stream_name'           => $playback_stream_name,
+        'mist_stream_wildcard_id'        => $mistWildcardId,
     ]);
 
   }

@@ -21,7 +21,10 @@
     <td class="px-6 py-4 whitespace-nowrap">
       {{ formatDuration(recording.total_milliseconds_recorded) }}
     </td>
-    <td class="px-6 py-4 whitespace-nowrap"></td>
+    <td class="px-6 py-4 whitespace-nowrap">
+      <span v-if="recording.meta?.good" class="bg-green-500 text-white rounded-full p-1 text-xs">✔️</span>
+      <span v-if="recording.meta?.ng" class="bg-orange-500 text-white rounded-full p-1 text-xs">❌</span>
+    </td>
     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
       <button @click.stop="shareRecording(recording.share_url)"
               class="btn btn-xs bg-orange-200 hover:bg-orange-300 text-black">
@@ -89,7 +92,7 @@ const confirmSaveToPremium = () => {
 
 const rowClass = computed(() => (recordingId) => ({
   'hover:bg-blue-100 cursor-pointer': state.hoveredRow === recordingId,
-  'bg-gray-100': recordingStore.selectedRecording?.id === recordingId,
+  'bg-gray-200': recordingStore.selectedRecording?.id === recordingId,
   'bg-green-100': recordingStore.nowPlayingRecordingId === recordingId,
 }));
 
