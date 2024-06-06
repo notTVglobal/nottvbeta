@@ -1383,6 +1383,7 @@ Route::middleware([
 /////////////
 
   Route::get('/api/recordings', [RecordingController::class, 'fetchRecordings']);
+  Route::patch('/api/recordings/{recording}', [RecordingController::class, 'update']);
 
 // Extra Functions
 //////////////////

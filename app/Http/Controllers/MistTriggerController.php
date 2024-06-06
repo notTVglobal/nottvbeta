@@ -403,7 +403,7 @@ class MistTriggerController extends Controller {
     $uniqueFilePath = $parsedContent['filePath'];
     $streamName = $parsedContent['streamName'];
     $convertedStreamName = str_replace('+', '_', $streamName);
-    $recordingDate = (new \DateTime())->setTimestamp($parsedContent['startTime'])->format('Y.m.d.H.i.s'); // Convert unix time to yyyy.mm.dd.hh.mm.ss
+    $recordingDate = $parsedContent['startTime']->format('Y.m.d.H.i.s'); // Convert to yyyy.mm.dd.hh.mm.ss
     // Initialize URLs and comment
     $download_url = '';
     $share_url = '';

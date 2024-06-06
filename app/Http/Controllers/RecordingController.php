@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class RecordingController extends Controller
@@ -184,4 +185,51 @@ class RecordingController extends Controller
 
     return response()->json($recordings);
   }
+
+  public function update(Request $request, Recording $recording): JsonResponse
+  {
+    Log::info('Update recording request received', ['recording_id' => $recording->id, 'request' => $request->all()]);
+
+    // Retrieve the show ID from the request
+    $showId = $request->input('show_id');
+    Log::info('Show ID retrieved from request', ['show_id' => $showId]);
+
+    // Find the show or fail
+    $show = Show::findOrFail($showId);
+    Log::info('Show found', ['show_id' => $show->id]);
+
+    // Authorize the action
+    $this->authorize('edit', $show);
+    Log::info('Authorization successful', ['user_id' => Auth::id(), 'show_id' => $show->id]);
+
+    // Validate the request input
+    $validatedData = $request->validate([
+        'meta.title' => 'nullable|string',
+        'meta.notes' => 'nullable|string',
+        'meta.updated_by' => 'nullable|string',
+        'meta.updated_at' => 'nullable|date',
+        'meta.good' => 'nullable|boolean',
+        'meta.ng' => 'nullable|boolean',
+    ]);
+    Log::info('Request validation passed', ['validated_data' => $validatedData]);
+
+    // Retrieve and update the meta data
+    $meta = $recording->meta ?? [];
+    $meta['title'] = $request->input('meta.title');
+    $meta['notes'] = $request->input('meta.notes');
+    $meta['updated_by'] = Auth::user()->name;
+    $meta['updated_at'] = now();
+    $meta['good'] = $request->input('meta.good');
+    $meta['ng'] = $request->input('meta.ng');
+    Log::info('Meta data updated', ['meta' => $meta]);
+
+    // Update the recording with new meta data
+    $recording->meta = $meta;
+    $recording->save();
+    Log::info('Recording saved', ['recording' => $recording]);
+
+    // Return a successful response
+    return response()->json(['success' => 'Recording updated successfully.', 'recording' => $recording]);
+  }
+
 }

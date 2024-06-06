@@ -29,21 +29,22 @@ class Recording extends Model {
       'model_id',
       'download_url',
       'share_url',
-      'playback_stream_name'
-  ];
-
-  protected $dates = [
-      'start_dateTime',
-      'end_dateTime',
+      'playback_stream_name',
+      'meta',
+      'expires_at'
   ];
 
   // Cast attributes to appropriate data types (optional)
   protected $casts = [
-      'bytes_recorded' => 'integer',
-      'seconds_spent_recording' => 'integer',
+      'bytes_recorded'              => 'integer',
+      'seconds_spent_recording'     => 'integer',
       'total_milliseconds_recorded' => 'integer',
-      'milliseconds_first_packet' => 'integer',
-      'milliseconds_last_packet' => 'integer',
+      'milliseconds_first_packet'   => 'integer',
+      'milliseconds_last_packet'    => 'integer',
+      'start_dateTime'              => 'datetime',
+      'end_dateTime'                => 'datetime',
+      'meta'                        => 'json',
+      'expires_at'                  => 'datetime'
     // any other fields you wish to cast
   ];
 

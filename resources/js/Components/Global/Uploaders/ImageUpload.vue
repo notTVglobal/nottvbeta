@@ -72,11 +72,16 @@ const fileTypes = ref(['image/png', 'image/jpeg'])
 // const modelType = 'yourModelType'; // Replace with your actual model type
 // const modelId = 'yourModelId'; // Replace with your actual model ID
 
+// Get the CSRF token from the meta tag
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
 const serverOptions = ref({
   process: {
     url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
     method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': csrfToken
+    },
     withCredentials: false,
     onload: (response) => {
       const jsonResponse = JSON.parse(response);
@@ -110,8 +115,8 @@ function handleProcessedFile(error, file) {
   }
   emit('reloadImage')
 
-  const response = JSON.parse(file.serverId)
-  emit('imageUploaded', response)
+  // const response = JSON.parse(file.serverId)
+  // emit('imageUploaded', response)
 }
 
 

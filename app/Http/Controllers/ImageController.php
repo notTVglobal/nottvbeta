@@ -308,7 +308,7 @@ class ImageController extends Controller {
     Log::info('image uploading...');
 
     $rules = [
-        'image'     => 'required|image|max:30720', // Max 30MB
+        'image'     => 'required|file|image|max:30720', // Max 30MB
         'modelType' => 'nullable|string', // Validate if present
         'modelId'   => 'required|numeric', // Validate if present and should be numeric
     ];
@@ -325,6 +325,10 @@ class ImageController extends Controller {
 
     try {
       $file = $request->file('image');
+      if (!$file->isValid()) {
+        Log::error('Uploaded file is not valid.');
+        return response()->json(['error' => 'The uploaded file is not valid.'], 422);
+      }
       $filePath = $file->getPathname();
 
       // Proceed with file upload and record creation
