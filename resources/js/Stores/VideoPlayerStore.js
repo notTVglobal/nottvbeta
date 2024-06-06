@@ -568,11 +568,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // videoSrc = source.video_url
                 // console.log('Using external video source:', videoSrc)
             } else if (source.mediaType === 'recording') {
-                // console.log('Video is a recording.')
+                console.log('Video is a recording.')
                 videoSrc = this.mistServerUri + source.recording.source
                 videoSourceType = source.recording.sourceType
-                // console.log(videoSrc)
-                // console.log(videoSourceType)
+                console.log(videoSrc)
+                console.log(videoSourceType)
             } else if (source.mediaType === 'mistStream') {
                 videoSrc = source.source
                 videoSourceType = source.type

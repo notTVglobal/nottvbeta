@@ -427,21 +427,21 @@ class MistTriggerController extends Controller {
 
     if (str_contains($uniqueFilePath, 'auto')) {
       // Auto recordings
-      $prefix = 'recording_' . $convertedStreamName . '+';
+      $prefix = 'recording_' . $convertedStreamName . '%2B';
     } elseif (str_contains($uniqueFilePath, 'user')) {
       // User recordings
       $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
       $parts = explode('/', $relativePath, 3);
       if (count($parts) < 3) return null; // Skip invalid paths
       $userIdPart = 'recordings_user_' . $parts[1];
-      $prefix = $userIdPart . '+';
+      $prefix = $userIdPart . '%2B';
     } elseif (str_contains($uniqueFilePath, 'backup')) {
       // Backup recordings
-      $prefix = 'recording_backup+';
+      $prefix = 'recording_backup%2B';
       $comment = 'backup recording';
     } elseif (str_contains($uniqueFilePath, 'recording')) {
       // General recordings
-      $prefix = 'recording+';
+      $prefix = 'recording%2B';
     } else {
       return null; // Invalid path
     }
