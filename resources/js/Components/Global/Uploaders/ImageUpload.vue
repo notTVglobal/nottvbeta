@@ -71,7 +71,7 @@ const fileTypes = ref(['image/png', 'image/jpeg'])
 
 const serverOptions = ref({
   process: {
-    url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif}`,
+    url: `/upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
     method: 'POST',
     withCredentials: false,
     // headers: {},
@@ -88,6 +88,9 @@ const serverOptions = ref({
 
 function handleFilePondInit() {
   console.log('FilePond has initialized')
+  console.log(removeExif)
+  console.log(removeExif.value)
+
 }
 
 function handleProcessedFile(error, file) {
@@ -97,10 +100,12 @@ function handleProcessedFile(error, file) {
     console.log(file)
     return
   }
+  console.log('reload image')
   // console.log(file)
   emit('reloadImage')
 
   const response = JSON.parse(file.serverId)
+  console.log(response)
   emit('imageUploaded', response)
 }
 
