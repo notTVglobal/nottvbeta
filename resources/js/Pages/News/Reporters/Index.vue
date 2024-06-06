@@ -33,7 +33,7 @@
                   </Link>
                 </main>
                 <footer class="mt-8">
-                  Add other details here
+                  {{ person.other_details }}
                 </footer>
               </div>
             </div>

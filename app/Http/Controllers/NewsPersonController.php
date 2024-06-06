@@ -87,21 +87,16 @@ class NewsPersonController extends Controller {
     // Select the view based on the authentication status
     $component = $user ? 'News/Reporters/Index' : 'LoggedOut/News/Reporters/Index';
 
-    // Filter news people who have a role with id 5 'Reporter'
+    // Filter news people who have a role with id 5 'Reporter' and eager load necessary relationships
     $newsPeople = NewsPerson::whereHas('roles', function ($query) {
       $query->where('news_people_roles.id', 5);
-    })->with('user')->get()->map(function ($newsPerson) {
-      return [
-          'id'                 => $newsPerson->user->id,
-          'slug'               => $newsPerson->slug,
-          'name'               => $newsPerson->user->name,
-          'profile_photo_path' => $newsPerson->user->profile_photo_path,
-          'profile_photo_url'  => $newsPerson->user->profile_photo_url,
-      ];
-    });
+    })->with(['user', 'roles', 'image.appSetting'])->get();
+
+    // Transform the collection using NewsPersonResource
+    $newsPeopleResource = NewsPersonResource::collection($newsPeople)->resolve();
 
     return Inertia::render($component, [
-        'newsPeople' => $newsPeople,
+        'newsPeople' => $newsPeopleResource,
         'can'        => [
             'viewNewsroom' => $canViewNewsroom
         ]

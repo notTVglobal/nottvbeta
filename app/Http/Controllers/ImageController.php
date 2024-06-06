@@ -386,7 +386,26 @@ class ImageController extends Controller {
     }
   }
 
-  protected function getValidModelTypes() {
+  protected function validateModelTypeAndId($validator, $request): void {
+    $modelType = $request->input('modelType');
+    $modelId = $request->input('modelId');
+
+    if ($modelType && $modelId) {
+      $validModelTypes = $this->getValidModelTypes();
+
+      if (!isset($validModelTypes[$modelType])) {
+        $validator->errors()->add('modelType', 'The model type is invalid.');
+      } else {
+        $modelClass = $validModelTypes[$modelType];
+        if (!$modelClass::find($modelId)) {
+          $validator->errors()->add('modelId', 'The model ID does not exist.');
+        }
+      }
+    }
+  }
+
+
+  protected function getValidModelTypes(): array {
     return [
         'creator' => \App\Models\Creator::class,
         'team' => \App\Models\Team::class,

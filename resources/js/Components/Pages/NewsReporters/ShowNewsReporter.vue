@@ -4,45 +4,45 @@
       <div class="flex flex-col xl:flex-row my-6">
         <div class="w-full flex flex-col gap-4 items-center justify-center xl:justify-start">
           <div>
-            <SingleImage v-if="$page.props.newsPerson.image"
-                         :image="$page.props.newsPerson.image"
+            <SingleImage v-if="newsPerson.image"
+                         :image="newsPerson.image"
                          :alt="`Profile Image`"
                          :class="`h-64 w-64 object-cover shadow-lg rounded-lg`"/>
             <img
                 alt="News Reporter Profile Picture"
-                v-if="$page.props.newsPerson.profile_photo_path && !$page.props.newsPerson.image && !$page.props.newsPerson.profile_photo_url"
-                :src="`/storage/${$page.props.newsPerson.profile_photo_path}`"
+                v-if="newsPerson.profile_photo_path && !newsPerson.image && !newsPerson.profile_photo_url"
+                :src="`/storage/${newsPerson.profile_photo_path}`"
                 class="h-64 w-64 object-cover shadow-lg rounded-lg"
             >
             <img
                 alt="News Reporter Profile Picture"
-                v-if="$page.props.newsPerson.profile_photo_url && !$page.props.newsPerson.image && !$page.props.newsPerson.profile_photo_path"
-                :src="$page.props.newsPerson.profile_photo_url"
+                v-if="newsPerson.profile_photo_url && !newsPerson.image && !newsPerson.profile_photo_path"
+                :src="newsPerson.profile_photo_url"
                 class="h-64 w-64 object-cover shadow-lg rounded-lg"
             >
           </div>
           <div>
-            <NewsTipButton :newsPersonId="$page.props.newsPerson.id" :newsPersonName="$page.props.newsPerson.name"/>
+            <NewsTipButton :newsPersonId="newsPerson.id" :newsPersonName="newsPerson.name"/>
           </div>
         </div>
 
         <div class="w-full mt-4 xl:mt-0 xl:mx-4">
           <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
-            {{ $page.props.newsPerson.name }}
+            {{ newsPerson.name }}
           </h1>
           <div class="space-y-6 mt-4">
             <!-- Sections for Biography, Past Stories, Contact -->
-            <section v-if="$page.props.newsPerson.biography" class="bg-white p-4 rounded-lg shadow">
+            <section v-if="newsPerson.biography" class="bg-white p-4 rounded-lg shadow">
               <h2 class="text-xl font-semibold mb-2">Biography</h2>
               <p class="text-sm italic text-gray-700">
                 <span v-html="truncatedBiography"/>
-                <span v-if="!showFullBiography && truncatedBiography.length < $page.props.newsPerson.biography.length">
+                <span v-if="!showFullBiography && truncatedBiography.length < newsPerson.biography.length">
                   ...<button @click="showFullBiography = true" class="text-blue-500">Read more</button>
                 </span>
-                <span v-if="showFullBiography" v-html="formatText($page.props.newsPerson.biography)"></span>
+                <span v-if="showFullBiography" v-html="formatText(newsPerson.biography)"></span>
               </p>
             </section>
-            <section v-if="$page.props.newsStories.length > 0" class="bg-white p-4 rounded-lg shadow">
+            <section v-if="newsStories.length > 0" class="bg-white p-4 rounded-lg shadow">
               <h2 class="text-xl font-semibold mb-2">Past Stories</h2>
               <div v-for="(story, index) in displayedNewsStories" :key="story.id"
                    @click.prevent="appSettingStore.btnRedirect(`/news/story/${story.slug}`)"
@@ -68,9 +68,9 @@
                 </button>
               </div>
             </section>
-            <section v-if="$page.props.newsPerson.contact_info" class="bg-white p-4 rounded-lg shadow">
+            <section v-if="newsPerson.contact_info" class="bg-white p-4 rounded-lg shadow">
               <h2 class="text-xl font-semibold mb-2">Contact</h2>
-              <p class="text-sm italic text-gray-700" v-html="formatText($page.props.newsPerson.contact_info)"></p>
+              <p class="text-sm italic text-gray-700" v-html="formatText(newsPerson.contact_info)"></p>
             </section>
             <section v-if="Object.keys(socialMediaLinks).length" class="bg-white p-4 rounded-lg shadow">
               <h2 class="text-xl font-semibold mb-2">Social Media</h2>
@@ -100,12 +100,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { usePage } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import NewsTipButton from '@/Components/Global/News/NewsTipButton.vue'
+
+const props = defineProps({
+  newsPerson: Object,
+  newsStories: Array,
+})
 
 // Import specific icons from Font Awesome
 import { faLink } from '@fortawesome/free-solid-svg-icons'
@@ -125,8 +129,6 @@ library.add(faFacebookF, faTwitter, faInstagram, faLinkedin, faSnapchat, faDisco
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
-const page = usePage()
-
 const showFullBiography = ref(false)
 const showAllStories = ref(false)
 
@@ -136,17 +138,17 @@ const formatText = (text) => {
 }
 
 const truncatedBiography = computed(() => {
-  const biography = page.props.newsPerson.biography || ''
+  const biography = props.newsPerson.biography || ''
   const truncated = biography.length > 300 && !showFullBiography.value ? biography.slice(0, 300) : biography
   return formatText(truncated)
 })
 
 const displayedNewsStories = computed(() => {
-  return showAllStories.value ? page.props.newsStories : page.props.newsStories.slice(0, 3)
+  return showAllStories.value ? props.newsStories : props.newsStories.slice(0, 3)
 })
 
 const showSeeMore = computed(() => {
-  return page.props.newsStories.length > 3 && !showAllStories.value
+  return props.newsStories.length > 3 && !showAllStories.value
 })
 
 const socialMediaIcons = {
@@ -160,7 +162,7 @@ const socialMediaIcons = {
 }
 
 const socialMediaLinks = computed(() => {
-  const socialMedia = page.props.newsPerson.social_media || {}
+  const socialMedia = props.newsPerson.social_media || {}
   return Object.entries(socialMedia).reduce((acc, [platform, url]) => {
     if (url && url.trim() !== '' && socialMediaIcons[platform]) {
       acc[platform] = url

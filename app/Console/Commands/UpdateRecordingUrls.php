@@ -54,7 +54,7 @@ class UpdateRecordingUrls extends Command {
 
       if (str_contains($uniqueFilePath, 'auto')) {
         // Auto recordings
-        $prefix = 'recording_' . $streamName . '%2B';
+        $prefix = 'recordings_' . $streamName . '%2B';
       } elseif (str_contains($uniqueFilePath, 'user')) {
         // User recordings
         $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
@@ -64,11 +64,11 @@ class UpdateRecordingUrls extends Command {
         $prefix = $userIdPart . '%2B';
       } elseif (str_contains($uniqueFilePath, 'backup')) {
         // Backup recordings
-        $prefix = 'recording_backup%2B';
+        $prefix = 'recordings_backup%2B';
         $comment = 'backup recording';
       } elseif (str_contains($uniqueFilePath, 'recording')) {
         // General recordings
-        $prefix = 'recording%2B';
+        $prefix = 'recordings%2B';
       } else {
         continue; // Invalid path
       }
@@ -77,7 +77,7 @@ class UpdateRecordingUrls extends Command {
       $fileWithPrefix = $prefix . $filename;
 
       // Generate URLs
-      $download_url = $mistServerUri . $fileWithPrefix . '?dl=' . $streamName . $recordingDate . '.mp4';
+      $download_url = $mistServerUri . $fileWithPrefix . '.mp4?dl=' . $streamName . $recordingDate . '.mp4';
       $share_url = $mistServerUri . $fileWithPrefix . '.html';
       $playback_stream_name = $fileWithPrefix . '.mp4';
 
