@@ -427,17 +427,16 @@ class MistTriggerController extends Controller {
       $download_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
       $share_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.html';
     } elseif (str_contains($uniqueFilePath, $autoRecordingsPath)) {
-      // Example: '/media/recordings_auto/show+wildcardId/show+wildcardId_2024.05.11.03.41.30.mkv';
+      // Example: '/media/recordings_auto/show+wildcardId/show+wildcardId_2024.04.26.17.17.13.mkv';
       $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
       $parts = explode('/', $relativePath, 2);
-      $wildcardIdPart = 'recordings_' . str_replace('/', '_', $parts[0]);
+      $wildcardIdPart = 'recordings_' . str_replace('+', '_', $parts[0]); // Fix wildcard ID part
       $filename = $parts[1];
       $filenameTransformed = str_replace('+', '%2B', $filename);
 
       $download_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
       $share_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.html';
     }
-
 
     // First, check if a recording with the same unique identifier already exists.
     $existingRecording = Recording::where('path', $uniqueFilePath)->first();
