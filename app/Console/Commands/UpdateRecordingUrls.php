@@ -52,8 +52,9 @@ class UpdateRecordingUrls extends Command {
         $filename = $parts[1];
         $filenameTransformed = str_replace('+', '%2B', $filename);
 
-        $download_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
-        $share_url = $mistServerUri . $userIdPart . '%2B' . $filenameTransformed . '.html';
+        $download_url = $mistServerUri . $userIdPart . '+' . $filename . '.mp4?dl=1';
+        $share_url = $mistServerUri . $userIdPart . '+' . $filename . '.html';
+        $playback_stream_name = $userIdPart . '+' . $filename;
       } elseif (str_contains($uniqueFilePath, $autoRecordingsPath)) {
         $relativePath = substr($uniqueFilePath, strlen($autoRecordingsPath));
         $parts = explode('/', $relativePath, 2);
@@ -62,19 +63,21 @@ class UpdateRecordingUrls extends Command {
         $filename = $parts[1];
         $filenameTransformed = str_replace('+', '%2B', $filename);
 
-        $download_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
-        $share_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.html';
-        $playback_stream_name = $wildcardIdPart . '%2B' . $filenameTransformed;
-
+        $download_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.mp4?dl=1';
+        $share_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.html';
+        $playback_stream_name = $wildcardIdPart . '+' . $filename;
       } elseif (str_contains($uniqueFilePath, $generalRecordingsPath)) {
         // Handle general recordings like: '/media/recordings/show+wildcardId_dateTime.mkv'
         $relativePath = substr($uniqueFilePath, strlen($generalRecordingsPath));
-        $filenameTransformed = str_replace('+', '%2B', $relativePath);
+        $parts = explode('/', $relativePath, 2);
+        if (count($parts) < 2) continue; // Skip invalid paths
+        $wildcardIdPart = 'recordings_show_' . str_replace('+', '_', $parts[0]);
+        $filename = $parts[1];
+        $filenameTransformed = str_replace('+', '%2B', $filename);
 
-        $download_url = $mistServerUri . 'recordings%2B' . $filenameTransformed . '.mp4?dl=1';
-        $share_url = $mistServerUri . 'recordings%2B' . $filenameTransformed . '.html';
-        $playback_stream_name = 'recordings%2B' . $filenameTransformed;
-
+        $download_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.mp4?dl=1';
+        $share_url = $mistServerUri . $wildcardIdPart . '+' . $filename . '.html';
+        $playback_stream_name = $wildcardIdPart . '+' . $filename;
       } else {
         continue; // Skip recordings that don't match the expected structure
       }
