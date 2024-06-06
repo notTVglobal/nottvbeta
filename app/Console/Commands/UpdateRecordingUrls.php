@@ -6,23 +6,21 @@ use App\Models\AppSetting;
 use App\Models\Recording;
 use Illuminate\Console\Command;
 
-class UpdateRecordingUrls extends Command
-{
+class UpdateRecordingUrls extends Command {
   protected $signature = 'recordings:update-urls';
   protected $description = 'Update the download_url and share_url columns on the recordings table';
 
-  public function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
 
-  public function handle()
-  {
+  public function handle() {
     // Fetch the settings
     $settings = AppSetting::find(1);
 
     if (!$settings) {
       $this->error('App settings not found.');
+
       return 1;
     }
 
@@ -33,6 +31,7 @@ class UpdateRecordingUrls extends Command
 
     if (!$userRecordingsPath || !$autoRecordingsPath) {
       $this->error('Recording paths not found in settings.');
+
       return 1;
     }
 
@@ -43,6 +42,7 @@ class UpdateRecordingUrls extends Command
       $uniqueFilePath = $recording->path;
       $download_url = '';
       $share_url = '';
+      $playback_stream_name = '';
 
       if (str_contains($uniqueFilePath, $userRecordingsPath)) {
         $relativePath = substr($uniqueFilePath, strlen($userRecordingsPath));
@@ -64,6 +64,8 @@ class UpdateRecordingUrls extends Command
 
         $download_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.mp4?dl=1';
         $share_url = $mistServerUri . $wildcardIdPart . '%2B' . $filenameTransformed . '.html';
+        $playback_stream_name = $wildcardIdPart . '%2B' . $filenameTransformed;
+
       } elseif (str_contains($uniqueFilePath, $generalRecordingsPath)) {
         // Handle general recordings like: '/media/recordings/show+wildcardId_dateTime.mkv'
         $relativePath = substr($uniqueFilePath, strlen($generalRecordingsPath));
@@ -71,17 +73,21 @@ class UpdateRecordingUrls extends Command
 
         $download_url = $mistServerUri . 'recordings%2B' . $filenameTransformed . '.mp4?dl=1';
         $share_url = $mistServerUri . 'recordings%2B' . $filenameTransformed . '.html';
+        $playback_stream_name = 'recordings%2B' . $filenameTransformed;
+
       } else {
         continue; // Skip recordings that don't match the expected structure
       }
 
       $recording->update([
-          'download_url' => $download_url,
-          'share_url' => $share_url,
+          'download_url'         => $download_url,
+          'share_url'            => $share_url,
+          'playback_stream_name' => $playback_stream_name,
       ]);
     }
 
     $this->info('Recording URLs updated successfully.');
+
     return 0;
   }
 }

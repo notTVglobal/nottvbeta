@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col rounded justify-end w-fit bg-white dark:bg-black my-6">
+  <div class="flex flex-col rounded justify-end w-full bg-white dark:bg-black my-6">
     <div class="block uppercase font-bold text-xs text-black dark:text-white"
          for="name"
     >

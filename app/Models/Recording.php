@@ -28,7 +28,8 @@ class Recording extends Model {
       'model_type',
       'model_id',
       'download_url',
-      'share_url'
+      'share_url',
+      'playback_stream_name'
   ];
 
   protected $dates = [

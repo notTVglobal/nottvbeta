@@ -18,7 +18,6 @@
           :scheduledDateTime="scheduledDateTime"
           :releaseDateTime="releaseDateTime"
       />
-
 <!--      <GoLive :episode="episode" :scheduledDateTime="scheduledDateTime"/>-->
       <GoLive v-if="goLiveStore.displayEpisodeGoLiveComponent" />
 
