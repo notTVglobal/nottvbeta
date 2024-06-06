@@ -490,7 +490,6 @@ class MistTriggerController extends Controller {
             'download_url'                   => $download_url,
             'share_url'                      => $share_url,
             'playback_stream_name'           => $playback_stream_name,
-            'mist_stream_wildcard_id'        => $mistWildcardId,
         ];
 
         if ($comment !== '') {
@@ -524,7 +523,6 @@ class MistTriggerController extends Controller {
         'download_url'                   => $download_url,
         'share_url'                      => $share_url,
         'playback_stream_name'           => $playback_stream_name,
-        'mist_stream_wildcard_id'        => $mistWildcardId,
     ]);
 
   }
