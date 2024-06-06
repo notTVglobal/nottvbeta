@@ -12,16 +12,15 @@
         <label for="removeExif" class="checkbox-label">Remove EXIF data</label>
       </div>
 
-
       <file-pond
           name="image"
           ref="pond"
           class-name="my-pond"
           allow-multiple="false"
           label-idle="Click to choose file, or drag here..."
-          :server="serverOptions"
+          :server="`/api/image-upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`"
           accepted-file-types="image/jpeg, image/png"
-          @init="handleFilePondInit"
+          @init="filepondInitialized"
           @processfile="handleProcessedFile"
           :max-file-size="maxSize"
           allowRemove="false"
@@ -79,34 +78,22 @@ const serverOptions = ref({
   process: {
     url: `/api/image-upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
     method: 'POST',
-    headers: {
-      'X-CSRF-TOKEN': csrfToken
-    },
     withCredentials: false,
-    onload: (response) => {
-      const jsonResponse = JSON.parse(response);
-      if (jsonResponse.error) {
-        throw new Error(jsonResponse.error);
-      }
-      return jsonResponse;
-    },
-    onerror: (response) => {
-      const error = JSON.parse(response);
-      console.error('FilePond error:', error);
-      notificationStore.setGeneralServiceNotification('Error', response);
-      return error.error || 'Upload failed';
-    },
+    // headers: {},
+    onload: (response) => response,
+    // onload: (response) => response.key,
+    // onerror: (response) => response.data,
   },
 })
 
 
-// function filepondInitialized() {
-//   console.log('Filepond is ready!')
-// }
-
-function handleFilePondInit() {
-  console.log('FilePond has initialized')
+function filepondInitialized() {
+  console.log('Filepond is ready!')
 }
+//
+// function handleFilePondInit() {
+//   console.log('FilePond has initialized')
+// }
 
 function handleProcessedFile(error, file) {
   if (error) {
