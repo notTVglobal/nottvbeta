@@ -167,7 +167,7 @@
                           @click.prevent="router.visit('/dashboard')"
                           :href="`#`"
                           :active="appSettingStore.currentPage === 'dashboard'">
-                        Dashboard
+                        <font-awesome-icon :icon="['fas', 'tachometer-alt']" class="mr-2" /> Dashboard
                       </JetDropdownLink>
 
                       <JetDropdownLink
@@ -176,7 +176,7 @@
                           @click.prevent="router.visit('/newsroom')"
                           :href="`#`"
                           :active="appSettingStore.currentPage === 'newsroom'">
-                        Newsroom
+                        <font-awesome-icon :icon="['fas', 'newspaper']" class="mr-2" /> Newsroom
                       </JetDropdownLink>
 
                       <Link
@@ -186,9 +186,9 @@
                           :href="`#`"
                           :active="appSettingStore.currentPage === 'library'"
                           class="bg-gray-400 text-white block w-full px-4 py-2 text-sm leading-5 text-left">
-                        My Library
+                        <font-awesome-icon :icon="['fas', 'book']" class="mr-2" /> My Library
                         <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
-                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1 shadow-cyan-950 drop-shadow-lg">
+                font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1 shadow-cyan-950 drop-shadow-lg">
                           coming soon
                         </div>
                       </Link>
@@ -198,14 +198,13 @@
                           @click.prevent="router.visit('/user/profile')"
                           :href="`#`"
                           :active="appSettingStore.currentPage === '/user/profile'">
-                        Settings
+                        <font-awesome-icon :icon="['fas', 'cog']" class="mr-2" /> Settings
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="$page.props.user.hasAccount"
-                          @click.prevent="billingPortal"
-                      >
-                        Account
+                          @click.prevent="billingPortal">
+                        <font-awesome-icon :icon="['fas', 'user-circle']" class="mr-2" /> Account
                       </JetDropdownLink>
 
                       <JetDropdownLink
@@ -214,7 +213,7 @@
                           :href="`#`"
                           @click.prevent="router.visit('/training')"
                           :active="appSettingStore.currentPage === 'training'">
-                        Training
+                        <font-awesome-icon :icon="['fas', 'chalkboard-teacher']" class="mr-2" /> Training
                       </JetDropdownLink>
 
                       <JetDropdownLink
@@ -223,12 +222,12 @@
                           :href="`#`"
                           @click.prevent="router.visit('/videoupload')"
                           :active="appSettingStore.currentPage === 'videoupload'">
-                        Video Upload
+                        <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" /> Video Upload
                       </JetDropdownLink>
 
                       <!-- Authentication -->
                       <JetDropdownLink @click.prevent="logout">
-                        Log Out
+                        <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="mr-2" /> Log Out
                       </JetDropdownLink>
 
 
@@ -241,7 +240,7 @@
                       <!--                                        </div>-->
 
                       <!-- Admin Only Links -->
-                      <div v-if="userStore.isAdmin" class="border-t border-b border-gray-300 bg-gray-700">
+                      <div v-if="userStore.isAdmin" class="border-t border-b border-gray-300 bg-red-900">
                         <div class="border-b border-1 border-gray-300 block px-4 py-2 text-xs text-gray-50 bg-gray-900">
                           Admin Only Links
                         </div>
@@ -252,14 +251,14 @@
                             :href="`#`"
                             :active="appSettingStore.currentPage === 'admin.settings'"
                             :dark="true">
-                          Admin Settings
+                          <font-awesome-icon :icon="['fas', 'cog']" class="mr-2" /> Admin Settings
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             v-touch="()=>(router.visit('/admin/settings' + '?section=firstPlaySettings'))"
                             @click.prevent="router.visit('/admin/settings' + '?section=firstPlaySettings')"
                             :dark="true">
-                          First Play Settings
+                          <font-awesome-icon :icon="['fas', 'play-circle']" class="mr-2" /> First Play Settings
                         </JetDropdownLink>
 
                         <JetDropdownLink
@@ -268,7 +267,7 @@
                             :href="`#`"
                             :active="appSettingStore.currentPage === 'admin.schedule'"
                             :dark="true">
-                          Schedule
+                          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="mr-2" /> Schedule
                         </JetDropdownLink>
 
                         <JetDropdownLink
@@ -276,7 +275,7 @@
                             @click.prevent="router.visit('/admin/channels')"
                             :active="appSettingStore.currentPage === 'admin.channels'"
                             :dark="true">
-                          Channels
+                          <font-awesome-icon :icon="['fas', 'tv']" class="mr-2" /> Channels
                         </JetDropdownLink>
 
                         <JetDropdownLink
@@ -285,7 +284,7 @@
                             :href="`#`"
                             :active="appSettingStore.currentPage === 'calculations'"
                             :dark="true">
-                          Calculations
+                          <font-awesome-icon :icon="['fas', 'calculator']" class="mr-2" /> Calculations
                         </JetDropdownLink>
 
                         <JetDropdownLink
@@ -294,7 +293,7 @@
                             :href="`#`"
                             :active="appSettingStore.currentPage === 'mistServerApi'"
                             :dark="true">
-                          MistServer API
+                          <font-awesome-icon :icon="['fas', 'server']" class="mr-2" /> MistServer API
                         </JetDropdownLink>
 
                       </div>

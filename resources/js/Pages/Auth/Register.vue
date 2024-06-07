@@ -114,13 +114,9 @@
 
               <div class="invite-code">
                 <div class="mt-4 ml-4 border-t border-t-gray-200 text-center font-semibold">
-                  <div>Need an invite code?</div>
-                  <button
-                      type="button"
-                      @click.prevent="appSettingStore.btnRedirect(`subscribe`)"
-                      class="btn btn-md bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">Get an Invite
-                    Code
-                  </button>
+                  <div @click.prevent="appSettingStore.btnRedirect(`subscribe`)"
+                       class="text-blue-500 hover:text-blue-400 hover:cursor-pointer hover:scale-105 transition">
+                    Need an invite code?</div>
                 </div>
               </div>
 
@@ -152,7 +148,7 @@
                 <JetLabel for="terms">
                   <div class="flex items-center">
                     <input id="terms" v-model="form.terms" name="terms" type="checkbox"
-                           class="checkbox checkbox-lg checkbox-accent" required/>
+                           class="checkbox checkbox-lg checkbox-info" required/>
                     <div class="ml-2">
                       I agree to the <a :href="route('terms.show')" target="_blank"
                                         class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a>

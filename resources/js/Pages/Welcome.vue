@@ -20,14 +20,20 @@
   <transition name="fade" mode="out-in">
     <div id="topDiv"
          :class="welcomeContainer">
-      <header :class="['headerContainer', { hidden: !isVisible, visible: isVisible }]">
-        <div class="w-full flex flex-row justify-between md:px-6 py-4 welcomeOverlay">
+      <!-- Target div to trigger visibility changes -->
+      <header :class="['headerContainer', { hidden: !isVisibleVideoControls, visible: isVisibleVideoControls }]">
+        <div :class="[{ 'bg-black py-8': hasScrolled }, 'w-full flex flex-row justify-between md:px-6 py-4 welcomeOverlay']">
 
-          <WelcomeBug/>
+          <WelcomeBug />
 
           <div class="flex flex-row flex-wrap justify-center md:justify-end pt-8 lg:pr-6 w-full gap-2">
 
             <div class="flex gap-2">
+              <Button
+                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                  v-if="!$page.props.auth.user" @click="router.visit('/teams')">
+                Browse
+              </Button>
               <Button
                   class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                   v-if="!$page.props.auth.user" @click="router.visit('/news')">
@@ -37,11 +43,6 @@
                   class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                   v-if="!$page.props.auth.user" @click="router.visit('/schedule')">
                 Schedule
-              </Button>
-              <Button
-                  class="hidden h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.auth.user" @click="router.visit('/teams')">
-                Browse
               </Button>
             </div>
             <div class="flex gap-2">
@@ -72,13 +73,20 @@
 
       <div class="">
 
+        <div ref="targetForScroll" class="trigger-div">
+          <!-- This div will trigger the visibility change -->
+        </div>
+
         <div class="welcomeOverlay">
           <div class="relative flex items-top justify-center min-h-screen text-gray-200">
             <div class="flex justify-center items-center h-screen w-screen">
 
-              <WelcomeOverlay v-show="welcomeStore.showOverlay"
+              <WelcomeOverlay v-show="welcomeStore.showOverlay && !welcomeStore.hasScrolled"
                               @watchNow="watchNow"/>
-              <VideoControlsWelcome v-if="!welcomeStore.showOverlay" class="video-controls" :class="{ hidden: !isVisible, visible: isVisible }"/>
+
+              <VideoControlsWelcome v-if="!welcomeStore.showOverlay" class="video-controls"
+                                    :class="[{ 'bg-black py-8 hasScrolled': hasScrolled }, { hidden: !isVisibleVideoControls, visible: isVisibleVideoControls }]"/>
+
 
             </div>
           </div>
@@ -93,7 +101,7 @@
           </div>
 
           <!-- Target div to trigger visibility changes -->
-          <div ref="target" class="trigger-div">
+          <div ref="targetForVideoControls" class="trigger-div">
             <!-- This div will trigger the visibility change -->
           </div>
 
@@ -165,7 +173,10 @@
           <div class="text-2xl">#mediaforabetterworld</div>
         </section>
 
-        <Footer/>
+        <div class="pb-48 bg-gray-900">
+          <Footer/>
+        </div>
+
 
 
       </div>
@@ -243,15 +254,26 @@ let props = defineProps({
 
 import { useIntersectionObserver } from '@vueuse/core';
 
-const target = ref(null);
-const isVisible = ref(true);
+const targetForScroll = ref(null);
+const targetForVideoControls = ref(null);
+const isVisibleVideoControls = ref(true);
+const hasScrolled = ref(true);
 
-const { stop } = useIntersectionObserver(
-    target,
+// useIntersectionObserver(
+//     targetForVideoControls,
+//     ([{ isIntersecting }]) => {
+//       console.log('is intersecting')
+//       isVisibleVideoControls.value = !isIntersecting; // Set isVisible to false when the target is intersecting
+//     }
+// )
+
+useIntersectionObserver(
+    targetForScroll,
     ([{ isIntersecting }]) => {
-      isVisible.value = !isIntersecting; // Set isVisible to false when the target is intersecting
-    },
-);
+      hasScrolled.value = !isIntersecting; // Set isVisible to true when the target is intersecting
+      welcomeStore.hasScrolled = !isIntersecting
+    }
+)
 
 const welcomeContainer = computed(() => ({
   'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-gray-900 bg-opacity-50': welcomeStore.showOverlay,
@@ -375,6 +397,11 @@ const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
   width: 100%;
   z-index: 10;
   transition: opacity 0.5s ease-in-out;
+}
+
+.video-controls.hasScrolled {
+  bottom:0;
+  padding-bottom: 2rem;
 }
 
 .hidden {

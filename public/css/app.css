@@ -8136,6 +8136,10 @@ hr {
   margin-top: 2rem;
 }
 
+.mb-48 {
+  margin-bottom: 12rem;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -10148,6 +10152,11 @@ hr {
   background-color: rgb(66 32 6 / var(--tw-bg-opacity));
 }
 
+.bg-red-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-0 {
   --tw-bg-opacity: 0;
 }
@@ -10853,6 +10862,10 @@ hr {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-48 {
+  padding-bottom: 12rem;
 }
 
 .text-left {

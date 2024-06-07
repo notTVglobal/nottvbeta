@@ -12,7 +12,7 @@
 
     <!-- Video Welcome Controls -->
 
-    <div :class="videoControlsClass">
+    <div :class="videoControlsClass" class="flex flex-wrap gap-4">
       <button
           class="font-bold text-xl md:text-2xl bg-gray-800 rounded-full py-3 px-6 tracking-wider hover:bg-gray-600 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg transition-transform duration-300 ease-in-out"
           @click="videoPlayerStore.fullscreen()">

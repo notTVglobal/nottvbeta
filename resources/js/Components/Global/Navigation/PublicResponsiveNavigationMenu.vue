@@ -63,61 +63,61 @@
               @click="goToWatchPage"
               :href="$route('home')"
               :active="route().current('home')">
-            Watch Now
+            <font-awesome-icon :icon="['fas', 'play']" class="mr-2" /> Watch Now
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('schedule')"
               :active="route().current('schedule')">
-            Schedule
+            <font-awesome-icon :icon="['fas', 'calendar-alt']" class="mr-2" /> Schedule
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('teams.index')"
               :active="route().current('teams.index')">
-            Browse
+            <font-awesome-icon :icon="['fas', 'search']" class="mr-2" /> Browse
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('news.index')"
               :active="route().current('news.index')">
-            News Stories
+            <font-awesome-icon :icon="['fas', 'newspaper']" class="mr-2" /> News Stories
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('news.reporters.index')"
               :active="route().current('news.reporters.index')">
-            Reporters
+            <font-awesome-icon :icon="['fas', 'user-tie']" class="mr-2" /> Reporters
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('public.newsletterSignup')"
               :active="route().current('public.newsletterSignup')">
-            Get Exclusive Access!
+            <font-awesome-icon :icon="['fas', 'gift']" class="mr-2" /> Get Exclusive Access!
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('public.contact')"
               :active="route().current('public.contact')">
-            Contact Us
+            <font-awesome-icon :icon="['fas', 'envelope']" class="mr-2" /> Contact Us
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="`/register`">
-            Register
+            <font-awesome-icon :icon="['fas', 'user-plus']" class="mr-2" /> Register
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="`/login`">
-            Login
+            <font-awesome-icon :icon="['fas', 'sign-in-alt']" class="mr-2" /> Login
           </JetResponsiveNavLink>
 
         </div>

@@ -141,14 +141,14 @@
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/dashboard')"
               :active="appSettingStore.currentPage === 'dashboard'">
-            Dashboard
+            <font-awesome-icon :icon="['fas', 'tachometer-alt']" class="mr-2" /> Dashboard
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/stream')"
               :active="appSettingStore.currentPage === 'stream'">
-            Stream
+            <font-awesome-icon :icon="['fas', 'video']" class="mr-2" /> Stream
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
@@ -156,28 +156,43 @@
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/library')"
               :active="appSettingStore.currentPage === 'library'">
-            My Library
+            <font-awesome-icon :icon="['fas', 'book']" class="mr-2" /> My Library
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/schedule')"
               :active="appSettingStore.currentPage === 'schedule'">
-            Schedule
+            <font-awesome-icon :icon="['fas', 'calendar-alt']" class="mr-2" /> Schedule
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              @click.prevent="router.visit('/newsroom')"
+              @click.prevent="router.visit('/teams')"
+              :active="route().current('teams.index')">
+            <font-awesome-icon :icon="['fas', 'users']" class="mr-2" /> Browse
+          </JetResponsiveNavLink>
+
+          <JetResponsiveNavLink
+              @click="appSettingStore.closeNavDropdown()"
+              @click.prevent="router.visit('/news')"
               :active="appSettingStore.currentPage.startsWith('news') && appSettingStore.currentPage !== 'newsroom'">
-            News
+            <font-awesome-icon :icon="['fas', 'newspaper']" class="mr-2" /> News
+          </JetResponsiveNavLink>
+
+          <JetResponsiveNavLink
+              v-if="userStore.isNewsPerson"
+              @click="appSettingStore.closeNavDropdown()"
+              @click.prevent="router.visit('/newsroom')"
+              :active="appSettingStore.currentPage.startsWith('newsroom')">
+            <font-awesome-icon :icon="['fas', 'building']" class="mr-2" /> Newsroom
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/shows')"
               :active="appSettingStore.currentPage === 'shows'">
-            Shows
+            <font-awesome-icon :icon="['fas', 'tv']" class="mr-2" /> Shows
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
@@ -185,7 +200,7 @@
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/movies')"
               :active="appSettingStore.currentPage === 'movies'">
-            Movies
+            <font-awesome-icon :icon="['fas', 'film']" class="mr-2" /> Movies
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
@@ -193,20 +208,20 @@
               @click.prevent="router.visit('/shop')"
               :active="appSettingStore.currentPage === 'shop'"
               hidden>
-            Shop
+            <font-awesome-icon :icon="['fas', 'shopping-cart']" class="mr-2" /> Shop
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/user/profile')"
               :active="route().current('/user/profile')">
-            Settings
+            <font-awesome-icon :icon="['fas', 'cog']" class="mr-2" /> Settings
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
               v-if="$page.props.user.hasAccount"
               @click="billingPortal">
-            Account
+            <font-awesome-icon :icon="['fas', 'user-circle']" class="mr-2" /> Account
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
@@ -214,7 +229,7 @@
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/training')"
               :active="appSettingStore.currentPage === 'training'">
-            Training
+            <font-awesome-icon :icon="['fas', 'chalkboard-teacher']" class="mr-2" /> Training
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
@@ -222,13 +237,14 @@
               @click="appSettingStore.closeNavDropdown()"
               @click.prevent="router.visit('/videoupload')"
               :active="appSettingStore.currentPage === 'videoupload'">
-            Video Upload
+            <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" /> Video Upload
           </JetResponsiveNavLink>
 
           <!-- Authentication -->
           <JetResponsiveNavLink @click.prevent="logout" class="border-t-0">
-            Log Out
+            <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="mr-2" /> Log Out
           </JetResponsiveNavLink>
+
 
 
           <!--                &lt;!&ndash; Creator Only Links &ndash;&gt;-->
@@ -241,7 +257,7 @@
           <!--                </div>-->
 
           <!-- Admin Only Links -->
-          <div v-if="userStore.isAdmin">
+          <div v-if="userStore.isAdmin" class="bg-red-900">
             <div class="border-t border-1 mt-3 border-gray-300 bg-black block px-4 py-2 text-xs text-gray-400">
               Admin Only Links
             </div>
@@ -250,42 +266,41 @@
                 @click="appSettingStore.closeNavDropdown()"
                 @click.prevent="router.visit('/admin/settings')"
                 :active="route().current('admin.settings')">
-              Admin Settings
+              <font-awesome-icon :icon="['fas', 'cog']" class="mr-2" /> Admin Settings
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
-                @click.prevent="router.visit('/admin/settings' + '?section=firstPlaySettings')"
-            >
-              First Play Settings
+                @click.prevent="router.visit('/admin/settings' + '?section=firstPlaySettings')">
+              <font-awesome-icon :icon="['fas', 'play-circle']" class="mr-2" /> First Play Settings
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
                 @click.prevent="router.visit('/admin/schedule')"
                 :active="route().current('admin.schedule')">
-              Schedule
+              <font-awesome-icon :icon="['fas', 'calendar-alt']" class="mr-2" /> Schedule
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
                 @click.prevent="router.visit('/admin/channels')"
                 :active="route().current('admin.channels')">
-              Channels
+              <font-awesome-icon :icon="['fas', 'tv']" class="mr-2" /> Channels
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
                 @click.prevent="router.visit('/calculations')"
                 :active="route().current('calculations')">
-              Calculations
+              <font-awesome-icon :icon="['fas', 'calculator']" class="mr-2" /> Calculations
             </JetResponsiveNavLink>
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
                 @click.prevent="router.visit('/admin/mistServerApi')"
                 :active="route().current('mistServerApi')">
-              MistServer API
+              <font-awesome-icon :icon="['fas', 'server']" class="mr-2" /> MistServer API
             </JetResponsiveNavLink>
           </div>
 
