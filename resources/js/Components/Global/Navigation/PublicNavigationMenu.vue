@@ -17,9 +17,12 @@
                   <JetNavLink
                   ><Link :href="`/`">Watch Now</Link></JetNavLink>
                 </h3>
+
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
-                  ><Link :href="`/teams`">Browse</Link></JetNavLink>
+                      :href="$route('teams.index')"
+                      :active="route().current('teams.index')">
+                    Browse</JetNavLink>
                 </h3>
 
                 <h3 class="inline-flex items-center relative">
@@ -27,13 +30,6 @@
                       :href="$route('schedule')"
                       :active="route().current('schedule')">
                     Schedule</JetNavLink>
-                </h3>
-
-                <h3 class="inline-flex items-center relative">
-                  <JetNavLink
-                      :href="$route('teams.index')"
-                      :active="route().current('teams.index')">
-                    Browse</JetNavLink>
                 </h3>
 
                 <h3 class="inline-flex items-center relative">

@@ -7,7 +7,7 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-125"
   >
-    <div v-if="welcomeStore.showOverlay===false">
+    <div v-if="welcomeStore.showOverlay===false || welcomeStore.hasScrolled">
       <div class="absolute top-4 lg:top-10 left-5 md:left-20">
         <div class="flex flex-row">
           <div>
@@ -20,7 +20,7 @@
           leave-from-class="opacity-100 scale-100"
           leave-to-class="opacity-0 scale-125"
       >
-      <div v-if="isVisible" class="absolute top-20 md:top-18 mt-20 lg:mt-12 flex flex-col left-5 md:left-20 ">
+      <div v-if="isVisible && !welcomeStore.hasScrolled" class="absolute top-20 md:top-18 mt-20 lg:mt-12 flex flex-col left-5 md:left-20 ">
         <div class="font-semibold text-3xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">Welcome to notTV</div>
         <div class="text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">Independent news, arts and culture.</div>
         <div class="text-2xl font-bold italic text-secondary" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">
@@ -34,11 +34,17 @@
 
 <script setup>
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const welcomeStore = useWelcomeStore()
 
 const isVisible = ref(true)
+
+const props = defineProps({
+  scrolled: Boolean
+})
+
+const hasScrolled = computed(() => props.scrolled)
 
 onMounted(() => {
   isVisible.value = true

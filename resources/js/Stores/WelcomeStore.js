@@ -4,6 +4,7 @@ const initialState = () => ({
     showLogin: Boolean,
     showRegister: Boolean,
     showOverlay: true,
+    hasScrolled: false,
 })
 
 export const useWelcomeStore = defineStore('welcomeStore', {
