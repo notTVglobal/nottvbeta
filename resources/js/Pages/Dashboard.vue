@@ -16,7 +16,7 @@
 
       <NotificationPanel/>
 
-      <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8 mx-2 m-auto text-black">
+      <section class="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-8 mx-2 m-auto text-black">
 
         <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded">
           <MyAssignments/>

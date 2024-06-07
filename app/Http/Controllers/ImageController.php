@@ -326,11 +326,12 @@ class ImageController extends Controller {
 //      Log::error('Image upload validation failed', ['errors' => $errors->toArray()]);
 //      return response()->json(['error' => 'Image upload validation failed.', 'details' => $errors], 422);
 //    }
-    Log::debug($request->all());
+//    Log::debug($request->all());
     try {
       $file = $request->file('image');
       if (!$file->isValid()) {
         Log::error('Uploaded file is not valid.');
+
         return response()->json(['error' => 'The uploaded file is not valid.'], 422);
       }
       $filePath = $file->getPathname();
@@ -342,21 +343,24 @@ class ImageController extends Controller {
         return response()->json(['error' => 'The file must be a valid image (jpeg, png, gif).'], 422);
       }
 
-      Log::info($mimeType);
+//      Log::debug($mimeType);
 
-      if ($request->input('removeExif')) {
+      if ($request->input('removeExif') === true) {
         // Remove all metadata from the image
         $exifResult = shell_exec("exiftool -all= $filePath 2>&1");
-        Log::info("ExifTool result: $exifResult");
+        Log::debug("ExifTool result: $exifResult");
       }
 
       $modelType = $request->input('modelType', null); // Default to null if not provided
       $modelId = $request->input('modelId', null); // Default to null if not provided
 
-      // Authorize the user to edit the model
-      if (!$this->authorizeModel($modelType, $modelId, 'edit')) {
-        Log::error('User is not authorized to edit this model.');
-        return response()->json(['error' => 'Unauthorized.'], 403);
+      // Check if modelType and modelId are not null or empty
+      if (!is_null($modelType) && !is_null($modelId) && $modelType !== '' && $modelId !== '') {
+        // Authorize the user to edit the model
+        if (!$this->authorizeModel($modelType, $modelId, 'edit')) {
+          Log::error('User is not authorized to edit this model.');
+          return response()->json(['error' => 'Unauthorized.'], 403);
+        }
       }
 
       // Retrieve cloud_folder and cdn_endpoint from app_settings
@@ -386,7 +390,7 @@ class ImageController extends Controller {
       CheckImageHashAndHandleDuplicate::dispatch($image, $modelType, $modelId);
 
       // Dynamically update the correct model with the image_id if modelType and modelId are provided
-      if (!is_null($modelType) && !is_null($modelId)) {
+      if (!is_null($modelType) && !is_null($modelId) && $modelType !== '' && $modelId !== '') {
         $this->updateModelWithImageId($modelType, $modelId, $image->id);
       }
 
@@ -396,6 +400,7 @@ class ImageController extends Controller {
       return response()->json(['success' => 'Image uploaded successfully.', 'image' => $image]);
     } catch (\Exception $e) {
       Log::error('Image upload failed', ['exception' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
       return response()->json(['error' => 'An error occurred during image upload. Please try again later.'], 500);
     }
   }
@@ -421,18 +426,18 @@ class ImageController extends Controller {
 
   protected function getValidModelTypes(): array {
     return [
-        'creator' => \App\Models\Creator::class,
-        'team' => \App\Models\Team::class,
-        'show' => \App\Models\Show::class,
-        'showEpisode' => \App\Models\ShowEpisode::class,
-        'newsStory' => \App\Models\NewsStory::class,
-        'newsPerson' => \App\Models\NewsPerson::class,
-        'newsRssFeedItem' => \App\Models\NewsRssFeedItemArchive::class,
-        'movie' => \App\Models\Movie::class,
-        'otherContent' => \App\Models\OtherContent::class,
+        'creator'          => \App\Models\Creator::class,
+        'team'             => \App\Models\Team::class,
+        'show'             => \App\Models\Show::class,
+        'showEpisode'      => \App\Models\ShowEpisode::class,
+        'newsStory'        => \App\Models\NewsStory::class,
+        'newsPerson'       => \App\Models\NewsPerson::class,
+        'newsRssFeedItem'  => \App\Models\NewsRssFeedItemArchive::class,
+        'movie'            => \App\Models\Movie::class,
+        'otherContent'     => \App\Models\OtherContent::class,
         'subscriptionPlan' => \App\Models\SubscriptionPlan::class,
-        'product' => \App\Models\Product::class,
-        'video' => \App\Models\Video::class,
+        'product'          => \App\Models\Product::class,
+        'video'            => \App\Models\Video::class,
     ];
   }
 

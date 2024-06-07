@@ -338,7 +338,7 @@ function watchNow() {
   videoPlayerStore.unMute()
 }
 
-const pageTitle = 'Beta'
+const pageTitle = ''
 const ogUrl = computed(() => `${page.appUrl}`);
 const ogType = computed(() => 'website');
 const ogTitle = computed(() => 'notTV - Community Television Re-invented!');

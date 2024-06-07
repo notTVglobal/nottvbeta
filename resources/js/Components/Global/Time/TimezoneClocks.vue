@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center space-x-8">
+  <div class="flex flex-wrap justify-center items-center space-x-8">
     <div v-for="timezone in timezones" :key="timezone.name" class="text-center">
       <div class="analog-clock" :class="timezone.name">
         <div class="hand hour" :style="hourStyle(timezone.offset)"></div>

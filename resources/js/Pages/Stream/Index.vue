@@ -1,5 +1,5 @@
 <template>
-  <Head title="Stream"/>
+  <Head title=""/>
 </template>
 
 <script setup>
