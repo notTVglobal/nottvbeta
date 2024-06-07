@@ -73,7 +73,7 @@
             Schedule
           </JetResponsiveNavLink>
 
-          <JetResponsiveNavLink hidden
+          <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="$route('teams.index')"
               :active="route().current('teams.index')">

@@ -354,14 +354,47 @@ class ImageController extends Controller {
       $modelType = $request->input('modelType', null); // Default to null if not provided
       $modelId = $request->input('modelId', null); // Default to null if not provided
 
-      // Check if modelType and modelId are not null or empty
-      if (!is_null($modelType) && !is_null($modelId) && $modelType !== '' && $modelId !== '') {
+
+
+      // Log initial values for debugging
+      Log::debug('Initial values from request', [
+          'modelType' => $modelType,
+          'modelId' => $modelId
+      ]);
+
+      // Check if modelType and modelId are set correctly
+      if (is_null($modelType) || is_null($modelId) || $modelType === 'null' || $modelId === 'null' || $modelType === '' || $modelId === '') {
+//        Log::debug('Model type or model ID is null or empty, skipping authorization', [
+//            'modelType' => $modelType,
+//            'modelId' => $modelId
+//        ]);
+      } else {
+//        Log::debug('Both model type and model ID are valid, proceeding with authorization', [
+//            'modelType' => $modelType,
+//            'modelId' => $modelId
+//        ]);
         // Authorize the user to edit the model
         if (!$this->authorizeModel($modelType, $modelId, 'edit')) {
-          Log::error('User is not authorized to edit this model.');
+          Log::error('User is not authorized to edit this model.', [
+              'modelType' => $modelType,
+              'modelId' => $modelId
+          ]);
           return response()->json(['error' => 'Unauthorized.'], 403);
         }
       }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       // Retrieve cloud_folder and cdn_endpoint from app_settings
       $appSettings = AppSetting::where('id', 1)->first(['cloud_folder', 'cdn_endpoint']);

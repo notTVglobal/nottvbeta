@@ -1492,6 +1492,10 @@ Route::get('/live', function () {
   return redirect('/');
 });
 
+Route::get('/browse', function () {
+  return redirect('/teams');
+});
+
 Route::get('/coffee', function () {
   return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });

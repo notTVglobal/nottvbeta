@@ -241,6 +241,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             const currentSourceType = this.videoSourceType
 
             // Reset the player source to force reload
+            videoJs.reset(); // Ensure the player is fully reset before setting a new source
+
+            // Reset the player source to force reload
             videoJs.src({
                 type: currentSourceType,
                 src: currentSource,

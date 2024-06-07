@@ -124,7 +124,7 @@ class HandleInertiaRequests extends Middleware {
         'firstPlay'   => fn() => $firstPlayData,
         'appUrl'      => fn() => config('app.url'),
         'currentPath' => fn() => '/' . $request->path(),
-//        'showHomescreenPopup' => true, // Always show the popup for testing
+        'showHomescreenPopup' => true, // Always show the popup for testing
 //        'showHomescreenPopup' => fn () => $request->session()->get('show_homescreen_popup', false),
         'user'        => function () use ($request) {
           $user = $request->user();
