@@ -6,6 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        <link rel="apple-touch-icon" sizes="180x180" href="/storage/images/apple-touch-icon-180x180.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="/storage/images/apple-touch-icon-167x167.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/storage/images/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/storage/images/apple-touch-icon-120x120.png">
+
         <!-- App Card Properties -->
 {{--        TODO: Create the Apps --}}
 {{--        <meta name="twitter:app:country" content="US">--}}
