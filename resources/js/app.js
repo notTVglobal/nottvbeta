@@ -128,7 +128,8 @@ createInertiaApp({
     progress: {
         delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true,
     },
-    title: (title) => `${title} - ${appName}`,
+    // title: (title) => `${title} - ${appName}`,
+    title: (title) => title ? `${title} - ${appName}` : appName,
     resolve: async name => {
 
         let page = await import(`./Pages/${name}`);
