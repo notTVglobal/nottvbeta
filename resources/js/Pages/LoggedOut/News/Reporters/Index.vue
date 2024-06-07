@@ -1,7 +1,7 @@
 <template>
   <Head :title="`News Reporters`"/>
   <div id="topDiv" ></div>
-  <div class="flex flex-col h-screen bg-gray-900 text-black w-full overflow-x-hidden overflow-y-auto mt-16">
+  <div class="flex flex-col h-screen bg-gray-90 0 text-black w-full overflow-x-hidden overflow-y-auto mt-16">
 
     <header class="place-self-center flex flex-col w-full text-black bg-gray-900">
 
