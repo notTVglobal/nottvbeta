@@ -1676,11 +1676,6 @@ html {
     text-decoration-line: underline;
   }
 
-  .checkbox-accent:hover {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-a,oklch(var(--a)/var(--tw-border-opacity)));
-  }
-
   .checkbox-warning:hover {
     --tw-border-opacity: 1;
     border-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-border-opacity)));
@@ -3344,25 +3339,6 @@ input.tab:checked + .tab-content,
       linear-gradient(-90deg, transparent 80%, var(--chkbg) 80%),
       linear-gradient(0deg, var(--chkbg) 43%, var(--chkfg) 43%, var(--chkfg) 57%, var(--chkbg) 57%);
 }
-.checkbox-accent {
-  --chkbg: var(--fallback-a,oklch(var(--a)/1));
-  --chkfg: var(--fallback-ac,oklch(var(--ac)/1));
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-a,oklch(var(--a)/var(--tw-border-opacity)));
-}
-.checkbox-accent:focus-visible {
-  outline-color: var(--fallback-a,oklch(var(--a)/1));
-}
-.checkbox-accent:checked,
-    .checkbox-accent[checked="true"],
-    .checkbox-accent[aria-checked="true"] {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-a,oklch(var(--a)/var(--tw-border-opacity)));
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-a,oklch(var(--a)/var(--tw-bg-opacity)));
-  --tw-text-opacity: 1;
-  color: var(--fallback-ac,oklch(var(--ac)/var(--tw-text-opacity)));
-}
 .checkbox-warning {
   --chkbg: var(--fallback-wa,oklch(var(--wa)/1));
   --chkfg: var(--fallback-wac,oklch(var(--wac)/1));
@@ -4702,13 +4678,6 @@ details.collapse summary::-webkit-details-marker {
   min-height: 2rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
-  font-size: 0.875rem;
-}
-.btn-md {
-  height: 3rem;
-  min-height: 3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
   font-size: 0.875rem;
 }
 .btn-lg {
@@ -8136,10 +8105,6 @@ hr {
   margin-top: 2rem;
 }
 
-.mb-48 {
-  margin-bottom: 12rem;
-}
-
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -10093,6 +10058,11 @@ hr {
   background-color: rgb(153 27 27 / var(--tw-bg-opacity));
 }
 
+.bg-red-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
+}
+
 .bg-transparent {
   background-color: transparent;
 }
@@ -10150,11 +10120,6 @@ hr {
 .bg-yellow-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(66 32 6 / var(--tw-bg-opacity));
-}
-
-.bg-red-900 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-0 {
@@ -10712,6 +10677,10 @@ hr {
   padding-bottom: 1rem;
 }
 
+.pb-48 {
+  padding-bottom: 12rem;
+}
+
 .pb-5 {
   padding-bottom: 1.25rem;
 }
@@ -10862,10 +10831,6 @@ hr {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pb-48 {
-  padding-bottom: 12rem;
 }
 
 .text-left {

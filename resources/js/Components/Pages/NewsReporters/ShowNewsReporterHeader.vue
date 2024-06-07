@@ -1,6 +1,4 @@
 <template>
-  <PublicNewsNavigationButtons :can="null"/>
-
   <Breadcrumbs :breadcrumbs="[
           { text: 'Reporters', to: '/news/reporters' },
           { text: $page.props.newsPerson.name, to: '' }

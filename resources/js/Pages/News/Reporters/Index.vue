@@ -4,7 +4,7 @@
   <div :class="marginTopClass">
     <PublicNavigationMenu v-if="!userStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
     <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />
-    <div class="h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
+    <div class="min-h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
       <PublicNewsNavigationButtons :can="can"/>
 <!--      <Breadcrumbs :breadcrumbs="[{ text: 'Reporters', to: '' }]" />-->
 

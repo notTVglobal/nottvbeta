@@ -1,9 +1,17 @@
 <template>
   <Head :title="newsPerson.name" />
   <div id="topDiv" ></div>
-  <div class="mt-16">
+  <div class="flex flex-col h-screen bg-gray-50 text-black w-full overflow-x-hidden overflow-y-auto mt-16">
+
+    <header class="place-self-center flex flex-col w-full text-black bg-gray-900">
+
+      <PublicNewsNavigationButtons :can="null"/>
+
+    </header>
+
     <PublicNavigationMenu class="fixed top-0 w-full nav-mask" />
     <PublicResponsiveNavigationMenu />
+
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
 
       <ShowNewsReporterHeader />
@@ -24,6 +32,7 @@ import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/Publi
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import ShowNewsReporter from '@/Components/Pages/NewsReporters/ShowNewsReporter.vue'
 import ShowNewsReporterHeader from '@/Components/Pages/NewsReporters/ShowNewsReporterHeader.vue'
+import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
