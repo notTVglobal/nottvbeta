@@ -20,7 +20,7 @@
   <transition name="fade" mode="out-in">
     <div id="topDiv"
          :class="welcomeContainer">
-      <header class="headerContainer w-full">
+      <header :class="['headerContainer', { hidden: !isVisible, visible: isVisible }]">
         <div class="w-full flex flex-row justify-between md:px-6 py-4 welcomeOverlay">
 
           <WelcomeBug/>
@@ -50,16 +50,20 @@
                   v-if="!$page.props.auth.user" @click="welcomeStore.showLogin = true">
                 Log in
               </Button>
-              <!--            <Button-->
-              <!--                class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
-              <!--                v-if="!$page.props.auth.user" @click="welcomeStore.showRegister = true">-->
-              <!--              &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.auth.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
+<!--                          <Button-->
+<!--                              class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
+<!--                              v-if="!$page.props.auth.user" @click="welcomeStore.showRegister = true">-->
+<!--                            &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.auth.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
 
-              <!--              Register-->
-              <!--            </Button>-->
+<!--                            Register-->
+<!--                          </Button>-->
+<!--              <Button v-if="!$page.props.auth.user"-->
+<!--                      class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
+<!--                      @click="router.visit('register')">Register-->
+<!--              </Button>-->
               <Button v-if="!$page.props.auth.user"
                       class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                      @click="router.visit('register')">Register
+                      @click="welcomeStore.showRegister = true">Register
               </Button>
             </div>
           </div>
@@ -70,12 +74,11 @@
 
         <div class="welcomeOverlay">
           <div class="relative flex items-top justify-center min-h-screen text-gray-200">
-
             <div class="flex justify-center items-center h-screen w-screen">
 
               <WelcomeOverlay v-show="welcomeStore.showOverlay"
                               @watchNow="watchNow"/>
-              <VideoControlsWelcome v-if="!welcomeStore.showOverlay"/>
+              <VideoControlsWelcome v-if="!welcomeStore.showOverlay" class="video-controls" :class="{ hidden: !isVisible, visible: isVisible }"/>
 
             </div>
           </div>
@@ -87,6 +90,11 @@
                class="text-center text-lg md:text-xl font-semibold text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer px-6 md:px-4 py-2 tracking-wide rounded-lg drop-shadow-lg">
             <span class="text-2xl md:text-3xl">Unlock Exclusive Access:</span><br/> <span class="">Subscribe to Our Newsletter for Your Chance to Receive an Invitation Code!</span>
 
+          </div>
+
+          <!-- Target div to trigger visibility changes -->
+          <div ref="target" class="trigger-div">
+            <!-- This div will trigger the visibility change -->
           </div>
 
         </section>
@@ -193,8 +201,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watchEffect, computed, onBeforeUnmount, onBeforeMount, onUnmounted, provide, watch } from 'vue'
-import videojs from 'video.js'
+import { onMounted, ref, computed, onBeforeUnmount, onBeforeMount, watch, watchEffect } from 'vue'
 
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -208,7 +215,6 @@ import Login from '@/Components/Pages/Welcome/Login'
 import VideoControlsWelcome from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsWelcome'
 import Footer from '@/Components/Global/Layout/Footer'
 import { router } from '@inertiajs/vue3'
-import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 import { usePage } from '@inertiajs/vue3'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 
@@ -234,6 +240,18 @@ let props = defineProps({
   showRegister: Boolean,
   user: Object,
 })
+
+import { useIntersectionObserver } from '@vueuse/core';
+
+const target = ref(null);
+const isVisible = ref(true);
+
+const { stop } = useIntersectionObserver(
+    target,
+    ([{ isIntersecting }]) => {
+      isVisible.value = !isIntersecting; // Set isVisible to false when the target is intersecting
+    },
+);
 
 const welcomeContainer = computed(() => ({
   'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-gray-900 bg-opacity-50': welcomeStore.showOverlay,
@@ -267,12 +285,30 @@ let reloadPage = () => {
 //   }
 // });
 
+// Function to send a ping request to the server
+function pingServer() {
+  fetch('/api/ping', {
+    method: 'GET',
+    credentials: 'same-origin'
+  })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Session refreshed:', data);
+      })
+      .catch(error => {
+        console.error('Error refreshing session:', error);
+      });
+}
+
+// Ping the server every 10 minutes (600000 milliseconds)
+setInterval(pingServer, 600000);
 
 onBeforeMount(() => {
   reloadPage()
 })
 
 onMounted(() => {
+
   if (flash.value.error) {
     errorMessage.value = flash.value.error
     document.getElementById('flashErrorModal').showModal()
@@ -296,6 +332,7 @@ onBeforeUnmount(() => {
   appSettingStore.currentPage = ''
 })
 
+
 function watchNow() {
   welcomeStore.showOverlay = false
   videoPlayerStore.unMute()
@@ -316,8 +353,38 @@ const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
 
 
 <style scoped>
-.headerContainer {
+/* Buttons and WelcomeBug fade transition */
+.welcomeOverlay,
+.welcomeBug {
   z-index: 500;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.headerContainer {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 20;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Video controls fixed at the bottom */
+.video-controls {
+  position: fixed;
+  bottom: 4rem;
+  width: 100%;
+  z-index: 10;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -327,4 +394,9 @@ const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+
+
+
+
 </style>

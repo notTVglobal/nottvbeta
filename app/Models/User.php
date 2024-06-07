@@ -52,7 +52,8 @@ class User extends Authenticatable implements MustVerifyEmail {
       'cookie_consent_at',
       'cookie_consent_expires_at',
       'is_banned',
-      'ban_expires_at'
+      'ban_expires_at',
+      'logins_count'
   ];
 
   /**
@@ -73,13 +74,13 @@ class User extends Authenticatable implements MustVerifyEmail {
    * @var array
    */
   protected $casts = [
-      'email_verified_at' => 'datetime',
-      'last_login_at'     => 'datetime',
-      'terms_agreed_at'   => 'datetime',
+      'email_verified_at'         => 'datetime',
+      'last_login_at'             => 'datetime',
+      'terms_agreed_at'           => 'datetime',
       'cookie_consent_expires_at' => 'datetime',
-      'cookie_consent_at' => 'datetime',
-      'is_banned' => 'boolean',
-      'ban_expires_at' => 'datetime',
+      'cookie_consent_at'         => 'datetime',
+      'is_banned'                 => 'boolean',
+      'ban_expires_at'            => 'datetime',
   ];
 
 //    public function setPasswordAttribute($value)
@@ -116,11 +117,11 @@ class User extends Authenticatable implements MustVerifyEmail {
   protected static function booted(): void {
     static::created(function ($user) {
       \App\Models\UserVideoSetting::create([
-          'user_id' => $user->id,
+          'user_id'                => $user->id,
           'last_playback_position' => 0,
-          'volume_setting' => 1.0,
-          'playback_speed' => 1.0,
-          'additional_settings' => json_encode([]),
+          'volume_setting'         => 1.0,
+          'playback_speed'         => 1.0,
+          'additional_settings'    => json_encode([]),
       ]);
     });
   }
@@ -289,13 +290,11 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->hasMany(NewsRssFeedItemArchive::class, 'saved_by_user_id');
   }
 
-  public function sentNewsPersonMessages(): HasMany
-  {
+  public function sentNewsPersonMessages(): HasMany {
     return $this->hasMany(NewsPersonMessage::class, 'sender_id');
   }
 
-  public function sentCreatorMessages(): HasMany
-  {
+  public function sentCreatorMessages(): HasMany {
     return $this->hasMany(CreatorMessage::class, 'sender_id');
   }
 
