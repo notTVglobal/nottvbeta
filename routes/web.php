@@ -341,6 +341,10 @@ Route::middleware([
     'verified.after.first.login'
 ])->group(function () {
 
+  Route::post('/clear-popup-session', function () {
+    Session::forget('show_homescreen_popup');
+//    return response()->json(['status' => 'success']);
+  })->name('clear.popup.session');
 
   Route::get('/externalLink', function () {
     return Inertia::render('ExternalLink');
