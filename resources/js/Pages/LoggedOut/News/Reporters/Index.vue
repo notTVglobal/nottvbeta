@@ -1,11 +1,19 @@
 <template>
   <Head :title="`News Reporters`"/>
   <div id="topDiv" ></div>
-  <div class="mt-16">
-    <PublicNavigationMenu class="fixed top-0 w-full nav-mask"/>
-    <PublicResponsiveNavigationMenu />
-    <div class="h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
+  <div class="flex flex-col h-screen bg-gray-90 0 text-black w-full overflow-x-hidden overflow-y-auto mt-16">
+
+    <header class="place-self-center flex flex-col w-full text-black bg-gray-900">
+
       <PublicNewsNavigationButtons :can="null"/>
+
+    </header>
+
+    <PublicNavigationMenu class="fixed top-0 w-full nav-mask" />
+    <PublicResponsiveNavigationMenu />
+
+
+    <div class="min-h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
 
       <div class="text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">News Reporters</div>
 
