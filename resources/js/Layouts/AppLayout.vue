@@ -31,6 +31,12 @@
           :user="user"/>
 
       <!-- Notifications -->
+      <!-- Popup Notification -->
+      <AddWebAppPopupNotification
+          v-if="showHomescreenPopup"
+          :showPopup="showHomescreenPopup"
+          @close="closePopup"
+      />
       <CookieBanner/>
       <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
@@ -81,6 +87,8 @@ import CookieBanner from '@/Components/Global/Banners/CookieBanner.vue'
 import ConfirmNotificationModal from '@/Components/Global/Modals/ConfirmNotificationModal.vue'
 import SocialSharingModal from '@/Components/Global/Modals/SocialSharingModal.vue'
 import useEchoListeners from '@/Utilities/EchoListeners'
+import AddWebAppPopupNotification from '@/Components/Global/Popups/AddWebAppPopupNotification.vue'
+import { router, usePage } from '@inertiajs/vue3'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()
@@ -98,6 +106,8 @@ let isStreamPage = ref()
 let showLogin = ref(false)
 let reloadVideoMainPlayer = 0
 
+const page = usePage().props;
+
 let props = defineProps({
   user: Object,
 })
@@ -106,6 +116,15 @@ let props = defineProps({
 // this could change to stop listening
 // in the future, or it can listen for
 // schedule updates.
+
+
+const showHomescreenPopup = ref(page.showHomescreenPopup);
+
+const closePopup = () => {
+  showHomescreenPopup.value = false;
+  // Clear the session variable after showing the popup
+  router.post('/clear-popup-session');
+};
 
 const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
 
