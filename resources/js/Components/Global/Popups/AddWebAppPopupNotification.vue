@@ -1,9 +1,9 @@
 <template>
-  <div v-if="showPopup" class="popup">
+  <div v-if="showPopup" class="popup" @click.self="closePopup">
     <div class="popup-overlay"></div>
-    <div class="popup-content border border-white">
+    <div class="popup-content border border-white scrollbar-custom dark:scrollbar-custom-dark">
       <span class="close" @click="closePopup">&times;</span>
-      <h2 class="flex flex-wrap justify-center items-center">Add <img src="/storage/images/logo_white.svg" class="w-20 h-auto"> to Your Home Screen</h2>
+      <h2 class="flex flex-wrap justify-center items-center">Add <img :src="logoSrc" class="w-20 h-auto"> to Your Home Screen</h2>
       <p class="mt-2">
         Experience notTV like never before by adding it to your home screen. This allows you to quickly access our
         platform, bypass censorship, and enjoy a seamless user experience.
@@ -73,6 +73,7 @@
 
 <script setup>
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   showPopup: {
@@ -86,6 +87,26 @@ const emit = defineEmits(['close'])
 const closePopup = () => {
   emit('close')
 }
+
+const logoSrc = computed(() => {
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? '/storage/images/logo_white.svg'
+      : '/storage/images/logo_black_311.png';
+});
+
+const handleKeyDown = (event) => {
+  if (event.key === 'Escape') {
+    closePopup();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown);
+});
 </script>
 
 <style scoped>
@@ -121,9 +142,11 @@ body {
 
 .popup-content {
   padding: 30px;
+  background-color: whitesmoke;
   border-radius: 10px;
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
   text-align: left;
+  color: ;
   max-width: 500px;
   width: 100%;
   max-height: 80vh; /* Ensure the popup height does not exceed the viewport height */
@@ -137,7 +160,7 @@ body {
   right: 10px;
   font-size: 25px;
   cursor: pointer;
-  color: white;
+  color: black;
   transition: color 0.2s;
 }
 
@@ -153,6 +176,7 @@ body {
 
 .popup p {
   font-size: 1em;
+  color: #202124;
 }
 
 .popup ol {
@@ -161,6 +185,7 @@ body {
 
 .popup ol li {
   margin-bottom: 15px;
+  color: #202124;
 }
 
 .instruction-image {
@@ -214,6 +239,11 @@ body {
   .popup p {
     color: #ffffff;
   }
+
+  .popup ol li {
+    color: #ffffff;
+  }
+
 
   .popup .close {
     color: #bbbbbb;
