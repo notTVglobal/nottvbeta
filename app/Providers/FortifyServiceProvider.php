@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\LoginResponse;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
@@ -19,9 +20,8 @@ class FortifyServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-        //
+    public function register(): void {
+      $this->app->singleton(\Laravel\Fortify\Contracts\LoginResponse::class, LoginResponse::class);
     }
 
     /**
@@ -29,11 +29,15 @@ class FortifyServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot() {
+    public function boot(): void {
       Fortify::createUsersUsing(CreateNewUser::class);
       Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
       Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
       Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+      Fortify::loginView(function () {
+        return view('auth.login');
+      });
 
       RateLimiter::for('login', function (Request $request) {
         $email = (string) $request->email;
@@ -48,7 +52,6 @@ class FortifyServiceProvider extends ServiceProvider
       Fortify::twoFactorChallengeView(function () {
         return view('auth.two-factor-challenge');
       });
-
 
     }
 }

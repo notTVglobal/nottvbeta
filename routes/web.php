@@ -105,7 +105,11 @@ Route::get('overlays/stream-preview', function () {
   return Inertia::render('Stream/StreamPreview');
 })->name('stream.preview');
 
-Route::get('/', [WelcomeController::class, 'index'])->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home')->middleware('refresh.session');
+
+Route::get('/api/ping', function () {
+  return response()->json(['message' => 'Session refreshed']);
+});
 
 Route::get('/send-mail', function () {
   Mail::to('test@test.com')->queue(new VerifyMail());
@@ -334,7 +338,7 @@ Route::middleware([
     'auth:sanctum',
     'update.last_login',
     config('jetstream.auth_session'),
-    'verified',
+    'verified.after.first.login'
 ])->group(function () {
 
 
