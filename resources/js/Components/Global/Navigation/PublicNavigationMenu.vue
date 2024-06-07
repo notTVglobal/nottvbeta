@@ -29,18 +29,13 @@
                     Schedule</JetNavLink>
                 </h3>
 
-                <h3 class="hidden inline-flex items-center relative">
+                <h3 class="inline-flex items-center relative">
                   <JetNavLink
-                      :href="$route('schedule')"
+                      :href="$route('teams.index')"
                       :active="route().current('teams.index')">
                     Browse</JetNavLink>
                 </h3>
 
-<!--                <h3 class="inline-flex items-center relative">-->
-<!--                  <JetNavLink-->
-<!--                  ><Link :href="`/schedule`">-->
-<!--                    Schedule</Link></JetNavLink>-->
-<!--                </h3>-->
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
                       :href="$route('news.index')"

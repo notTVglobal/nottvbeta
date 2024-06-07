@@ -39,22 +39,24 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import { ref } from 'vue'
-import { useNotificationStore } from '@/Stores/NotificationStore'
 
-const notificationStore  = useNotificationStore()
-
-let props = defineProps({
-  // image: Object,
+const props = defineProps({
   name: String,
   metadataKey: String,
   metadataValue: String,
-  modelType: String,
-  modelId: Number,
+  modelType: {
+    type: String,
+    default: null
+  },
+  modelId: {
+    type: Number,
+    default: null
+  },
   maxSize: String,
   fileTypes: String,
 })
 
-const myFiles = ref([''])
+// const myFiles = ref([''])
 
 const emit = defineEmits(['reloadImage', 'imageUploaded'])
 
@@ -70,22 +72,6 @@ const maxSize = ref('30MB')
 const fileTypes = ref(['image/png', 'image/jpeg'])
 // const modelType = 'yourModelType'; // Replace with your actual model type
 // const modelId = 'yourModelId'; // Replace with your actual model ID
-
-// Get the CSRF token from the meta tag
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-
-const serverOptions = ref({
-  process: {
-    url: `/api/image-upload?modelType=${props.modelType}&modelId=${props.modelId}&removeExif=${removeExif.value}`,
-    method: 'POST',
-    withCredentials: false,
-    // headers: {},
-    onload: (response) => response,
-    // onload: (response) => response.key,
-    // onerror: (response) => response.data,
-  },
-})
-
 
 function filepondInitialized() {
   console.log('Filepond is ready!')
