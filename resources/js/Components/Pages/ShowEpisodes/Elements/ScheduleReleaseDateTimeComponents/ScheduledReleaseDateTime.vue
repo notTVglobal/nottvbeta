@@ -33,9 +33,11 @@ import DateTimePickerSelect from '@/Components/Global/Calendar/DateTimePickerSel
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+dayjs.extend(isSameOrAfter)
 
 const showEpisodeStore = useShowEpisodeStore()
 const userStore = useUserStore()
@@ -56,7 +58,7 @@ const handleScheduledDateTime = (newDate) => {
   console.log('current date: ' + userStore.userCurrentTime)
 
   // if release dateTime is in the past, alert and return
-  if (newDateInUserTz < userStore.userCurrentTime) {
+  if (dayjs(newDateInUserTz).isBefore(dayjs(userStore.userCurrentTime))) {
     notificationStore.setGeneralServiceNotification('Alert', 'The scheduled date and time is in the past! Please select a date/time in the future.')
   } else {
     // else proceed
