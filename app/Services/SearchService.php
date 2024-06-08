@@ -15,6 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SearchService {
 
@@ -27,7 +28,8 @@ class SearchService {
    * @return AnonymousResourceCollection
    */
 
-  public function searchShowEpisodes(string $modelType, $id, string $query): AnonymousResourceCollection {
+  public function searchShowEpisodes(string $modelType, $id, string $query): AnonymousResourceCollection
+  {
     // Define cache keys based on the model type and ID
     $cacheKey = "{$modelType}_episodes_{$id}";
 
@@ -35,14 +37,14 @@ class SearchService {
     $episodes = Cache::remember($cacheKey, 300, function () use ($modelType, $id) {
       if ($modelType === 'team') {
         $team = Team::with(['shows.showEpisodes' => function ($query) {
-          $query->where('show_episode_status_id', [6, 7, 8])  // Filter for scheduled, published, or archived episodes
+          $query->whereIn('show_episode_status_id', [6, 7, 8])  // Filter for scheduled, published, or archived episodes
           ->with('image.appSetting');
         },
             'shows.category', 'shows.subCategory', 'shows.image.appSetting'])->find($id);
         return $team ? $team->shows->flatMap->showEpisodes : collect();
       } elseif ($modelType === 'show') {
         $show = Show::with(['showEpisodes' => function ($query) {
-          $query->where('show_episode_status_id', [6, 7, 8])  // Filter for scheduled, published, or archived episodes
+          $query->whereIn('show_episode_status_id', [6, 7, 8])  // Filter for scheduled, published, or archived episodes
           ->with('image.appSetting');
         },
             'category', 'subCategory', 'image.appSetting'])->find($id);
@@ -53,8 +55,8 @@ class SearchService {
 
     // Apply query filtering on the cached data
     $filteredEpisodes = $episodes->filter(function ($episode) use ($query) {
-      return str_contains(strtolower($episode->name), strtolower($query)) ||
-          str_contains(strtolower($episode->description), strtolower($query));
+      return Str::contains(strtolower($episode->name), strtolower($query)) ||
+          Str::contains(strtolower($episode->description), strtolower($query));
     });
 
     // Sort globally by date across all fetched episodes
@@ -64,7 +66,7 @@ class SearchService {
       return $dateB <=> $dateA;
     });
 
-//    Log::debug('Episodes fetched', ['Model Type' => $modelType, 'ID' => $id, 'Count' => $filteredEpisodes->count()]);
+    // Log::debug('Episodes fetched', ['Model Type' => $modelType, 'ID' => $id, 'Count' => $filteredEpisodes->count()]);
     return ShowEpisodeResource::collection($sortedEpisodes->values()->all());
   }
 
