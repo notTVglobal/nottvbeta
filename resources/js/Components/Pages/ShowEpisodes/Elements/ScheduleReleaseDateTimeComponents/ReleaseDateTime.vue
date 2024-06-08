@@ -36,9 +36,11 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import { ref } from 'vue'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+dayjs.extend(isSameOrAfter)
 
 const showEpisodeStore = useShowEpisodeStore()
 const userStore = useUserStore()
@@ -60,7 +62,7 @@ const handleReleaseDateTime = (newDate) => {
   console.log('date converted to user time: ' + newDateInUserTz)
   console.log('current date: ' + userStore.userCurrentTime)
   // if release dateTime is in the future, alert and return
-  if (newDateInUserTz > userStore.userCurrentTime) {
+  if (dayjs(newDateInUserTz).isAfter(dayjs(userStore.userCurrentTime))) {
     notificationStore.setGeneralServiceNotification('Alert', 'The selected release date and time is in the future! Please select a date/time in the past.')
 
   } else {
