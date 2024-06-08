@@ -9,7 +9,7 @@
     </div>
     <div class="episode-info">
       <h3 class="text-center text-white hover:text-blue-400 transition-colors duration-300">{{ truncateText(result.name, 50) }}</h3>
-      <p class="text-center text-gray-300"><span v-html="truncateText(result.description, 50)"/></p>
+      <p class="text-center text-gray-300"><span v-html="truncateText(result.description, 100)"/></p>
       <div class="flex flex-row flex-wrap justify-center gap-2 mt-2">
         <ConvertDateTimeToTimeAgo
             v-if="timeZoneConvertedDateTime"

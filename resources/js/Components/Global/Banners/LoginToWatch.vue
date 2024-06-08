@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!$page.props.auth.user" class="mt-8 border border-yellow-600 rounded-lg p-8">
+  <div v-if="!$page.props.auth.user" class="mt-8 border border-yellow-600 rounded-lg p-8 mx-10 text-center">
     <div class="block">
       <h2 class="text-2xl font-bold mb-4">Join the Community</h2>
       <p class="text-lg mb-6">

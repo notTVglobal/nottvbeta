@@ -39,13 +39,14 @@
               :dateTime="episode.scheduled_release_dateTime"
               :class="`text-green-400 mt-2`"
           />
+          <!-- Category and Subcategory Section -->
+          <div class="flex flex-col mt-4  items-center xl:items-start text-center xl:text-left w-full">
+            <span class="text-lg uppercase tracking-wider text-yellow-700">{{ show?.category?.name }}</span>
+            <span class="text-sm tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
+          </div>
         </div>
+        <ShareButton :model="episode" class="mt-4"/>
 
-        <!-- Category and Subcategory Section -->
-        <div class="flex flex-col mt-4 p-4 items-center xl:items-start text-center xl:text-left w-full">
-          <span class="text-lg uppercase tracking-wider text-yellow-700">{{ show?.category?.name }}</span>
-          <span class="text-sm tracking-wide text-yellow-500">{{ show?.subCategory?.name }}</span>
-        </div>
       </div>
     </div>
   </div>
@@ -56,6 +57,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
+import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 
 const userStore = useUserStore()
 
