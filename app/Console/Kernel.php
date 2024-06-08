@@ -25,22 +25,22 @@ class Kernel extends ConsoleKernel {
     $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
     $schedule->command('images:delete-queued')->hourly();
-    $schedule->command('fetch:rssFeeds')->hourly();
-    $schedule->command('archive:rssFeeds')->hourly();
+    $schedule->command('fetch:rss-feeds')->hourly();
+    $schedule->command('archive:rss-feeds')->hourly();
 //    $schedule->command('schedule:check-and-update-channels')->everyThirtyMinutes();
-    $schedule->command('schedule:update')->everyThirtyMinutes();
+    $schedule->command('update:schedule')->everyThirtyMinutes();
 
     // Purge cache files older than 1 hour every hour
     $schedule->call(function () {
       app(ScheduleService::class)->purgeOldCacheFiles(1);
     })->hourly();
 
-    $schedule->command('purge:rssFeed')->daily();
+    $schedule->command('purge:rss-feeds')->daily();
     $schedule->command('expire:inviteCodes')->daily();
     $schedule->command('clamav:scan')->dailyAt('9:00'); // 9am UTC is 2am PDT or 3am PST
 
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
-    $schedule->command('schedule:purge')->daily();
+    $schedule->command('purge:schedule')->daily();
   }
 
   /**
