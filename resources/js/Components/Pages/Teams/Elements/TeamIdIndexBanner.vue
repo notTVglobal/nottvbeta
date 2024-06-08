@@ -1,17 +1,26 @@
 <template>
+  <Transition
+      enter-from-class="opacity-0 transform translate-x-full"
+      enter-to-class="opacity-100 transform translate-x-0"
+      enter-active-class="transition duration-300"
+      leave-active-class="transition duration-200"
+      leave-from-class="opacity-100 transform translate-x-0"
+      leave-to-class="opacity-0 transform translate-x-full"
+  >
+    <div>
   <div v-if="teamStore.nextBroadcast || team.public_message"
        class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
     <div
-        class="flex flex-col md:flex-row bg-yellow-300 dark:bg-gray-700 w-full py-6 text-center align-middle rounded-lg shadow-lg">
+        class="flex flex-col md:flex-row bg-gray-600 dark:bg-gray-700 border border-gray-900 w-full py-6 text-center align-middle rounded-lg shadow-lg">
       <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
         <div v-if="teamStore.nextBroadcast" class="px-4">
-          <p class="uppercase font-bold tracking-wider text-gray-800 dark:text-gray-200">
+          <p class="uppercase font-bold tracking-wider text-gray-400 dark:text-gray-200">
             Next Broadcast
           </p>
-          <p class="text-lg text-gray-800 dark:text-gray-200">
+          <p class="text-lg text-gray-200 dark:text-gray-200">
             {{ formattedDate }}
           </p>
-          <p class="text-lg text-gray-800 dark:text-gray-200">
+          <p class="text-lg text-gray-200 dark:text-gray-200">
             {{ formattedTime }} {{ userStore.timezoneAbbreviation }}
           </p>
           <!-- Enhanced broadcast name display -->
@@ -26,7 +35,7 @@
       </div>
       <div v-if="teamStore.nextBroadcast" class="flex flex-col md:w-2/3 justify-center items-center font-semibold px-4">
         <div v-if="team.public_message"
-             class="text-lg md:text-xl leading-relaxed font-medium text-gray-800 dark:text-gray-200 p-3 mb-4 rounded">
+             class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 mb-4 rounded">
           <span v-html="team.public_message"/>
         </div>
         <div class="w-20 md:border-t border-gray-400 dark:border-gray-600">
@@ -75,6 +84,8 @@
   <!--      </div>-->
   <!--    </div>-->
   <!--  </div>-->
+    </div>
+  </Transition>
 </template>
 
 <script setup>

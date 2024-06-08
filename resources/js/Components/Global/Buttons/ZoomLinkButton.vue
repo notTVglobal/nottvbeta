@@ -1,6 +1,6 @@
 <template>
   <div class="space-x-4">
-    <p class="text-lg md:text-xl leading-relaxed font-medium text-gray-800 dark:text-gray-200 p-3 rounded">
+    <p class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 rounded">
       <span v-if="!isBroadcastOpen">Join the next broadcast!</span>
       <span v-else>Join the broadcast!</span>
     </p>
