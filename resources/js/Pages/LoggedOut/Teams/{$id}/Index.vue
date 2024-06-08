@@ -29,7 +29,7 @@
       <div class="flex flex-col mx-auto justify-center max-w-7xl">
 
         <TeamIdIndexHeader/>
-        <TeamIdIndexBanner/>
+        <TeamIdIndexBanner v-show="show"/>
 
         <div class="flex w-full justify-center mt-2 mb-8">
           <div class="max-w-lg text-center">
@@ -62,7 +62,7 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3'
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
@@ -111,6 +111,14 @@ const scrollToTop = () => {
   }
 }
 scrollToTop() // Optionally scroll to top when the component mounts
+
+const show = ref(false);
+
+onMounted(() => {
+  setTimeout(() => {
+    show.value = true;
+  }, 2000); // 2 seconds
+});
 
 
 onMounted(() => {
