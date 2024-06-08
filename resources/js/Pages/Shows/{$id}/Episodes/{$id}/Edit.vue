@@ -56,6 +56,8 @@
 
                     <CreateEpisodeSetEpisodeNumber :errors="form.errors"/>
 
+                    <CreateEpisodeScheduleReleaseDate :episode="episode" :can="can" :errors="form.errors"/>
+
 
                     <CreateEpisodeSetDescription :errors="form.errors" :description="episode.description"/>
 
@@ -144,6 +146,8 @@ import CreateEpisodeChangeImage from '@/Components/Pages/ShowEpisodes/Elements/C
 import EditEpisodeShowInfo from '@/Components/Pages/ShowEpisodes/Elements/EditEpisodeShowInfo.vue'
 import EditEpisodeVideoContainer from '@/Components/Pages/ShowEpisodes/Elements/EditEpisodeVideoContainer.vue'
 import CreateEpisodeUploadVideo from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeUploadVideo.vue'
+import CreateEpisodeScheduleReleaseDate
+  from '@/Components/Pages/ShowEpisodes/Elements/CreateEpisodeScheduleReleaseDate.vue'
 
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';

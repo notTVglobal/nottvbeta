@@ -1391,8 +1391,12 @@ class ShowsController extends Controller {
         $formattedUtcDatetime = $carbonDatetime->utc()->format('Y-m-d H:i:s');
 
       } else if ($newStatusId === 7) { // 7 is 'published'
-        $releaseDateTime = Carbon::now()->format('Y-m-d H:i:s');
-        $releaseYear = Carbon::now()->year;
+        $now = Carbon::now();
+        $minutes = $now->minute;
+        $roundedMinutes = $minutes >= 30 ? 30 : 0;
+
+        $releaseDateTime = $now->minute($roundedMinutes)->second(0)->millisecond(0)->format('Y-m-d H:i:s');
+        $releaseYear = $now->year;
         $isPublished = 1;
       }
 

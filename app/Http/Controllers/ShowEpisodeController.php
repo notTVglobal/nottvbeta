@@ -142,15 +142,10 @@ class ShowEpisodeController extends Controller {
       // 'youtube_url'         => 'active_url', // Commented out
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
         'copyrightYear'       => [
-            'sometimes',
+            'required',
             'integer',
-            'min:1900',
+            'min:1800',
             'max:' . date('Y'),
-            function ($attribute, $value, $fail) use ($request) {
-              if ($request->input('creative_commons_id') != 8 && !$value) {
-                $fail('The copyright year is required when not Public Domain.');
-              }
-            }
         ],
 
     ];
@@ -165,16 +160,16 @@ class ShowEpisodeController extends Controller {
         'creative_commons_id.integer'  => 'The Creative Commons ID must be an integer.',
         'creative_commons_id.exists'   => 'The selected Creative Commons ID is invalid.',
         'copyrightYear.integer'        => 'The copyright year must be an integer.',
-        'copyrightYear.required'       => 'The copyright year is required when not Public Domain.',
+        'copyrightYear.required'       => 'The copyright year is required.',
     ];
 
     // Create a validator instance
     $validator = Validator::make($request->all(), $rules, $messages);
 
     // Apply conditional validation for copyrightYear
-    $validator->sometimes('copyrightYear', 'required|integer|min:1900|max:' . date('Y'), function ($input) {
-      return $input->creative_commons_id != 8;
-    });
+//    $validator->sometimes('copyrightYear', 'required|integer|min:1900|max:' . date('Y'), function ($input) {
+//      return;
+//    });
 
 
     // Perform validation
@@ -231,7 +226,7 @@ class ShowEpisodeController extends Controller {
       $showEpisode->notes = e($validatedData['notes']);
       $showEpisode->release_year = Carbon::now()->format('Y');
       // Set copyrightYear to null if it's not required
-      $showEpisode->copyrightYear = $validatedData['creative_commons_id'] == 8 ? null : e($validatedData['copyrightYear']);
+      $showEpisode->copyrightYear = e($validatedData['copyrightYear']);
       $showEpisode->creative_commons_id = $validatedData['creative_commons_id'];
       $showEpisode->video_embed_code = e($validatedData['video_embed_code']);
 
@@ -517,15 +512,15 @@ class ShowEpisodeController extends Controller {
 
   public function manage(Show $show, ShowEpisode $showEpisode) {
 
-    // convert release dateTime to user's timezone
-    if ($showEpisode->release_dateTime) {
-      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-    }
-
-    // convert scheduled_release dateTime to user's timezone
-    if ($showEpisode->scheduled_release_dateTime) {
-      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
-    }
+//    // convert release dateTime to user's timezone
+//    if ($showEpisode->release_dateTime) {
+//      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
+//    }
+//
+//    // convert scheduled_release dateTime to user's timezone
+//    if ($showEpisode->scheduled_release_dateTime) {
+//      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+//    }
 
 //    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
@@ -547,9 +542,9 @@ class ShowEpisodeController extends Controller {
             'copyrightYear' => $show->created_at->format('Y'),
         ],
         'team'              => [
-            'name' => $show->team->name,
-            'slug' => $show->team->slug,
-            'image'              => $show->team->image ? (new ImageResource($show->team->image))->resolve() : null,
+            'name'  => $show->team->name,
+            'slug'  => $show->team->slug,
+            'image' => $show->team->image ? (new ImageResource($show->team->image))->resolve() : null,
         ],
         'episode'           => [
             'id'                         => $showEpisode->id,
@@ -562,9 +557,9 @@ class ShowEpisodeController extends Controller {
             'episode_number'             => $showEpisode->episode_number,
             'status'                     => $showEpisode->showEpisodeStatus,
             'release_year'               => $showEpisode->release_year ?? null,
-            'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
-            'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
-            'copyrightYear'              => $showEpisode->copyrightYear ?? null,
+            'release_dateTime'           => $showEpisode->release_dateTime ?? null,
+            'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime ?? null,
+            'copyright_year'              => $showEpisode->copyrightYear ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
             'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
@@ -633,8 +628,8 @@ class ShowEpisodeController extends Controller {
             'episode_number'             => $showEpisode->episode_number,
             'status'                     => $showEpisode->showEpisodeStatus,
             'release_year'               => $showEpisode->release_year ?? null,
-            'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
-            'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
+            'release_dateTime'           => $showEpisode->release_dateTime ?? null,
+            'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime ?? null,
             'copyright_year'             => $showEpisode->copyrightYear ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'mist_stream_id'             => $showEpisode->mist_stream_id,
@@ -754,7 +749,8 @@ class ShowEpisodeController extends Controller {
     ]);
 
     // Sanitize the name field
-    $validatedData['name'] = e($validatedData['name']);
+    $processedName = strip_tags($validatedData['name']);
+
     // Sanitize the episode_number field
     // Sanitize the episode_number field if it exists
     if (array_key_exists('episode_number', $validatedData)) {
@@ -795,58 +791,25 @@ class ShowEpisodeController extends Controller {
       }
     }
 
-
-//        $scheduledDateTime = $request->input('scheduled_release_dateTime');
-//        $releaseDateTime = $request->input('release_dateTime');
-//
-//        // Create a Carbon instance from the datetime string
-//        $carbonScheduledDatetime = \Illuminate\Support\Carbon::parse($scheduledDateTime);
-//        $carbonReleaseDatetime = \Illuminate\Support\Carbon::parse($releaseDateTime);
-//
-//        // Convert to UTC
-//        $utcScheduledDatetime = $carbonScheduledDatetime->utc();
-//        $utcReleaseDatetime = $carbonReleaseDatetime->utc();
-//
-//        // Format $utcDatetime as a string in ISO 8601 format:
-//        $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
-//        $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
-
-    $formattedScheduledUtcDatetime = null;
-    $formattedReleaseUtcDatetime = null;
     $releaseYear = null;
 
     Log::channel('custom_error')->info('episode name: ' . $request->name);
     Log::channel('custom_error')->info('release date in: ' . $request->release_dateTime);
     Log::channel('custom_error')->info('scheduled date in: ' . $request->scheduled_release_dateTime);
 
-//        function formatDateForMySQL($dateTimeString) {
-//            // Parse the datetime string into a Carbon instance, assuming it's in ISO 8601 format
-//            $carbonDateTime = Carbon::parse($dateTimeString);
-//            Log::channel('custom_error')->info('carbon parsed date: '.$carbonDateTime);
-//
-//            // Convert the Carbon instance to the MySQL datetime format
-//            $formattedDateTime = $carbonDateTime->format('Y-m-d H:i:s');
-//            Log::channel('custom_error')->info('formatted date: '.$formattedDateTime);
-//
-//            return $formattedDateTime;
-//        }
-
     if ($validatedData['release_dateTime']) {
       // Create a Carbon instance from the DateTime string
-      $releaseDateTime = Carbon::parse($validatedData['release_dateTime']);
+      $releaseDateTime = Carbon::parse($validatedData['release_dateTime'])->toDateTimeString();
 
       // Get the year from the Carbon instance
-      $releaseYear = $releaseDateTime->year;
-
-      // Format $utcDatetime as a string in ISO 8601 format:
-      $formattedReleaseUtcDatetime = $this->convertToUtcTime($validatedData['release_dateTime']);
+      $releaseYear = Carbon::parse($validatedData['release_dateTime'])->year;
     }
 
     if ($validatedData['scheduled_release_dateTime']) {
       $showEpisode->show_episode_status_id = 6;
       $releaseYear = null;
 
-      $formattedScheduledUtcDatetime = $this->convertToUtcTime($validatedData['scheduled_release_dateTime']);
+      $scheduledReleaseDatetime = Carbon::parse($validatedData['scheduled_release_dateTime'])->toDateTimeString();
     }
 
     if ($showEpisode->scheduled_release_dateTime && !$validatedData['scheduled_release_dateTime']) {
@@ -875,9 +838,9 @@ class ShowEpisodeController extends Controller {
     $showEpisode->notes = e($validatedData['notes']);
     $showEpisode->youtube_url = $validatedData['youtube_url'];
     $showEpisode->video_embed_code = $validatedData['video_embed_code'];
-    $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
+    $showEpisode->release_dateTime = $releaseDateTime ?? null;
     $showEpisode->release_year = $releaseYear ?? null;
-    $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
+    $showEpisode->scheduled_release_dateTime = $scheduledReleaseDatetime ?? null;
     $showEpisode->copyrightYear = $validatedData['copyright_year'] ?? null;
     $showEpisode->creative_commons_id = $validatedData['creative_commons_id'];
     $showEpisode->save();

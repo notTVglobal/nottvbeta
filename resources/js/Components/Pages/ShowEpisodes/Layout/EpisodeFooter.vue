@@ -25,8 +25,8 @@
         <span class="text-xs font-semibold text-gray-500" v-else-if="showEpisodeStore.show?.first_release_year">
         {{ showEpisodeStore.show.first_release_year }}
       </span>
-        <span class="text-xs font-semibold text-gray-500" v-else-if="showEpisodeStore.episode?.copyrightYear">
-        {{ showEpisodeStore.episode.copyrightYear }}
+        <span class="text-xs font-semibold text-gray-500" v-else-if="showEpisodeStore.episode?.copyright_year">
+        {{ showEpisodeStore.episode.copyright_year }}
       </span>
       </div>
     </div>

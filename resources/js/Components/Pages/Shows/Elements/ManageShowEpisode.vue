@@ -91,7 +91,7 @@ const props = defineProps({
 });
 
 const showEpisodeStatuses = ref(false);
-const releaseDateTime = userStore.formatDateInUserTimezone(props.episode.releaseDateTime, 'ddd DD MMM YYYY');
+const releaseDateTime = userStore.formatLongDateTimeFromUtcToUserTimezone(props.episode.releaseDateTime);
 const scheduledReleaseDateTime = userStore.formatDateInUserTimezone(props.episode.scheduledReleaseDateTime, 'ddd DD MMM YYYY, hh:mm A' + ' ' + userStore.timezoneAbbreviation);
 
 showStore.noteEdit = 0;

@@ -105,7 +105,7 @@
             </div>
             <div v-if="releaseDateTime">
               <span class="text-xs capitalize font-semibold mr-2">
-                {{ formatDate(releaseDateTime) }}
+                {{ formatDate(showEpisodeStore.releaseDateTimeInUserTz) }}
               </span>
             </div>
           </div>
@@ -121,7 +121,8 @@
               <br/>
               <div v-if="episode.status.id === 6">
                 <span class="text-2xl capitalize font-semibold">Scheduled Release:</span><br/>
-                <span class="text-3xl capitalize font-semibold">{{ timeAgo }}</span>
+                <span class="text-3xl capitalize font-semibold"><ConvertDateTimeToTimeAgo :dateTime="showEpisodeStore.scheduleReleaseDateTimeInUserTz" :timezone="userStore.timezone"/></span>
+                <span class="text-xl capitalize font-semibold">{{ showEpisodeStore.formattedScheduledReleaseDateTime }}</span>
               </div>
             </div>
 
@@ -138,24 +139,24 @@ import { useTimeAgo } from '@vueuse/core'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useGoLiveStore } from "@/Stores/GoLiveStore"
 import { useTeamStore } from "@/Stores/TeamStore"
+import { useUserStore } from '@/Stores/UserStore'
+import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
 import Button from "@/Jetstream/Button.vue"
 import ShowEpisodeManageTopBanner from "@/Components/Pages/ShowEpisodes/Layout/ManageShowEpisodeTopBanner"
 import EpisodeHeader from "@/Components/Pages/ShowEpisodes/Layout/EpisodeHeader"
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 const appSettingStore = useAppSettingStore()
 const goLiveStore = useGoLiveStore()
 const teamStore = useTeamStore()
+const userStore = useUserStore()
+const showEpisodeStore = useShowEpisodeStore()
 
 let props = defineProps({
   show: Object,
   team: Object,
   episode: Object,
   episodeStatus: Object,
-  scheduledDateTime: String,
-  releaseDateTime: String,
 })
-
-const timeAgo = useTimeAgo(props.scheduledDateTime)
-
 
 </script>
