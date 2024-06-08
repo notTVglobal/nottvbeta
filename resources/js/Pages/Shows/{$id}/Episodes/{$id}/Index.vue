@@ -21,121 +21,121 @@
 
   <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
     <div id="topDiv" class="text-white bg-gray-900 rounded py-5 min-h-screen">
-<div class="flex flex-col justify-center max-w-7xl mx-auto">
-  <div class="w-full">
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
+      <div class="flex flex-col justify-center max-w-7xl mx-auto">
+        <div class="w-full">
+          <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <ShowEpisodeHeaderCreatorNavButtons :can="can" :team="team" :show="show" :episode="episode"/>
+          <ShowEpisodeHeaderCreatorNavButtons :can="can" :team="team" :show="show" :episode="episode"/>
 
-      <header class="p-5 mb-6">
+          <header class="p-5">
 
-        <ShowShowEpisodeHeader :show="show" :episode="episode" :team="team"/>
+            <ShowShowEpisodeHeader :show="show" :episode="episode" :team="team"/>
 
-        <p v-if="episode.video.upload_status === 'processing' && !episode.video.video_url"
-           class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
-          The episode video is currently processing. Please check back later.
-        </p>
+            <p v-if="episode.video.upload_status === 'processing' && !episode.video.video_url"
+               class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+              The episode video is currently processing. Please check back later.
+            </p>
 
-        <div class="flex flex-wrap px-10 mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
-          <div></div>
-          <button v-if="episode.video.isAvailable"
-                  class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                  @click="playEpisode">
-            <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 485 485">
-              <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+            <div class="flex flex-wrap px-10 m-auto lg:mx-0 justify-center lg:justify-start gap-3">
+              <button v-if="episode.video.isAvailable"
+                      :class="buttonClass"
+                      @click="handlePlayEpisode">
+                <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 485 485">
+                  <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
 		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
 		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
 		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
-              <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
-            </svg>
-            <span v-if="nowPlayingStore?.activeMedia?.details?.primaryName === episode?.name"
-                  class="ml-2">Now Playing</span>
-            <span v-else class="ml-2">Watch Episode</span>
-          </button>
-
-          <ComingSoonShareAndSaveButtons/>
-          <ShareButton :model="episode"/>
-
-        </div>
-
-      </header>
-
-      <div class="my-6 py-5 px-4 xl:px-16">
-        <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
-        <!--          <div class="description">{{ episode.description }}</div>-->
-        <ExpandableDescription :description="episode.description" :hideTitle="true"/>
-      </div>
-
-
-      <div
-          class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
-        <!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
-        <div class="max-w-[50%] ml-5 py-0">
-
-          <SingleImageWithModal :image="episode.image" :key="episode.image"/>
-
-        </div>
-
-        <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
-
-
-      </div>
-
-      <div class="flex flex-col px-5">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-
-            <div class="mb-6 p-5">
-
-              <div v-if="episode?.bonusContent">
-                <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
-                <div class="mb-8 p-4">
-                <span
-                    class="text-orange-500">Bonus content will go here. This includes content mentioned in an episode.</span>
-                </div>
-              </div>
-
-
-              <div hidden>
-                <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>
-
-
-                <div class="flex flex-row flex-wrap">
-                  <div v-for="creator in props.creators.data"
-                       :key="creator.id"
-                       class="pb-8 light:bg-light dark:bg-gray-900">
-
-                    <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
-                      <img :src="'/storage/' + creator.profile_photo_path"
-                           class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                      <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{ creator.name }}</span>
-                    </div>
-
-                    <!--                            For now, we are just displaying the team members here.
-                                                    This will make a good component that can be re-used across
-                                                    the Show and Episode Index pages. Just pass in the creators prop.
-
-                                                    We will add this when we have our Creators model setup
-                                                    and creators attached to the credits table for this
-                                                    show.                                                       -->
-
-                    <!--                            <ShowCreatorsList />-->
-
-                  </div>
-                </div>
-              </div>
+                  <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
+                </svg>
+                <span class="ml-2">{{ buttonText }}</span>
+              </button>
 
 
             </div>
 
-            <EpisodeFooter :can="can" :team="team" :episode="episode" :show="show"/>
+          </header>
+
+          <div class="px-4 xl:px-16">
+            <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
+            <!--          <div class="description">{{ episode.description }}</div>-->
+            <ExpandableDescription :description="episode.description" :hideTitle="true"/>
+          </div>
+
+
+          <div
+              class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+            <!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
+            <div class="max-w-[50%] ml-5">
+
+              <SingleImageWithModal :image="episode.image" :key="episode.image"/>
+
+            </div>
+
+            <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
+
+
+          </div>
+
+          <div class="flex flex-col px-5">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+
+                <div class="mb-6 p-5">
+
+                  <div v-if="episode?.bonusContent">
+                    <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
+                    <div class="mb-8 p-4">
+                <span
+                    class="text-orange-500">Bonus content will go here. This includes content mentioned in an episode.</span>
+                    </div>
+                  </div>
+
+
+                  <div hidden>
+                    <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>
+
+
+                    <div class="flex flex-row flex-wrap">
+                      <div v-for="creator in props.creators.data"
+                           :key="creator.id"
+                           class="pb-8 light:bg-light dark:bg-gray-900">
+
+                        <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
+                          <img :src="'/storage/' + creator.profile_photo_path"
+                               class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
+                          <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{
+                              creator.name
+                            }}</span>
+                        </div>
+
+                        <!--                            For now, we are just displaying the team members here.
+                                                        This will make a good component that can be re-used across
+                                                        the Show and Episode Index pages. Just pass in the creators prop.
+
+                                                        We will add this when we have our Creators model setup
+                                                        and creators attached to the credits table for this
+                                                        show.                                                       -->
+
+                        <!--                            <ShowCreatorsList />-->
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <EpisodeFooter :can="can" :team="team" :episode="episode" :show="show"/>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-  </div>
-</div>
     </div>
+    <RestartVideoModal :is-visible="showModal"
+                       @restart="restartEpisode"
+                       @close="showModal = false" />
   </div>
 
 </template>
@@ -143,11 +143,13 @@
 
 <script setup>
 import { usePage } from '@inertiajs/vue3'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
@@ -159,12 +161,15 @@ import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 import ShowShowEpisodeHeader from '@/Components/Pages/ShowEpisodes/Layout/ShowShowEpisodeHeader.vue'
 import ShowEpisodeHeaderCreatorNavButtons
   from '@/Components/Pages/ShowEpisodes/Elements/ShowEpisodeHeaderCreatorNavButtons.vue'
+import RestartVideoModal from '@/Components/Global/Modals/RestartVideoModal.vue'
 
 usePageSetup('showEpisodesShow')
 
 const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
 const videoPlayerStore = useVideoPlayerStore()
+const showEpisodeStore = useShowEpisodeStore()
+const notificationStore = useNotificationStore()
 const teamStore = useTeamStore()
 const userStore = useUserStore()
 const page = usePage().props
@@ -178,12 +183,48 @@ let props = defineProps({
   can: Object,
 })
 
+const isNowPlaying = computed(() => {
+  return nowPlayingStore?.activeMedia?.details?.primaryName === props.episode?.name
+})
+
+const buttonClass = computed(() => {
+  return [
+    'flex text-white font-semibold ml-4 px-4 py-4 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed',
+    {
+      'bg-green-700 hover:bg-green-800': isNowPlaying.value,
+      'bg-green-500 hover:bg-green-700': !isNowPlaying.value,
+    },
+  ]
+})
+
+const buttonText = computed(() => {
+  return isNowPlaying.value ? 'Now Playing' : 'Watch Episode'
+})
+
+
 onMounted(() => {
+  showEpisodeStore.initializeShowEpisode(props.episode, props.show, props.team)
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 })
 
+const showModal = ref(false)
+
+const handlePlayEpisode = () => {
+  if (isNowPlaying.value) {
+    showModal.value = true;
+  } else {
+    playEpisode();
+  }
+};
+
+const restartEpisode = () => {
+  showModal.value = false;
+  playEpisode();
+};
+
 let playEpisode = () => {
+
   nowPlayingStore.reset()
 
   // Determine media type and specific details based on the video type
@@ -191,7 +232,7 @@ let playEpisode = () => {
   const show = props.show
   const mediaType = episode.video ? episode.video.mediaType : null // Use the new 'mediaType' from the backend
 
-  const isInternalVideo = mediaType === 'show'
+  const isInternalVideo = mediaType === 'internalVideo'
   const isExternalVideo = mediaType === 'externalVideo'
   const isBitchute = mediaType === 'bitchute'
 
@@ -234,6 +275,7 @@ let playEpisode = () => {
   // } else if (isExternalVideo) {
   //   videoPlayerStore.loadNewSourceFromUrl({video_url: props.episode.video.video_url, type: 'video/mp4'})
   // }
+
 
   // Load the video source in videoPlayerStore for playback
   if (isInternalVideo) {

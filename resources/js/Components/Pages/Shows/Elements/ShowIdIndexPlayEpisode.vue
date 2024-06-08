@@ -7,8 +7,8 @@
     <!--                  The first episode is currently processing. <br>Please check back later.-->
     <!--                </div>-->
     <button v-if="show?.firstPlayEpisode"
-            class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-            @click="playEpisode">
+            :class="buttonClass"
+            @click="handlePlayEpisode">
       <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 485 485">
         <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -20,13 +20,18 @@
 
       <span v-if="watchText" class="ml-2">{{ watchText }}</span>
     </button>
+
+    <RestartVideoModal :is-visible="showModal"
+                       @restart="restartEpisode"
+                       @close="showModal = false" />
   </div>
 </template>
 <script setup>
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useShowStore } from '@/Stores/ShowStore'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import RestartVideoModal from '@/Components/Global/Modals/RestartVideoModal.vue'
 
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
@@ -44,13 +49,39 @@ const isNowPlaying = computed(() => {
 const watchText = computed(() => {
   if (isNowPlaying.value) {
     return 'Now Playing';
-  } else if (props.show.episodePlayOrder === 'oldest') {
-    return 'Watch First Episode';
-  } else if (props.show.episodePlayOrder === 'newest') {
-    return 'Watch Latest Episode';
+  } else {
+    if (props.show.episodePlayOrder === 'oldest') {
+      return 'Watch First Episode';
+    } else if (props.show.episodePlayOrder === 'newest') {
+      return 'Watch Latest Episode';
+    }
   }
-  return '';
 });
+
+const buttonClass = computed(() => {
+  return [
+    'flex text-white font-semibold ml-4 px-4 py-4 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed',
+    {
+      'bg-green-700 hover:bg-green-800': isNowPlaying.value,
+      'bg-green-500 hover:bg-green-400': !isNowPlaying.value,
+    }
+  ];
+});
+
+const showModal = ref(false)
+
+const handlePlayEpisode = () => {
+  if (isNowPlaying.value) {
+    showModal.value = true;
+  } else {
+    playEpisode();
+  }
+};
+
+const restartEpisode = () => {
+  showModal.value = false;
+  playEpisode();
+};
 
 const playEpisode = () => {
 

@@ -28,14 +28,10 @@
       <div class="flex flex-col justify-center mx-auto max-w-5xl">
 
 
-        <header class="p-5 mb-6">
+        <header class="p-5 ">
 
           <ShowShowEpisodeHeader :show="show" :episode="episode" :team="team" />
 
-
-            <div class="my-6 px-10">
-              <ShareButton/>
-            </div>
 
             <LoginToWatch />
 
@@ -44,7 +40,7 @@
 
         </header>
 
-        <div class="my-6 py-5 px-4 xl:px-16">
+        <div class="py-5 px-4 xl:px-16">
           <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
           <!--          <div class="description">{{ episode.description }}</div>-->
           <ExpandableDescription :description="episode.description" :hideTitle="true"/>
@@ -133,6 +129,7 @@ import { computed, onMounted } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useShowEpisodeStore } from '@/Stores/ShowEpisodeStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
@@ -150,6 +147,7 @@ import ShowShowEpisodeHeader from '@/Components/Pages/ShowEpisodes/Layout/ShowSh
 const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
 const videoPlayerStore = useVideoPlayerStore()
+const showEpisodeStore = useShowEpisodeStore()
 const teamStore = useTeamStore()
 const userStore = useUserStore()
 const page = usePage().props
@@ -167,6 +165,7 @@ appSettingStore.currentPage = `shows.${props.show.slug}.episodes.${props.episode
 appSettingStore.setPrevUrl()
 
 onMounted(() => {
+  showEpisodeStore.initializeShowEpisode(props.episode, props.show, props.team)
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 })

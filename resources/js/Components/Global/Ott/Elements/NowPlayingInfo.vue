@@ -111,7 +111,7 @@
                 </div>
                 <div v-if="nowPlayingStore.activeMedia.details?.description" class="flex flex-col my-4 break-words">
                   <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Description</div>
-                  <div class="showEpisodeOrMovieDescription description">{{ nowPlayingStore.activeMedia.details?.description }}</div>
+                  <div class="showEpisodeOrMovieDescription description"><span v-html="nowPlayingStore.activeMedia.details?.description"/></div>
                 </div>
 
                 <!-- Episode Number & Episode ID -->
