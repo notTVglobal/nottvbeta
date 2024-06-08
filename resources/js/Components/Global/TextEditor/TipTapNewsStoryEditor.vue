@@ -97,6 +97,9 @@ const editorInstance = new Editor({
     Placeholder.configure({
       placeholder: 'Write something …',
     }),
+    CharacterCount.configure({
+      limit: null,
+    })
   ],
   onUpdate: ({ editor }) => {
     newsStore.content = editor.getHTML()
