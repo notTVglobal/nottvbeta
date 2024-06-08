@@ -15,8 +15,6 @@
           :episodeStatus="episodeStatus"
           :show="show"
           :team="team"
-          :scheduledDateTime="scheduledDateTime"
-          :releaseDateTime="releaseDateTime"
       />
 <!--      <GoLive :episode="episode" :scheduledDateTime="scheduledDateTime"/>-->
       <GoLive v-if="goLiveStore.displayEpisodeGoLiveComponent" />
@@ -73,8 +71,6 @@ let props = defineProps({
   team: Object,
   episode: Object,
   episodeStatus: Object,
-  releaseDateTime: String,
-  scheduledDateTime: String,
   can: Object,
 })
 

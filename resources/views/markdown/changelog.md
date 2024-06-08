@@ -3,13 +3,20 @@
 Last Update: June 7, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.19
+June 7, 2024
+
+* Fix the formatting of dates when scheduling episode releases.
+* Refactor the schedule release dateTimes of Episodes on the Episode Edit page.
+
 ## v0.9.3.18
 June 7, 2024
 
-* Fix the layout problem on logged out reporters pages
-* Added the Browse button to the Welcome page
-* The menu and video controls now stay on scree when the user scrolls on the welcome page.
-* Users no longer need to confirm their email on first login (need to login 2 more times)
+* Fix the layout problem on logged out reporters pages.
+* Added the Browse button to the Welcome page.
+* The menu and video controls now stay on screen when the user scrolls on the welcome page.
+* Added icons to the menus.
+* Users no longer need to confirm their email on first login (need to login 2 more times).
 * Switched to the Registration form that appears over the currently playing video to create a seamless experience for first time users watching and registering.
 
 ## v0.9.3.17

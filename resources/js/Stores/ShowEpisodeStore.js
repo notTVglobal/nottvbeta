@@ -1,4 +1,12 @@
 import { defineStore } from 'pinia'
+import { useUserStore } from '@/Stores/UserStore'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+// Extend Day.js with the necessary plugins
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const initialState = () => ({
     episode: {},
@@ -28,14 +36,13 @@ export const useShowEpisodeStore = defineStore('showEpisodeStore', {
         },
         initializeShowEpisode(showEpisode, show = null, team = null, creativeCommons = null) {
             // console.log('initializeShow')
-
-            let meta = {};
+            let meta = {}
             try {
                 if (showEpisode.meta) {
-                    meta = typeof showEpisode.meta === 'string' ? JSON.parse(showEpisode.meta) : showEpisode.meta;
+                    meta = typeof showEpisode.meta === 'string' ? JSON.parse(showEpisode.meta) : showEpisode.meta
                 }
             } catch (error) {
-                console.error('Error parsing meta:', error);
+                console.error('Error parsing meta:', error)
             }
 
             this.$patch({
@@ -49,8 +56,8 @@ export const useShowEpisodeStore = defineStore('showEpisodeStore', {
                     episodeNumber: showEpisode.episode_number,
                     status: showEpisode.status,
                     release_year: showEpisode.release_year,
-                    release_dateTime: showEpisode.release_dateTime,
-                    scheduled_release_dateTime: showEpisode.scheduled_release_dateTime,
+                    release_dateTime: showEpisode.release_dateTime, // keep this in UTC time in our State, the getter converts it to the user's timezone.
+                    scheduled_release_dateTime: showEpisode.scheduled_release_dateTime, // keep this in UTC time in our State, the getter converts it to the user's timezone.
                     copyright_year: showEpisode.copyright_year,
                     creative_commons: showEpisode.creative_commons,
                     mist_stream_id: showEpisode.mist_stream_id,
@@ -67,14 +74,14 @@ export const useShowEpisodeStore = defineStore('showEpisodeStore', {
                 isSaving: meta.isSaving ?? false,
                 isUpdatingSchedule: meta.isUpdatingSchedule ?? null,
                 updatedBy: meta.updatedBy ?? null,
-            });
+            })
 
         },
         setLeader(user) {
-            this.leader = user;
+            this.leader = user
         },
         resetLeader() {
-            this.leader = null;
+            this.leader = null
             // Reset other states...
         },
         async checkIsLive() {
@@ -93,11 +100,54 @@ export const useShowEpisodeStore = defineStore('showEpisodeStore', {
             //   update the form errors, notifications.
             //   add locking logic like the show manage page.
         },
+        setReleaseDateTime(newDateTime) {
+            // Convert newDateTime to UTC time
+            this.episode.release_dateTime = dayjs(newDateTime).utc().format()
+            this.episode.scheduled_release_dateTime = null
+        },
+        setScheduledReleaseDateTime(newDateTime) {
+            // Convert newDateTime to UTC time
+            this.episode.scheduled_release_dateTime = dayjs(newDateTime).utc().format()
+            this.episode.release_dateTime = null
+        },
+        cancelScheduledRelease() {
+            this.episode.scheduled_release_dateTime = null
+        }
 
     },
 
     getters: {
-        //
+        scheduleReleaseDateTimeInUserTz(state) {
+            const userStore = useUserStore()
+            if (state.episode.scheduled_release_dateTime) {
+                return dayjs(state.episode.scheduled_release_dateTime).tz(userStore.timezone).format()
+            } else
+                return null
+        },
+        releaseDateTimeInUserTz(state) {
+            const userStore = useUserStore()
+            if (state.episode.release_dateTime) {
+                return dayjs(state.episode.release_dateTime).tz(userStore.timezone).format()
+            } else
+                return null
+        },
+        formattedReleaseDateTime(state) {
+            const userStore = useUserStore()
+            if (state.episode.release_dateTime) {
+                return userStore.formatLongDateTimeFromUtcToUserTimezone(state.episode.release_dateTime)
+            } else
+                return null
+
+        },
+        formattedScheduledReleaseDateTime(state) {
+            const userStore = useUserStore()
+            // return dayjs.utc(dateTime).tz(userStore.timezone).format('dddd MMMM D [at] h:mm a')
+            if (state.episode.scheduled_release_dateTime) {
+                return userStore.formatLongDateTimeFromUtcToUserTimezone(state.episode.scheduled_release_dateTime)
+            } else
+                return null
+
+        }
     },
 
 })
