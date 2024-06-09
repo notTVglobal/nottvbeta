@@ -1,11 +1,34 @@
 <template>
   <div>
     <div class="toolbar mb-2">
-      <button @click.prevent="toggleBold" class="btn">Bold</button>
-      <button @click.prevent="toggleItalic" class="btn">Italic</button>
-      <button @click.prevent="toggleUnderline" class="btn">Underline</button>
-      <button @click.prevent="toggleSuperscript" class="btn">Superscript</button>
-      <button @click.prevent="toggleSubscript" class="btn">Subscript</button>
+      <button @click.prevent="toggleBold" class="icon-btn" :class="{ 'active': isBoldActive }">
+        <font-awesome-icon :icon="['fas', 'bold']" />
+      </button>
+      <button @click.prevent="toggleItalic" class="icon-btn" :class="{ 'active': isItalicActive }">
+        <font-awesome-icon :icon="['fas', 'italic']" />
+      </button>
+      <button @click.prevent="toggleUnderline" class="icon-btn" :class="{ 'active': isUnderlineActive }">
+        <font-awesome-icon :icon="['fas', 'underline']" />
+      </button>
+      <button @click.prevent="toggleSuperscript" class="icon-btn" :class="{ 'active': isSuperscriptActive }">
+        <font-awesome-icon :icon="['fas', 'superscript']" />
+      </button>
+      <button @click.prevent="toggleSubscript" class="icon-btn" :class="{ 'active': isSubscriptActive }">
+        <font-awesome-icon :icon="['fas', 'subscript']" />
+      </button>
+      <button @click.prevent="toggleBulletList" class="icon-btn" :class="{ 'active': isBulletListActive }">
+        <font-awesome-icon :icon="['fas', 'list-ul']" />
+      </button>
+      <button @click.prevent="toggleOrderedList" class="icon-btn" :class="{ 'active': isOrderedListActive }">
+        <font-awesome-icon :icon="['fas', 'list-ol']" />
+      </button>
+      <button @click.prevent="setLink" class="icon-btn" :class="{ 'active': isLinkActive }">
+        <font-awesome-icon :icon="['fas', 'link']" />
+      </button>
+      <button @click.prevent="unsetLink" class="icon-btn" :class="{ 'disabled': !isLinkActive }" :disabled="!isLinkActive">
+        <font-awesome-icon :icon="['fas', 'unlink']" />
+      </button>
+
     </div>
     <div
         class="editor-textarea editor-container bg-gray-50 border border-gray-400 text-gray-900 text-sm w-full rounded-lg focus-within:ring-blue-500 focus-within:border-blue-500"
@@ -27,8 +50,10 @@ import Typography from '@tiptap/extension-typography'
 import Underline from '@tiptap/extension-underline'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
+import BulletList from '@tiptap/extension-bullet-list'
+import OrderedList from '@tiptap/extension-ordered-list'
 import Link from '@tiptap/extension-link'
-import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 
 const emits = defineEmits(['updateContent'])
 
@@ -56,7 +81,6 @@ const editor = useEditor({
     Subscript,
     Superscript,
     Link.configure({openOnClick: false}),
-
   ],
   content: initialContent,
   onUpdate: ({editor}) => {
@@ -96,6 +120,42 @@ const toggleSuperscript = () => {
 const toggleSubscript = () => {
   editor.value.chain().focus().toggleSubscript().run()
 }
+
+const toggleBulletList = () => {
+  editor.value.chain().focus().toggleBulletList().run()
+}
+
+const toggleOrderedList = () => {
+  editor.value.chain().focus().toggleOrderedList().run()
+}
+
+
+const setLink = () => {
+  const previousUrl = editor.value.getAttributes('link').href
+  const url = window.prompt('URL', previousUrl)
+  if (url === null) return
+
+  if (url === '') {
+    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
+  } else {
+    editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  }
+}
+
+const unsetLink = () => {
+  if (editor.value) {
+    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
+  }
+}
+
+const isBoldActive = computed(() => editor.value && editor.value.isActive('bold'))
+const isItalicActive = computed(() => editor.value && editor.value.isActive('italic'))
+const isUnderlineActive = computed(() => editor.value && editor.value.isActive('underline'))
+const isSuperscriptActive = computed(() => editor.value && editor.value.isActive('superscript'))
+const isSubscriptActive = computed(() => editor.value && editor.value.isActive('subscript'))
+const isBulletListActive = computed(() => editor.value && editor.value.isActive('bulletList'))
+const isOrderedListActive = computed(() => editor.value && editor.value.isActive('orderedList'))
+const isLinkActive = computed(() => editor.value && editor.value.isActive('link'))
 
 
 // const submitDescription = () => {
@@ -139,18 +199,39 @@ onBeforeUnmount(() => {
 .toolbar {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-.btn {
+.icon-btn {
   background-color: #4a5568;
   color: white;
-  padding: 8px 12px;
+  padding: 8px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
-.btn:hover {
+.icon-btn.active {
   background-color: #2d3748;
+}
+
+.icon-btn:hover {
+  background-color: #2d3748;
+  transform: scale(1.1);
+}
+
+.icon-btn.disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.icon-btn i {
+  font-size: 16px;
 }
 </style>

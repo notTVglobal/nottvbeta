@@ -40,10 +40,10 @@
 
         </header>
 
-        <div class="py-5 px-4 xl:px-16">
+        <div class="py-5 px-4 xl:px-16 mb-8">
           <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
           <!--          <div class="description">{{ episode.description }}</div>-->
-          <ExpandableDescription :description="episode.description" :hideTitle="true"/>
+          <ExpandableDescription :description="episode.description" :hideTitle="true" :length="600" />
         </div>
 
 

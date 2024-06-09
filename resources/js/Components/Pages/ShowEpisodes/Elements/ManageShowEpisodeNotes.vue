@@ -3,7 +3,7 @@
 
     <div class="my-6 ml-10 md:w-3/4">
       <div class="mb-2">
-        <span class="text-sm font-semibold uppercase">Episode Notes</span>
+        <span class="text-sm font-semibold uppercase">Internal Episode Notes (Team Only)</span>
         <span class="tooltip" data-tip="Only team members see these">
                                     <font-awesome-icon icon="fa-circle-info" class="ml-1"/>
                                 </span>

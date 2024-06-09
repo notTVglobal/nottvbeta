@@ -19,15 +19,15 @@
 <!--      <GoLive :episode="episode" :scheduledDateTime="scheduledDateTime"/>-->
       <GoLive v-if="goLiveStore.displayEpisodeGoLiveComponent" />
 
-      <EpisodeVideo :episode="episode"/>
-
       <EpisodeNotes :episode="episode"/>
+
+      <ShowEpisodeManageBonusContent/>
 
       <ShowEpisodeManageEpisodeDescription :episode="episode"/>
 
-      <EpisodeRundown hidden/>
+      <EpisodeRundown />
 
-      <ShowEpisodeManageBonusContent/>
+      <EpisodeVideo :episode="episode"/>
 
       <EpisodeFooter :can="can" :team="team" :episode="episode" :show="show"/>
 

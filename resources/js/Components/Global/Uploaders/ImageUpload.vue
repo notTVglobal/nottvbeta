@@ -49,7 +49,7 @@ const props = defineProps({
     default: null
   },
   modelId: {
-    type: Number,
+    type: [Number, String],
     default: null
   },
   maxSize: String,

@@ -103,7 +103,7 @@
               <span v-if="episode.episode_number">{{ episode.episode_number }}</span>
               <span v-if="!episode.episode_number">{{ episode.id }}</span>
             </div>
-            <div v-if="releaseDateTime">
+            <div v-if="showEpisodeStore.releaseDateTimeInUserTz">
               <span class="text-xs capitalize font-semibold mr-2">
                 {{ formatDate(showEpisodeStore.releaseDateTimeInUserTz) }}
               </span>

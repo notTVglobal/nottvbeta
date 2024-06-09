@@ -131,7 +131,7 @@ class ShowEpisodeController extends Controller {
             'distinct:ignore_case',
             new UniqueEpisodeName($request->show_id)
         ],
-        'description'         => 'required|string|max:5000',
+        'description'         => 'required|string|max:10000',
         'user_id'             => 'required|exists:users,id',
         'show_id'             => 'required|exists:shows,id',
         'show_slug'           => 'required|exists:shows,slug',
@@ -736,7 +736,7 @@ class ShowEpisodeController extends Controller {
         'creative_commons_id'        => 'required|integer|exists:creative_commons,id',
         'copyright_year'             => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'episode_number'             => 'nullable|string|min:1|max:10',
-        'description'                => 'required|string|max:5000',
+        'description'                => 'required|string|max:10000',
         'notes'                      => 'nullable|string|max:2000',
         'video_url'                  => 'nullable|active_url|ends_with:.mp4',
         'youtube_url'                => 'nullable|active_url',

@@ -11,7 +11,7 @@
       <div class="flex w-full justify-center">
         <button v-if="needsTruncation && !showFullDescription"
                 @click="toggleDescription"
-                class="btn btn-wide justify-self-center">
+                class="btn btn-wide justify-self-center bg-gray-200 hover:bg-gray-400 transition text-gray-800">
           Read the full description
         </button>
       </div>
@@ -28,20 +28,25 @@ const props = defineProps({
   description: String,
   hideTitle: Boolean,
   class: String,
+  length: {
+    type: Number,
+    default: 210
+  }
 })
 
 const showFullDescription = ref(false)
 
 const truncatedDescription = computed(() => {
-  if (props.description.length > 210) {
-    return props.description.substring(0, 210) + '...'  // Add ellipsis directly here
+  if (props.length === 0 || props.description.length <= props.length) {
+    return props.description
   }
-  return props.description
+  return props.description.substring(0, props.length) + '...'
 })
 
 const needsTruncation = computed(() => {
-  return props.description.length > 210
+  return props.length !== 0 && props.description.length > props.length
 })
+
 
 const toggleDescription = () => {
   showFullDescription.value = !showFullDescription.value

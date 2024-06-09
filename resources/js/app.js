@@ -1,14 +1,14 @@
 import './bootstrap'
 
-import {createApp, h} from 'vue'
-import {createInertiaApp, Head, Link} from '@inertiajs/vue3'
-import AppLayout from "./Layouts/AppLayout"
-import {createPinia} from "pinia"
+import { createApp, h } from 'vue'
+import { createInertiaApp, Head, Link } from '@inertiajs/vue3'
+import AppLayout from './Layouts/AppLayout'
+import { createPinia } from 'pinia'
 import { ZiggyVue } from 'ziggy-js'
-import { Ziggy } from "./ziggy.js"
-import Vue3TouchEvents from "vue3-touch-events"
+import { Ziggy } from './ziggy.js'
+import Vue3TouchEvents from 'vue3-touch-events'
 // import helmet from "helmet";
-import "../../resources/css/theme.css" // Magic happens here
+import '../../resources/css/theme.css' // Magic happens here
 // import the fontawesome core
 import { library } from '@fortawesome/fontawesome-svg-core'
 // import font awesome icon component
@@ -24,8 +24,13 @@ import {
     fa7,
     fa8,
     fa9,
+    faAlignCenter,
+    faAlignJustify,
+    faAlignLeft,
+    faAlignRight,
     faAngleLeft,
     faArrowRightArrowLeft,
+    faBold,
     faBook,
     faBookOpen,
     faBuilding,
@@ -40,6 +45,7 @@ import {
     faClipboard,
     faClipboardList,
     faClapperboard,
+    faCode,
     faCog,
     faComments,
     faCommentDots,
@@ -51,20 +57,29 @@ import {
     faFilm,
     faFilter,
     faFlagUsa,
+    faFont,
     faGem,
     faGift,
     faHandsHelping,
+    faHeading,
     faHeart,
+    faItalic,
     faLeaf,
     faLink,
     faList,
+    faListOl,
+    faListUl,
     faLock,
+    faMinus,
     faNewspaper,
+    faPalette,
     faPaperPlane,
     faPencil,
     faPlay,
     faPlayCircle,
     faQuestion,
+    faQuoteRight,
+    faRedo,
     faRepeat,
     faRocket,
     faRss,
@@ -74,10 +89,17 @@ import {
     faShoppingCart,
     faSignInAlt,
     faSignOutAlt,
+    faStrikethrough,
+    faSubscript,
+    faSuperscript,
     faStar,
     faTachometerAlt,
+    faTextHeight,
     faTrashCan,
     faTv,
+    faUnderline,
+    faUndo,
+    faUnlink,
     faUpload,
     faUser,
     faUserCircle,
@@ -89,9 +111,9 @@ import {
     faVideo,
     faVolumeMute,
     faVolumeUp,
-    faWrench
+    faWrench,
 } from '@fortawesome/free-solid-svg-icons'
-import {  } from '@fortawesome/free-regular-svg-icons';
+import {} from '@fortawesome/free-regular-svg-icons'
 import {
     faBuffer,
     faDiscord,
@@ -117,10 +139,10 @@ import {
     faWhatsapp,
     faWordpress,
     faXTwitter,
-    faYammer
-} from '@fortawesome/free-brands-svg-icons';
+    faYammer,
+} from '@fortawesome/free-brands-svg-icons'
 // import popper for pop-up tooltips
-import Popper from "vue3-popper";
+import Popper from 'vue3-popper'
 import VueConfetti from 'vue-confetti'
 
 // import confirm dialog
@@ -140,9 +162,9 @@ import VueConfetti from 'vue-confetti'
 //     directives
 // })
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-window.audioContext = new AudioContext();
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV'
+const AudioContext = window.AudioContext || window.webkitAudioContext
+window.audioContext = new AudioContext()
 
 // formatting dates, helper plugins:
 // https://jerickson.net/how-to-format-dates-in-vue-3/
@@ -150,18 +172,18 @@ window.audioContext = new AudioContext();
 const formatDate = () => ({
     methods: {
         formatDate: function (dateString) {
-            const date = new Date(dateString);
+            const date = new Date(dateString)
             // Then specify how you want your dates to be formatted
-            return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
+            return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date)
         },
         formatDateTime: function (dateString) {
-            const date = new Date(dateString);
+            const date = new Date(dateString)
             const options = {
                 year: 'numeric', month: 'short', day: 'numeric',
-                hour: '2-digit', minute: '2-digit', hour12: true
-            };
-            return new Intl.DateTimeFormat('default', options).format(date);
-        }
+                hour: '2-digit', minute: '2-digit', hour12: true,
+            }
+            return new Intl.DateTimeFormat('default', options).format(date)
+        },
     },
 })
 
@@ -173,21 +195,21 @@ createInertiaApp({
     title: (title) => title ? `${title} - ${appName}` : appName,
     resolve: async name => {
 
-        let page = await import(`./Pages/${name}`);
+        let page = await import(`./Pages/${name}`)
 
-        page = page.default;
+        page = page.default
 
-        if (! page.layout) {
-            page.layout = AppLayout;
+        if (!page.layout) {
+            page.layout = AppLayout
         }
-        return page;
+        return page
     },
-    setup({ el, App, props, plugin }) {
-        const VueApp = createApp({ render: () => h(App, props) })
+    setup({el, App, props, plugin}) {
+        const VueApp = createApp({render: () => h(App, props)})
 
-            VueApp.config.globalProperties.$route = route
+        VueApp.config.globalProperties.$route = route
 
-            VueApp.use(plugin)
+        VueApp.use(plugin)
             // .use(VueReCaptcha, { siteKey: captchaKey } )
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
@@ -196,13 +218,13 @@ createInertiaApp({
             // .use(vuetify)
             // .use(vueCountryRegionSelect)
             // .use(setupCalendar, {})
-            .component("Link", Link)
-            .component("Head", Head)
-            .component("font-awesome-icon", FontAwesomeIcon)
-            .component("Popper", Popper)
+            .component('Link', Link)
+            .component('Head', Head)
+            .component('font-awesome-icon', FontAwesomeIcon)
+            .component('Popper', Popper)
             // .component("ConfirmDialog", ConfirmDialog)
             .mixin(formatDate())
-            .mount(el);
+            .mount(el)
 
         // // Register Inertia navigation event listeners
         // router.on('start', (event) => {
@@ -215,7 +237,7 @@ createInertiaApp({
         // });
 
     },
-});
+})
 
 // Add icons to the library
 library.add(
@@ -228,8 +250,13 @@ library.add(
     fa7,
     fa8,
     fa9,
+    faAlignCenter,
+    faAlignJustify,
+    faAlignLeft,
+    faAlignRight,
     faAngleLeft,
     faArrowRightArrowLeft,
+    faBold,
     faBook,
     faBookOpen,
     faBuffer,
@@ -245,6 +272,7 @@ library.add(
     faClipboard,
     faClipboardList,
     faClapperboard,
+    faCode,
     faCog,
     faComments,
     faCommentDots,
@@ -260,27 +288,36 @@ library.add(
     faFilter,
     faFlagUsa,
     faFlipboard,
+    faFont,
     faGem,
     faGetPocket,
     faGift,
     faHackerNews,
     faHandsHelping,
+    faHeading,
     faHeart,
     faInstagram,
+    faItalic,
     faLeaf,
     faLink,
     faLinkedin,
     faList,
+    faListOl,
+    faListUl,
     faLock,
+    faMinus,
     faNewspaper,
+    faPalette,
     faPaperPlane,
     faPencil,
     faPinterest,
     faPlay,
     faPlayCircle,
-    faQuora,
     faQuestion,
+    faQuora,
+    faQuoteRight,
     faRedditAlien,
+    faRedo,
     faRepeat,
     faRocket,
     faRss,
@@ -292,14 +329,21 @@ library.add(
     faSignOutAlt,
     faSkype,
     faSnapchat,
+    faStrikethrough,
     faStumbleupon,
     faStar,
+    faSubscript,
+    faSuperscript,
     faTachometerAlt,
     faTelegramPlane,
+    faTextHeight,
     faTrashCan,
     faTumblr,
     faTv,
     faTwitter,
+    faUnderline,
+    faUndo,
+    faUnlink,
     faUpload,
     faUser,
     faUserCircle,
@@ -317,8 +361,8 @@ library.add(
     faWordpress,
     faWrench,
     faXTwitter,
-    faYammer
-);
+    faYammer,
+)
 
 // let lastUrl = window.location.pathname;
 //

@@ -1,7 +1,16 @@
 # not.tv Changelog
 
-Last Update: June 7, 2024\
+Last Update: June 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.20
+June 9, 2024
+
+* Fix the expandable description to be a have a custom length.
+* Add icons and new styling to the description and news editor TipTap components.
+* Add a color picker to the TipTapNewsEditor buttons.
+* Fix the spacing of list items in TipTap.
+* Change the order of components on the Show Episode Manage page.
 
 ## v0.9.3.19
 June 7, 2024

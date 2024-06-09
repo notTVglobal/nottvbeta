@@ -1182,17 +1182,19 @@ hr {
 
 .tiptap ul {
     list-style-type: circle; /* Change disc to circle for a different bullet style */
+    margin-bottom: 1.5rem;
 }
 
 .tiptap ol {
     list-style-type: decimal; /* Confirming decimal style for ordered lists */
     counter-reset: list-counter; /* Optional: Reset counters for nested lists */
+    margin-bottom: 1.5rem;
 }
 
 .tiptap li {
-    margin-bottom: 0.1em; /* Reduce the space between items more if needed */
+    margin-bottom: 0.4em; /* Reduce the space between items more if needed */
     padding-left: 0; /* Remove padding to tighten the list */
-    line-height: 1.2; /* Adjust line height for list items */
+    line-height: 1.5; /* Adjust line height for list items */
 }
 
 .tiptap li p {

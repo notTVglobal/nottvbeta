@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-full flex justify-between gap-2">
-      <SingleImage :image="newsStore.image" :alt="`image`" :class="`skeleton max-w-20 max-h-20 object-contain`"/>
+      <SingleImage :image="newsStore.image" :alt="`image`" :class="`skeleton max-w-full max-h-20 object-contain`"/>
       <button v-if="newsStore.image" @click="removeImage" class="btn btn-danger mt-2">Remove Image</button>
     </div>
     <ImageUpload :image="newsStore.image"
