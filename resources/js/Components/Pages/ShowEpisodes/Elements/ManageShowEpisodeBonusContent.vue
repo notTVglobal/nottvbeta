@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow overflow-hidden bg-gray-50 border-b border-gray-200 sm:rounded-lg p-5">
+  <div class="shadow overflow-hidden bg-gray-50 border-b border-gray-200 sm:rounded-lg p-5 mb-8">
 
     <div class="flex flex-col my-6 ml-10 md:w-3/4 space-x-2 space-y-2">
       <div class="text-sm font-semibold uppercase mb-2">Bonus Content

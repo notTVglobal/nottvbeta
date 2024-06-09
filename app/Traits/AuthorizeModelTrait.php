@@ -1,8 +1,13 @@
 <?php
 namespace App\Traits;
 
+use Illuminate\Auth\Access\AuthorizationException;
+
 trait AuthorizeModelTrait {
-  protected function authorizeModel($modelType, $modelId, $action) {
+  /**
+   * @throws AuthorizationException
+   */
+  protected function authorizeModel($modelType, $modelId, $action): \Illuminate\Auth\Access\Response|false {
     if (!$modelType || !$modelId) {
       return false;
     }

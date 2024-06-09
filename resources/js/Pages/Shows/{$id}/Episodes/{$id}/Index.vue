@@ -56,24 +56,20 @@
 
           </header>
 
-          <div class="px-4 xl:px-16">
+          <div class="px-4 xl:px-16 mb-8">
             <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
-            <!--          <div class="description">{{ episode.description }}</div>-->
-            <ExpandableDescription :description="episode.description" :hideTitle="true"/>
+            <ExpandableDescription :description="episode.description" :hideTitle="true" :length="600"/>
           </div>
 
 
           <div
               class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
-            <!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
+
             <div class="max-w-[50%] ml-5">
 
               <SingleImageWithModal :image="episode.image" :key="episode.image"/>
 
             </div>
-
-            <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
-
 
           </div>
 
@@ -154,10 +150,8 @@ import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import Message from '@/Components/Global/Modals/Messages'
-import ComingSoonShareAndSaveButtons from '@/Components/Global/UserActions/ComingSoonShareAndSaveButtons.vue'
 import ExpandableDescription from '@/Components/Global/Text/ExpandableDescription.vue'
 import SingleImageWithModal from '@/Components/Global/Multimedia/SingleImageWithModal.vue'
-import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
 import ShowShowEpisodeHeader from '@/Components/Pages/ShowEpisodes/Layout/ShowShowEpisodeHeader.vue'
 import ShowEpisodeHeaderCreatorNavButtons
   from '@/Components/Pages/ShowEpisodes/Elements/ShowEpisodeHeaderCreatorNavButtons.vue'
