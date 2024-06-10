@@ -431,7 +431,7 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  private function transformFetchedSchedules(array $schedules): array {
+  public function transformFetchedSchedules(array $schedules): array {
 
     return array_reduce($schedules, function ($carry, $schedule) {
       // Check if 'broadcast_dates' is already an array
@@ -551,7 +551,7 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  private function sortSchedules(array $schedules): array {
+  public function sortSchedules(array $schedules): array {
 
     // Remove duplicates based on unique composite key
     $uniqueSchedules = [];
@@ -587,7 +587,7 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  private function resolveScheduleConflicts(array $schedules): array
+  public function resolveScheduleConflicts(array $schedules): array
   {
     // Initialize an array to track occupied rows and times for each row
     $rowOccupancy = [];

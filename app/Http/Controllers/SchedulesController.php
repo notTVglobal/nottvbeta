@@ -309,11 +309,11 @@ class SchedulesController extends Controller {
 //    Log::debug("Fetched schedules:", $schedules);
 
     // 2. Transform schedules
-    $transformedSchedules = $this->transformFetchedSchedules($schedules);
+    $transformedSchedules = $this->scheduleService->transformFetchedSchedules($schedules);
 //    Log::debug("Transformed schedules:", $transformedSchedules);
 
     // 3. Sort schedules
-    $sortedSchedules = $this->sortSchedules($transformedSchedules);
+    $sortedSchedules = $this->scheduleService->sortSchedules($transformedSchedules);
 //    Log::debug("Sorted schedules:", $sortedSchedules);
 
     // Transform and sort schedules
@@ -321,7 +321,7 @@ class SchedulesController extends Controller {
 //    Log::info("Transformed and sorted schedules:", $transformedSchedules);
 
     // 4. Resolve schedule conflicts
-    $finalSchedules = $this->resolveScheduleConflicts($sortedSchedules);
+    $finalSchedules = $this->scheduleService->resolveScheduleConflicts($sortedSchedules);
 //    Log::debug("Final schedules after resolving conflicts:", $finalSchedules);
 
 
@@ -420,17 +420,17 @@ class SchedulesController extends Controller {
     // NOTE: Start dates and times in the schedule tables other than BroadcastDates are stored in UTC as part of our standardization.
     // NOTE: The reason Schedules are saved in a specific timezone is to prevent daylight savings changes causing issues.
 
-    Log::info('Fetching schedules for date range', [
-        'start' => $userRequestedStartOfWeekUTC,
-        'end'   => $userRequestedEndOfWeekUTC
-    ]);
+//    Log::debug('Fetching schedules for date range', [
+//        'start' => $userRequestedStartOfWeekUTC,
+//        'end'   => $userRequestedEndOfWeekUTC
+//    ]);
 
     // Eager load schedules but limit the initially fetched set
     $schedules = Schedule::with(['content.image.appSetting'])
         ->whereBetween('start_dateTime', [$userRequestedStartOfWeekUTC->subDay(), $userRequestedEndOfWeekUTC->addDay()])
         ->get(); // Adjust the range as necessary
 
-    Log::info('Fetched schedules:', $schedules->toArray());
+//    Log::debug('Fetched schedules:', $schedules->toArray());
 
     $filteredSchedules = $schedules->filter(function ($schedule) use ($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC) {
       // Convert the UTC times to the schedule's timezone
@@ -438,19 +438,19 @@ class SchedulesController extends Controller {
       $localEnd = $userRequestedEndOfWeekUTC->copy()->setTimezone($schedule->timezone);
 
       $result = $schedule->start_dateTime <= $localEnd && $schedule->end_dateTime >= $localStart;
-      Log::info('Filtering schedule', [
-          'schedule_id' => $schedule->id,
-          'start_dateTime'  => $schedule->start_dateTime,
-          'end_dateTime'    => $schedule->end_dateTime,
-          'local_start' => $localStart,
-          'local_end'   => $localEnd,
-          'result'      => $result
-      ]);
+//      Log::debug('Filtering schedule', [
+//          'schedule_id' => $schedule->id,
+//          'start_dateTime'  => $schedule->start_dateTime,
+//          'end_dateTime'    => $schedule->end_dateTime,
+//          'local_start' => $localStart,
+//          'local_end'   => $localEnd,
+//          'result'      => $result
+//      ]);
 
       return $result;
     })->sortBy('start_dateTime');
 
-    Log::info('Filtered schedules:', $filteredSchedules->toArray());
+//    Log::debug('Filtered schedules:', $filteredSchedules->toArray());
 
     // After fetching, dynamically load additional relationships based on content type
     foreach ($filteredSchedules as $schedule) {

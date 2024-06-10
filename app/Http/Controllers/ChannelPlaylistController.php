@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChannelPlaylist;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,7 +23,7 @@ class ChannelPlaylistController extends Controller {
   }
 
 
-  public function adminSearchChannelPlaylists(Request $request) {
+  public function adminSearchChannelPlaylists(Request $request): \Inertia\Response {
     $search = $request->input('search', '');
 
     // Directly fetch mistStreams based on the search input.
@@ -55,7 +56,7 @@ class ChannelPlaylistController extends Controller {
   /**
    * Display a listing of the resource.
    *
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function index() {
     $mistStreams = ChannelPlaylist::all();
