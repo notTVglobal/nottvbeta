@@ -18,8 +18,8 @@
         </Link>
         <Link :href="`#`">
           <button
+              @click.prevent="openAddChannelPlaylistModal"
               class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
-              disabled
           >Add Channel Playlist
           </button>
         </Link>
@@ -54,12 +54,23 @@
         <button @click.prevent="submit" class="btn btn-primary ml-2">Add</button>
       </div>
     </dialog>
+
+    <dialog id="addChannelPlaylistModal" class="modal">
+      <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-lg mb-2">Add Channel Playlist</h3>
+        <CreatePlaylist />
+      </div>
+    </dialog>
   </div>
 </template>
 <script setup>
 import { useAdminStore } from '@/Stores/AdminStore'
 import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal'
 import { ref } from 'vue'
+import CreatePlaylist from '@/Components/Pages/Admin/ChannelPlaylists/CreatePlaylist.vue'
 
 const adminStore = useAdminStore()
 
@@ -67,6 +78,10 @@ const newChannelName = ref('')
 
 const openAddChannelModal = () => {
   document.getElementById('adminAddChannel').showModal()
+}
+
+const openAddChannelPlaylistModal = () => {
+  document.getElementById('addChannelPlaylistModal').showModal()
 }
 
 const submit = async () => {

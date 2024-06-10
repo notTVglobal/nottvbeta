@@ -95,7 +95,7 @@ class ScheduleService {
 //    Log::debug('Final schedules:', ['schedules' => $finalSchedules]);
 
     // Log the first 2 or 3 schedules
-    $this->logSampleSchedules($resolvedSchedules);
+//    $this->logSampleSchedules($resolvedSchedules);
 
     // 7. Cache the schedules
     $cacheKey = $this->getCacheKey('all_schedules');
@@ -250,7 +250,7 @@ class ScheduleService {
 
       return [
           'message' => 'All caches invalidated successfully.',
-          'type' => 'success'
+          'type'    => 'success'
       ];
     } catch (Exception $e) {
       Log::error('Error invalidating caches', [
@@ -260,7 +260,7 @@ class ScheduleService {
 
       return [
           'message' => 'Error invalidating caches.',
-          'type' => 'error'
+          'type'    => 'error'
       ];
     }
   }
@@ -272,7 +272,7 @@ class ScheduleService {
 
       return [
           'message' => 'Update schedule job dispatched successfully.',
-          'type' => 'success'
+          'type'    => 'success'
       ];
     } catch (Exception $e) {
       Log::error('Error dispatching update schedule job', [
@@ -282,7 +282,7 @@ class ScheduleService {
 
       return [
           'message' => 'Error dispatching update schedule job.',
-          'type' => 'error'
+          'type'    => 'error'
       ];
     }
   }
@@ -332,36 +332,46 @@ class ScheduleService {
    *
    * @param string $startDateTimeUtc
    * @param string $endDateTimeUtc
+   * @param bool $useSubDay
    * @return array
    */
-  public function fetchContentForRange(string $startDateTimeUtc, string $endDateTimeUtc): array {
-
+  public function fetchContentForRange(string $startDateTimeUtc, string $endDateTimeUtc, bool $useSubDay = true): array {
     $validationError = $this->validateDate($startDateTimeUtc) ?: $this->validateDate($endDateTimeUtc);
     if ($validationError) {
+      Log::error('Invalid date provided', ['details' => $validationError]);
+
       return ['error' => 'Invalid date provided', 'details' => $validationError];
     }
 
-    try {
-      $start = Carbon::parse($startDateTimeUtc)->startOfDay();
-      $end = Carbon::parse($endDateTimeUtc)->endOfDay();
-    } catch (\Exception $e) {
-      return ['error' => 'Invalid date provided', 'details' => $e->getMessage()];
-    }
+    if ($useSubDay) {
+      try {
+        $start = Carbon::parse($startDateTimeUtc)->startOfDay();
+        $end = Carbon::parse($endDateTimeUtc)->endOfDay();
+      } catch (\Exception $e) {
+        Log::error('Exception parsing dates', ['exception' => $e->getMessage()]);
 
-    // Expand the fetch range by one day on each side
-    $expandedStart = $start->copy()->subDay();
-    $expandedEnd = $end->copy()->addDay();
+        return ['error' => 'Invalid date provided', 'details' => $e->getMessage()];
+      }
+      // Conditionally expand the fetch range by one day on each side
+      $expandedStart = $start->copy()->subDay();
+      $expandedEnd = $end->copy()->addDay();
+    } else {
+      $expandedStart = $startDateTimeUtc;
+      $expandedEnd = $endDateTimeUtc;
+    }
 
     $cacheKey = $this->getCacheKey('all_schedules');
     $cachedSchedules = Cache::get($cacheKey);
 
     if ($cachedSchedules) {
-//      Log::debug('Cached schedule used');
+      Log::debug('Using cached schedules');
+      Log::debug('Cached Schedules Data:', ['schedules' => $cachedSchedules]); // Log schedules data
 
       return $this->filterSchedulesByDateRange($cachedSchedules, $expandedStart, $expandedEnd);
     } else {
-
+      Log::debug('Fetching and caching schedules');
       $fetchedSchedules = $this->fetchAndCacheSchedules();
+      Log::debug('Fetched Schedules Data:', ['schedules' => $fetchedSchedules]); // Log schedules data
 
       return $this->filterSchedulesByDateRange($fetchedSchedules, $expandedStart, $expandedEnd);
     }
@@ -372,8 +382,8 @@ class ScheduleService {
 //          ->orderBy('start_dateTime')
 //          ->get();
 
-      // If cache is empty or invalid, fetch from the database
-      // Transform the schedules using ScheduleResource
+  // If cache is empty or invalid, fetch from the database
+  // Transform the schedules using ScheduleResource
 //      $transformedSchedules = ScheduleResource::collection($schedules)->toArray(request());
 //      $schedules = Schedule::with(['content', 'scheduleRecurrenceDetails'])
 //          ->whereBetween('start_dateTime', [$expandedStart, $expandedEnd])
@@ -385,7 +395,7 @@ class ScheduleService {
 //        $this->preloadContentRelationships($schedule);
 //      }
 
-      // Cache the schedules for future use
+  // Cache the schedules for future use
 //      Log::error('Problem getting the schedule from the cache in the ScheduleService->fetchContentForRange().');
 //      Cache::put($cacheKey, $schedules, now()->addMinutes(30));
 //    }
@@ -399,7 +409,7 @@ class ScheduleService {
 
 //    Log::debug('Fetched schedules:', $schedules);
 
-    // 2. Transform schedules
+  // 2. Transform schedules
 //    $transformedSchedules = $this->transformFetchedSchedules($schedules);
 ////    Log::debug("Transformed schedules:", $transformedSchedules);
 //
@@ -419,9 +429,12 @@ class ScheduleService {
 
     // Filter schedules by the requested date range
     return $schedulesCollection->filter(function ($schedule) use ($start, $end) {
-      return isset($schedule['start_dateTime']) && isset($schedule['end_dateTime']) &&
-          $schedule['start_dateTime'] >= $start->toDateTimeString() &&
-          $schedule['end_dateTime'] <= $end->toDateTimeString();
+      // Parse the schedule start and end times in UTC
+      $scheduleStart = Carbon::parse($schedule['start_dateTime']);
+      $scheduleEnd = Carbon::parse($schedule['end_dateTime']);
+
+      // Ensure the schedule ends after the start time and starts before the end time
+      return $scheduleEnd->gte($start) && $scheduleStart->lte($end);
     })->values()->toArray();
   }
 
@@ -447,17 +460,28 @@ class ScheduleService {
           $startDateTime = new DateTime($date, new DateTimeZone('UTC'));
           $endDateTime = (clone $startDateTime)->modify("+{$schedule['duration_minutes']} minutes");
 
+//          $startDateTime = new DateTime($date, new DateTimeZone('UTC'));
+//          $endDateTime = (clone $startDateTime)->modify("+{$schedule['duration_minutes']} minutes");
+//
+//
+//          $startDateTimeInTimezone = (clone $startDateTime)->setTimezone(new DateTimeZone($timezone));
+//          $endDateTimeInTimezone = (clone $endDateTime)->setTimezone(new DateTimeZone($timezone));
+
           // Add the transformed schedule to the accumulator
           $carry[] = [
-              'id'               => $schedule['id'],
-              'created_at'       => $schedule['created_at'],
-              'type'             => $schedule['type'],
-              'start_dateTime'   => $startDateTime->format('c'),
-              'end_dateTime'     => $endDateTime->format('c'),
-              'priority'         => $schedule['priority'],
-              'duration_minutes' => $schedule['duration_minutes'],
-              'timezone'         => $timezone,
-              'content'          => $schedule['content'],
+              'id'                 => $schedule['id'],
+              'created_at'         => $schedule['created_at'],
+              'type'               => $schedule['type'],
+              'start_dateTime'     => $startDateTime->format('c'),
+              'end_dateTime'       => $endDateTime->format('c'),
+//              'start_dateTime'     => $startDateTimeInTimezone->format('c'),
+//              'end_dateTime'       => $endDateTimeInTimezone->format('c'),
+//              'start_dateTime_utc' => $endDateTime->format('c'),
+//              'end_dateTime_utc'   => $endDateTime->format('c'),
+              'priority'           => $schedule['priority'],
+              'duration_minutes'   => $schedule['duration_minutes'],
+              'timezone'           => $timezone,
+              'content'            => $schedule['content'],
           ];
         } catch (\Exception $e) {
           Log::error('Error transforming broadcast date', [
@@ -467,6 +491,7 @@ class ScheduleService {
           ]);
         }
       }
+
       return $carry; // Return the accumulator for the next iteration
     }, []); // Initial value of the accumulator is an empty array
 
@@ -587,8 +612,7 @@ class ScheduleService {
    * @param array $schedules
    * @return array
    */
-  public function resolveScheduleConflicts(array $schedules): array
-  {
+  public function resolveScheduleConflicts(array $schedules): array {
     // Initialize an array to track occupied rows and times for each row
     $rowOccupancy = [];
 

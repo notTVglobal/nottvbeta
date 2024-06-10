@@ -3,18 +3,21 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { createTimeSlots } from '@/Utilities/TimeUtils'
-import {
-    format,
-    isToday,
-    isTomorrow,
-    isYesterday,
-    startOfDay,
-} from 'date-fns'
+// import {
+//     format,
+//     isToday,
+//     isTomorrow,
+//     isYesterday,
+//     startOfDay,
+// } from 'date-fns'
 
 // Import dayjs and its plugins
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore' // To check if the day is the same
+import isToday from 'dayjs/plugin/isToday';
+import isYesterday from 'dayjs/plugin/isYesterday';
+import isTomorrow from 'dayjs/plugin/isTomorrow';
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear' // For week start and end calculations
@@ -24,6 +27,9 @@ import { router } from '@inertiajs/vue3' // For more complex formatting options
 // Extend dayjs with the plugins
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(isTomorrow);
 dayjs.extend(advancedFormat)
 dayjs.extend(utc)
 dayjs.extend(isSameOrAfter)
@@ -491,7 +497,9 @@ export const useScheduleStore = defineStore('scheduleStore', {
             const fifteenMinutesAgo = now.subtract(15, 'minutes')
 
             for (const date of upcomingDates) {
-                const dateString = date.format('YYYY-MM-DD')  // Day.js format for 'YYYY-MM-DD'
+                const dayjsDate = dayjs(date); // Ensure date is a dayjs object
+                const dateString = dayjsDate.format('YYYY-MM-DD');  // Day.js format for 'YYYY-MM-DD'
+
                 const contentCoverageAndFreshness = this.weeklyContent.some(content => {
                     const contentDate = dayjs(content.start_dateTime).format('YYYY-MM-DD')  // Convert and compare as 'YYYY-MM-DD'
                     const lastFetchedTime = this.dataFetchLog[dateString]
@@ -1090,17 +1098,23 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
 
         dateMessage: (state) => {
-            const startDay = startOfDay(state.viewingWindowStart)
-            const formattedDate = format(startDay, 'EEEE MMMM do, yyyy')
-            // console.log('getter', 50)
-            if (isToday(startDay)) {
-                return `Today - ${formattedDate}`
-            } else if (isYesterday(startDay)) {
-                return `Yesterday - ${formattedDate}`
-            } else if (isTomorrow(startDay)) {
-                return `Tomorrow - ${formattedDate}`
+            const startDay = dayjs(state.viewingWindowStart).startOf('day');
+
+            // Check if startDay is a valid date
+            if (!startDay.isValid()) {
+                return 'Invalid date';
+            }
+
+            const formattedDate = startDay.format('dddd MMMM DD, YYYY');
+
+            if (startDay.isToday()) {
+                return `Today - ${formattedDate}`;
+            } else if (startDay.isYesterday()) {
+                return `Yesterday - ${formattedDate}`;
+            } else if (startDay.isTomorrow()) {
+                return `Tomorrow - ${formattedDate}`;
             } else {
-                return formattedDate
+                return formattedDate;
             }
         },
 

@@ -308,8 +308,11 @@ class SchedulesController extends Controller {
 //    $schedules = $this->fetchSchedulesFromBroadcastDates($userRequestedStartOfWeekUTC, $userRequestedEndOfWeekUTC);
 //    Log::debug("Fetched schedules:", $schedules);
 
+    // Convert the collection to an array before passing it to transformFetchedSchedules
+    $schedulesArray = $schedules->toArray();
+
     // 2. Transform schedules
-    $transformedSchedules = $this->scheduleService->transformFetchedSchedules($schedules);
+    $transformedSchedules = $this->scheduleService->transformFetchedSchedules($schedulesArray);
 //    Log::debug("Transformed schedules:", $transformedSchedules);
 
     // 3. Sort schedules
@@ -572,6 +575,41 @@ class SchedulesController extends Controller {
 //        });
 //  }
 
+  public function getSchedules(Request $request): JsonResponse {
+    try {
+      $startTime = $request->query('startTime');
+      $endTime = $request->query('endTime');
+
+      if (!$startTime || !$endTime) {
+        return response()->json(['message' => 'Start time and end time are required', 'status' => 'error'], 400);
+      }
+
+      $startTimeUTC = Carbon::parse($startTime)->format('Y-m-d\TH:i:s.v\Z');
+      $endTimeUTC = Carbon::parse($endTime)->format('Y-m-d\TH:i:s.v\Z');
+
+// Logging the start and end times
+      Log::debug('Parsed start and end times to UTC', [
+          'startTimeUTC' => $startTimeUTC,
+          'endTimeUTC' => $endTimeUTC,
+      ]);
+
+      $schedules = $this->scheduleService->fetchContentForRange($startTimeUTC, $endTimeUTC, false);
+
+      if (isset($schedules['error'])) {
+        Log::error('Error fetching schedules', ['error' => $schedules['error'], 'details' => $schedules['details']]);
+        return response()->json($schedules, 400);
+      }
+
+//      Log::debug("Fetched schedules:", $schedules);
+
+      return response()->json(['items' => $schedules, 'message' => 'Schedules fetched successfully', 'status' => 'success']);
+    } catch (\Exception $e) {
+      Log::error('Exception in getSchedules', ['exception' => $e->getMessage()]);
+      return response()->json(['message' => 'An unexpected error occurred', 'status' => 'error', 'details' => $e->getMessage()], 500);
+    }
+  }
+
+
   private function fetchSchedules(Carbon $userRequestedStartOfWeekUTC, Carbon $userRequestedEndOfWeekUTC) {
 
 //    Log::debug('Fetching schedules for date range', [
@@ -612,6 +650,10 @@ class SchedulesController extends Controller {
             'content.showRunner.user',
             'content.image.appSetting',
         ]);
+        if ($schedule->content_type === 'App\Models\ShowEpisode' && isset($schedule->content->show_id)) {
+          // Dynamically load related show data for ShowEpisodes
+          $schedule->load('content.show.image.appSetting');
+        }
       }
       // Additional conditions for other content types can be added here
     });
@@ -698,6 +740,8 @@ class SchedulesController extends Controller {
               'id'              => $uniqueId, // Use the generated unique ID
               'type'            => 'show',
               'start_dateTime'      => $dateTimeUTC->toIso8601String(),
+              'start_dateTime_utc'      => $schedule->start_dateTime_utc->toIso8601String(),
+              'end_dateTime_utc'      => $schedule->end_dateTime_utc->toIso8601String(),
               'content'         => [
                   'show' => $showResource->resolve(), // Resolve to get an array
               ],
@@ -709,6 +753,8 @@ class SchedulesController extends Controller {
           $instances[] = [
               'id'              => $uniqueId, // Use the generated unique ID
               'start_dateTime'      => $dateTimeUTC->toIso8601String(),
+              'start_dateTime_utc'      => $schedule->start_dateTime_utc->toIso8601String(),
+              'end_dateTime_utc'      => $schedule->end_dateTime_utc->toIso8601String(),
               'durationMinutes' => $recurrenceDetails->duration_minutes,
             // Include minimal details or indicate absence of detailed content
               'content'         => [], // Placeholder for non-Show content
