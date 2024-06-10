@@ -1,8 +1,7 @@
 <template>
-  <div class="flex flex-row flex-wrap-reverse w-full justify-between gap-2">
-
+  <div :class="containerClass">
     <div>
-      <div class="flex flex-row flex-wrap gap-x-2 gap-y-2 mb-2">
+      <div :class="buttonContainerClass">
         <div>
           <button @click="openObsInstructions = !openObsInstructions"
                   class="btn bg-blue-500 hover:bg-blue-700 text-white ml-2"
@@ -11,13 +10,13 @@
             <span v-else>Hide Your Stream Key</span>
           </button>
         </div>
-        <div v-if="!openObsInstructions" >
+        <div v-if="!openObsInstructions">
           <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
                   class="btn bg-blue-500 hover:bg-blue-700 text-white">How To Stream From Zoom
           </button>
         </div>
       </div>
-      <div v-if="openObsInstructions" class="my-4 ml-10">
+      <div v-if="openObsInstructions" :class="obsInstructionsClass">
         <h3>Stream from OBS or other software using these details:</h3>
         <div>RTMP full url: <span v-if="fullUrl" class="font-bold">{{ fullUrl }}</span>
           &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl">
@@ -42,10 +41,9 @@
                 style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
         </div>
       </div>
-
     </div>
 
-    <div v-if="!openObsInstructions" class="flex flex-row flex-wrap justify-between grow ml-4 gap-2">
+    <div v-if="!openObsInstructions" :class="liveControlsClass">
       <div class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2 gap-2">
         <div class="flex flex-row gap-2">
           <div class="mb-2">
@@ -71,7 +69,6 @@
                     class="btn btn-sm text-white bg-red-700 hover:bg-red-900 uppercase"
             >End Live
             </button>
-
           </div>
         </div>
         <div v-if="!goLiveStore.isRecording || !goLiveStore.isLive"
@@ -84,15 +81,11 @@
         <button class="btn btn-secondary" @click="openStats">Live Analytics</button>
       </div>
 
-      <div class="">
+      <div>
         <div>Live will begin in... &nbsp;</div>
-        <!--          <div class="font-semibold">{{ formattedCountdown }} (for demo purposes only)</div>-->
         <div class="countdown font-mono text-2xl">
-          <!-- Hours (if your countdown includes hours) -->
           <span :style="{ '--value': hours }">{{ hours.toString().padStart(2, '0') }}</span>h
-          <!-- Minutes -->
           <span :style="{ '--value': minutes }">{{ minutes.toString().padStart(2, '0') }}</span>m
-          <!-- Seconds -->
           <span :style="{ '--value': seconds }">{{ seconds.toString().padStart(2, '0') }}</span>s
         </div>
         <div class="text-xs">for demo purposes only</div>
@@ -138,6 +131,31 @@ const copyStreamKey = () => {
   showCopiedStreamKey.value = true
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
+
+
+const containerClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'flex flex-col w-full' : 'flex flex-row flex-wrap-reverse w-full justify-between gap-2'
+})
+
+const buttonContainerClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'flex flex-col gap-2 mb-2' : 'flex flex-row flex-wrap gap-x-2 gap-y-2 mb-2'
+})
+
+const aobsButtonClass = computed(() => {
+  return openObsInstructions.value ? 'bg-yellow-800 hover:bg-yellow-900' : 'bg-blue-500 hover:bg-blue-700'
+})
+
+const zoomButtonClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'w-full mt-2' : 'bg-blue-500 hover:bg-blue-700'
+})
+
+const obsInstructionsClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'my-4' : 'my-4 ml-10'
+})
+
+const liveControlsClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'flex flex-col gap-2' : 'flex flex-row flex-wrap justify-between grow ml-4 gap-2'
+})
 
 // Keep a reference to the interval ID so it can be cleared
 let intervalId = null

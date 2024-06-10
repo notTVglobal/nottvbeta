@@ -53,7 +53,7 @@ class GoLiveController extends Controller {
 
     // Get shows that belong to those teams and have a status of 1, 2, or 9
     return Show::whereIn('team_id', $userActiveTeamIds)
-        ->whereIn('show_status_id', [1, 2, 9]) // 1 = new, 2 = active, 9 = creators only
+        ->whereIn('show_status_id', [1, 2, 8, 9]) // 1 = new, 2 = active, 8 = hidden, 9 = creators only
         ->with('mistStreamWildcard')
         ->get();
   }

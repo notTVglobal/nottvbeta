@@ -1,84 +1,55 @@
 <template>
   <Head title="Go Live"/>
-  <!--        <template #header>-->
-  <!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
-  <!--                Dashboard-->
-  <!--            </h2>-->
-  <!--        </template>-->
 
-  <!--        <div class="py-12">-->
-  <!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
-  <!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
-
-  <div class="place-self-center flex flex-col gap-y-3">
+  <div :class="containerClass">
     <div id="topDiv" class="bg-white text-black p-5 mb-10">
-
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <div class="flex justify-between mx-4 px-6 w-full">
-        <div class="grid grid-cols-1 grid-rows-2">
-          <h1 class="text-3xl font-semibold">Go Live</h1>
-        </div>
+      <div :class="headerClass">
         <div>
-          <CancelButton/>
+          <h1 :class="titleClass">Go Live</h1>
         </div>
-        <!--                <div class="grid grid-cols-1 grid-rows-2">-->
-        <!--                    <div class="justify-self-end">-->
-        <!--                        <Link :href="`/dashboard`"><button-->
-        <!--                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"-->
-        <!--                        >Dashboard</button>-->
-        <!--                        </Link>-->
-        <!--                    </div>-->
-        <!--                </div>-->
+        <div :class="buttonContainerClass">
+          <CancelButton />
+        </div>
       </div>
-      <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 px-6 w-full">
-        <label class="block mb-2 uppercase font-bold text-xs text-light text-neutral dark:text-white"
-               for="show"
-        >
+
+      <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 w-full" :class="showSelectorClass">
+        <label class="block mb-2 uppercase font-bold text-xs text-light text-neutral dark:text-white" for="show">
           Select Show To Go Live On
         </label>
-
         <select
             class="select select-info select-lg w-full p-2 block my-2 uppercase font-bold text-lg bg-white dark:bg-gray-800 dark:text-white"
             v-model="goLiveStore.selectedShowId"
             @change="reloadPlayer"
         >
-          <option disabled selected >Select show</option>
-          <option v-for="show in goLiveStore.shows"
-                  :key="show.id" :value="show.id">{{ show.name }}
-          </option>
-
+          <option disabled selected>Select show</option>
+          <option v-for="show in goLiveStore.shows" :key="show.id" :value="show.id">{{ show.name }}</option>
         </select>
-
-
       </div>
 
-      <div v-else class="bg-black w-3/4 text-center px-10 py-6 text-white mx-auto border-red-700 border-2">
+      <div v-else class="bg-black text-center py-6 text-white mx-auto border-red-700 border-2" :class="noShowsClass">
         You don't have any shows to go live with... please check your show(s).
       </div>
 
-      <div v-if="goLiveStore.selectedShow" class="text-3xl font-semibold text-center w-full">
-        <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{goLiveStore.selectedShow.name}}</Link>
+      <div v-if="goLiveStore.selectedShow" class="text-center w-full hover:text-blue-500" :class="selectedShowClass">
+        <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{ goLiveStore.selectedShow.name }}</Link>
       </div>
 
       <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />
-      <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id" class="flex flex-col justify-items-center text-center px-16">
-        <div v-if="generateStreamKeyError" class="text-red-700">{{generateStreamKeyError}}</div>
-        <div v-if="generateStreamKeyProcessing && !generateStreamKeyError" class="">
+      <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id" class="flex flex-col justify-items-center text-center" :class="streamKeyClass">
+        <div v-if="generateStreamKeyError" class="text-red-700">{{ generateStreamKeyError }}</div>
+        <div v-if="generateStreamKeyProcessing && !generateStreamKeyError">
           <div>Stream key is being generated...</div>
           <div><span class="loading loading-infinity loading-lg text-primary"></span></div>
         </div>
         <div v-if="!generateStreamKeyProcessing && !generateStreamKeyError">
           <div class="mb-3">Please generate a stream key:</div>
-          <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">generate key</button></div>
+          <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">Generate Key</button></div>
         </div>
       </div>
     </div>
   </div>
-  <!--                </div>-->
-  <!--            </div>-->
-  <!--        </div>-->
-
   <ManageShowEpisodeNoticeModals />
 </template>
 
@@ -91,7 +62,7 @@ import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import Message from '@/Components/Global/Modals/Messages'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import GoLive from '@/Components/Global/GoLive/GoLive'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import videojs from 'video.js'
 import ManageShowEpisodeNoticeModals from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeNoticeModals.vue'
 import Button from '@/Jetstream/Button.vue'
@@ -105,6 +76,38 @@ const goLiveStore = useGoLiveStore()
 
 const props = defineProps({
   shows: Object
+})
+
+const containerClass = computed(() => {
+  return 'place-self-center flex flex-col gap-y-3 min-h-screen bg-blue-900'
+})
+
+const headerClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'flex flex-row flex-wrap justify-between mx-4 px-6 w-full' : 'flex flex-row justify-between mx-4 px-6 w-full'
+})
+
+const titleClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'text-xl font-semibold' : 'text-3xl font-semibold'
+})
+
+const buttonContainerClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'my-2' : 'mt-0'
+})
+
+const showSelectorClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'px-4' : 'px-6'
+})
+
+const noShowsClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'w-full px-4' : 'w-3/4 px-10'
+})
+
+const selectedShowClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'text-xl font-semibold' : 'text-3xl font-semibold'
+})
+
+const streamKeyClass = computed(() => {
+  return appSettingStore.isSmallScreen ? 'px-4' : 'px-16'
 })
 
 onMounted(async () => {
@@ -124,32 +127,14 @@ const reloadPlayer = async () => {
   await goLiveStore.reloadPlayer();
 
 };
-// const selectedShowId = ref('');
-// const selectedShow = computed(() => {
-//   return props.shows?.find(show => show.id === selectedShowId.value) || null;
-// });
-// const selectedShow = computed(() => goLiveStore.selectedShow);
 
 const generateStreamKeyProcessing = ref(false)
 const generateStreamKeyError = ref('')
-
-// const reloadPlayer = () => {
-//   let source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-//   let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
-//   console.log('source url: ' + sourceUrl)
-//   let sourceType = 'application/vnd.apple.mpegurl'
-//   let videoJs = videojs('aux-player')
-//   videoJs.src({'src': sourceUrl, 'type': sourceType})
-//   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
-//   goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-//   console.log('reload player')
-// }
 
 const onChangeShow = async (event) => {
   goLiveStore.setSelectedShowId(event);
   await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
   await goLiveStore.reloadPlayer();
-  // videoAuxPlayerStore.loadNewVideo(goLiveStore.selectedShow.mist)
 };
 
 
@@ -182,35 +167,5 @@ const handleGenerateStreamKey = async () => {
     generateStreamKeyProcessing.value = false; // End processing
   }
 };
-
-// const generateStreamKey = () => {
-//   // Ensure selectedShowId is accessible and has a value
-//   if (!goLiveStore.selectedShowId.value) {
-//     console.error("No show selected");
-//     return; // Exit the function if no show is selected
-//   }
-//
-//   axios.post(`/go-live/shows/${goLiveStore.selectedShowId.value}/stream-key`)
-//       .then(response => {
-//         // Handle the successful response here
-//         console.log("Stream key generated:", response.data);
-//         // You might want to do something with the response data, like updating a data property
-//       })
-//       .catch(error => {
-//         // Handle any errors here
-//         console.error("Error generating stream key:", error.response ? error.response.data : error);
-//       });
-// }
-
-// watch(goLiveStore.preSelectedShowId, (newVal, oldVal) => {
-//   if (newVal !== '') {
-//     // Assuming the video player is ready to be initialized at this point
-//     // const videoPlayer = videojs('main-player');
-//     videoPlayerStore.mute()
-//     // goLiveStore.selectedShowId = selectedShowId
-//
-//     // Additional logic to load the video based on selectedShowId can be added here
-//   }
-// });
 </script>
 

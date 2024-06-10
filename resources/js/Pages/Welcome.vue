@@ -1,73 +1,38 @@
 <template>
   <Head :title="pageTitle">
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" :content="ogUrl" />
-    <meta property="og:type" :content="ogType" />
-    <meta property="og:title" :content="ogTitle" />
-    <meta property="og:description" :content="ogDescription" />
-    <meta property="og:image" :content="ogImage" />
-    <meta property="og:image:alt" :content="twitterImageAlt" /> <!-- Optional: for better accessibility -->
+    <meta property="og:url" :content="ogUrl"/>
+    <meta property="og:type" :content="ogType"/>
+    <meta property="og:title" :content="ogTitle"/>
+    <meta property="og:description" :content="ogDescription"/>
+    <meta property="og:image" :content="ogImage"/>
+    <meta property="og:image:alt" :content="twitterImageAlt"/> <!-- Optional: for better accessibility -->
 
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" :content="twitterCard" />
-    <meta name="twitter:site" :content="twitterSite" />
-    <meta name="twitter:creator" :content="twitterCreator" />
-    <meta name="twitter:title" :content="ogTitle" />
-    <meta name="twitter:description" :content="ogDescription" />
-    <meta name="twitter:image" :content="ogImage" />
-    <meta name="twitter:image:alt" :content="twitterImageAlt" />
+    <meta name="twitter:card" :content="twitterCard"/>
+    <meta name="twitter:site" :content="twitterSite"/>
+    <meta name="twitter:creator" :content="twitterCreator"/>
+    <meta name="twitter:title" :content="ogTitle"/>
+    <meta name="twitter:description" :content="ogDescription"/>
+    <meta name="twitter:image" :content="ogImage"/>
+    <meta name="twitter:image:alt" :content="twitterImageAlt"/>
   </Head>
   <transition name="fade" mode="out-in">
     <div id="topDiv"
          :class="welcomeContainer">
       <!-- Target div to trigger visibility changes -->
       <header :class="['headerContainer', { hidden: !isVisibleVideoControls, visible: isVisibleVideoControls }]">
-        <div :class="[{ 'bg-black py-8': hasScrolled }, 'w-full flex flex-row justify-between md:px-6 py-4 welcomeOverlay']">
+        <div :class="containerClasses">
+          <WelcomeBug/>
 
-          <WelcomeBug />
-
-          <div class="flex flex-row flex-wrap justify-center md:justify-end pt-8 lg:pr-6 w-full gap-2">
-
-            <div class="flex gap-2">
-              <Button
-                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.auth.user" @click="router.visit('/teams')">
-                Browse
-              </Button>
-              <Button
-                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.auth.user" @click="router.visit('/news')">
-                News
-              </Button>
-              <Button
-                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.auth.user" @click="router.visit('/schedule')">
-                Schedule
-              </Button>
+            <div v-if="!hasScrolled && welcomeStore.showOverlay" class="pt-0">
+              <WelcomeNavButtons/>
             </div>
-            <div class="flex gap-2">
-              <Button
-                  class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                  v-if="!$page.props.auth.user" @click="welcomeStore.showLogin = true">
-                Log in
-              </Button>
-<!--                          <Button-->
-<!--                              class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
-<!--                              v-if="!$page.props.auth.user" @click="welcomeStore.showRegister = true">-->
-<!--                            &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.auth.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
 
-<!--                            Register-->
-<!--                          </Button>-->
-<!--              <Button v-if="!$page.props.auth.user"-->
-<!--                      class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
-<!--                      @click="router.visit('register')">Register-->
-<!--              </Button>-->
-              <Button v-if="!$page.props.auth.user"
-                      class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                      @click="welcomeStore.showRegister = true">Register
-              </Button>
+            <div v-if="hasScrolled || !welcomeStore.showOverlay" class="pt-8 md:pt-0">
+              <WelcomeNavButtons/>
             </div>
-          </div>
+
         </div>
       </header>
 
@@ -78,14 +43,14 @@
         </div>
 
         <div class="welcomeOverlay">
-          <div class="relative flex items-top justify-center min-h-screen text-gray-200">
-            <div class="flex justify-center items-center h-screen w-screen">
+          <div class="relative flex items-top justify-center min-h-screen w-full text-gray-200">
+            <div class="flex justify-center items-center h-screen w-full">
 
               <WelcomeOverlay v-show="welcomeStore.showOverlay && !welcomeStore.hasScrolled"
                               @watchNow="watchNow"/>
 
               <VideoControlsWelcome v-if="!welcomeStore.showOverlay" class="video-controls"
-                                    :class="[{ 'bg-black py-8 hasScrolled': hasScrolled }, { hidden: !isVisibleVideoControls, visible: isVisibleVideoControls }]"/>
+                                    :class="[{ 'hasScrolled': hasScrolled }, { hidden: !isVisibleVideoControls, visible: isVisibleVideoControls }]"/>
 
 
             </div>
@@ -178,7 +143,6 @@
         </div>
 
 
-
       </div>
 
     </div>
@@ -252,12 +216,13 @@ let props = defineProps({
   user: Object,
 })
 
-import { useIntersectionObserver } from '@vueuse/core';
+import { useIntersectionObserver } from '@vueuse/core'
+import WelcomeNavButtons from '@/Components/Pages/Welcome/WelcomeNavButtons.vue'
 
-const targetForScroll = ref(null);
-const targetForVideoControls = ref(null);
-const isVisibleVideoControls = ref(true);
-const hasScrolled = ref(true);
+const targetForScroll = ref(null)
+const targetForVideoControls = ref(null)
+const isVisibleVideoControls = ref(true)
+const hasScrolled = ref(true)
 
 // useIntersectionObserver(
 //     targetForVideoControls,
@@ -269,10 +234,10 @@ const hasScrolled = ref(true);
 
 useIntersectionObserver(
     targetForScroll,
-    ([{ isIntersecting }]) => {
-      hasScrolled.value = !isIntersecting; // Set isVisible to true when the target is intersecting
+    ([{isIntersecting}]) => {
+      hasScrolled.value = !isIntersecting // Set isVisible to true when the target is intersecting
       welcomeStore.hasScrolled = !isIntersecting
-    }
+    },
 )
 
 const welcomeContainer = computed(() => ({
@@ -311,19 +276,19 @@ let reloadPage = () => {
 function pingServer() {
   fetch('/api/ping', {
     method: 'GET',
-    credentials: 'same-origin'
+    credentials: 'same-origin',
   })
       .then(response => response.json())
       .then(data => {
-        console.log('Session refreshed:', data);
+        console.log('Session refreshed:', data)
       })
       .catch(error => {
-        console.error('Error refreshing session:', error);
-      });
+        console.error('Error refreshing session:', error)
+      })
 }
 
 // Ping the server every 10 minutes (600000 milliseconds)
-setInterval(pingServer, 600000);
+setInterval(pingServer, 600000)
 
 onBeforeMount(() => {
   reloadPage()
@@ -360,16 +325,28 @@ function watchNow() {
   videoPlayerStore.unMute()
 }
 
+const isWelcomeBugVisible = computed(() => {
+  return welcomeStore.showOverlay === false || welcomeStore.hasScrolled;
+});
+
+const containerClasses = computed(() => {
+  return [
+    'w-full flex flex-row md:px-6 py-4 md:py-4 welcomeOverlay',
+    { 'justify-between': isWelcomeBugVisible.value, 'justify-end': !isWelcomeBugVisible.value },
+    { 'bg-black py-2 md:py-4': hasScrolled.value }
+  ];
+});
+
 const pageTitle = ''
-const ogUrl = computed(() => `${page.appUrl}`);
-const ogType = computed(() => 'website');
-const ogTitle = computed(() => 'notTV - Community Television Re-invented!');
-const ogDescription = computed(() => 'Join the revolution of community television with notTV. Experience innovative, creative, and inspiring content that brings communities together. Watch, create, and engage with autonomous broadcasting chapters worldwide!');
-const ogImage = 'https://not.tv/storage/logo_black_311.png';
-const twitterCard = computed(() => 'summary_large_image'); // Type of Twitter card
-const twitterSite = computed(() => '@notTV'); // Your Twitter handle
-const twitterCreator = computed(() => '@notTV'); // Creator's Twitter handle (if different)
-const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
+const ogUrl = computed(() => `${page.appUrl}`)
+const ogType = computed(() => 'website')
+const ogTitle = computed(() => 'notTV - Community Television Re-invented!')
+const ogDescription = computed(() => 'Join the revolution of community television with notTV. Experience innovative, creative, and inspiring content that brings communities together. Watch, create, and engage with autonomous broadcasting chapters worldwide!')
+const ogImage = 'https://not.tv/storage/logo_black_311.png'
+const twitterCard = computed(() => 'summary_large_image') // Type of Twitter card
+const twitterSite = computed(() => '@notTV') // Your Twitter handle
+const twitterCreator = computed(() => '@notTV') // Creator's Twitter handle (if different)
+const twitterImageAlt = computed(() => 'notTV Logo') // Alt text for the image
 
 </script>
 
@@ -393,15 +370,15 @@ const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
 /* Video controls fixed at the bottom */
 .video-controls {
   position: fixed;
-  bottom: 4rem;
+  left: 0;
+  bottom: 0;
   width: 100%;
   z-index: 10;
   transition: opacity 0.5s ease-in-out;
+  padding: 1rem 0;
 }
-
 .video-controls.hasScrolled {
-  bottom:0;
-  padding-bottom: 2rem;
+  background-color: rgba(0, 0, 0, 1);
 }
 
 .hidden {
@@ -421,9 +398,6 @@ const twitterImageAlt = computed(() => 'notTV Logo'); // Alt text for the image
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
-
-
 
 
 </style>

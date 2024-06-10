@@ -708,7 +708,7 @@ class CreatorsController extends Controller {
 
     // Extract team names for logging
     $teamNames = collect($teams)->pluck('name');
-    Log::debug('Team Names: ', $teamNames->toArray());
+//    Log::debug('Team Names: ', $teamNames->toArray());
     return response()->json($teams);
   }
 //  public function fetchTeams(Creator $creator): JsonResponse {

@@ -49,7 +49,6 @@
         </div>
       </div>
 
-
       <div class="flex flex-row justify-between mb-2 py-2 h-12">
         <div><h2 class="text-xl font-bold">Push Destinations</h2>
         </div>
@@ -66,74 +65,14 @@
         </div>
       </div>
       <div v-if="goLiveStore.destinations.length > 0">
-        <div class="flex flex-col gap-4">
-          <div v-for="destination in goLiveStore.destinations" :key="destination.id"
-               class="border p-4 rounded-lg shadow flex flex-row items-center gap-4">
-            <img :src="destination.destination_image" alt="Destination Image"
-                 class="w-24 h-24 object-cover rounded-full"/>
-            <div class="flex-grow">
-              <h3 class="text-lg font-semibold">{{ destination.destination_name }}</h3>
-              <h4 class="">{{ destination.comment }}</h4>
-
-              <p v-if="destination.push_is_started" class="text-red-500 font-semibold">Push Is Active</p>
-              <div class="flex gap-2 mt-2">
-                <button v-if="destination.push_is_started"
-                        @click="goLiveStore.stopPush(destination.id, destination.mist_push_id)"
-                        :disabled="goLiveStore.loadingDestinationId === destination.id"
-                        class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                  Stop Push
-                </button>
-                <button v-else
-                        @click="goLiveStore.startPush(destination.id, destination.full_push_uri, destination.mist_push_id)"
-                        :disabled="goLiveStore.loadingDestinationId === destination.id"
-                        class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                  Start Push
-                </button>
-                <button v-if="!destination.has_auto_push"
-                        @click="goLiveStore.enableAutoPush(destination.id)"
-                        :disabled="goLiveStore.loadingDestinationId === destination.id"
-                        class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                  Enable Auto Push
-                </button>
-                <button v-if="destination.has_auto_push"
-                        @click="goLiveStore.disableAutoPush(destination.id)"
-                        :disabled="goLiveStore.loadingDestinationId === destination.id"
-                        class="hidden py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                  Disable Auto Push
-                </button>
-                <p v-if="destination.has_auto_push" class="text-yellow-500 font-semibold">Auto push
-                  is enabled</p>
-                <span v-if="goLiveStore.loadingDestinationId === destination.id"
-                      class="loading loading-spinner text-info"></span>
-              </div>
-            </div>
-            <div class="flex flex-row justify-end">
-              <!--                  <button @click="editDestination(destination.id)" class="py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 transition duration-150">Edit</button>-->
-              <!--                  <button @click="deleteDestination(destination.id)" class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150">Delete</button>-->
-
-              <button
-                  @click.prevent="editDestination(destination)"
-                  class="btn btn-sm text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg">
-                <font-awesome-icon icon="fa-pencil" class="my-1 mx-1"/>
-              </button>
-            </div>
-            <button
-                @click.prevent="goLiveStore.deleteDestination(destination.id)"
-                class="btn btn-sm text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
-            >
-              <font-awesome-icon icon="fa-trash-can" class="my-1 mx-1"/>
-            </button>
-
-
-          </div>
-        </div>
+        <GoLiveDestinationList />
       </div>
     </div>
 
     <MistStreamPushDestinationForm @update-success="mistStore.getMistStreamPushDestinations"
-                                   :destinationDetails="destinationDetails"
+                                   :destinationDetails="goLiveStore.destinationDetails"
 
-                                   :mode="mistStreamPushDestinationFormModalMode"/>
+                                   :mode="goLiveStore.mistStreamPushDestinationFormModalMode"/>
     <ToastNotification/>
   </div>
 </template>
@@ -145,6 +84,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import MistStreamPushDestinationForm from '@/Components/Global/MistStreams/MistStreamPushDestinationForm'
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
+import GoLiveDestinationList from '@/Components/Pages/GoLive/GoLiveDestinationList.vue'
 
 const appSettingStore = useAppSettingStore()
 const mistStore = useMistStore()
@@ -152,29 +92,16 @@ const goLiveStore = useGoLiveStore()
 
 const countdown = ref(15) // Set initial countdown (in seconds)
 const intervalId = ref(null)
-const destinationDetails = ref({})
-const mistStreamPushDestinationFormModalMode = ref('add')
 
 const anyDestinationHasActiveAutoPush = computed(() => {
   return goLiveStore.destinations.some(destination => destination.has_auto_push === 1)
 })
 
 const addDestination = async () => {
-  mistStreamPushDestinationFormModalMode.value = 'add'
+  goLiveStore.mistStreamPushDestinationFormModalMode = 'add'
   const wildcardId = goLiveStore.selectedShow?.mist_stream_wildcard?.id
-  destinationDetails.value = {mist_stream_wildcard_id: wildcardId} // Initialize destinationDetails with the wildcard ID
+  goLiveStore.destinationDetails = {mist_stream_wildcard_id: wildcardId} // Initialize destinationDetails with the wildcard ID
   document.getElementById('mistStreamPushDestinationForm').showModal()
-}
-
-const editDestination = async (destination) => {
-  mistStreamPushDestinationFormModalMode.value = 'edit'
-  destinationDetails.value = destination
-  document.getElementById('mistStreamPushDestinationForm').showModal()
-  // console.log(`Editing destination with ID: ${destination}`)
-  // const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationDetails.value.id)
-  // if (index !== -1) {
-  //   mistStreamPushDestinations.value[index].has_auto_push = 0
-  // }
 }
 
 

@@ -27,6 +27,8 @@ const initialState = () => ({
     pushDestinationFormSubmitProcessing: false,
     mistServerUri: null,
     previousStreamStatus: null,
+    mistStreamPushDestinationFormModalMode: null,
+    destinationDetails: {},
 })
 
 export const useGoLiveStore = defineStore('goLiveStore', {

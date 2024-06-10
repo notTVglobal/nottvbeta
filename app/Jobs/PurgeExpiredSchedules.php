@@ -48,7 +48,7 @@ class PurgeExpiredSchedules implements ShouldQueue
                 DB::beginTransaction();
                 try {
                   // Delete related index entries first to maintain referential integrity
-                  $schedule->scheduleIndexes()->delete();
+                  SchedulesIndex::where('schedule_id', $schedule->id)->delete();
 
                   // Then delete the schedule
                   $schedule->delete();

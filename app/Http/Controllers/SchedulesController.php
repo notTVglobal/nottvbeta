@@ -488,12 +488,19 @@ class SchedulesController extends Controller {
   }
 
   public function adminResetCache(): JsonResponse {
-    Log::debug('invalidating caches...');
-    $this->scheduleService->invalidateCaches();
-    Log::debug('Caches invalidated!');
+    Log::debug('Invalidating caches...');
+    $response = $this->scheduleService->invalidateCaches();
+    Log::debug($response['message']);
 
-    // Return a response indicating success
-    return response()->json(['message' => 'All caches invalidated successfully.']);
+    return response()->json($response);
+  }
+
+  public function adminUpdateSchedule(): JsonResponse {
+    Log::debug('Updating schedule...');
+    $response = $this->scheduleService->updateSchedule();
+    Log::debug($response['message']);
+
+    return response()->json($response);
   }
 
 //  private function cacheSchedule($scheduleData): void {

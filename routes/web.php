@@ -1386,6 +1386,9 @@ Route::middleware([
   Route::post('/admin/schedule/admin-reset-cache', [SchedulesController::class, 'adminResetCache'])
       ->can('viewAdmin', 'App\Models\User');
 
+  Route::post('/admin/schedule/admin-update-schedule', [SchedulesController::class, 'adminUpdateSchedule'])
+      ->can('viewAdmin', 'App\Models\User');
+
 
 // Recordings
 /////////////

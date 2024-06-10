@@ -13503,6 +13503,10 @@ hr {
     padding-top: 1.5rem;
   }
 
+  .md\:pt-0 {
+    padding-top: 0px;
+  }
+
   .md\:text-left {
     text-align: left;
   }
@@ -13828,6 +13832,10 @@ hr {
 
   .lg\:pt-6 {
     padding-top: 1.5rem;
+  }
+
+  .lg\:pt-8 {
+    padding-top: 2rem;
   }
 
   .lg\:text-left {

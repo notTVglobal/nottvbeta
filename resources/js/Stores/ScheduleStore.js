@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { createTimeSlots } from '@/Utilities/TimeUtils'
 import {
     format,
@@ -17,7 +18,8 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore' // To check if the day 
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear' // For week start and end calculations
-import advancedFormat from 'dayjs/plugin/advancedFormat' // For more complex formatting options
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+import { router } from '@inertiajs/vue3' // For more complex formatting options
 
 // Extend dayjs with the plugins
 dayjs.extend(timezone)
@@ -307,7 +309,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
-                console.log('Received response:', response.data) // Log the raw response data
+                // console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone
@@ -667,7 +669,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Step 7: Sort and group shows by rows
             this.nextFourHoursOfContent = this.sortShowsByPosition(combinedShows)
-            console.log(28)
+            // console.log(28)
         },
 
         filterShowsForTimeRange() {
@@ -874,7 +876,30 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 content: {name: 'Blank Spot'}, // Ensure it is differentiated from normal placeholders
             }
         },
-
+        async purgeAllCaches() {
+            const notificationStore = useNotificationStore()
+            const scheduleStore = useScheduleStore()
+            scheduleStore.resetAll()
+            try {
+                const response = await axios.post('/admin/schedule/admin-reset-cache')
+                notificationStore.setToastNotification(response.data.message, response.data.type)
+            } catch (error) {
+                notificationStore.setToastNotification('Error purging caches.', 'error')
+            }
+            router.reload()
+        },
+        async updateSchedule() {
+            const notificationStore = useNotificationStore()
+            const scheduleStore = useScheduleStore()
+            scheduleStore.resetAll()
+            try {
+                const response = await axios.post('/admin/schedule/admin-update-schedule')
+                notificationStore.setToastNotification(response.data.message, response.data.type)
+            } catch (error) {
+                notificationStore.setToastNotification('Error updating schedule.', 'error')
+            }
+            router.reload()
+        }
     },
 
     getters: {

@@ -5,6 +5,7 @@ use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\SimpleMovieResource;
 use App\Http\Resources\SimpleShowEpisodeResource;
 use App\Http\Resources\SimpleShowResource;
+use App\Jobs\UpdateAllScheduleBroadcastDates;
 use App\Traits\PreloadScheduleContentRelationships;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
@@ -13,6 +14,7 @@ use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
@@ -234,15 +236,54 @@ class ScheduleService {
   /**
    * Invalidate caches.
    */
-  public function invalidateCaches(): void {
-    $keys = ['scheduleToday', 'scheduleWeek', 'scheduleFiveDaySixHour'];
+  public function invalidateCaches(): array {
+    try {
+      $keys = ['schedule_cache_scheduleToday', 'schedule_cache_scheduleWeek', 'schedule_cache_scheduleFiveDaySixHour', 'schedule_cache_all_schedules'];
 
-    // Invalidate keys with patterns
-    $patternKeys = Redis::connection()->keys('scheduleRange_*');
-    $keys = array_merge($keys, $patternKeys);
+      // Invalidate keys with patterns
+      $patternKeys = Redis::connection()->keys('schedule_cache_scheduleRange_*');
+      $keys = array_merge($keys, $patternKeys);
 
-    foreach ($keys as $key) {
-      Cache::forget($key);
+      foreach ($keys as $key) {
+        Cache::forget($key);
+      }
+
+      return [
+          'message' => 'All caches invalidated successfully.',
+          'type' => 'success'
+      ];
+    } catch (Exception $e) {
+      Log::error('Error invalidating caches', [
+          'error' => $e->getMessage(),
+          'trace' => $e->getTraceAsString()
+      ]);
+
+      return [
+          'message' => 'Error invalidating caches.',
+          'type' => 'error'
+      ];
+    }
+  }
+
+
+  public function updateSchedule(): array {
+    try {
+      dispatch(new UpdateAllScheduleBroadcastDates());
+
+      return [
+          'message' => 'Update schedule job dispatched successfully.',
+          'type' => 'success'
+      ];
+    } catch (Exception $e) {
+      Log::error('Error dispatching update schedule job', [
+          'error' => $e->getMessage(),
+          'trace' => $e->getTraceAsString()
+      ]);
+
+      return [
+          'message' => 'Error dispatching update schedule job.',
+          'type' => 'error'
+      ];
     }
   }
 

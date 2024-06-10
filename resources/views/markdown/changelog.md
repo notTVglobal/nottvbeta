@@ -3,6 +3,11 @@
 Last Update: June 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.21
+June 9, 2024
+
+* Fix the Welcome page css layout.
+
 ## v0.9.3.20
 June 9, 2024
 
