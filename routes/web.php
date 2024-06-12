@@ -368,7 +368,6 @@ Route::middleware([
   Route::get('/admin/channel-playlist/get-playlists', [ChannelPlaylistController::class, 'adminGetPlaylists'])->can('viewAdmin', 'App\Models\User');
   Route::post('/admin/channel-playlist/create', [ChannelPlaylistController::class, 'create'])->can('viewAdmin', 'App\Models\User');
 
-
 //
 //    Route::get('/payment', function (Request $request) {
 //        return Inertia::render('Payment', [

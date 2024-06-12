@@ -68,7 +68,7 @@ const props = defineProps({
   startDateTime: String,
 });
 
-const emit = defineEmits(['addContentToGap', 'closeModal']);
+const emit = defineEmits(['addContentToGap']);
 
 const contentType = ref('ShowEpisode');
 const playlistStore = useChannelPlaylistStore();
@@ -96,7 +96,7 @@ const addContent = (content) => {
 };
 
 const closeModal = () => {
-  emit('closeModal');
+  playlistStore.closeAddContentModal()
   resetContent();
 };
 

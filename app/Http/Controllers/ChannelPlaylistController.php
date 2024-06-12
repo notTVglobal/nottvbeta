@@ -13,6 +13,7 @@ use App\Models\OtherContent;
 use App\Models\ShowEpisode;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -29,7 +30,7 @@ class ChannelPlaylistController extends Controller {
     $this->middleware('can:store,' . ChannelPlaylist::class)->only(['store']);
     $this->middleware('can:edit,channelPlaylist')->only(['edit']);
     $this->middleware('can:update,channelPlaylist')->only(['update']);
-    $this->middleware('can:delete,channelPlaylist')->only(['delete']);
+    $this->middleware('can:delete,channelPlaylist')->only(['destroy']);
     $this->middleware('can:restore,channelPlaylist')->only(['restore']);
     $this->middleware('can:forceDelete,channelPlaylist')->only(['forceDelete']);
   }
@@ -178,10 +179,31 @@ class ChannelPlaylistController extends Controller {
    *
    * @return JsonResponse
    */
-  public function index(): JsonResponse {
-    $mistStreams = ChannelPlaylist::all();
+  public function index(): JsonResponse
+  {
+    // Fetch all playlists with the next playlist information
+    $playlists = ChannelPlaylist::with('nextPlaylist')->get();
 
-    return response()->json($mistStreams);
+    // Transform the data to include the name of the next playlist
+    $playlists = $playlists->map(function ($playlist) {
+      return [
+          'id' => $playlist->id,
+          'channel_id' => $playlist->channel_id,
+          'name' => $playlist->name,
+          'description' => $playlist->description,
+          'url' => $playlist->url,
+          'type' => $playlist->type,
+          'status' => $playlist->status,
+          'start_dateTime' => $playlist->start_dateTime,
+          'end_dateTime' => $playlist->end_dateTime,
+          'priority' => $playlist->priority,
+          'repeat_mode' => $playlist->repeat_mode,
+          'next_playlist_id' => $playlist->next_playlist_id,
+          'next_playlist_name' => $playlist->nextPlaylist ? $playlist->nextPlaylist->name : null,
+      ];
+    });
+
+    return response()->json($playlists);
   }
 
   /**
@@ -199,7 +221,6 @@ class ChannelPlaylistController extends Controller {
           'description' => 'nullable|string',
           'url' => 'nullable|url',
           'type' => 'required|string|in:regular,event,special',
-          'status' => 'required|string|in:active,inactive',
           'start_dateTime' => 'required|date',
           'end_dateTime' => 'required|date|after_or_equal:start_dateTime',
           'priority' => 'required|integer',
@@ -231,11 +252,11 @@ class ChannelPlaylistController extends Controller {
           'description' => $request->description,
           'url' => $request->url,
           'type' => $request->type,
-          'status' => $request->status,
           'start_dateTime' => $startDateTime,
           'end_dateTime' => $endDateTime,
           'priority' => $request->priority,
           'repeat_mode' => $request->repeat_mode,
+          'next_playlist_id' => $request->next_playlist_id,
       ]);
 
       Log::info('ChannelPlaylist created', ['playlist' => $channelPlaylist]);
@@ -295,7 +316,7 @@ class ChannelPlaylistController extends Controller {
   /**
    * Display the specified resource.
    *
-   * @param \App\Models\ChannelPlaylist $channelPlaylist
+   * @param ChannelPlaylist $channelPlaylist
    * @return Response
    */
   public function show(ChannelPlaylist $channelPlaylist) {
@@ -305,7 +326,7 @@ class ChannelPlaylistController extends Controller {
   /**
    * Show the form for editing the specified resource.
    *
-   * @param \App\Models\ChannelPlaylist $channelPlaylist
+   * @param ChannelPlaylist $channelPlaylist
    * @return Response
    */
   public function edit(ChannelPlaylist $channelPlaylist) {
@@ -316,7 +337,7 @@ class ChannelPlaylistController extends Controller {
    * Update the specified resource in storage.
    *
    * @param \Illuminate\Http\Request $request
-   * @param \App\Models\ChannelPlaylist $channelPlaylist
+   * @param ChannelPlaylist $channelPlaylist
    * @return Response
    */
   public function update(Request $request, ChannelPlaylist $channelPlaylist) {
@@ -326,10 +347,17 @@ class ChannelPlaylistController extends Controller {
   /**
    * Remove the specified resource from storage.
    *
-   * @param \App\Models\ChannelPlaylist $channelPlaylist
-   * @return Response
+   * @param ChannelPlaylist $channelPlaylist
+   * @return RedirectResponse
    */
-  public function destroy(ChannelPlaylist $channelPlaylist) {
-    //
+  public function destroy(ChannelPlaylist $channelPlaylist): RedirectResponse {
+    $channelPlaylist->delete();
+
+    return back()->with(['message' => 'Channel Playlist deleted successfully'], 200);
+
+//    return response()->json([
+//        'message' => 'Channel Playlist deleted successfully',
+//        'status' => 'info',
+//    ], 201);
   }
 }

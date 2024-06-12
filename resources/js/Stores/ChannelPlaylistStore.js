@@ -24,6 +24,7 @@ const initialState = () => ({
     currentPage: 1,
     totalPages: 1,
     searchQuery: '',
+    showAddContentModal: false,
     loading: false,
     loadingSchedules: false,
     processing: false,
@@ -36,6 +37,12 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
         reset() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
+        },
+        openAddContentModal() {
+            this.showAddContentModal = true
+        },
+        closeAddContentModal() {
+            this.showAddContentModal = false
         },
         async fetchPlaylists() {
             this.loading = true

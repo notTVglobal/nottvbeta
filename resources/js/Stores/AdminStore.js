@@ -217,14 +217,15 @@ export const useAdminStore = defineStore('adminStore', {
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setPlaybackPriorityType`, dataToSend)
                 if (response.data.success) {
-                    this.fetchChannels()
+                    await this.fetchChannels()
                     // Find the index of the updated channel in the channels array
-                    const index = this.channels.findIndex(c => c.id === channel.id)
-                    if (index !== -1) {
-                        // Update the channel in the channels array with the updated data
-                        this.channels[index] = response.data.channel
-                    }
+                    // const index = this.channels.findIndex(c => c.id === channel.id)
+                    // if (index !== -1) {
+                    //     // Update the channel in the channels array with the updated data
+                    //     this.channels[index] = response.data.channel
+                    // }
                 }
+                await this.fetchChannels()
             } catch (error) {
                 console.error(error)
             }
@@ -234,13 +235,13 @@ export const useAdminStore = defineStore('adminStore', {
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setMistStream`, dataToSend)
                 if (response.data.success) {
-                    this.fetchChannels()
+                    await this.fetchChannels()
                     // Find the index of the updated channel in the channels array
-                    const index = this.channels.findIndex(c => c.id === channel.id)
-                    if (index !== -1) {
-                        // Update the channel in the channels array with the updated data
-                        this.channels[index] = response.data.channel
-                    }
+                    // const index = this.channels.findIndex(c => c.id === channel.id)
+                    // if (index !== -1) {
+                    //     // Update the channel in the channels array with the updated data
+                    //     this.channels[index] = response.data.channel
+                    // }
                 }
             } catch (error) {
                 console.error(error)
@@ -251,13 +252,13 @@ export const useAdminStore = defineStore('adminStore', {
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setChannelPlaylist`, dataToSend)
                 if (response.data.success) {
-                    this.fetchChannels()
+                    await this.fetchChannels()
                     // Find the index of the updated channel in the channels array
-                    const index = this.channels.findIndex(c => c.id === channel.id)
-                    if (index !== -1) {
-                        // Update the channel in the channels array with the updated data
-                        this.channels[index] = response.data.channel
-                    }
+                    // const index = this.channels.findIndex(c => c.id === channel.id)
+                    // if (index !== -1) {
+                    //     // Update the channel in the channels array with the updated data
+                    //     this.channels[index] = response.data.channel
+                    // }
                 }
             } catch (error) {
                 console.error(error)
@@ -268,13 +269,13 @@ export const useAdminStore = defineStore('adminStore', {
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setExternalSource`, dataToSend)
                 if (response.data.success) {
-                    this.fetchChannels()
+                    await this.fetchChannels()
                     // Find the index of the updated channel in the channels array
-                    const index = this.channels.findIndex(c => c.id === channel.id)
-                    if (index !== -1) {
-                        // Update the channel in the channels array with the updated data
-                        this.channels[index] = response.data.channel
-                    }
+                    // const index = this.channels.findIndex(c => c.id === channel.id)
+                    // if (index !== -1) {
+                    //     // Update the channel in the channels array with the updated data
+                    //     this.channels[index] = response.data.channel
+                    // }
                 }
             } catch (error) {
                 console.error(error)

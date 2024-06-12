@@ -14,7 +14,6 @@
       <AdminChannelHeaderButtons/>
 
       <div class="bg-orange-300 px-2 text-black mb-3">
-        <p>Add a channel: create playlist and add shows.</p>
         <p><span class="font-semibold">TRAVIS NOTE: </span>Use FFMPEG to push an .mp4 to a mist stream. This will allow
           us to schedule video objects from anywhere
           into our channels, and we can have a channel that loads the current video at the right time spot in the video

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChannelPlaylist;
 use App\Models\NewsStory;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -38,27 +39,39 @@ class ChannelController extends Controller
   }
 
 
-  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): JsonResponse {
-    //
+  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): JsonResponse
+  {
+    // Validate the incoming request
     $validatedData = $request->validate([
-//        'channelId' => 'unique:teams|required|max:255',
-        'setPriorityType' => 'required|nullable|string|max:15',
+        'setPriorityType' => 'required|string|max:15|nullable',
     ]);
 
-//    $channelId = $validatedData->channelId;
+    // Extract the validated priority type
     $priorityType = $validatedData['setPriorityType'];
-//    $channel = Channel::where('id', $channelId)->first();
+
+    // Update the playback priority type of the channel
     $channel->playback_priority_type = $priorityType;
     $channel->save();
 
-//    return redirect()->route('admin.channels', $channel)->with('message', 'Channel '. $channel->id .'Priority Successfully Changed');
+    // Update the status of the associated playlist based on the priority type
+    if ($channel->channel_playlist_id) {
+      $channelPlaylist = ChannelPlaylist::find($channel->channel_playlist_id);
+      if ($channelPlaylist) {
+        if ($priorityType === 'channelPlaylist') {
+          $channelPlaylist->status = 'Active';
+        } else {
+          $channelPlaylist->status = 'Standby';
+        }
+        $channelPlaylist->save();
+      }
+    }
+
     // Return a JSON response
     return response()->json([
         'success' => true,
         'message' => 'Channel ' . $channel->id . ' Priority Successfully Changed',
         'channel' => $channel,
     ]);
-
   }
 
   public function setMistStream(Channel $channel, HttpRequest $request): JsonResponse {
@@ -78,12 +91,32 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function setChannelPlaylist(Channel $channel, HttpRequest $request): JsonResponse {
+  public function setChannelPlaylist(Channel $channel, HttpRequest $request): JsonResponse
+  {
     $validatedData = $request->validate([
-        'channelPlaylistId' => 'required|nullable|integer',
+        'channelPlaylistId' => 'required|integer|nullable',
     ]);
 
     $channelPlaylistId = $validatedData['channelPlaylistId'];
+
+    // Update the status of the selected playlist
+    if ($channelPlaylistId) {
+      $selectedPlaylist = ChannelPlaylist::findOrFail($channelPlaylistId);
+      if ($channel->playback_priority_type === 'channelPlaylist') {
+        $selectedPlaylist->status = 'Active';
+      } else {
+        $selectedPlaylist->status = 'Standby';
+      }
+      $selectedPlaylist->channel_id = $channel->id;
+      $selectedPlaylist->save();
+
+      // Set other playlists with the same channel_id to Inactive
+      ChannelPlaylist::where('channel_id', $channel->id)
+          ->where('id', '!=', $channelPlaylistId)
+          ->update(['status' => 'Inactive']);
+    }
+
+    // Update the channel's playlist ID
     $channel->channel_playlist_id = $channelPlaylistId;
     $channel->save();
 
