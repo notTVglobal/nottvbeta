@@ -16,13 +16,14 @@ class ShowEpisodeResource extends JsonResource {
    */
   public function toArray($request) {
     return [
-        'id'          => $this->id,
-        'name'        => $this->name,
-        'slug'        => $this->slug,
-        'description' => $this->description,
-        'image'       => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
+        'id'              => $this->id,
+        'name'            => $this->name,
+        'slug'            => $this->slug,
+        'description'     => $this->description,
+        'duration'        => $this->duration,
+        'image'           => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
       // Include video using VideoResource
-        'video'       => $this->whenLoaded('video') ? new VideoResource($this->video) : null,
+        'video'           => $this->whenLoaded('video') ? new VideoResource($this->video) : null,
         'category'        => [
             'name'        => $this->resource->show->getCachedCategory()->name ?? null,
             'description' => $this->resource->show->getCachedCategory()->description ?? null,
@@ -31,11 +32,11 @@ class ShowEpisodeResource extends JsonResource {
             'name'        => $this->resource->show->getCachedSubCategory()->name ?? null,
             'description' => $this->resource->show->getCachedSubCategory()->description ?? null,
         ],
-        'show'          => [
-          'name'        => $this->show->name ?? null,
-          'slug'        => $this->show->slug ?? null,
-          'description' => $this->show->description ?? null,
-          'image'       => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
+        'show'            => [
+            'name'        => $this->show->name ?? null,
+            'slug'        => $this->show->slug ?? null,
+            'description' => $this->show->description ?? null,
+            'image'       => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
         ],
         'releaseDateTime' => $this->release_dateTime ?? null,
 

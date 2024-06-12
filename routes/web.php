@@ -364,6 +364,9 @@ Route::middleware([
 
   Route::resource('channelPlaylists', ChannelPlaylistController::class);
   Route::get('/admin/channel-playlist/search', [ChannelPlaylistController::class, 'adminSearchChannelPlaylists'])->can('viewAdmin', 'App\Models\User');
+  Route::get('/admin/channel-playlist/get-content', [ChannelPlaylistController::class, 'adminGetContent'])->can('viewAdmin', 'App\Models\User');
+  Route::get('/admin/channel-playlist/get-playlists', [ChannelPlaylistController::class, 'adminGetPlaylists'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channel-playlist/create', [ChannelPlaylistController::class, 'create'])->can('viewAdmin', 'App\Models\User');
 
 
 //

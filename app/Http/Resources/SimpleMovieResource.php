@@ -28,6 +28,7 @@ class SimpleMovieResource extends JsonResource
           'name' => $this->name,
           'slug' => $this->slug,
           'logline' => $this->logline,
+          'duration' => $this->duration,
           'image' => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
           'category' => $this->resource->getCachedCategory() ? [
               'name' => $this->resource->getCachedCategory()->name,
@@ -37,7 +38,7 @@ class SimpleMovieResource extends JsonResource
               'name' => $this->resource->getCachedSubCategory()->name,
               'description' => $this->resource->getCachedSubCategory()->description,
           ] : null,
-          'team' => $this->whenLoaded('team') ? $this->transformTeam($this->team) : null,
+//          'team' => $this->whenLoaded('team') ? $this->transformTeam($this->team) : null,
         // Add other fields as necessary
       ];
     }

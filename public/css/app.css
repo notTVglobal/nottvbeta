@@ -10517,6 +10517,10 @@ hr {
   padding: 2rem;
 }
 
+.p-0 {
+  padding: 0px;
+}
+
 .px-0 {
   padding-left: 0px;
   padding-right: 0px;

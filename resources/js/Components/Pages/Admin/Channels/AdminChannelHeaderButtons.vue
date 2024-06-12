@@ -56,23 +56,26 @@
     </dialog>
 
     <dialog id="addChannelPlaylistModal" class="modal">
-      <div class="modal-box">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      <div class="modal-box p-0 flex flex-col h-full">
+        <form method="dialog" class="absolute right-2 top-2 z-50">
+          <button @click="clearChannelPlaylistStore" class="btn btn-sm btn-circle btn-ghost">✕</button>
         </form>
-        <h3 class="font-bold text-lg mb-2">Add Channel Playlist</h3>
-        <CreatePlaylist />
+        <div class="flex-grow overflow-auto">
+          <CreatePlaylist />
+        </div>
       </div>
     </dialog>
   </div>
 </template>
 <script setup>
 import { useAdminStore } from '@/Stores/AdminStore'
+import { useChannelPlaylistStore } from '@/Stores/ChannelPlaylistStore'
 import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal'
 import { ref } from 'vue'
 import CreatePlaylist from '@/Components/Pages/Admin/ChannelPlaylists/CreatePlaylist.vue'
 
 const adminStore = useAdminStore()
+const channelPlaylistStore = useChannelPlaylistStore()
 
 const newChannelName = ref('')
 
@@ -82,6 +85,10 @@ const openAddChannelModal = () => {
 
 const openAddChannelPlaylistModal = () => {
   document.getElementById('addChannelPlaylistModal').showModal()
+}
+
+const clearChannelPlaylistStore = () => {
+  channelPlaylistStore.reset()
 }
 
 const submit = async () => {
