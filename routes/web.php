@@ -367,6 +367,7 @@ Route::middleware([
   Route::get('/admin/channel-playlist/get-content', [ChannelPlaylistController::class, 'adminGetContent'])->can('viewAdmin', 'App\Models\User');
   Route::get('/admin/channel-playlist/get-playlists', [ChannelPlaylistController::class, 'adminGetPlaylists'])->can('viewAdmin', 'App\Models\User');
   Route::post('/admin/channel-playlist/create', [ChannelPlaylistController::class, 'create'])->can('viewAdmin', 'App\Models\User');
+//  Route::put('/admin/channel-playlist/{channel', [ChannelPlaylistController::class, 'create'])->can('viewAdmin', 'App\Models\User');
 
 //
 //    Route::get('/payment', function (Request $request) {
@@ -712,6 +713,13 @@ Route::middleware([
   })->can('viewVip', 'App\Models\User')
       ->name('library');
 
+// Library
+///////////
+
+  Route::get('/iframe', function () {
+    return Inertia::render('IframeTest');
+  })->can('viewVip', 'App\Models\User')
+      ->name('iFrame');
 
 // For Testing
 ///////////

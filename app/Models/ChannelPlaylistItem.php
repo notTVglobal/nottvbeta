@@ -18,18 +18,24 @@ class ChannelPlaylistItem extends Model {
       'source_path',
       'source_type',
       'is_live',
+      'is_scheduled',
       'current_viewers_count',
       'max_viewers_count',
       'additional_sources',
       'custom_playback_options',
       'metadata',
-      'has_played'
+      'has_played',
+      'start_dateTime',
+      'end_dateTime',
+      'duration_minutes'
   ];
 
   protected $casts = [
       'additional_sources'      => 'json',
       'custom_playback_options' => 'json',
       'metadata'                => 'json',
+      'is_live'                 => 'boolean',
+      'is_scheduled'            => 'boolean',
   ];
 
 

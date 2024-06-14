@@ -3,8 +3,9 @@
     <div class="modal-box w-11/12 max-w-5xl">
 
       <div class="flex flex-row justify-between align-bottom">
-        <div>
+        <div class="flex gap-2">
           <h3 class="font-bold text-lg">{{ adminStore.modalHeader }}</h3>
+          <span v-if="adminStore.loading" class="loading loading-spinner" />
         </div>
         <div>
           <h3>{{ adminStore?.selectedChannel?.name }}</h3>
@@ -27,7 +28,7 @@
 
       <div>
         <div class="overflow-x-auto">
-          <table class="table table-xs">
+            <table class="table table-xs">
             <thead>
             <tr>
               <th>
@@ -66,6 +67,7 @@
               </th>
             </tr>
             </thead>
+
             <tbody>
             <tr v-for="item in adminStore.paginatedItems" :key="item.id" class="hover:bg-blue-300 hover:cursor-pointer"
                 :class="{'bg-yellow-500': item.id === adminStore.activeItemId}">
@@ -102,13 +104,13 @@
               </td>
               <td @click="selectItem(item)">
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{
-                    formatDateTime(item.start_dateTime)
+                    dayjs.utc(item.start_dateTime).tz(userStore.timezone).format('MMM D, YYYY, hh:mm A')
                   }}</span>
-                <span v-if="adminStore.currentType === 'mistStream'">{{ formatDateTime(item.created_at) }}</span>
+                <span v-if="adminStore.currentType === 'mistStream'">{{ dayjs.utc(item.created_at).tz(userStore.timezone).format('MMM D, YYYY, hh:mm A') }}</span>
 
               </td>
               <td @click="selectItem(item)">
-                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.end_dateTime) }}</span>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ dayjs.utc(item.end_dateTime).tz(userStore.timezone).format('MMM D, YYYY, hh:mm A') }}</span>
                 <span v-if="adminStore.currentType === 'mistStream'"></span>
               </td>
               <td class="w-fit whitespace-nowrap overflow-hidden">
@@ -147,8 +149,20 @@
         </div>
         <div v-if="adminStore.totalModalPages > 1" class="flex flex-row justify-center mt-6 w-full">
           <div class="join grid grid-cols-2">
-            <button class="join-item btn btn-sm btn-outline" @click="adminStore.prevPage">Previous page</button>
-            <button class="join-item btn btn-sm btn-outline" @click="adminStore.nextPage">Next</button>
+            <button
+                class="join-item btn btn-sm btn-outline"
+                @click="adminStore.prevPage"
+                :disabled="adminStore.currentPage === 1"
+            >
+              Previous page
+            </button>
+            <button
+                class="join-item btn btn-sm btn-outline"
+                @click="adminStore.nextPage"
+                :disabled="adminStore.currentPage === adminStore.totalModalPages"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
@@ -174,8 +188,8 @@
             Are you sure you want to select <span id="selectedItemName"></span>?
           </p>
           <div class="modal-action">
-            <button class="btn" @click="confirmSelection">Confirm</button>
-            <button class="btn" onclick="document.getElementById('confirmSelectionModal').close()">Cancel</button>
+            <button class="btn" @click="confirmSelection" :disabled="adminStore.loading">Confirm</button>
+            <button class="btn" @click="closeConfirmSelectionModal" :disabled="adminStore.loading">Cancel</button>
           </div>
         </div>
       </dialog>
@@ -187,8 +201,8 @@
             Are you sure you want to remove <span id="selectedForRemovalItemName"></span>?
           </p>
           <div class="modal-action">
-            <button class="btn" @click="confirmRemove">Confirm</button>
-            <button class="btn" onclick="document.getElementById('confirmRemoveModal').close()">Cancel</button>
+            <button class="btn" @click="confirmRemove" :disabled="adminStore.loading">Confirm</button>
+            <button class="btn" @click="closeConfirmRemoveModal" :disabled="adminStore.loading">Cancel</button>
           </div>
         </div>
       </dialog>
@@ -203,12 +217,12 @@
             <form method="dialog" class="absolute right-2 top-2 z-50">
               <button class="btn btn-sm btn-circle btn-ghost">✕</button>
             </form>
-            <h3 class="font-bold text-lg">Edit Playlist</h3>
+            <h2 class="text-2xl font-bold">Edit Playlist</h2>
           </div>
 
           <!-- Modal content with padding to account for the sticky header and footer -->
           <div class="modal-body flex-1 overflow-y-auto">
-            <EditPlaylist :playlist="selectedPlaylist" @update-list="refreshList" />
+            <EditPlaylist v-if="selectedPlaylist" :playlist="selectedPlaylist" @update-list="refreshList" />
           </div>
 
           <!-- Sticky footer -->
@@ -230,17 +244,24 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted, nextTick } from 'vue'
+import { ref, watch, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useAdminStore } from '@/Stores/AdminStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useChannelPlaylistStore } from '@/Stores/ChannelPlaylistStore'
 import debounce from 'lodash/debounce'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { router } from '@inertiajs/vue3'
-import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal.vue'
-import EditPlaylist from '@/Components/Pages/Admin/ChannelPlaylists/EditPlaylist.vue'
+// Lazy load the components
+const AddOrUpdateMistStreamModal = defineAsyncComponent(() => import('@/Components/Global/MistStreams/AddOrUpdateMistStreamModal.vue'))
+const EditPlaylist = defineAsyncComponent(() => import('@/Components/Pages/Admin/ChannelPlaylists/EditPlaylist.vue'))
+
+import dayjs from 'dayjs'
 
 const adminStore = useAdminStore()
 const channelStore = useChannelStore()
+const userStore = useUserStore()
+const channelPlaylistStore = useChannelPlaylistStore()
 // const searchTerm = ref('');
 
 let props = defineProps({
@@ -312,26 +333,33 @@ const removeMistStream = (name) => {
 }
 
 const openEditPlaylistModal = (item) => {
+  console.log('Edit item opening: ', item)
   selectedPlaylist.value = item
+  channelPlaylistStore.setPlaylistData(item)
   document.getElementById('updateChannelPlaylistModal').showModal()
 }
 
 const closeEditPlaylistModal = () => {
+  channelPlaylistStore.reset()
   document.getElementById('updateChannelPlaylistModal').close()
 }
 
 const removeChannelPlaylist = (item) => {
-  router.delete(route('channelPlaylists.destroy', { channelPlaylist: item.id }))
-  document.getElementById('dynamicModal').close()
+  channelPlaylistStore.removePlaylist(item.id)
+  adminStore.removeItem(item)
 }
 
 const refreshList = () => {
   adminStore.fetchItems(props.type)
 }
 
-onMounted(async () => {
-  await adminStore.fetchItems(props.type)
-})
+// onMounted(() => {
+//   adminStore.fetchItems(props.type).then(() => {
+//     adminStore.setActiveItem(props.type);
+//   }).catch(error => {
+//     console.error('Error fetching items:', error);
+//   });
+// });
 
 const getStatusClass = (status) => {
   switch (status) {

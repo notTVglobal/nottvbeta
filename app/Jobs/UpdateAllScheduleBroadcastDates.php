@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Schedule;
-use App\Traits\PreloadScheduleContentRelationships;
+use App\Traits\PreloadContentRelationships;
 use Illuminate\Bus\Batch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UpdateAllScheduleBroadcastDates implements ShouldQueue {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable, PreloadScheduleContentRelationships;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable, PreloadContentRelationships;
 
   // This will run "after" we Purge Expired Shows.
   // This runs a batch of `UpdateBroadcastScheduleForShow` Jobs.

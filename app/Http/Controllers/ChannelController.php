@@ -60,7 +60,17 @@ class ChannelController extends Controller
         if ($priorityType === 'channelPlaylist') {
           $channelPlaylist->status = 'Active';
         } else {
-          $channelPlaylist->status = 'Standby';
+          // Check if any other channels are using the same playlist with 'channelPlaylist' priority type
+          $otherChannels = Channel::where('channel_playlist_id', $channel->channel_playlist_id)
+              ->where('id', '!=', $channel->id)
+              ->where('playback_priority_type', 'channelPlaylist')
+              ->exists();
+
+          if ($otherChannels) {
+            $channelPlaylist->status = 'Active';
+          } else {
+            $channelPlaylist->status = 'Standby';
+          }
         }
         $channelPlaylist->save();
       }
@@ -97,28 +107,62 @@ class ChannelController extends Controller
         'channelPlaylistId' => 'required|integer|nullable',
     ]);
 
-    $channelPlaylistId = $validatedData['channelPlaylistId'];
+    $newChannelPlaylistId = $validatedData['channelPlaylistId'];
+    $currentChannelPlaylistId = $channel->channel_playlist_id;
 
     // Update the status of the selected playlist
-    if ($channelPlaylistId) {
-      $selectedPlaylist = ChannelPlaylist::findOrFail($channelPlaylistId);
+    if ($newChannelPlaylistId) {
+      $selectedPlaylist = ChannelPlaylist::findOrFail($newChannelPlaylistId);
+
       if ($channel->playback_priority_type === 'channelPlaylist') {
         $selectedPlaylist->status = 'Active';
       } else {
-        $selectedPlaylist->status = 'Standby';
-      }
-      $selectedPlaylist->channel_id = $channel->id;
-      $selectedPlaylist->save();
+        // Check if any other channels are using the playlist with 'channelPlaylist' priority type
+        $isActive = Channel::where('channel_playlist_id', $newChannelPlaylistId)
+            ->where('playback_priority_type', 'channelPlaylist')
+            ->where('id', '!=', $channel->id)
+            ->exists();
 
-      // Set other playlists with the same channel_id to Inactive
-      ChannelPlaylist::where('channel_id', $channel->id)
-          ->where('id', '!=', $channelPlaylistId)
-          ->update(['status' => 'Inactive']);
+        $selectedPlaylist->status = $isActive ? 'Active' : 'Standby';
+      }
+
+      $selectedPlaylist->save();
     }
 
     // Update the channel's playlist ID
-    $channel->channel_playlist_id = $channelPlaylistId;
+    $channel->channel_playlist_id = $newChannelPlaylistId;
     $channel->save();
+
+    // Check and update the status of the previous playlist if it exists and was changed
+    if ($currentChannelPlaylistId && $currentChannelPlaylistId != $newChannelPlaylistId) {
+      $previousPlaylist = ChannelPlaylist::find($currentChannelPlaylistId);
+
+      if ($previousPlaylist) {
+        // Check if any other channels are using the previous playlist
+        $channelsUsingPreviousPlaylist = Channel::where('channel_playlist_id', $currentChannelPlaylistId)
+            ->where('id', '!=', $channel->id)
+            ->get();
+
+        if ($channelsUsingPreviousPlaylist->isEmpty()) {
+          // No other channels are using this playlist
+          $previousPlaylist->status = 'Inactive';
+        } else {
+          // Check if any other channels have the playback priority type set to 'channelPlaylist'
+          $hasChannelPlaylistPriority = $channelsUsingPreviousPlaylist->contains(function ($channel) {
+            return $channel->playback_priority_type === 'channelPlaylist';
+          });
+
+          if ($hasChannelPlaylistPriority) {
+            $previousPlaylist->status = 'Active';
+          } else {
+            // If other channels are using the playlist but none have 'channelPlaylist' priority
+            $previousPlaylist->status = 'Standby';
+          }
+        }
+
+        $previousPlaylist->save();
+      }
+    }
 
     // Return a JSON response
     return response()->json([
@@ -127,6 +171,10 @@ class ChannelController extends Controller
         'channel' => $channel,
     ]);
   }
+
+
+
+
 
   public function setExternalSource(Channel $channel, HttpRequest $request): JsonResponse {
     $validatedData = $request->validate([

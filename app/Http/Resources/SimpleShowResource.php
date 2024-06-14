@@ -44,6 +44,7 @@ class SimpleShowResource extends JsonResource {
             'name'        => $this->resource->getCachedSubCategory()->name,
             'description' => $this->resource->getCachedSubCategory()->description,
         ] : null,
+        'duration'    => $this->duration ?? null,
     ];
   }
 }

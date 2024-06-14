@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ChannelPlaylistItemCreator;
+use App\Helpers\ChannelPlaylistItemHelper;
+use App\Helpers\ChannelPlaylistRequestValidator;
+use App\Helpers\PlaylistContentHelper;
 use App\Http\Resources\SimpleMovieResource;
 use App\Http\Resources\SimpleNewsStoryResource;
 use App\Http\Resources\SimpleShowEpisodeResource;
 use App\Models\ChannelPlaylist;
 use App\Models\ChannelPlaylistItem;
+use App\Models\MistStream;
 use App\Models\Movie;
 use App\Models\NewsStory;
 use App\Models\OtherContent;
 use App\Models\ShowEpisode;
+use App\Traits\PreloadContentRelationships;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +27,8 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ChannelPlaylistController extends Controller {
+
+  use PreloadContentRelationships;
 
   public function __construct() {
 
@@ -66,20 +74,17 @@ class ChannelPlaylistController extends Controller {
   public function adminGetContent(Request $request): JsonResponse {
     try {
       $type = $request->input('type');
-      $maxDurationMinutes = $request->input('maxDurationMinutes');
-      $page = $request->input('page', 1);
+      $maxDurationMinutes = intval($request->input('maxDurationMinutes')); // Ensure this is an integer
+      $page = intval($request->input('page', 1)); // Ensure this is an integer
       $search = $request->input('search', '');
       $startDateTime = $request->input('start_dateTime');
 
-      Log::info('Request received', [
-          'type'               => $type,
-          'maxDurationMinutes' => $maxDurationMinutes,
-          'page'               => $page,
-          'search'             => $search,
-          'start_dateTime'     => $startDateTime,
-      ]);
-
       if (!$type || !$maxDurationMinutes || !$startDateTime) {
+        Log::error('Invalid request parameters', [
+            'type' => $type,
+            'maxDurationMinutes' => $maxDurationMinutes,
+            'startDateTime' => $startDateTime,
+        ]);
         return response()->json(['message' => 'Invalid request parameters', 'status' => 'error'], 400);
       }
 
@@ -90,72 +95,69 @@ class ChannelPlaylistController extends Controller {
         'Movie' => Movie::with('image'),
         'NewsStory' => NewsStory::with('image'),
         'OtherContent' => OtherContent::query(),
-        default => throw new \Exception('Invalid content type'),
+        'MistStream' => MistStream::query(),
+        default => throw new \Exception("Invalid content type: $type"),
       };
 
-      $contentQuery->where('duration', '<=', $maxDurationSeconds);
+      if ($type !== 'MistStream') {
+        $contentQuery->where('duration', '<=', $maxDurationSeconds);
+      }
 
       if ($search) {
         $contentQuery->where('name', 'like', "%$search%");
       }
 
-      // Log the query for debugging
-      Log::info('Query being executed', ['query' => $contentQuery->toSql(), 'bindings' => $contentQuery->getBindings()]);
-
       $content = $contentQuery->paginate(10, ['*'], 'page', $page);
 
-      // Log the actual items fetched from the query
-      Log::info('Items fetched', ['items' => $content->items()]);
-
-      $formattedContent = $content->map(function ($item) use ($type, $startDateTime) {
-        $durationMinutes = $item->duration / 60;
+      $formattedContent = $content->map(function ($item) use ($type, $startDateTime, $maxDurationMinutes) {
+        $durationMinutes = $type !== 'MistStream' ? $item->duration / 60 : $maxDurationMinutes;
         $startDateTimeParsed = Carbon::parse($startDateTime);
-        $endDateTime = $startDateTimeParsed->copy()->addMinutes($durationMinutes);
+        $endDateTime = $startDateTimeParsed->copy()->addMinutes((int)$durationMinutes);
 
         return [
-            'content'          => match ($type) {
-              'ShowEpisode' => new SimpleShowEpisodeResource($item),
-              'Movie' => new SimpleMovieResource($item),
-              'NewsStory' => new SimpleNewsStoryResource($item),
-              'OtherContent' => $item,
-            },
-//            'start_dateTime' => $startDateTimeParsed->format('Y-m-d\TH:i:s.v\Z'),
-            'start_dateTime'   => $startDateTimeParsed->format('Y-m-d\TH:i:s.v\Z'),
-            'end_dateTime'     => $endDateTime->format('Y-m-d\TH:i:s.v\Z'),
+            'content' => \App\Helpers\PlaylistContentHelper::getFormattedContent($item, $type),
+            'start_dateTime' => $startDateTimeParsed->format('Y-m-d\TH:i:s.v\Z'),
+            'end_dateTime' => $endDateTime->format('Y-m-d\TH:i:s.v\Z'),
             'duration_minutes' => $durationMinutes,
-            'type'             => lcfirst($type),
+            'type' => lcfirst(class_basename($type)),
         ];
       });
 
-      Log::info('Content fetched successfully', [
-          'items'        => $formattedContent,
-          'current_page' => $content->currentPage(),
-          'total_pages'  => $content->lastPage(),
-      ]);
-
       return response()->json([
-          'items'        => $formattedContent,
+          'items' => $formattedContent,
           'current_page' => $content->currentPage(),
-          'total_pages'  => $content->lastPage(),
-          'message'      => 'Content fetched successfully',
-          'status'       => 'success',
+          'total_pages' => $content->lastPage(),
+          'message' => 'Content fetched successfully',
+          'status' => 'success',
       ]);
     } catch (\Exception $e) {
-      Log::error('Exception in adminGetContent', ['exception' => $e->getMessage()]);
+      Log::error('Exception in adminGetContent', [
+          'exception' => $e->getMessage(),
+          'type' => $type,
+          'maxDurationMinutes' => $maxDurationMinutes,
+          'page' => $page,
+          'search' => $search,
+          'startDateTime' => $startDateTime,
+      ]);
 
       return response()->json(['message' => 'An unexpected error occurred', 'status' => 'error', 'details' => $e->getMessage()], 500);
     }
   }
 
+
+
+
+
+
   public function adminGetPlaylists(): JsonResponse
   {
     try {
-      Log::info('Fetching channel playlists');
+//      Log::debug('Fetching channel playlists');
 
       // Fetch playlists from the database
       $playlists = ChannelPlaylist::all();
 
-      Log::info('Playlists fetched successfully', ['playlists' => $playlists]);
+//      Log::debug('Playlists fetched successfully', ['playlists' => $playlists]);
 
       return response()->json([
           'message' => 'Playlists fetched successfully',
@@ -181,11 +183,20 @@ class ChannelPlaylistController extends Controller {
    */
   public function index(): JsonResponse
   {
-    // Fetch all playlists with the next playlist information
-    $playlists = ChannelPlaylist::with('nextPlaylist')->get();
+
+    // Fetch all playlists with the next playlist information and items with content
+    $playlists = ChannelPlaylist::with(['nextPlaylist', 'items'])->get();
+
+    // Preload additional relationships for each item's content
+    foreach ($playlists as $playlist) {
+      foreach ($playlist->items as $item) {
+        $this->preloadContentRelationships($item);
+      }
+    }
 
     // Transform the data to include the name of the next playlist
     $playlists = $playlists->map(function ($playlist) {
+//      Log::debug('Processing playlist', ['playlist' => $playlist->toArray()]);
       return [
           'id' => $playlist->id,
           'channel_id' => $playlist->channel_id,
@@ -200,6 +211,36 @@ class ChannelPlaylistController extends Controller {
           'repeat_mode' => $playlist->repeat_mode,
           'next_playlist_id' => $playlist->next_playlist_id,
           'next_playlist_name' => $playlist->nextPlaylist ? $playlist->nextPlaylist->name : null,
+          'playlist_items' => $playlist->items->map(function ($item) {
+//            Log::debug('Processing item', ['item' => $item->toArray()]);
+//            $durationMinutes = $item->duration / 60;
+//            $startDateTimeParsed = Carbon::parse($item->start_dateTime);
+//            $endDateTime = $startDateTimeParsed->copy()->addMinutes($durationMinutes);
+            $startDateTimeParsed = $item->start_dateTime ? Carbon::parse($item->start_dateTime) : null;
+            $endDateTimeParsed = $item->end_dateTime ? Carbon::parse($item->end_dateTime) : null;
+
+            return [
+                'id' => $item->id,
+                'content_id' => $item->content_id,
+                'content_type' => $item->content_type,
+                'order' => $item->order,
+                'media_type' => $item->media_type,
+                'source_path' => $item->source_path,
+                'source_type' => $item->source_type,
+                'is_live' => $item->is_live,
+                'is_scheduled' => $item->is_scheduled,
+                'current_viewers_count' => $item->current_viewers_count,
+                'max_viewers_count' => $item->max_viewers_count,
+                'additional_sources' => $item->additional_sources ?? null,
+                'custom_playback_options' => $item->custom_playback_options ?? null,
+                'metadata' => $item->metadata ?? null,
+                'has_played' => $item->has_played,
+                'start_dateTime' => $startDateTimeParsed?->format('Y-m-d\TH:i:s.v\Z'),
+                'end_dateTime' => $endDateTimeParsed?->format('Y-m-d\TH:i:s.v\Z'),
+                'duration_minutes' => $item->duration_minutes,
+                'type' => $item->content_type,
+                'content' => PlaylistContentHelper::getFormattedContent($item->content, $item->content_type),            ];
+          }),
       ];
     });
 
@@ -214,33 +255,33 @@ class ChannelPlaylistController extends Controller {
    */
   public function create(Request $request): JsonResponse
   {
-    try {
-      // Validate the incoming request
-      $validator = Validator::make($request->all(), [
-          'name' => 'required|string|max:255|unique:channel_playlists,name',
-          'description' => 'nullable|string',
-          'url' => 'nullable|url',
-          'type' => 'required|string|in:regular,event,special',
-          'start_dateTime' => 'required|date',
-          'end_dateTime' => 'required|date|after_or_equal:start_dateTime',
-          'priority' => 'required|integer',
-          'repeat_mode' => 'required|string|in:repeat_all,repeat_last,shuffle,stop,next_playlist',
-          'next_playlist_id' => 'nullable|exists:channel_playlists,id',
-          'scheduleItems.*.content.id' => 'required|integer',
-          'scheduleItems.*.type' => 'required|string',
-          'scheduleItems.*.start_dateTime' => 'required|date',
-          'scheduleItems.*.end_dateTime' => 'required|date|after_or_equal:scheduleItems.*.start_dateTime',
-      ]);
+   //
+  }
 
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function store(Request $request): JsonResponse
+  {
+    try {
+      // Convert all content IDs to strings
+      $requestData = $request->all();
+      foreach ($requestData['scheduleItems'] as &$item) {
+        $item['content']['id'] = (string) $item['content']['id'];
+      }
+      $request->replace($requestData);
+      // Validate the incoming request
+      $validator = ChannelPlaylistRequestValidator::validatePlaylistRequest($request);
       if ($validator->fails()) {
         return response()->json([
             'message' => 'Validation failed',
             'status' => 'error',
-            'errors' => $validator->errors()
+            'details' => $validator->errors()
         ], 422);
       }
-
-      Log::info('Creating ChannelPlaylist', $request->all());
 
       // Convert datetime fields to the MySQL format
       $startDateTime = Carbon::parse($request->start_dateTime)->format('Y-m-d H:i:s');
@@ -259,36 +300,8 @@ class ChannelPlaylistController extends Controller {
           'next_playlist_id' => $request->next_playlist_id,
       ]);
 
-      Log::info('ChannelPlaylist created', ['playlist' => $channelPlaylist]);
-
-      // Iterate over scheduleItems and create a ChannelPlaylistItem for each
-      $channelPlaylistItems = [];
-      foreach ($request->scheduleItems as $index => $item) {
-        $itemStartDateTime = Carbon::parse($item['start_dateTime'])->format('Y-m-d H:i:s');
-        $itemEndDateTime = Carbon::parse($item['end_dateTime'])->format('Y-m-d H:i:s');
-
-        $channelPlaylistItem = ChannelPlaylistItem::create([
-            'playlist_id' => $channelPlaylist->id,
-            'content_id' => $item['content']['id'],
-            'content_type' => ucfirst($item['type']),
-            'order' => $index + 1,  // Assuming the order is based on the index
-            'media_type' => null, // Adjust based on your requirements
-            'source_path' => null, // Adjust based on your requirements
-            'source_type' => null, // Adjust based on your requirements
-            'is_live' => false, // Adjust based on your requirements
-            'current_viewers_count' => 0,
-            'max_viewers_count' => 0,
-            'additional_sources' => null, // Adjust based on your requirements
-            'custom_playback_options' => null, // Adjust based on your requirements
-            'metadata' => null, // Adjust based on your requirements
-            'has_played' => false,
-            'start_dateTime' => $itemStartDateTime,
-            'end_dateTime' => $itemEndDateTime,
-        ]);
-        $channelPlaylistItems[] = $channelPlaylistItem;
-      }
-
-      Log::info('ChannelPlaylistItems created', ['items' => $channelPlaylistItems]);
+      // Create or Update the ChannelPlaylistItems
+      $channelPlaylistItems = ChannelPlaylistItemHelper::createOrUpdateItems($request->scheduleItems, $channelPlaylist->id);
 
       return response()->json([
           'message' => 'Channel Playlist created successfully',
@@ -301,16 +314,6 @@ class ChannelPlaylistController extends Controller {
 
       return response()->json(['message' => 'An unexpected error occurred', 'status' => 'error', 'details' => $e->getMessage()], 500);
     }
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param \Illuminate\Http\Request $request
-   * @return Response
-   */
-  public function store(Request $request) {
-    //
   }
 
   /**
@@ -336,12 +339,66 @@ class ChannelPlaylistController extends Controller {
   /**
    * Update the specified resource in storage.
    *
-   * @param \Illuminate\Http\Request $request
+   * @param Request $request
    * @param ChannelPlaylist $channelPlaylist
-   * @return Response
+   * @return JsonResponse
    */
-  public function update(Request $request, ChannelPlaylist $channelPlaylist) {
-    //
+  public function update(Request $request, ChannelPlaylist $channelPlaylist): JsonResponse
+  {
+    try {
+      // Convert all content IDs to strings
+      $requestData = $request->all();
+      foreach ($requestData['scheduleItems'] as &$item) {
+        $item['content']['id'] = (string) $item['content']['id'];
+      }
+      $request->replace($requestData);
+      // Validate the incoming request
+      $validator = ChannelPlaylistRequestValidator::validatePlaylistRequest($request, $channelPlaylist->id);
+      if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation failed',
+            'status' => 'error',
+            'details' => $validator->errors()
+        ], 422);
+      }
+
+      // Convert datetime fields to the MySQL format
+      $startDateTime = Carbon::parse($request->start_dateTime)->format('Y-m-d H:i:s');
+      $endDateTime = Carbon::parse($request->end_dateTime)->format('Y-m-d H:i:s');
+
+      // Update the ChannelPlaylist
+      $channelPlaylist->update([
+          'name' => $request->name,
+          'description' => $request->description,
+          'url' => $request->url,
+          'type' => $request->type,
+          'start_dateTime' => $startDateTime,
+          'end_dateTime' => $endDateTime,
+          'priority' => $request->priority,
+          'repeat_mode' => $request->repeat_mode,
+          'next_playlist_id' => $request->next_playlist_id,
+      ]);
+
+      // Create or Update the ChannelPlaylistItems
+      $channelPlaylistItems = ChannelPlaylistItemHelper::createOrUpdateItems($request->scheduleItems, $channelPlaylist->id);
+
+      // Get current item IDs to keep
+      $currentItemIds = array_map(fn($item) => $item->id, $channelPlaylistItems);
+
+      // Remove unused items
+      ChannelPlaylistItemHelper::removeUnusedItems($channelPlaylist->id, $currentItemIds);
+
+      return response()->json([
+          'message' => 'Channel Playlist updated successfully',
+          'status' => 'success',
+          'playlist' => $channelPlaylist,
+          'items' => $channelPlaylistItems
+      ], 200);
+    } catch (\Exception $e) {
+      Log::error('Exception in update method', ['exception' => $e->getMessage()]);
+
+      return response()->json(['message' => 'An unexpected error occurred', 'status' => 'error', 'details' => $e->getMessage()], 500);
+    }
   }
 
   /**

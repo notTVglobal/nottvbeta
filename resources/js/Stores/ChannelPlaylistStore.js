@@ -6,6 +6,8 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useUserStore } from '@/Stores/UserStore'
+import { useAdminStore } from '@/Stores/AdminStore'
+import { router } from '@inertiajs/vue3'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -24,11 +26,19 @@ const initialState = () => ({
     currentPage: 1,
     totalPages: 1,
     searchQuery: '',
-    showAddContentModal: false,
+    showModal: false,
     loading: false,
     loadingSchedules: false,
     processing: false,
     error: null,
+    id: null,
+    name: '',
+    description: '',
+    url: '',
+    type: 'regular',
+    priority: 1,
+    repeat_mode: 'repeat_all',
+    next_playlist_id: null,
 })
 
 export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
@@ -39,17 +49,17 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
             Object.assign(this, initialState())
         },
         openAddContentModal() {
-            this.showAddContentModal = true
+            this.showModal = true
         },
         closeAddContentModal() {
-            this.showAddContentModal = false
+            this.showModal = false
         },
         async fetchPlaylists() {
             this.loading = true
             try {
                 const response = await axios.get('/admin/channel-playlist/get-playlists')
                 this.playlists = response.data.playlists
-                const { message, status } = response.data
+                const {message, status} = response.data
                 const notificationStore = useNotificationStore()
                 notificationStore.setToastNotification(message, status)
             } catch (error) {
@@ -61,11 +71,67 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
             }
         },
         async createPlaylist(playlist) {
+            if (!this.validateScheduleItems()) return false;
+
+            this.loading = true
+            try {
+                const response = await axios.post('/channelPlaylists', {
+                    ...playlist,
+                    scheduleItems: this.getValidScheduleItems(),
+                })
+                this.playlists.push(response.data.playlist)
+                this.showNotification(response.data)
+                this.reset()
+                return true
+            } catch (error) {
+                this.handleError(error)
+                return false
+            } finally {
+                this.loading = false
+            }
+        },
+        async updatePlaylist(playlist) {
+            const adminStore = useAdminStore();
+            playlist.scheduleItems = this.scheduleItems;
+
+            if (!this.validateScheduleItems(playlist.scheduleItems)) {
+                console.error('Invalid schedule items');
+                return false;
+            }
+
+            this.loading = true;
+            try {
+                const response = await axios.put(`/channelPlaylists/${playlist.id}`, playlist);
+                const index = this.playlists.findIndex(p => p.id === playlist.id);
+                if (index !== -1) {
+                    this.playlists[index] = response.data.playlist;
+                }
+
+                const adminIndex = adminStore.items.findIndex(item => item.id === playlist.id);
+                if (adminIndex !== -1) {
+                    adminStore.items[adminIndex] = {
+                        ...response.data.playlist,
+                        playlist_items: this.scheduleItems
+                    };
+                }
+                this.showNotification(response.data);
+                document.getElementById('updateChannelPlaylistModal').close();
+                this.clearError()
+                return true;
+            } catch (error) {
+                this.handleError(error);
+                return false;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        validateScheduleItems() {
             const notificationStore = useNotificationStore()
 
             // Check for conflicts
             if (this.scheduleItems.some(item => item.conflict)) {
-                notificationStore.setGeneralServiceNotification('Conflict Detected', 'There are conflicts in the schedule items. Please resolve them before creating the playlist.')
+                notificationStore.setGeneralServiceNotification('Conflict Detected', 'There are conflicts in the schedule items. Please resolve them before proceeding.')
                 return false
             }
 
@@ -73,70 +139,133 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
             const items = this.scheduleItems.filter(item => !item.removed && item.type !== 'gap').sort((a, b) => dayjs(a.start_dateTime).isBefore(dayjs(b.start_dateTime)) ? -1 : 1)
             for (let i = 0; i < items.length - 1; i++) {
                 if (dayjs(items[i].end_dateTime).isBefore(dayjs(items[i + 1].start_dateTime))) {
-                    notificationStore.setGeneralServiceNotification('Gap Detected', 'There are gaps in the schedule items. Please ensure there are no gaps before creating the playlist.')
+                    notificationStore.setGeneralServiceNotification('Gap Detected', 'There are gaps in the schedule items. Please ensure there are no gaps before proceeding.')
                     return false
                 }
             }
+            return true
+        },
 
-            this.loading = true
-            try {
-                const response = await axios.post('/admin/channel-playlist/create', {
-                    ...playlist,
-                    scheduleItems: items,
-                });
-                this.playlists.push(response.data.playlist);
-                const { message, status } = response.data;
-                notificationStore.setToastNotification(message, status);
-                return true;
-            } catch (error) {
-                const errorMessage = error.response ? error.response.data.message : error.message;
-                const errorDetails = error.response && error.response.data.errors ? error.response.data.errors : {};
+        getValidScheduleItems() {
+            return this.scheduleItems.filter(item => !item.removed && item.type !== 'gap').sort((a, b) => dayjs(a.start_dateTime).isBefore(dayjs(b.start_dateTime)) ? -1 : 1)
+        },
 
-                // Aggregate validation error messages with HTML styling
-                let detailedErrorMessages = '<ul>';
-                for (const [field, messages] of Object.entries(errorDetails)) {
-                    detailedErrorMessages += `<li><strong>${field}:</strong> ${messages.join(', ')}</li>`;
+        showNotification(response) {
+            const { message, status } = response
+            const notificationStore = useNotificationStore()
+            notificationStore.setToastNotification(message, status)
+        },
+
+        handleError(error) {
+            const notificationStore = useNotificationStore();
+            const errorMessage = error.response ? error.response.data.message : error.message;
+            let errorDetails = error.response && error.response.data.details ? error.response.data.details : '';
+
+            // Check if errorDetails is a string and parse it to an object if necessary
+            if (typeof errorDetails === 'string') {
+                try {
+                    errorDetails = JSON.parse(errorDetails);
+                } catch (e) {
+                    // If parsing fails, wrap the errorDetails in an object
+                    errorDetails = { details: errorDetails };
                 }
-                detailedErrorMessages += '</ul>';
-
-                // Display general error message with aggregated details
-                notificationStore.setGeneralServiceNotification('Validation Error', `${errorMessage}\n${detailedErrorMessages}`);
-
-                return false;
-            } finally {
-                this.loading = false;
             }
-        },
-        async updatePlaylist(playlist) {
-            this.loading = true
-            try {
-                const response = await axios.put(`/api/playlists/${playlist.id}`, playlist)
-                const index = this.playlists.findIndex(p => p.id === playlist.id)
-                this.playlists[index] = response.data
-                const {message, status} = response.data
-                notificationStore.setToastNotification(message, status)
-            } catch (error) {
-                this.error = error.response ? error.response.data.message : error.message
-                notificationStore.setToastNotification(this.error, 'error')
-            } finally {
-                this.loading = false
+
+            // Aggregate validation error messages with HTML styling
+            let detailedErrorMessages = '<ul>';
+            for (const [field, messages] of Object.entries(errorDetails)) {
+                // Ensure messages is an array and join them into a string
+                const messageText = Array.isArray(messages) ? messages.join(', ') : messages;
+                detailedErrorMessages += `<li><strong>${field}:</strong> ${messageText}</li>`;
             }
+            detailedErrorMessages += '</ul>';
+
+            // Display general error message with aggregated details
+            notificationStore.setGeneralServiceNotification('Validation Error', `${errorMessage}\n${detailedErrorMessages}`);
+
+            this.error = errorMessage;
         },
-        async fetchSchedules(startTimeUTC, endTimeUTC) {
+
+        setPlaylistData(playlist) {
+            console.log('playlist:', playlist)
+            const userStore = useUserStore()
+
+            const startTime = dayjs.utc(playlist.start_dateTime).tz(userStore.timezone).format('YYYY-MM-DDTHH:mm')
+            const endTime = dayjs.utc(playlist.end_dateTime).tz(userStore.timezone).format('YYYY-MM-DDTHH:mm')
+
+            this.id = playlist.id
+            this.name = playlist.name
+            this.description = playlist.description
+            this.url = playlist.url
+            this.type = playlist.type
+            this.priority = playlist.priority
+            this.repeat_mode = playlist.repeat_mode
+            this.next_playlist_id = playlist.next_playlist_id
+            this.startTime = startTime
+            this.endTime = endTime
+
+            console.log('playlist.playlist_items:', playlist.playlist_items)
+
+            this.scheduleItems = playlist.playlist_items
+                .filter(item => {
+                    console.log('Filtering item:', item)
+                    return item !== null && item !== undefined
+                })
+                .map(item => {
+                    const mappedItem = {
+                        id: item.id,
+                        content_id: item.content_id,
+                        content_type: item.content_type,
+                        order: item.order,
+                        media_type: item.media_type,
+                        source_path: item.source_path,
+                        source_type: item.source_type,
+                        is_live: item.is_live,
+                        is_scheduled: item.is_scheduled,
+                        current_viewers_count: item.current_viewers_count,
+                        max_viewers_count: item.max_viewers_count,
+                        additional_sources: item.additional_sources,
+                        custom_playback_options: item.custom_playback_options,
+                        metadata: item.metadata,
+                        has_played: item.has_played,
+                        start_dateTime: item.start_dateTime,
+                        end_dateTime: item.end_dateTime,
+                        duration_minutes: item.duration_minutes,
+                        type: item.type,
+                        content: item.content,
+                    }
+                    console.log('Mapped item:', mappedItem)
+                    return mappedItem
+                })
+
+            console.log('this.scheduleItems:', this.scheduleItems)
+        },
+        async fetchSchedules() {
             this.loadingSchedules = true
             this.clearError()
             const notificationStore = useNotificationStore()
+
+            if (!this.startTime || !this.endTime) {
+                notificationStore.setGeneralServiceNotification('Start and End Times Required', 'Please check the schedule start and end times.')
+                this.loadingSchedules = false
+                return
+            }
+
             try {
                 const response = await axios.get(`/api/schedules`, {
                     params: {
-                        startTime: startTimeUTC,
-                        endTime: endTimeUTC,
+                        startTime: this.startTimeUTC,
+                        endTime: this.endTimeUTC,
                     },
                 })
-                this.scheduleItems = response.data.items.map(item => ({...item, removed: false}))
+                // Push new items to the existing array with added attributes
+                this.scheduleItems.push(...response.data.items.map(item => ({
+                    ...item,
+                    removed: false,
+                    is_scheduled: true
+                })))
                 const {message, status} = response.data
                 notificationStore.setToastNotification(message, status)
-                this.scheduleItems = response.data.items
                 this.updateConflicts()
                 this.loadingSchedules = false
                 return response.data // return the data to the caller
@@ -202,6 +331,9 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
         },
         selectPlaylist(playlist) {
             this.selectedPlaylist = playlist
+        },
+        removePlaylist(playlistId) {
+            router.delete(route('channelPlaylists.destroy', { channelPlaylist: playlistId }))
         },
         clearError() {
             this.error = null
@@ -412,6 +544,15 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
             // Convert startDateTime from user's timezone to UTC
             const startDateTimeUTC = dayjs(startDateTime).tz(dayjs.tz.guess()).utc().format('YYYY-MM-DDTHH:mm:ss[Z]')
 
+            // Log the parameters before making the request
+            // console.log('Fetching content with parameters:');
+            // console.log('Content Type:', contentType);
+            // console.log('Max Duration Minutes:', maxDurationMinutes);
+            // console.log('Start DateTime (User Timezone):', startDateTime);
+            // console.log('Start DateTime (UTC):', startDateTimeUTC);
+            // console.log('Page:', page);
+            // console.log('Search Query:', search);
+
             try {
                 const response = await axios.get('/admin/channel-playlist/get-content', {
                     params: {
@@ -422,7 +563,7 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
                         search: search,
                     },
                 })
-                // console.log('Response data:', response.data);
+                console.log('Response data:', response.data)  // Log the response data
                 this.contentItems = response.data.items
                 this.currentPage = response.data.current_page
                 this.totalPages = response.data.total_pages
@@ -475,11 +616,10 @@ export const useChannelPlaylistStore = defineStore('channelPlaylistStore', {
         scheduleItemsWithUserTimezone(state) {
             const userStore = useUserStore()
             const items = state.scheduleItems.map(item => {
-                const timezone = item.timezone || 'UTC'
                 return {
                     ...item,
-                    start_dateTime: dayjs(item.start_dateTime).tz(timezone).tz(userStore.timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
-                    end_dateTime: dayjs(item.end_dateTime).tz(timezone).tz(userStore.timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
+                    start_dateTime: dayjs(item.start_dateTime).tz(userStore.timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
+                    end_dateTime: dayjs(item.end_dateTime).tz(userStore.timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
                 }
             })
             items.sort((a, b) => dayjs(a.start_dateTime).isBefore(dayjs(b.start_dateTime)) ? -1 : 1)

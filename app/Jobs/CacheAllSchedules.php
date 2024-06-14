@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\ScheduleService;
-use App\Traits\PreloadScheduleContentRelationships;
+use App\Traits\PreloadContentRelationships;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
 
 class CacheAllSchedules implements ShouldQueue {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, PreloadScheduleContentRelationships;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, PreloadContentRelationships;
 
   /**
    * Execute the job.

@@ -6,7 +6,7 @@ use App\Http\Resources\SimpleMovieResource;
 use App\Http\Resources\SimpleShowEpisodeResource;
 use App\Http\Resources\SimpleShowResource;
 use App\Jobs\UpdateAllScheduleBroadcastDates;
-use App\Traits\PreloadScheduleContentRelationships;
+use App\Traits\PreloadContentRelationships;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Models\Schedule;
@@ -29,7 +29,7 @@ use JsonSerializable;
 
 class ScheduleService {
 
-  use PreloadScheduleContentRelationships;
+  use PreloadContentRelationships;
 
   private int $cacheExpiryMinutes = 45; // Cache expiry time in minutes
 
@@ -364,14 +364,14 @@ class ScheduleService {
     $cachedSchedules = Cache::get($cacheKey);
 
     if ($cachedSchedules) {
-      Log::debug('Using cached schedules');
-      Log::debug('Cached Schedules Data:', ['schedules' => $cachedSchedules]); // Log schedules data
+//      Log::debug('Using cached schedules');
+//      Log::debug('Cached Schedules Data:', ['schedules' => $cachedSchedules]); // Log schedules data
 
       return $this->filterSchedulesByDateRange($cachedSchedules, $expandedStart, $expandedEnd);
     } else {
-      Log::debug('Fetching and caching schedules');
+//      Log::debug('Fetching and caching schedules');
       $fetchedSchedules = $this->fetchAndCacheSchedules();
-      Log::debug('Fetched Schedules Data:', ['schedules' => $fetchedSchedules]); // Log schedules data
+//      Log::debug('Fetched Schedules Data:', ['schedules' => $fetchedSchedules]); // Log schedules data
 
       return $this->filterSchedulesByDateRange($fetchedSchedules, $expandedStart, $expandedEnd);
     }

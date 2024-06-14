@@ -50,7 +50,8 @@ class TeamsController extends Controller {
 //    $this->middleware('can:viewAny,team')->only(['index']);
 //    $this->middleware('can:view,team')->only(['show']);
     $this->middleware('can:viewTeamManagePage,team')->only(['manage']);
-    $this->middleware('can:update,team')->only(['edit']);
+    $this->middleware('can:edit,team')->only(['edit']);
+    $this->middleware('can:update,team')->only(['update']);
     $this->middleware('can:delete,team')->only(['destroy']);
 
 
@@ -367,10 +368,10 @@ class TeamsController extends Controller {
 
     // Prepare the response data using TeamDetailedResource
     return Inertia::render('Teams/{$id}/Manage', [
-        'team'        => (new TeamDetailedResource($team))->resolve(),
-        'shows'       => $shows,
-        'filters'     => Request::only(['team_id']),
-        'can'         => $this->getUserPermissions($team),
+        'team'    => (new TeamDetailedResource($team))->resolve(),
+        'shows'   => $shows,
+        'filters' => Request::only(['team_id']),
+        'can'     => $this->getUserPermissions($team),
     ]);
   }
 
@@ -694,12 +695,15 @@ class TeamsController extends Controller {
 //////////////////
 
   public function edit(Team $team) {
+
+    $user = Auth::user();
+
     // lock the team from being edited by more than 1 person.
-    DB::table('users')->where('id', Auth::user()->id)->update([
+    DB::table('users')->where('id', $user->id)->update([
         'isEditingTeam_id' => $team->id,
     ]);
     DB::table('teams')->where('id', $team->id)->update([
-        'isBeingEditedByUser_id' => Auth::user()->id,
+        'isBeingEditedByUser_id' => $user->id,
     ]);
 
     // check if teamLeader is not null before attempting to access its related properties
@@ -791,7 +795,7 @@ class TeamsController extends Controller {
 //                ]),
         'can'                 => [
 //                'viewTeams' => Auth::user()->can('view', Team::class),
-            'editTeam' => Auth::user()->can('edit', Team::class),
+            'editTeam' => optional($user)->can('edit', $team),
 //                'viewCreator' => Auth::user()->can('viewCreator', User::class),
         ]
     ]);

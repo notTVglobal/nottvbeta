@@ -84,6 +84,7 @@ const openAddChannelModal = () => {
 }
 
 const openAddChannelPlaylistModal = () => {
+  channelPlaylistStore.reset()
   document.getElementById('addChannelPlaylistModal').showModal()
 }
 

@@ -10,10 +10,10 @@ use App\Models\OtherContent;
 if (!function_exists('getModelClass')) {
   function getModelClass($type): string {
     return match ($type) {
+      'showEpisode' => ShowEpisode::class,
       'show' => Show::class,
       'movie' => Movie::class,
       'movieTrailer' => MovieTrailer::class,
-      'showEpisode' => ShowEpisode::class,
       'newsStory' => NewsStory::class,
       'otherContent' => OtherContent::class,
       default => throw new \InvalidArgumentException("Invalid content type: $type"),

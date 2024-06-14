@@ -2,19 +2,19 @@
   <div>
     <div>
       <label for="name" class="block font-medium text-gray-700">Name:</label>
-      <input type="text" v-model="name" id="name" class="input input-bordered w-full mt-1" required>
+      <input type="text" v-model="store.name" id="name" class="input input-bordered w-full mt-1" required>
     </div>
     <div>
       <label for="description" class="block font-medium text-gray-700">Description:</label>
-      <textarea v-model="description" id="description" class="input input-bordered w-full mt-1"></textarea>
+      <textarea v-model="store.description" id="description" class="input input-bordered w-full mt-1"></textarea>
     </div>
     <div>
       <label for="url" class="block font-medium text-gray-700">URL:</label>
-      <input type="text" v-model="url" id="url" class="input input-bordered w-full mt-1">
+      <input type="text" v-model="store.url" id="url" class="input input-bordered w-full mt-1">
     </div>
     <div>
       <label for="type" class="block font-medium text-gray-700">Type:</label>
-      <select v-model="type" id="type" class="input input-bordered w-full mt-1">
+      <select v-model="store.type" id="type" class="input input-bordered w-full mt-1">
         <option value="regular">Regular</option>
         <option value="event">Event</option>
         <option value="special">Special</option>
@@ -52,12 +52,12 @@
     </div>
     <div>
       <label for="priority" class="block font-medium text-gray-700">Priority:</label>
-      <input type="number" v-model="priority" id="priority" class="input input-bordered w-full mt-1">
+      <input type="number" v-model="store.priority" id="priority" class="input input-bordered w-full mt-1">
     </div>
     <div>
       <label for="repeat_mode" class="block font-medium text-gray-700">Repeat Mode: <span
           class="text-sm text-gray-500">(What happens when the playlist reaches the end?)</span></label>
-      <select v-model="repeat_mode" id="repeat_mode" class="input input-bordered w-full mt-1">
+      <select v-model="store.repeat_mode" id="repeat_mode" class="input input-bordered w-full mt-1">
         <option value="repeat_all">Repeat All</option>
         <option value="repeat_last">Repeat Last One Only</option>
         <option value="shuffle">Shuffle</option>
@@ -65,9 +65,9 @@
         <option value="next_playlist">Play A Different Playlist</option>
       </select>
     </div>
-    <div v-if="repeat_mode === 'next_playlist'">
+    <div v-if="store.repeat_mode === 'next_playlist'">
       <label for="next_playlist" class="block font-medium text-gray-700">Select Playlist:</label>
-      <select v-model="next_playlist_id" id="next_playlist" class="input input-bordered w-full mt-1">
+      <select v-model="store.next_playlist_id" id="next_playlist" class="input input-bordered w-full mt-1">
         <option v-for="playlist in store.playlists" :key="playlist.id" :value="playlist.id">
           {{ playlist.name }}
         </option>
@@ -83,23 +83,18 @@ import { watch } from 'vue'
 // Use the mixin to get the shared form logic
 const {
   store,
-  name,
-  description,
-  url,
-  type,
-  priority,
-  repeat_mode,
-  next_playlist_id,
   clearStartDateTime,
   setStartDateTimeNow,
   clearEndDateTime,
   setEndDateTimeNow,
+  fetchPlaylistsIfNeeded
 } = usePlaylistForm()
 
 // Watch the repeat_mode variable and call fetchPlaylistsIfNeeded when it changes
-watch(repeat_mode, (newValue) => {
+watch(() => store.repeat_mode, (newValue) => {
+  console.log('next_playlist selected')
   if (newValue === 'next_playlist') {
-    store.fetchPlaylistsIfNeeded()
+    fetchPlaylistsIfNeeded()
   }
-})
+}, {immediate: true})
 </script>

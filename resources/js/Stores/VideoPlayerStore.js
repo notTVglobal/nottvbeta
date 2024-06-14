@@ -579,6 +579,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             } else if (source.mediaType === 'mistStream') {
                 videoSrc = source.source
                 videoSourceType = source.type
+            } else if (source.mediaType === 'vod') {
+                videoSrc = source.source
+                videoSourceType = source.type
             } else {
                 // console.log('CDN Endpoint:', source.cdn_endpoint)
                 // console.log('Cloud Folder:', source.cloud_folder)

@@ -1,4 +1,3 @@
-// mixins/usePlaylistForm.js
 import { ref } from 'vue'
 import dayjs from 'dayjs'
 import { useChannelPlaylistStore } from '@/Stores/ChannelPlaylistStore'
@@ -11,18 +10,8 @@ export function usePlaylistForm(initialData = {}) {
     const userStore = useUserStore()
 
     const isSmallScreen = ref(userStore.isSmallScreen)
-    const name = ref(initialData.name || '')
-    const description = ref(initialData.description || '')
-    const url = ref(initialData.url || '')
-    const type = ref(initialData.type || 'regular')
-    const priority = ref(initialData.priority || 1)
-    const repeat_mode = ref(initialData.repeat_mode || 'repeat_all')
-    const next_playlist_id = ref(initialData.next_playlist_id || null)
-    const scheduleItems = ref(initialData.scheduleItems || [])
-    const error = ref(null)
     const selectedGapDuration = ref(0)
-    const showModal = ref(false)
-    const startDateTime = ref(initialData.startDateTime || '')
+    const startDateTime = ref('')
 
     const getListItemClass = (conflict, removed) => {
         if (removed) {
@@ -68,18 +57,22 @@ export function usePlaylistForm(initialData = {}) {
         store.resolveConflicts()
     }
 
-    const openAddContentModal = (gapItem) => {
-        selectedGapDuration.value = gapItem.duration_minutes
-        showModal.value = true
-        startDateTime.value = gapItem.start_dateTime
+    const fetchSchedules = () => {
+        store.fetchSchedules()
     }
 
+    const openAddContentModal = (gapItem) => {
+        selectedGapDuration.value = gapItem.duration_minutes
+        store.showModal = true
+        startDateTime.value = gapItem.start_dateTime
+        console.log('Opening modal with startDateTime:', startDateTime.value) // Add log to verify startDateTime
+    }
     const closeModal = () => {
-        showModal.value = false
+        store.showModal = false // Use the store's reactive property
     }
 
     const fetchPlaylistsIfNeeded = async () => {
-        if (repeat_mode.value === 'next_playlist' && store.playlists.length === 0) {
+        if (store.repeat_mode === 'next_playlist' && store.playlists.length === 0) {
             await store.fetchPlaylists()
         }
     }
@@ -109,18 +102,9 @@ export function usePlaylistForm(initialData = {}) {
         notificationStore,
         userStore,
         isSmallScreen,
-        name,
-        description,
-        url,
-        type,
-        priority,
-        repeat_mode,
-        next_playlist_id,
-        scheduleItems,
-        error,
         selectedGapDuration,
-        showModal,
         startDateTime,
+        fetchSchedules,
         getListItemClass,
         clearStartDateTime,
         setStartDateTimeNow,
