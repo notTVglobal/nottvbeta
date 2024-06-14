@@ -13,17 +13,19 @@
         <div class="my-3 flex flex-col space-y-2">
           <input v-model="form.rtmp_url"
                  type="text"
-                 placeholder="RTMP URL"
+                 placeholder="Server URL (RTMP Url)"
                  class="input input-bordered bg-white dark:bg-gray-800 dark:text-white"
                  required >
           <input v-model="form.rtmp_key"
                  type="text"
-                 placeholder="RTMP Key"
+                 placeholder="Stream Key (RTMP Key)"
                  class="input input-bordered bg-white dark:bg-gray-800 dark:text-white" >
           <textarea v-model="form.comment" class="textarea textarea-bordered bg-white dark:bg-gray-800 dark:text-white" placeholder="Optional Comment..." />
 
-          <div v-if="notificationStore.errorMessage" role="alert" class="alert alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <div v-if="hasErrorMessage" role="alert" class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             <div class="w-full flex flex-row justify-between">
               <div>{{ notificationStore.formattedErrorMessage }}</div>
               <div><button @click.prevent="notificationStore.clearErrorMessage" class="btn btn-xs">OK</button></div>
@@ -43,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import { useMistStore } from '@/Stores/MistStore'
@@ -71,6 +73,10 @@ const form = ref({
   errors: '',
   // Initialize other model attributes here
 });
+
+const hasErrorMessage = computed(() => {
+  return notificationStore.errorMessage && Object.keys(notificationStore.errorMessage).length > 0
+})
 
 // Use watchEffect to reactively update form whenever props.destinationDetails changes
 watchEffect(() => {

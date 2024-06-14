@@ -364,7 +364,10 @@ Route::middleware([
 
   Route::resource('channelPlaylists', ChannelPlaylistController::class);
   Route::get('/admin/channel-playlist/search', [ChannelPlaylistController::class, 'adminSearchChannelPlaylists'])->can('viewAdmin', 'App\Models\User');
-
+  Route::get('/admin/channel-playlist/get-content', [ChannelPlaylistController::class, 'adminGetContent'])->can('viewAdmin', 'App\Models\User');
+  Route::get('/admin/channel-playlist/get-playlists', [ChannelPlaylistController::class, 'adminGetPlaylists'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channel-playlist/create', [ChannelPlaylistController::class, 'create'])->can('viewAdmin', 'App\Models\User');
+//  Route::put('/admin/channel-playlist/{channel', [ChannelPlaylistController::class, 'create'])->can('viewAdmin', 'App\Models\User');
 
 //
 //    Route::get('/payment', function (Request $request) {
@@ -454,6 +457,15 @@ Route::middleware([
   Route::post('/admin/channels/{channel}/setExternalSource', [ChannelController::class, 'setExternalSource'])->can('viewAdmin', 'App\Models\User');
   Route::post('/admin/channels/{channel}/toggleChannelActive', [ChannelController::class, 'toggleChannelActive'])->can('viewAdmin', 'App\Models\User');
 
+  Route::get('/api/channels_playlists', [ChannelPlaylistController::class, 'fetchChannelPlaylists'])
+      ->name('channels.playlists')
+      ->can('viewAdmin', 'App\Models\User');
+  Route::post('/api/channels_playlists', [ChannelPlaylistController::class, 'createChannelPlaylists'])
+      ->name('channels.playlists')
+      ->can('viewAdmin', 'App\Models\User');
+  Route::put('/api/channels_playlists/{channelPlaylist}', [ChannelPlaylistController::class, 'updateChannelPlaylists'])
+      ->name('channels.playlists')
+      ->can('viewAdmin', 'App\Models\User');
 
   // Schedule
 ///////////
@@ -527,7 +539,7 @@ Route::middleware([
       ->name('subscriptionSuccess');
 
   Route::get('/contribute/subscription_success/stripe_return_url', [StripeController::class, 'subscriptionSuccessReturnUrl'])
-  ->name('contribute.subscription_success.return_url');
+      ->name('contribute.subscription_success.return_url');
 
   Route::get('/contribute/donation_success', [StripeController::class, 'donationSuccess'])
       ->name('donationSuccess');
@@ -701,6 +713,13 @@ Route::middleware([
   })->can('viewVip', 'App\Models\User')
       ->name('library');
 
+// Library
+///////////
+
+  Route::get('/iframe', function () {
+    return Inertia::render('IframeTest');
+  })->can('viewVip', 'App\Models\User')
+      ->name('iFrame');
 
 // For Testing
 ///////////
@@ -767,9 +786,9 @@ Route::middleware([
 
   //// ADMIN: BAN USERS
   Route::post('/admin/ban-user/{userId}', [AdminController::class, 'banUser'])
-  ->can('viewAdmin', 'App\Models\User');
+      ->can('viewAdmin', 'App\Models\User');
   Route::post('/admin/unban-user/{userId}', [AdminController::class, 'unbanUser'])
-  ->can('viewAdmin', 'App\Models\User');
+      ->can('viewAdmin', 'App\Models\User');
   Route::get('/admin/banned-users', [AdminController::class, 'bannedUsers'])
       ->can('viewAdmin', 'App\Models\User');
 
@@ -1377,13 +1396,17 @@ Route::middleware([
 ///
 
 
-  Route::get('/api/schedule', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
+  Route::get('/api/schedules/', [SchedulesController::class, 'getSchedules']);
+  Route::get('/api/schedule/fiveDaySixHour', [SchedulesController::class, 'fetchFiveDaySixHourSchedule']);
   Route::post('/api/schedule/addToSchedule', [SchedulesController::class, 'addToSchedule']);
   Route::post('/api/schedule/{id}', [SchedulesController::class, 'update']);
   Route::delete('/api/schedule/removeFromSchedule', [SchedulesController::class, 'removeFromSchedule']);
   Route::get('/api/schedule/today', [SchedulesController::class, 'fetchTodaysContent']);
 
   Route::post('/admin/schedule/admin-reset-cache', [SchedulesController::class, 'adminResetCache'])
+      ->can('viewAdmin', 'App\Models\User');
+
+  Route::post('/admin/schedule/admin-update-schedule', [SchedulesController::class, 'adminUpdateSchedule'])
       ->can('viewAdmin', 'App\Models\User');
 
 

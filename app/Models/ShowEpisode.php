@@ -51,6 +51,7 @@ class ShowEpisode extends Model {
       'image_id',
       'release_year',
       'release_dateTime',
+      'duration'
   ];
 
   protected $with = ['show', 'image'];

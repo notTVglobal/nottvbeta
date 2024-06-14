@@ -14,14 +14,34 @@ class ChannelPlaylistItem extends Model {
       'content_type',
       'content_id',
       'order',
+      'media_type',
+      'source_path',
+      'source_type',
+      'is_live',
+      'is_scheduled',
+      'current_viewers_count',
+      'max_viewers_count',
+      'additional_sources',
       'custom_playback_options',
-      'metadata'
+      'metadata',
+      'has_played',
+      'start_dateTime',
+      'end_dateTime',
+      'duration_minutes'
   ];
+
+  protected $casts = [
+      'additional_sources'      => 'json',
+      'custom_playback_options' => 'json',
+      'metadata'                => 'json',
+      'is_live'                 => 'boolean',
+      'is_scheduled'            => 'boolean',
+  ];
+
 
   // Other model properties and methods...
 
-  public function playlist()
-  {
+  public function playlist() {
     return $this->belongsTo(ChannelPlaylist::class, 'playlist_id');
   }
 

@@ -1,27 +1,35 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { createTimeSlots } from '@/Utilities/TimeUtils'
-import {
-    format,
-    isToday,
-    isTomorrow,
-    isYesterday,
-    startOfDay,
-} from 'date-fns'
+// import {
+//     format,
+//     isToday,
+//     isTomorrow,
+//     isYesterday,
+//     startOfDay,
+// } from 'date-fns'
 
 // Import dayjs and its plugins
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore' // To check if the day is the same
+import isToday from 'dayjs/plugin/isToday';
+import isYesterday from 'dayjs/plugin/isYesterday';
+import isTomorrow from 'dayjs/plugin/isTomorrow';
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear' // For week start and end calculations
-import advancedFormat from 'dayjs/plugin/advancedFormat' // For more complex formatting options
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+import { router } from '@inertiajs/vue3' // For more complex formatting options
 
 // Extend dayjs with the plugins
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+dayjs.extend(isTomorrow);
 dayjs.extend(advancedFormat)
 dayjs.extend(utc)
 dayjs.extend(isSameOrAfter)
@@ -307,7 +315,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
-                console.log('Received response:', response.data) // Log the raw response data
+                // console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone
@@ -489,7 +497,9 @@ export const useScheduleStore = defineStore('scheduleStore', {
             const fifteenMinutesAgo = now.subtract(15, 'minutes')
 
             for (const date of upcomingDates) {
-                const dateString = date.format('YYYY-MM-DD')  // Day.js format for 'YYYY-MM-DD'
+                const dayjsDate = dayjs(date); // Ensure date is a dayjs object
+                const dateString = dayjsDate.format('YYYY-MM-DD');  // Day.js format for 'YYYY-MM-DD'
+
                 const contentCoverageAndFreshness = this.weeklyContent.some(content => {
                     const contentDate = dayjs(content.start_dateTime).format('YYYY-MM-DD')  // Convert and compare as 'YYYY-MM-DD'
                     const lastFetchedTime = this.dataFetchLog[dateString]
@@ -667,7 +677,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             // Step 7: Sort and group shows by rows
             this.nextFourHoursOfContent = this.sortShowsByPosition(combinedShows)
-            console.log(28)
+            // console.log(28)
         },
 
         filterShowsForTimeRange() {
@@ -874,7 +884,30 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 content: {name: 'Blank Spot'}, // Ensure it is differentiated from normal placeholders
             }
         },
-
+        async purgeAllCaches() {
+            const notificationStore = useNotificationStore()
+            const scheduleStore = useScheduleStore()
+            scheduleStore.resetAll()
+            try {
+                const response = await axios.post('/admin/schedule/admin-reset-cache')
+                notificationStore.setToastNotification(response.data.message, response.data.type)
+            } catch (error) {
+                notificationStore.setToastNotification('Error purging caches.', 'error')
+            }
+            router.reload()
+        },
+        async updateSchedule() {
+            const notificationStore = useNotificationStore()
+            const scheduleStore = useScheduleStore()
+            scheduleStore.resetAll()
+            try {
+                const response = await axios.post('/admin/schedule/admin-update-schedule')
+                notificationStore.setToastNotification(response.data.message, response.data.type)
+            } catch (error) {
+                notificationStore.setToastNotification('Error updating schedule.', 'error')
+            }
+            router.reload()
+        }
     },
 
     getters: {
@@ -1065,17 +1098,23 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
 
         dateMessage: (state) => {
-            const startDay = startOfDay(state.viewingWindowStart)
-            const formattedDate = format(startDay, 'EEEE MMMM do, yyyy')
-            // console.log('getter', 50)
-            if (isToday(startDay)) {
-                return `Today - ${formattedDate}`
-            } else if (isYesterday(startDay)) {
-                return `Yesterday - ${formattedDate}`
-            } else if (isTomorrow(startDay)) {
-                return `Tomorrow - ${formattedDate}`
+            const startDay = dayjs(state.viewingWindowStart).startOf('day');
+
+            // Check if startDay is a valid date
+            if (!startDay.isValid()) {
+                return 'Invalid date';
+            }
+
+            const formattedDate = startDay.format('dddd MMMM DD, YYYY');
+
+            if (startDay.isToday()) {
+                return `Today - ${formattedDate}`;
+            } else if (startDay.isYesterday()) {
+                return `Yesterday - ${formattedDate}`;
+            } else if (startDay.isTomorrow()) {
+                return `Tomorrow - ${formattedDate}`;
             } else {
-                return formattedDate
+                return formattedDate;
             }
         },
 

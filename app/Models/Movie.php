@@ -35,6 +35,7 @@ class Movie extends Model {
       'app_setting_id',
       'isBeingEditedByUser_id',
       'logline',
+      'duration',
       'video_id',
       'movies_trailer_id',
       'status_id',

@@ -95,6 +95,7 @@ const submit = async () => {
 const handleOpenModal = (type) => {
   // You can add more logic here if needed before emitting
   emit('open-modal', {channel: props.channel, type})
+    adminStore.setActiveItem(type);
 }
 
 const toggleChannelActiveStatus = async (event) => {

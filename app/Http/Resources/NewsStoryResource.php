@@ -20,6 +20,7 @@ class NewsStoryResource extends JsonResource {
         'slug'                         => $this->slug,
         'title'                        => $this->title,
         'content'                      => $this->content,
+        'duration'                     => $this->duration,
         'newsPerson'                   => [
             'id'   => $this->newsPerson->id ?? null,
             'name' => $this->newsPerson->user->name ?? 'Unknown',

@@ -63,6 +63,23 @@ class ChannelPlaylistPolicy
       return Response::deny('You must be an admin to create this.');
     }
 
+  /**
+   * Determine whether the user can store models.
+   *
+   * @param  \App\Models\User  $user
+   * @return \Illuminate\Auth\Access\Response|bool
+   */
+  public function store(User $user)
+  {
+    $isAdmin = $user->isAdmin;
+    // If the user is an admin, allow viewing
+    if ($isAdmin) {
+      return true;
+    }
+
+    return Response::deny('You must be an admin to create this.');
+  }
+
     /**
      * Determine whether the user can update the model.
      *

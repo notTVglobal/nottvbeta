@@ -83,9 +83,9 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
         );
       } catch (\Exception $e) {
         Log::error('Failed to update schedule index', [
-            'schedule_id' => $schedule->id,
-            'error'       => $e->getMessage(),
-            'team_id'     => $teamId
+            'schedule_id'        => $schedule->id,
+            'error'              => $e->getMessage(),
+            'team_id'            => $teamId
         ]);
       }
     }

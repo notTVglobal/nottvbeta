@@ -18,16 +18,24 @@ class ChannelPlaylist extends Model {
       'start_dateTime',
       'end_dateTime',
       'priority',
-      'repeat_mode'
+      'repeat_mode',
+      'next_playlist_id'
   ];
 
-  public function channel() {
+  public function channel(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo('App\Models\Channel', 'channel_playlist_id');
   }
 
-  public function items()
-  {
+  public function items(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(ChannelPlaylistItem::class, 'playlist_id')->orderBy('order');
+  }
+
+  public function nextPlaylist(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    return $this->belongsTo(ChannelPlaylist::class, 'next_playlist_id');
+  }
+
+  public function previousPlaylist(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(ChannelPlaylist::class, 'next_playlist_id');
   }
 
 }

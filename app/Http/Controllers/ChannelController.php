@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChannelPlaylist;
 use App\Models\NewsStory;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -38,27 +39,49 @@ class ChannelController extends Controller
   }
 
 
-  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): JsonResponse {
-    //
+  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): JsonResponse
+  {
+    // Validate the incoming request
     $validatedData = $request->validate([
-//        'channelId' => 'unique:teams|required|max:255',
-        'setPriorityType' => 'required|nullable|string|max:15',
+        'setPriorityType' => 'required|string|max:15|nullable',
     ]);
 
-//    $channelId = $validatedData->channelId;
+    // Extract the validated priority type
     $priorityType = $validatedData['setPriorityType'];
-//    $channel = Channel::where('id', $channelId)->first();
+
+    // Update the playback priority type of the channel
     $channel->playback_priority_type = $priorityType;
     $channel->save();
 
-//    return redirect()->route('admin.channels', $channel)->with('message', 'Channel '. $channel->id .'Priority Successfully Changed');
+    // Update the status of the associated playlist based on the priority type
+    if ($channel->channel_playlist_id) {
+      $channelPlaylist = ChannelPlaylist::find($channel->channel_playlist_id);
+      if ($channelPlaylist) {
+        if ($priorityType === 'channelPlaylist') {
+          $channelPlaylist->status = 'Active';
+        } else {
+          // Check if any other channels are using the same playlist with 'channelPlaylist' priority type
+          $otherChannels = Channel::where('channel_playlist_id', $channel->channel_playlist_id)
+              ->where('id', '!=', $channel->id)
+              ->where('playback_priority_type', 'channelPlaylist')
+              ->exists();
+
+          if ($otherChannels) {
+            $channelPlaylist->status = 'Active';
+          } else {
+            $channelPlaylist->status = 'Standby';
+          }
+        }
+        $channelPlaylist->save();
+      }
+    }
+
     // Return a JSON response
     return response()->json([
         'success' => true,
         'message' => 'Channel ' . $channel->id . ' Priority Successfully Changed',
         'channel' => $channel,
     ]);
-
   }
 
   public function setMistStream(Channel $channel, HttpRequest $request): JsonResponse {
@@ -78,14 +101,68 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function setChannelPlaylist(Channel $channel, HttpRequest $request): JsonResponse {
+  public function setChannelPlaylist(Channel $channel, HttpRequest $request): JsonResponse
+  {
     $validatedData = $request->validate([
-        'channelPlaylistId' => 'required|nullable|integer',
+        'channelPlaylistId' => 'required|integer|nullable',
     ]);
 
-    $channelPlaylistId = $validatedData['channelPlaylistId'];
-    $channel->channel_playlist_id = $channelPlaylistId;
+    $newChannelPlaylistId = $validatedData['channelPlaylistId'];
+    $currentChannelPlaylistId = $channel->channel_playlist_id;
+
+    // Update the status of the selected playlist
+    if ($newChannelPlaylistId) {
+      $selectedPlaylist = ChannelPlaylist::findOrFail($newChannelPlaylistId);
+
+      if ($channel->playback_priority_type === 'channelPlaylist') {
+        $selectedPlaylist->status = 'Active';
+      } else {
+        // Check if any other channels are using the playlist with 'channelPlaylist' priority type
+        $isActive = Channel::where('channel_playlist_id', $newChannelPlaylistId)
+            ->where('playback_priority_type', 'channelPlaylist')
+            ->where('id', '!=', $channel->id)
+            ->exists();
+
+        $selectedPlaylist->status = $isActive ? 'Active' : 'Standby';
+      }
+
+      $selectedPlaylist->save();
+    }
+
+    // Update the channel's playlist ID
+    $channel->channel_playlist_id = $newChannelPlaylistId;
     $channel->save();
+
+    // Check and update the status of the previous playlist if it exists and was changed
+    if ($currentChannelPlaylistId && $currentChannelPlaylistId != $newChannelPlaylistId) {
+      $previousPlaylist = ChannelPlaylist::find($currentChannelPlaylistId);
+
+      if ($previousPlaylist) {
+        // Check if any other channels are using the previous playlist
+        $channelsUsingPreviousPlaylist = Channel::where('channel_playlist_id', $currentChannelPlaylistId)
+            ->where('id', '!=', $channel->id)
+            ->get();
+
+        if ($channelsUsingPreviousPlaylist->isEmpty()) {
+          // No other channels are using this playlist
+          $previousPlaylist->status = 'Inactive';
+        } else {
+          // Check if any other channels have the playback priority type set to 'channelPlaylist'
+          $hasChannelPlaylistPriority = $channelsUsingPreviousPlaylist->contains(function ($channel) {
+            return $channel->playback_priority_type === 'channelPlaylist';
+          });
+
+          if ($hasChannelPlaylistPriority) {
+            $previousPlaylist->status = 'Active';
+          } else {
+            // If other channels are using the playlist but none have 'channelPlaylist' priority
+            $previousPlaylist->status = 'Standby';
+          }
+        }
+
+        $previousPlaylist->save();
+      }
+    }
 
     // Return a JSON response
     return response()->json([
@@ -94,6 +171,10 @@ class ChannelController extends Controller
         'channel' => $channel,
     ]);
   }
+
+
+
+
 
   public function setExternalSource(Channel $channel, HttpRequest $request): JsonResponse {
     $validatedData = $request->validate([

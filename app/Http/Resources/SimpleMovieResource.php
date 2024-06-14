@@ -9,11 +9,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\VideoResource;
 use JsonSerializable;
 
-class SimpleMovieResource extends JsonResource
-{
+class SimpleMovieResource extends JsonResource {
 
-  public static function requiredRelationships(): array
-  {
+  public static function requiredRelationships(): array {
     return ['image.appSetting', 'trailers', 'team.image.appSetting'];
   }
 
@@ -23,27 +21,28 @@ class SimpleMovieResource extends JsonResource
    * @param Request $request
    * @return array
    */
-      public function toArray(Request $request): array {
-      return [
-          'name' => $this->name,
-          'slug' => $this->slug,
-          'logline' => $this->logline,
-          'image' => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
-          'category' => $this->resource->getCachedCategory() ? [
-              'name' => $this->resource->getCachedCategory()->name,
-              'description' => $this->resource->getCachedCategory()->description,
-          ] : null,
-          'subCategory' => $this->resource->getCachedSubCategory() ? [
-              'name' => $this->resource->getCachedSubCategory()->name,
-              'description' => $this->resource->getCachedSubCategory()->description,
-          ] : null,
-          'team' => $this->whenLoaded('team') ? $this->transformTeam($this->team) : null,
-        // Add other fields as necessary
-      ];
-    }
+  public function toArray(Request $request): array {
+    return [
+        'id'          => $this->id,
+        'name'        => $this->name,
+        'slug'        => $this->slug,
+        'logline'     => $this->logline,
+        'duration'    => $this->duration,
+        'image'       => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
+        'category'    => $this->resource->getCachedCategory() ? [
+            'name'        => $this->resource->getCachedCategory()->name,
+            'description' => $this->resource->getCachedCategory()->description,
+        ] : null,
+        'subCategory' => $this->resource->getCachedSubCategory() ? [
+            'name'        => $this->resource->getCachedSubCategory()->name,
+            'description' => $this->resource->getCachedSubCategory()->description,
+        ] : null,
+//          'team' => $this->whenLoaded('team') ? $this->transformTeam($this->team) : null,
+      // Add other fields as necessary
+    ];
+  }
 
-  private function transformTeam($team)
-  {
+  private function transformTeam($team) {
     // Ensure team is a collection before mapping
     if ($team instanceof \Illuminate\Support\Collection) {
       return $team->map(function ($member) {

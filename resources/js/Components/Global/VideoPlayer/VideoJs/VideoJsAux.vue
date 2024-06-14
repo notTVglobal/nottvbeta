@@ -1,10 +1,8 @@
 <template>
-  <div class="w-full h-fit bg-yellow-400">
-<!--    <video ref="videoPlayerAux" :id="id" class="vjs-layout-tiny w-full" playsinline controls autoplay-->
-<!--           muted/>-->
+  <div class="w-full h-auto max-w-screen">
 
     <video-js :id="id"
-              class="video-js vjs-layout-tiny w-96 h-64 bg-blue-400"
+              class="video-js vjs-layout-tiny w-full max-w-full min-h-64 h-auto bg-blue-400"
               autoplay
               muted
               playsinline
@@ -14,25 +12,19 @@
               :type="sourceType">
     </video-js>
 
-
-
-
   </div>
-
-
-
-
 </template>
 
 
 <script setup>
-import { onMounted, onBeforeUnmount } from "vue"
+import { onMounted, onBeforeUnmount } from 'vue'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
-import { useVideoAuxPlayerStore } from "@/Stores/VideoAuxPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+
 const appSettingStore = useAppSettingStore()
-import { useStreamStore } from "@/Stores/StreamStore"
+import { useStreamStore } from '@/Stores/StreamStore'
 import VideoJs from '@/Components/Global/VideoPlayer/VideoJs/VideoJs.vue'
 
 const videoAuxPlayerStore = useVideoAuxPlayerStore()
@@ -42,7 +34,7 @@ const props = defineProps({
   options: Object,
   id: String,
   source: String,
-  sourceType: String
+  sourceType: String,
 })
 
 onMounted(() => {
@@ -94,18 +86,18 @@ onMounted(() => {
   }
 
   // Initialize Video.js player
-  const videoAuxPlayer = videojs(videoElementId, playerOptions);
+  const videoAuxPlayer = videojs(videoElementId, playerOptions)
 
   // Use the store to manage the player
-  videoAuxPlayerStore.setPlayer(videoAuxPlayer);
+  videoAuxPlayerStore.setPlayer(videoAuxPlayer)
 
   // Access the video DOM element controlled by VideoJS
-  const videoDomElement = videoAuxPlayer.el();
+  const videoDomElement = videoAuxPlayer.el()
 
   // Disable right-click on the video element
   videoDomElement.addEventListener('contextmenu', (event) => {
-    event.preventDefault();
-  });
+    event.preventDefault()
+  })
 })
 
 onBeforeUnmount(() => {

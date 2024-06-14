@@ -10,8 +10,11 @@
       <div class="form-control mt-4">
         <label class="label cursor-pointer flex justify-start items-center space-x-3 mb-2">
           <span class="label-text">Use Custom First Play Video</span>
-          <input type="checkbox" ref="useCustomVideoCheckbox" class="toggle toggle-primary bg-white dark:bg-gray-800 dark:text-white"
-                 v-model="adminStore.firstPlaySettings.useCustomVideo" @click="blurCheckbox"/>
+          <input type="checkbox"
+                 ref="useCustomVideoCheckbox"
+                 class="toggle toggle-primary bg-white text-black dark:bg-gray-800 dark:text-white"
+                 v-model="adminStore.firstPlaySettings.useCustomVideo"
+                 @click="blurCheckbox"/>
         </label>
         <!-- Display error for useCustomVideo if exists -->
         <div v-if="adminStore.validationErrors['useCustomVideo']" class="text-xs text-red-600 mt-1">

@@ -18,8 +18,8 @@
         </Link>
         <Link :href="`#`">
           <button
+              @click.prevent="openAddChannelPlaylistModal"
               class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
-              disabled
           >Add Channel Playlist
           </button>
         </Link>
@@ -54,19 +54,42 @@
         <button @click.prevent="submit" class="btn btn-primary ml-2">Add</button>
       </div>
     </dialog>
+
+    <dialog id="addChannelPlaylistModal" class="modal">
+      <div class="modal-box p-0 flex flex-col h-full">
+        <form method="dialog" class="absolute right-2 top-2 z-50">
+          <button @click="clearChannelPlaylistStore" class="btn btn-sm btn-circle btn-ghost">✕</button>
+        </form>
+        <div class="flex-grow overflow-auto">
+          <CreatePlaylist />
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
 <script setup>
 import { useAdminStore } from '@/Stores/AdminStore'
+import { useChannelPlaylistStore } from '@/Stores/ChannelPlaylistStore'
 import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal'
 import { ref } from 'vue'
+import CreatePlaylist from '@/Components/Pages/Admin/ChannelPlaylists/CreatePlaylist.vue'
 
 const adminStore = useAdminStore()
+const channelPlaylistStore = useChannelPlaylistStore()
 
 const newChannelName = ref('')
 
 const openAddChannelModal = () => {
   document.getElementById('adminAddChannel').showModal()
+}
+
+const openAddChannelPlaylistModal = () => {
+  channelPlaylistStore.reset()
+  document.getElementById('addChannelPlaylistModal').showModal()
+}
+
+const clearChannelPlaylistStore = () => {
+  channelPlaylistStore.reset()
 }
 
 const submit = async () => {

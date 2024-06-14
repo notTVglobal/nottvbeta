@@ -35,11 +35,11 @@ class SimpleShowEpisodeResource extends JsonResource {
         'releaseDateTime'          => $this->release_dateTime ?? null,
         'scheduledReleaseDateTime' => $this->scheduled_release_date_time ?? null,
         'team'                     => $this->getTeam(),
+        'duration'                 => $this->duration ?? null,
     ];
   }
 
-  private function getCategory()
-  {
+  private function getCategory() {
     return $this->whenLoaded('show', function () {
       return [
           'name'        => $this->show->getCachedCategory()->name ?? null,
@@ -48,8 +48,7 @@ class SimpleShowEpisodeResource extends JsonResource {
     });
   }
 
-  private function getSubCategory()
-  {
+  private function getSubCategory() {
     return $this->whenLoaded('show', function () {
       return [
           'name'        => $this->show->getCachedSubCategory()->name ?? null,
@@ -58,8 +57,7 @@ class SimpleShowEpisodeResource extends JsonResource {
     });
   }
 
-  private function getShowDetails()
-  {
+  private function getShowDetails() {
     return $this->whenLoaded('show', function () {
       return [
           'name'        => $this->show->name ?? null,
@@ -70,8 +68,7 @@ class SimpleShowEpisodeResource extends JsonResource {
     });
   }
 
-  private function getTeam()
-  {
+  private function getTeam() {
     return $this->whenLoaded('show', function () {
       if ($this->show->relationLoaded('team')) {
         return [

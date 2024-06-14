@@ -37,6 +37,12 @@
           >
             Purge All Caches
           </button>
+          <button
+              @click.prevent="updateSchedule"
+              class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded-lg disabled:bg-gray-400"
+          >
+            Update Schedule
+          </button>
 
 
         </div>
@@ -155,9 +161,11 @@ const setView = (view) => {
 }
 
 const purgeAllCaches = () => {
-  scheduleStore.resetAll()
-  router.post('/admin/schedule/admin-reset-cache')
-  router.reload()
+scheduleStore.purgeAllCaches()
+}
+
+const updateSchedule = () => {
+  scheduleStore.updateSchedule()
 }
 
 const resetCalendar = () => {

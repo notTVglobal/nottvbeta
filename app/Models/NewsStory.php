@@ -29,6 +29,7 @@ class NewsStory extends Model {
       'status',
       'meta',
       'published_at',
+      'duration',
       'video_id',
       'content_json'
   ];
