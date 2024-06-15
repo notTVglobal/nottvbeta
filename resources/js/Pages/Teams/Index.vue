@@ -1,23 +1,11 @@
 <template>
   <Head title="Teams"/>
 
-  <div class="place-self-center flex flex-col gap-y-3">
-    <div id="topDiv" class="min-h-screen bg-gray-700 text-gray-50 dark:bg-gray-700 dark:text-gray-50 p-5">
+  <div class="place-self-center flex flex-col">
+    <div id="topDiv" class="min-h-screen bg-gray-700 text-gray-50 dark:bg-gray-700 dark:text-gray-50">
 
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2 pt-6">
 
-        <Link v-if="can.createTeam" :href="`/teams/create`">
-          <button
-              class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-          >Add Team
-          </button>
-        </Link>
-        <DashboardButton />
-      </div>
-
-      <TeamsIndexGrid :teams ="teams" :filters="filters"/>
 
 
     </div>
@@ -35,7 +23,6 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Pagination from '@/Components/Global/Paginators/Pagination'
-import TeamsIndexGrid from '@/Components/Pages/Teams/Elements/TeamsIndexGrid.vue'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 
 usePageSetup('teams')

@@ -23,7 +23,7 @@ const teamStore = useTeamStore()
 
 teamStore.saveNoteProcessing = false
 
-let props = defineProps({
+const props = defineProps({
   show: Object,
 });
 

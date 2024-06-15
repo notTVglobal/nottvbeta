@@ -75,8 +75,8 @@
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="$route('teams.index')"
-              :active="route().current('teams.index')">
+              :href="$route('browse.index')"
+              :active="route().current('browse.index')">
             <font-awesome-icon :icon="['fas', 'search']" class="mr-2" /> Browse
           </JetResponsiveNavLink>
 

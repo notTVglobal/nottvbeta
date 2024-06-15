@@ -38,6 +38,7 @@ const initialState = () => ({
     deleteMemberId: 0,
     noteEdit: 0,
     note: '',
+    noteKey: 0,
     saveNoteProcessing: Boolean,
     // on the show episode manage page
     // turn on the go live div
@@ -46,11 +47,7 @@ const initialState = () => ({
     nextBroadcastLoaded: {
         scheduleIndexId: null,
         broadcastDate: null,
-        broadcastDetails: [
-            {
-                zoomLink: '',
-            },
-        ],
+        broadcastDetails: {},
         type: '',
         image: null,
         category: null,
@@ -59,6 +56,7 @@ const initialState = () => ({
         name: null,
         description: null,
     },
+    nextBroadcastZoomLink: '',
 })
 
 export const useTeamStore = defineStore('teamStore', {
@@ -73,25 +71,41 @@ export const useTeamStore = defineStore('teamStore', {
         //     this.$state = r.default;
         // },
         initializeTeam(team) {
+            console.log('incoming team: ', team)
             const userStore = useUserStore()
-            if (team.nextBroadcast && team.nextBroadcast.broadcastDetails) {
-                this.nextBroadcastLoaded = team.nextBroadcast[0]
-                // Ensure broadcastDetails is an array and has the zoomLink object
-                this.nextBroadcastLoaded.broadcastDetails = []
-                // if (!Array.isArray(this.nextBroadcastLoaded.broadcastDetails)) {
-                //     this.nextBroadcastLoaded.broadcastDetails = []
-                // }
 
-                let zoomLinkObj = this.nextBroadcastLoaded.broadcastDetails.find(detail => detail.zoomLink !== undefined)
-                if (!zoomLinkObj) {
-                    zoomLinkObj = {zoomLink: ''}
-                    this.nextBroadcastLoaded.broadcastDetails.push(zoomLinkObj)
+            // Ensure nextBroadcast is an array and has at least one element
+            if (Array.isArray(team.nextBroadcast) && team.nextBroadcast.length > 0) {
+                const firstBroadcast = team.nextBroadcast[0]
+
+                if (firstBroadcast.broadcastDetails) {
+                    this.nextBroadcastLoaded = firstBroadcast
+
+                    if (firstBroadcast.broadcastDetails.zoomLink) {
+                        this.nextBroadcastZoomLink = firstBroadcast.broadcastDetails.zoomLink
+                    }
+
+                    // Ensure broadcastDetails is an array and has the zoomLink object
+                    // this.nextBroadcastLoaded.broadcastDetails = []
+                    // if (!Array.isArray(this.nextBroadcastLoaded.broadcastDetails)) {
+                    //     this.nextBroadcastLoaded.broadcastDetails = []
+                    // }
+
+                    // let zoomLinkObj = this.nextBroadcastLoaded.broadcastDetails.find(detail => detail.zoomLink !== undefined)
+                    // if (!zoomLinkObj) {
+                    //     zoomLinkObj = {zoomLink: ''}
+                    //     this.nextBroadcastLoaded.broadcastDetails.push(zoomLinkObj)
+                    // }
+
+                    team.nextBroadcast = team.nextBroadcast.map(broadcast => ({
+                        ...broadcast,
+                        broadcastDate: userStore.convertUtcToUserTimezone(broadcast.broadcastDate),
+                    }))
                 }
-                team.nextBroadcast = team.nextBroadcast.map(broadcast => ({
-                    ...broadcast,
-                    broadcastDate: userStore.convertUtcToUserTimezone(broadcast.broadcastDate),
-
-                }))
+            } else {
+                // Handle the case where nextBroadcast is not an array or is empty
+                this.nextBroadcastLoaded = null
+                this.nextBroadcastZoomLink = null
             }
 
             this.team = team || {}

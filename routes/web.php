@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Api\ChannelApiController;
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\ChannelExternalSourceController;
 use App\Http\Controllers\ChannelPlaylistController;
+use App\Http\Controllers\EmailReminderController;
 use App\Http\Controllers\GoLiveController;
 use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\MistServerController;
@@ -329,6 +331,20 @@ Route::get('/creator/{creator}/teams', [CreatorsController::class, 'fetchTeams']
 Route::get('/creator/{creator}/news-stories', [CreatorsController::class, 'fetchNewsStories']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/api/user', [UsersController::class, 'getUserData']);
+
+
+// Email Reminders
+//////////////////
+
+Route::post('/send-email-reminder', [EmailReminderController::class, 'sendEmailReminder']);
+
+// Browse
+/////////
+
+Route::get('/browse', [BrowseController::class, 'index'])
+  ->name('browse.index');
+Route::get('/browse/fetch-teams', [BrowseController::class, 'fetchTeams']);
+
 
 // BEGIN ROUTES FOR
 // Logged In Users
@@ -721,6 +737,7 @@ Route::middleware([
   })->can('viewVip', 'App\Models\User')
       ->name('iFrame');
 
+
 // For Testing
 ///////////
 
@@ -1027,7 +1044,6 @@ Route::middleware([
 
     // Invite team member
     Route::post('/teams/{team}/invite', [TeamMembersController::class, 'inviteMember']);
-
 
 // Creators
 ///////////
@@ -1515,8 +1531,8 @@ Route::get('/live', function () {
   return redirect('/');
 });
 
-Route::get('/browse', function () {
-  return redirect('/teams');
+Route::get('/teams', function () {
+  return redirect('/browse');
 });
 
 Route::get('/coffee', function () {

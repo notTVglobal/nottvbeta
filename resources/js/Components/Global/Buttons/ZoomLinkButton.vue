@@ -1,6 +1,6 @@
 <template>
   <div class="space-x-4">
-    <p class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 rounded">
+    <p class="text-lg md:text-xl leading-relaxed font-medium text-gray-900 dark:text-gray-200 p-3 rounded">
       <span v-if="!isBroadcastOpen">Join the next broadcast!</span>
       <span v-else>Join the broadcast!</span>
     </p>
@@ -19,9 +19,10 @@
   <button @click.prevent="shareZoomLink" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
     Click to Share This
   </button>
-  <button v-if="!isBroadcastOpen" @click="getEmailReminder" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-    Get an Email Reminder
-  </button>
+  <div v-if="!isBroadcastOpen">
+    <NextBroadcastEmailReminderDialog />
+  </div>
+
 </div>
 
   </div>
@@ -31,19 +32,18 @@
 import { computed, ref, watch, watchEffect } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
-import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useSocialShareStore } from '@/Stores/SocialShareStore'
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import ZoomLogo from '@/Components/Global/SvgLogos/ZoomLogo.vue'
+import NextBroadcastEmailReminderDialog from '@/Components/Pages/Teams/Elements/NextBroadcastEmailReminderDialog.vue'
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const teamStore = useTeamStore()
 const userStore = useUserStore()
-const notificationStore = useNotificationStore()
 const socialShareStore = useSocialShareStore()
 
 // Map store state to local computed properties
@@ -96,10 +96,5 @@ function shareZoomLink() {
 function joinZoom() {
   // console.log('zoomLink value:', zoomLink.value);  // Accessing the value of the computed property
   window.open(zoomLink.value, '_blank');
-}
-
-function getEmailReminder() {
-  // Implement the logic to sign up for an email reminder
-  notificationStore.setGeneralServiceNotification('Reminder Set!', 'You’re all set! We’ll send you an email reminder before the broadcast starts. Stay tuned!');
 }
 </script>

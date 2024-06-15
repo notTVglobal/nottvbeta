@@ -27,14 +27,14 @@
 
 
           <!-- Set Zoom Link for the next broadcast. -->
-          <div v-if="teamStore.nextBroadcastLoaded && teamStore.nextBroadcastLoaded.broadcastDate">
+          <div v-if="teamStore?.nextBroadcastLoaded && teamStore?.nextBroadcastLoaded?.broadcastDate">
             <p class="italic">insert zoom link</p>
-            <input v-model="teamStore.nextBroadcastLoaded.broadcastDetails[0].zoomLink" type="text" placeholder="Type here"
+            <input v-model="teamStore.nextBroadcastZoomLink" type="text" placeholder="Type here"
                    class="input input-bordered w-full max-w-xs bg-white dark:bg-gray-800 dark:text-white border-black focus:border-black"/>
             <p class="mt-2 text-sm uppercase font-semibold">
               for the next broadcast:</p>
             <p class="">{{ formatedBroadcastDate }}</p>
-            <p class="font-semibold uppercase">{{ teamStore.nextBroadcast?.name }}</p>
+            <p class="font-semibold uppercase">{{ teamStore?.nextBroadcast?.name }}</p>
           </div>
 
         </div>
@@ -129,23 +129,19 @@ const handleContentUpdate = (html) => {
 
 const savePublicMessage = () => {
   const payload = {
-    public_message: team.value.public_message,
+    publicMessage: team.value.public_message,
   }
 
-  if (teamStore.nextBroadcast) {
-    if (!teamStore.nextBroadcast.scheduleIndexId) {
-      errorMessage.value = 'No schedule index found. Error Code: VUCS001'
-      return
-    }
-
-    payload.schedule_index_id = teamStore.nextBroadcastLoaded.scheduleIndexId
-    payload.next_broadcast_details = JSON.stringify(teamStore.nextBroadcastLoaded.broadcastDetails)
-    // payload.next_broadcast_details = JSON.stringify(nextBroadcastDetails);  // Convert to JSON string
+  if (teamStore.nextBroadcastLoaded.scheduleIndexId) {
+    payload.scheduleIndexId = teamStore.nextBroadcastLoaded.scheduleIndexId
   }
 
+  if (teamStore.nextBroadcastZoomLink) {
+    payload.nextBroadcastZoomLink = teamStore.nextBroadcastZoomLink
+  }
 
-  // console.log(nextBroadcastDetails); // Check the structure
-  // console.log(payload); // Verify the payload before sending
+  console.log('payload: ', payload)
+
   axios.post('/teams/' + team.value.slug + '/save-public-message', payload)
 
       .then(response => {
@@ -171,6 +167,7 @@ const savePublicMessage = () => {
         hasError.value = true // Set the error state on failure
       })
 }
+
 
 const handleOkayClick = () => {
   if (hasError.value) {

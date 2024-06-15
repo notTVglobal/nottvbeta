@@ -57,6 +57,9 @@ class UpdateBroadcastDates implements ShouldQueue {
       $closestBroadcastDate = $this->findClosestBroadcastDate($broadcastDates);
 
       $redisKey = 'schedule_broadcast_dates_' . $schedule->id;
+
+//      Log::debug('Broadcast Dates: ', $broadcastDates);
+
       Redis::set($redisKey, json_encode([
           'dates'                => $broadcastDates,
           'closestBroadcastDate' => $closestBroadcastDate
@@ -145,6 +148,8 @@ class UpdateBroadcastDates implements ShouldQueue {
     $now = Carbon::now('UTC');
     $closestDate = null;
 
+//    Log::debug('Finding closest broadcast date', $broadcastDates);
+
     foreach ($broadcastDates as $date) {
       $broadcastTime = Carbon::parse($date, 'UTC');
       if ($broadcastTime->gt($now) && ($closestDate === null || $broadcastTime->lt($closestDate))) {
@@ -218,8 +223,10 @@ class UpdateBroadcastDates implements ShouldQueue {
 
       // Use the start and end date times with the specified timezone
       $timezone = new DateTimeZone($details->timezone);
-      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime, $timezone);
-      $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime, $timezone);
+//      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime, $timezone);
+//      $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime, $timezone);
+      $startDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime_utc);
+      $endDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime_utc);
 
 //      Log::debug('DateTime Details', [
 //          'startDateTime' => $startDateTime,
@@ -227,22 +234,32 @@ class UpdateBroadcastDates implements ShouldQueue {
 //          'timezone' => $timezone
 //      ]);
 
-      $currentDateTime = $startDateTime->copy();
+//      $currentDateTime = $startDateTime->copy();
+      $currentDateTime = $startDateTimeUTC->copy();
 
       // Find the first valid day within the date range
-      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTime)) {
+//      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTime)) {
+//        $currentDateTime->addDay();
+//      }
+      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTimeUTC)) {
         $currentDateTime->addDay();
       }
 
 
       // Generate all occurrences of the specified days within the date range
-      while ($currentDateTime->lte($endDateTime)) {
-        if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
-          // Convert the date to utc and add it to the array
-          $recurrentDates[] = $currentDateTime->copy()->setTimezone('UTC')->toIso8601String();
-        }
+//      while ($currentDateTime->lte($endDateTime)) {
+//        if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
+//          // Convert the date to utc and add it to the array
+//          $recurrentDates[] = $currentDateTime->copy()->setTimezone('UTC')->toIso8601String();
+//        }
+        while ($currentDateTime->lte($endDateTimeUTC)) {
+          if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
+            // The date is UTC, add it to the array
+            $recurrentDates[] = $currentDateTime->copy()->toIso8601String();
+          }
 
-        // Find the next valid day
+
+          // Find the next valid day
         $currentDayIndex = array_search(strtolower($currentDateTime->format('l')), $daysOfWeek);
         $nextDayIndex = ($currentDayIndex + 1) % count($daysOfWeek);
 

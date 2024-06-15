@@ -6,7 +6,7 @@
 
         <div class="mb-6 p-5">
 
-          <div v-if="!episodes.length" class="text-center">
+          <div v-if="!episodes.length" class="text-center mb-12">
             <div class="text-6xl mb-4">📺✨</div>
             <h2 class="text-2xl font-bold mb-2">Stay Tuned!</h2>
             <p class="text-lg">Exciting episodes are coming soon. Stay tuned and be ready for some amazing content!</p>

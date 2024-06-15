@@ -14,7 +14,7 @@
         class="flex flex-col md:flex-row bg-gray-600 dark:bg-gray-700 border border-gray-900 w-full py-6 text-center align-middle rounded-lg shadow-lg">
       <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
         <div v-if="teamStore.nextBroadcast" class="px-4">
-          <p class="uppercase font-bold tracking-wider text-gray-400 dark:text-gray-200">
+          <p class="uppercase font-bold tracking-wider text-yellow-400 dark:text-gray-200">
             Next Broadcast
           </p>
           <p class="text-lg text-gray-200 dark:text-gray-200">
@@ -36,18 +36,19 @@
       <div v-if="teamStore.nextBroadcast" class="flex flex-col md:w-2/3 justify-center items-center font-semibold px-4">
         <div v-if="team.public_message"
              class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 mb-4 rounded">
-          <span v-html="team.public_message"/>
+          <span v-html="team.public_message" class="public-message"/>
         </div>
         <div class="w-20 md:border-t border-gray-400 dark:border-gray-600">
         </div>
-        <div v-if="teamStore.nextBroadcast?.broadcastDetails.length > 0 && teamStore.nextBroadcast?.broadcastDetails[0].zoomLink">
 
-          <ZoomLinkButton/>
-
-        </div>
       </div>
     </div>
   </div>
+      <div v-if="teamStore.nextBroadcastLoaded && teamStore.nextBroadcastZoomLink" class="flex justify-center text-center text-black p-4 mx-5 bg-yellow-300 rounded-lg">
+
+        <ZoomLinkButton/>
+
+      </div>
   <TeamIdIndexUpcomingBroadcasts/>
   <!--  <div v-if="sortedBroadcasts.length" class="accordion bg-gray-800 text-gray-50 p-5 rounded-lg shadow">-->
   <!--    &lt;!&ndash; Header for the Accordion &ndash;&gt;-->
@@ -140,7 +141,7 @@ const goToBroadcast = (broadcast) => {
   router.visit(url)
 }
 </script>
-<style scoped>
+<style>
 .broadcast-carousel {
   display: flex;
   overflow-x: auto;
@@ -169,5 +170,60 @@ const goToBroadcast = (broadcast) => {
 .broadcast-hover img:hover {
   transform: scale(1.05); /* Slightly enlarge the image on hover */
   transition: transform 0.2s;
+}
+
+.public-message ul {
+  list-style-type: disc;
+  margin-left: 1.5em;
+  padding-left: 1em;
+  color: #d1d5db; /* light text color for dark mode */
+}
+
+.public-message ol {
+  list-style-type: decimal;
+  margin-left: 1.5em;
+  padding-left: 1em;
+  color: #d1d5db; /* light text color for dark mode */
+}
+
+.public-message ul li, .public-message ol li {
+  margin-bottom: 0.5em;
+}
+
+.public-message a {
+  color: #1E90FF; /* default blue color for links */
+  text-decoration: underline;
+  transition: color 0.3s, text-decoration 0.3s; /* smooth transition */
+}
+
+.public-message a:hover {
+  color: #00BFFF; /* bright blue color on hover */
+  text-decoration: none; /* remove underline on hover */
+}
+
+.public-message p {
+  margin-bottom: 0.25em;
+}
+
+.public-message strong {
+  font-weight: bold;
+}
+
+.public-message em {
+  font-style: italic;
+}
+
+.public-message u {
+  text-decoration: underline;
+}
+
+.public-message sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.public-message sup {
+  vertical-align: super;
+  font-size: smaller;
 }
 </style>

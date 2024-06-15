@@ -23,13 +23,13 @@
         <!-- Description and Creators section -->
         <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
           <TeamIdIndexDescription />
-          <TeamIdIndexCreators />
+          <TeamIdIndexCreators v-if="contributors.data.length > 0"/>
         </div>
 
         <!-- Search and list section with minimum height -->
         <div class="px-5 bg-gray-800 p-4 rounded-lg shadow-lg min-h-64">
           <TeamIdIndexSearchShowEpisodes />
-          <TeamShowsList />
+          <TeamShowsList v-if="shows.data.length > 0"/>
         </div>
       </div>
 

@@ -105,7 +105,7 @@ class SchedulesController extends Controller {
 
 
   public function addToSchedule(Request $request): JsonResponse {
-    Log::alert('this should only run once: addToSchedule in SchedulesController');
+//    Log::alert('this should only run once: addToSchedule in SchedulesController');
 
     // tec21 2024-05-14: I'm commenting out the validation because
     // it kept returning errors saying the data was missing.

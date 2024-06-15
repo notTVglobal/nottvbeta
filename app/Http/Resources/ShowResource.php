@@ -15,28 +15,29 @@ class ShowResource extends JsonResource {
    */
   public function toArray($request) {
     return [
-        'id'               => $this->id,
-        'ulid'             => $this->ulid,
-        'name'             => $this->name,
-        'slug'             => $this->slug,
-        'description'      => $this->description,
-        'image'            => $this->whenLoaded('image', function () {
+        'id'          => $this->id,
+        'ulid'        => $this->ulid,
+        'name'        => $this->name,
+        'notes'       => $this->notes,
+        'slug'        => $this->slug,
+        'description' => $this->description,
+        'image'       => $this->whenLoaded('image', function () {
           // Directly return the array representation of the ImageResource
           return (new ImageResource($this->image))->resolve();
         }),
-        'category'         => $this->resource->getCachedCategory() ? [
+        'category'    => $this->resource->getCachedCategory() ? [
             'id'          => $this->resource->getCachedCategory()->id,
             'name'        => $this->resource->getCachedCategory()->name,
             'description' => $this->resource->getCachedCategory()->description,
         ] : null,
-        'subCategory'      => $this->resource->getCachedSubCategory() ? [
+        'subCategory' => $this->resource->getCachedSubCategory() ? [
             'id'          => $this->resource->getCachedSubCategory()->id,
             'name'        => $this->resource->getCachedSubCategory()->name,
             'description' => $this->resource->getCachedSubCategory()->description,
         ] : null,
       // Include video using VideoResource
 //        'video'       => $this->whenLoaded('video') ? new VideoResource($this->video) : null,
-        'showRunner'       => $this->whenLoaded('showRunner', function () {
+        'showRunner'  => $this->whenLoaded('showRunner', function () {
           return [
               'creator_id' => $this->showRunner->id ?? null, // This should be creator id...
               'name'       => $this->showRunner->user->name ?? null,

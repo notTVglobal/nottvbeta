@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Schedule;
 use App\Models\SchedulesIndex;
+use App\Services\BroadcastDetailsService;
 use App\Services\ScheduleService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -26,36 +27,68 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
         ->orderBy('start_dateTime_utc')
         ->get();
 
+
     foreach ($schedules as $schedule) {
-      if ($schedule->content_type === 'App\Models\ShowEpisode') {
-        $schedule->load('content.show');
-      }
-
-      $redisKey = 'schedule_broadcast_dates_' . $schedule->id;
-      $cacheData = json_decode(Redis::get($redisKey), true);
-
-      if ($cacheData) {
-        // Format for storage
-        $broadcastDatesData = [
-            'modelType'       => $schedule->content_type,
-            'modelId'         => $schedule->content_id,
-            'priority'        => $schedule->priority, // Assuming the same priority for all schedules for simplicity
-            'timezone'        => 'UTC',
-            'durationMinutes' => $schedule->duration_minutes,
-            'broadcastDates'  => $cacheData['dates']
-        ];
-
-        $closestBroadcastDate = $cacheData['closestBroadcastDate'];
-
-        $this->updateScheduleAndIndex($schedule, $broadcastDatesData, $closestBroadcastDate);
-        Redis::del($redisKey); // Clear the data from Redis after updating
-      }
-
-
+      $this->updateSingleScheduleAndIndex($schedule);
     }
+
+
+//    foreach ($schedules as $schedule) {
+//      if ($schedule->content_type === 'App\Models\ShowEpisode') {
+//        $schedule->load('content.show');
+//      }
+//
+//      $redisKey = 'schedule_broadcast_dates_' . $schedule->id;
+//      $cacheData = json_decode(Redis::get($redisKey), true);
+//
+//      if ($cacheData) {
+//        // Format for storage
+//        $broadcastDatesData = [
+//            'modelType'       => $schedule->content_type,
+//            'modelId'         => $schedule->content_id,
+//            'priority'        => $schedule->priority, // Assuming the same priority for all schedules for simplicity
+//            'timezone'        => 'UTC',
+//            'durationMinutes' => $schedule->duration_minutes,
+//            'broadcastDates'  => $cacheData['dates']
+//        ];
+//
+//        $closestBroadcastDate = $cacheData['closestBroadcastDate'];
+//
+//        $this->updateScheduleAndIndex($schedule, $broadcastDatesData, $closestBroadcastDate);
+//        Redis::del($redisKey); // Clear the data from Redis after updating
+//      }
+//
+//
+//    }
 
 //    Log::debug('UpdateSchedulesAndIndexes completed successfully.');
     return "UpdateSchedulesAndIndexes completed successfully.";
+  }
+
+  public function updateSingleScheduleAndIndex(Schedule $schedule): void {
+    if ($schedule->content_type === 'App\Models\ShowEpisode') {
+      $schedule->load('content.show');
+    }
+
+    $redisKey = 'schedule_broadcast_dates_' . $schedule->id;
+    $cacheData = json_decode(Redis::get($redisKey), true);
+
+    if ($cacheData) {
+      // Format for storage
+      $broadcastDatesData = [
+          'modelType'       => $schedule->content_type,
+          'modelId'         => $schedule->content_id,
+          'priority'        => $schedule->priority, // Assuming the same priority for all schedules for simplicity
+          'timezone'        => 'UTC',
+          'durationMinutes' => $schedule->duration_minutes,
+          'broadcastDates'  => $cacheData['dates']
+      ];
+
+      $closestBroadcastDate = $cacheData['closestBroadcastDate'];
+
+      $this->updateScheduleAndIndex($schedule, $broadcastDatesData, $closestBroadcastDate);
+      Redis::del($redisKey); // Clear the data from Redis after updating
+    }
   }
 
   protected function updateScheduleAndIndex($schedule, $broadcastDates, $closestBroadcastDate): void {
@@ -72,7 +105,8 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
       };
 
       try {
-        SchedulesIndex::updateOrCreate(
+        // Update or create the schedule index
+        $scheduleIndex = SchedulesIndex::updateOrCreate(
             ['schedule_id' => $schedule->id],
             [
                 'next_broadcast' => $closestBroadcastDate,
@@ -81,13 +115,25 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
                 'team_id'        => $teamId ?? null
             ]
         );
+
+        // Initialize next_broadcast_details if null
+        if (is_null($scheduleIndex->next_broadcast_details)) {
+          $scheduleIndex->next_broadcast_details = [];
+        }
+
+        $nextBroadcastDetails = $scheduleIndex->next_broadcast_details; // Get the current value
+        $nextBroadcastDetails['duration_minutes'] = $schedule->duration_minutes; // Modify it
+        $scheduleIndex->next_broadcast_details = $nextBroadcastDetails; // Set the entire property
+
+        $scheduleIndex->save();
       } catch (\Exception $e) {
         Log::error('Failed to update schedule index', [
-            'schedule_id'        => $schedule->id,
-            'error'              => $e->getMessage(),
-            'team_id'            => $teamId
+            'schedule_id' => $schedule->id,
+            'error'       => $e->getMessage(),
+            'team_id'     => $teamId
         ]);
       }
     }
   }
+
 }
