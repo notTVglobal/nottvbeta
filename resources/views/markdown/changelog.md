@@ -3,6 +3,13 @@
 Last Update: June 15, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.23
+June 15, 2024
+
+* Improve the Browse page functionality.
+* Change the timing of the display on the Team Show page.
+* Change the logic of displaying the next broadcast on the Team Show page.
+
 ## v0.9.3.22
 June 15, 2024
 

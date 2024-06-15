@@ -32,5 +32,8 @@ export const useBrowseStore = defineStore('browseStore', {
                 this.isLoading = false
             }
         },
+        clearSearch() {
+            this.filters.search = ''
+        }
     },
 })

@@ -1,11 +1,9 @@
 import { defineStore } from 'pinia'
-import { router } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import utc from 'dayjs-plugin-utc'
 import timezone from 'dayjs/plugin/timezone'
 import { useUserStore } from '@/Stores/UserStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
-import { ref } from 'vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -298,6 +296,16 @@ export const useTeamStore = defineStore('teamStore', {
                 }
                 return closest
             }, null)
+        },
+        nextBroadcastIsOver: (state) => {
+            const userStore = useUserStore();
+            const nowInUserTimezone = dayjs().utc().tz(userStore.timezone);
+            const broadcastEndTime = dayjs(state.nextBroadcastLoaded.broadcastDate)
+                .add(state.nextBroadcastLoaded.broadcastDetails.duration_minutes, 'minute')
+                .utc()
+                .tz(userStore.timezone);
+
+            return nowInUserTimezone.isAfter(broadcastEndTime);
         },
         sortedBroadcasts(state) {
             if (!state.team.nextBroadcast || state.team.nextBroadcast.length === 0) {

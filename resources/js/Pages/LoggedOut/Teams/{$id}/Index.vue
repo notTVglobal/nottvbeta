@@ -117,7 +117,7 @@ const show = ref(false);
 onMounted(() => {
   setTimeout(() => {
     show.value = true;
-  }, 2000); // 2 seconds
+  }, 200); // 200 milliseconds
 });
 
 

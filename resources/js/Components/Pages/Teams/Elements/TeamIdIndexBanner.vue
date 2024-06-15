@@ -13,7 +13,7 @@
     <div
         class="flex flex-col md:flex-row bg-gray-600 dark:bg-gray-700 border border-gray-900 w-full py-6 text-center align-middle rounded-lg shadow-lg">
       <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
-        <div v-if="teamStore.nextBroadcast" class="px-4">
+        <div v-if="teamStore.nextBroadcast && !teamStore.nextBroadcastIsOver" class="px-4">
           <p class="uppercase font-bold tracking-wider text-yellow-400 dark:text-gray-200">
             Next Broadcast
           </p>
@@ -29,7 +29,7 @@
             <SingleImage :image="teamStore.nextBroadcast.image" :alt="`Image`" :class="`max-w-32 max-h-24 object-cover rounded-lg`"/>
           </div>
         </div>
-        <div v-else class="px-4 text-gray-800 dark:text-gray-200">
+        <div v-else class="px-4 text-gray-400 dark:text-gray-200">
           No broadcasts are currently scheduled.
         </div>
       </div>
@@ -44,7 +44,7 @@
       </div>
     </div>
   </div>
-      <div v-if="teamStore.nextBroadcastLoaded && teamStore.nextBroadcastZoomLink" class="flex justify-center text-center text-black p-4 mx-5 bg-yellow-300 rounded-lg">
+      <div v-if="teamStore.nextBroadcastLoaded && teamStore.nextBroadcastZoomLink && !teamStore.nextBroadcastIsOver" class="flex justify-center text-center text-black p-4 mx-5 bg-yellow-300 rounded-lg">
 
         <ZoomLinkButton/>
 
