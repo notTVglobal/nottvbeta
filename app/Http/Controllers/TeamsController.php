@@ -895,7 +895,7 @@ class TeamsController extends Controller {
    */
   public function savePublicMessage(HttpRequest $request, Team $team): \Illuminate\Http\JsonResponse {
     // Log the incoming request data
-    Log::debug('Incoming request data', $request->all());
+//    Log::debug('Incoming request data', $request->all());
     $validatedData = $request->validate([
         'publicMessage'         => 'sometimes|string|max:440',
         'nextBroadcastZoomLink' => 'sometimes|string',
@@ -934,7 +934,7 @@ class TeamsController extends Controller {
       // Sanitize public message
       $sanitizedPublicMessage = Purifier::clean($validatedData['publicMessage'], 'customNoCss');
 
-      Log::debug('Public message: ' . $sanitizedPublicMessage);
+//      Log::debug('Public message: ' . $sanitizedPublicMessage);
       $team->public_message = $sanitizedPublicMessage;
       $team->save();
     }
