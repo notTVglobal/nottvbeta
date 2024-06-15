@@ -121,9 +121,11 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
           $scheduleIndex->next_broadcast_details = [];
         }
 
+
         $nextBroadcastDetails = $scheduleIndex->next_broadcast_details; // Get the current value
         $nextBroadcastDetails['duration_minutes'] = $schedule->duration_minutes; // Modify it
         $scheduleIndex->next_broadcast_details = $nextBroadcastDetails; // Set the entire property
+
 
         $scheduleIndex->save();
       } catch (\Exception $e) {

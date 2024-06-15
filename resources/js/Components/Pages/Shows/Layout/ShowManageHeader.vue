@@ -127,19 +127,19 @@ const nextBroadcastDate = computed(() => {
   const now = dayjs();
   if (showStore.scheduleDetails && showStore.scheduleDetails.broadcastDates) {
     const broadcastDatesObj = JSON.parse(showStore.scheduleDetails.broadcastDates);
-    console.log('Parsed broadcastDates:', broadcastDatesObj);
+    // console.log('Parsed broadcastDates:', broadcastDatesObj);
 
     if (Array.isArray(broadcastDatesObj.broadcastDates)) {
       const upcomingDates = broadcastDatesObj.broadcastDates
           .map(dateStr => {
             const date = dayjs.tz(dateStr, broadcastDatesObj.timezone);
-            console.log('date:', date.toString());
+            // console.log('date:', date.toString());
             return date;
           })
           .filter(date => date.isAfter(now))
           .sort((a, b) => a - b);
 
-      console.log('upcomingDates:', upcomingDates);
+      // console.log('upcomingDates:', upcomingDates);
       return upcomingDates.length > 0 ? upcomingDates[0].toISOString() : null;
     }
   }
@@ -213,7 +213,7 @@ onMounted(async () => {
   // console.log('updatedBy:', meta.updatedBy);
   // console.log('current user:', page.user.name);
 
-  if (meta.isUpdatingSchedule && meta.updatedBy === page.user.name) {
+  if (meta && meta.isUpdatingSchedule && meta.updatedBy === page.user.name) {
     // console.log('Resetting isUpdatingSchedule and updatedBy');
     await showStore.setUpdatingStatus(false, page.user.name, props.show.slug);
   }
