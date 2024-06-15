@@ -13,29 +13,28 @@
     <transition name="fade">
       <div v-if="!search" class="w-full mb-6">
         <swiper
-            :slides-per-view="1"
-            :autoplay="{ delay: 2000, disableOnInteraction: false }"
-            loop
-            navigation
-            @swiper="onSwiper"
+            :space-between="30"
+            :centered-slides="true"
+            :autoplay="{ delay: 2500, disableOnInteraction: false }"
+            :pagination="{ clickable: true }"
+            :navigation="true"
+            :modules="modules"
             class="mySwiper"
         >
           <swiper-slide v-for="team in browseStore.teams" :key="team.id" class="p-8">
             <div
                 class="swiper-buffer"
+                @click="navigateToTeam(team.slug)"
                 @mouseenter="pauseAutoplay"
                 @mouseleave="resumeAutoplay"
+                @touchstart="pauseAutoplay"
+                @touchend="resumeAutoplay"
             >
               <div
-                  @click="navigateToTeam(team.slug)"
-                  @touchstart="handleTouchStart"
-                  @touchend="handleTouchEnd(team.slug)"
                   class="swiper-item cursor-pointer bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition duration-300 relative group"
               >
-                <SingleImage :image="team.image" :alt="'Team Logo'" class="skeleton rounded-lg w-full object-cover h-64 mb-4" />
-                <h3 class="text-2xl font-bold text-center text-gray-800 transition group-hover:text-blue-500">
-                  {{ team.name }}
-                </h3>
+                <SingleImage :image="team.image" :alt="'Team Logo'" class="rounded-lg w-full object-cover h-64 mb-4" />
+                <h3 class="text-2xl font-bold text-center text-gray-800 transition group-hover:text-blue-500">{{ team.name }}</h3>
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 group-hover:opacity-75 transition duration-300"></div>
               </div>
             </div>
@@ -46,7 +45,7 @@
 
     <transition name="fade">
       <div v-if="search" class="w-full flex flex-wrap justify-center gap-4 mt-6">
-        <div v-for="team in filteredTeams" :key="team.id" class="team-card bg-white rounded-lg shadow-md p-4 transition duration-300 flex flex-col items-center w-48">
+        <div @click="navigateToTeam(team.slug)" v-for="team in filteredTeams" :key="team.id" class="team-card bg-white rounded-lg shadow-md p-4 hover:shadow-lg hover:cursor-pointer transition duration-300 flex flex-col items-center w-48">
           <SingleImage :image="team.image" :alt="'Team Logo'" class="skeleton rounded-lg h-32 w-32 object-cover mb-2" />
           <h3 class="text-lg font-semibold text-center text-gray-800">{{ team.name }}</h3>
         </div>
@@ -67,31 +66,53 @@
         Load More Teams
       </button>
     </div>
+
+    <transition name="fade">
+      <div v-if="showScrollIndicator" class="scroll-indicator">
+        <span>Scroll Down</span>
+        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+    </transition>
+
+    <!-- Target element to detect visibility -->
+    <div ref="target">
+      <h1 class="invisible">Bottom Marker</h1>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'
 import { ref, watch, computed, onMounted } from 'vue'
 import throttle from 'lodash/throttle'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 import 'swiper/css/autoplay'
-import { Navigation, Autoplay } from 'swiper/modules'
-import SwiperCore from 'swiper'
+import { Autoplay, Pagination, Navigation } from 'swiper/modules'
 import { useBrowseStore } from '@/Stores/BrowseStore'
-
-SwiperCore.use([Navigation, Autoplay])
+import { router } from '@inertiajs/vue3'
+import { useElementVisibility } from '@vueuse/core'
 
 const browseStore = useBrowseStore()
 
 const search = ref(browseStore.filters.search)
 const loading = ref(true)
-let swiperInstance = null
+const showScrollIndicator = ref(false)
 
-const { currentPage, lastPage, isLoading, fetchTeams } = browseStore
+const { currentPage, lastPage, fetchTeams } = browseStore
+
+const modules = [Autoplay, Pagination, Navigation]
+
+const target = ref(null)
+const targetIsVisible = useElementVisibility(target)
+
+watch(targetIsVisible, (isVisible) => {
+  showScrollIndicator.value = !isVisible
+})
 
 watch(search, throttle(function (value) {
   browseStore.filters.search = value
@@ -107,44 +128,26 @@ const loadMoreTeams = () => {
   fetchTeams(currentPage + 1)
 }
 
-const onSwiper = (swiper) => {
-  swiperInstance = swiper
-}
-
-const pauseAutoplay = () => {
-  if (swiperInstance) {
-    swiperInstance.autoplay.stop()
-  }
-}
-
-const resumeAutoplay = () => {
-  if (swiperInstance) {
-    swiperInstance.autoplay.start()
-  }
-}
-
-const handleTouchStart = (event) => {
-  pauseAutoplay()
-  event.stopPropagation()
-}
-
-const handleTouchEnd = (slug) => {
-  return (event) => {
-    resumeAutoplay()
-    // Ensure it's a click and not a hold
-    if (!event.touches || event.touches.length === 0) {
-      router.visit(`/teams/${slug}`)
-    }
-  }
-}
-
 const navigateToTeam = (slug) => {
   router.visit(`/teams/${slug}`)
 }
 
+const pauseAutoplay = () => {
+  const swiper = document.querySelector('.mySwiper').swiper
+  swiper.autoplay.stop()
+}
+
+const resumeAutoplay = () => {
+  const swiper = document.querySelector('.mySwiper').swiper
+  swiper.autoplay.start()
+}
+
 onMounted(() => {
-  fetchTeams()
-  loading.value = false
+  browseStore.clearSearch()
+  search.value = ''
+  fetchTeams().then(() => {
+    loading.value = false
+  })
 })
 </script>
 
@@ -220,9 +223,30 @@ onMounted(() => {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
+.scroll-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #ff5722;
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 1000;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+
 @media (max-width: 800px) {
   .swiper-buffer {
     padding: 20px;
+  }
+
+  .scroll-indicator {
+    display: none;
   }
 }
 </style>

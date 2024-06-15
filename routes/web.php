@@ -474,13 +474,13 @@ Route::middleware([
   Route::post('/admin/channels/{channel}/toggleChannelActive', [ChannelController::class, 'toggleChannelActive'])->can('viewAdmin', 'App\Models\User');
 
   Route::get('/api/channels_playlists', [ChannelPlaylistController::class, 'fetchChannelPlaylists'])
-      ->name('channels.playlists')
+      ->name('channels.playlists.fetch')
       ->can('viewAdmin', 'App\Models\User');
   Route::post('/api/channels_playlists', [ChannelPlaylistController::class, 'createChannelPlaylists'])
-      ->name('channels.playlists')
+      ->name('channels.playlists.create')
       ->can('viewAdmin', 'App\Models\User');
   Route::put('/api/channels_playlists/{channelPlaylist}', [ChannelPlaylistController::class, 'updateChannelPlaylists'])
-      ->name('channels.playlists')
+      ->name('channels.playlists.update')
       ->can('viewAdmin', 'App\Models\User');
 
   // Schedule

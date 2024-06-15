@@ -17,7 +17,7 @@
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <TeamIdIndexHeader />
-      <TeamIdIndexBanner />
+      <TeamIdIndexBanner v-show="show"/>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Description and Creators section -->
@@ -55,7 +55,7 @@ import TeamIdIndexCreators from '@/Components/Pages/Teams/Elements/TeamIdIndexCr
 import TeamIdIndexHeader from '@/Components/Pages/Teams/Elements/TeamIdIndexHeader.vue'
 import TeamIdIndexDescription from '@/Components/Pages/Teams/Elements/TeamIdIndexDescription.vue'
 import TeamIdIndexSearchShowEpisodes from '@/Components/Pages/Teams/Elements/TeamIdIndexSearchShowEpisodes.vue'
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 //
 usePageSetup('teams/slug')
 //
@@ -92,11 +92,17 @@ const scrollToTop = () => {
 }
 scrollToTop() // Optionally scroll to top when the component mounts
 
+const show = ref(false);
+
 onMounted(() => {
   teamStore.initializeTeam({ ...props.team })
   teamStore.initializeShows({ ...props.shows })
   teamStore.initializeContributors({ ...props.contributors })
   teamStore.setCan({ ...props.can })
+
+  setTimeout(() => {
+    show.value = true;
+  }, 200); // 200 milliseconds
 })
 
 onBeforeUnmount(() => {
