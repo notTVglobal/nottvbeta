@@ -453,7 +453,7 @@
                                     <button @click="copyCommand(command)">
                     <font-awesome-icon icon="fa-clipboard" class="ml-2 text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
                   </button>
-                  <span v-if="command.copied" class="copied-message">Copied!</span>
+                  <span v-if="command.copied" class="copied-message text-yellow-400">Copied!</span>
                   </code></pre>
                 </div>
               </div>

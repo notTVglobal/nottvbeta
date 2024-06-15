@@ -42,7 +42,7 @@ const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
-appSettingStore.currentPage = 'browse.loggedOut'
+appSettingStore.currentPage = 'browse.index'
 appSettingStore.setPrevUrl()
 
 let props = defineProps({

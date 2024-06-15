@@ -26,7 +26,7 @@ import Pagination from '@/Components/Global/Paginators/Pagination'
 import TeamsIndexGrid from '@/Components/Pages/Browse/Layout/TeamsIndexGrid.vue'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 
-usePageSetup('browse')
+usePageSetup('browse.index')
 
 const appSettingStore = useAppSettingStore()
 

@@ -3,6 +3,11 @@
 Last Update: June 15, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.24
+June 15, 2024
+
+* Minor changes, disable some debugging statements.
+
 ## v0.9.3.23
 June 15, 2024
 
