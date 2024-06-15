@@ -1303,8 +1303,11 @@ class ShowsController extends Controller {
 
 
   public function updateNotes(HttpRequest $request) {
+    Log::debug('Update Notes: ', $request->all());
+
     // get the show
     $id = $request->showId;
+    Log::debug('Show ID: ' . $id);
     $show = Show::find($id);
 
     // Check if the show was found
@@ -1316,16 +1319,17 @@ class ShowsController extends Controller {
     }
 
     // validate the request
-    $request->validate([
+    $validated = $request->validate([
         'notes' => 'nullable|string|max:1024',
     ]);
 
-    // update the show notes
-    $show->notes = $request->notes;
+    // update the show notes using the validated data
+    $show->notes = e($validated['notes']);
     $show->save();
 
-    return $show;
+    return response()->json($show);
   }
+
 
 ////////////  DESTROY
 /////////////////////

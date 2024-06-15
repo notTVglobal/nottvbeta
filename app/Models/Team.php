@@ -150,7 +150,7 @@ class Team extends Model {
       }
 
       // Decode next_broadcast_details if it's not null
-      $broadcastDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : [];
+      $broadcastDetails = $scheduleIndex->next_broadcast_details ?: [];
 
       $data = [
           'scheduleIndexId'  => $scheduleIndex->id,

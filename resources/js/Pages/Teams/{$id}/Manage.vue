@@ -134,6 +134,7 @@ let props = defineProps({
   can: Object,
 })
 
+console.log('Props received:', props)
 // teamStore.setActiveTeam(props.team)
 
 onMounted(() => {

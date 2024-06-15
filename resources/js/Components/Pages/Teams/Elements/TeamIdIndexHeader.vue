@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="flex w-full xl:w-auto justify-center xl:justify-end mb-6">
-          <button @click="router.visit('/teams')" class="btn btn-wide">Browse All Teams</button>
+          <button @click="router.visit('/browse')" class="btn btn-wide">Browse All Teams</button>
         </div>
       </div>
     </div>

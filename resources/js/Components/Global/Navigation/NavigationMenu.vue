@@ -34,10 +34,10 @@
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-                    v-touch="()=>(router.visit('/teams'))"
-                    @click.prevent="router.visit('/teams')"
+                    v-touch="()=>(router.visit('/browse'))"
+                    @click.prevent="router.visit('/browse')"
                     :href="`#`"
-                    :active="appSettingStore.currentPage === 'teams.index'">
+                    :active="appSettingStore.currentPage === 'browse.index'">
                   Browse
                 </JetNavLink>
               </h3>

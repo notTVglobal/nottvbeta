@@ -47,7 +47,7 @@ class TeamDetailedResource extends JsonResource {
         'slug'             => $this->slug,
         'image'            => $resolvedImage,
         'team_status_id'   => $this->team_status_id,
-        'nextBroadcast'    => $this->nextBroadcast ?? [],
+        'nextBroadcast'    => $this->nextBroadcast ? $this->nextBroadcast->toArray() : [],
         'public_message'   => $this->public_message ?? '',
         'socialMediaLinks' => [
             'www_url'        => $this->www_url ?? null,

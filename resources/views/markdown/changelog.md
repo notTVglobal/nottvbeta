@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: June 9, 2024\
+Last Update: June 15, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.22
+June 15, 2024
+
+* Fix the Teams Show page, the Public Message and the Zoom Link.
+* Added the Send Email Reminder for upcoming broadcast zoom.
+* Re-designed the Team Index page and change it to Browse.
 
 ## v0.9.3.21
 June 9, 2024

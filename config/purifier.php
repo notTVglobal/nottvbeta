@@ -119,9 +119,16 @@ return [
             ['u', 'Inline', 'Inline', 'Common'],
         ],
         'customNoCss' => [
-            'HTML.Allowed' => 'p,b,strong,em,u,a[href],i,ul,ol,li,sub,sup', // Only allow specific tags
+            'HTML.Allowed' => 'p,br,b,strong,em,u,a[href],i,ul,ol,li,sub,sup', // Only allow specific tags
             'CSS.AllowedProperties' => [], // Disallow all CSS properties
             'AutoFormat.RemoveEmpty' => true, // Remove empty tags
+        ],
+        'customNoPTags' => [
+            'HTML.Doctype'             => 'HTML 4.01 Transitional',
+            'HTML.Allowed'             => 'a[href|title],ul,ol,li,strong,em,u,sup,sub',
+            'CSS.AllowedProperties'    => [],
+            'AutoFormat.AutoParagraph' => false,
+            'AutoFormat.RemoveEmpty'   => true,
         ],
     ],
 

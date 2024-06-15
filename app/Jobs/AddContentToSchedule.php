@@ -9,6 +9,7 @@ use App\Models\ScheduleRecurrenceDetails;
 use App\Models\SchedulesIndex;
 use App\Models\Show;
 use Carbon\Carbon;
+use Illuminate\Bus\Batch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,6 +17,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
@@ -245,8 +247,10 @@ class AddContentToSchedule implements ShouldQueue {
           'content_id'     => $content->id,
           'content_type'   => get_class($content),
           'schedule_id'    => $schedule->id,
-          'next_broadcast' => $schedule->start_dateTime,  // Assuming start_dateTime is the next broadcast
+          'next_broadcast' => $schedule->start_dateTime_utc,  // Assuming start_dateTime is the next broadcast
       ];
+
+      Log::debug('Next Broadcast: ', $schedulesIndexData);
 
       // Create the SchedulesIndex entry
       SchedulesIndex::create($schedulesIndexData);
@@ -255,8 +259,19 @@ class AddContentToSchedule implements ShouldQueue {
       // Commit the transaction
       DB::commit();
 
-      // Dispatch the job to update broadcast dates for this schedule
-      UpdateBroadcastDates::dispatch($schedule);
+      // Create the batch of UpdateBroadcastDates jobs
+      $jobs = [new UpdateBroadcastDates($schedule)];
+
+      // Optionally, add more jobs to the batch if needed
+      // $jobs[] = new AnotherJob($someParameter);
+
+      Bus::batch($jobs)
+          ->then(function () use ($schedule) {
+            // Dispatch UpdateSingleScheduleAndIndex after UpdateBroadcastDates job completes
+            UpdateSingleScheduleAndIndex::dispatch($schedule);
+          })
+          ->name('Update Broadcast Dates and Single Schedule')
+          ->dispatch();
 
       $meta = [
           'isSaving'           => false,
@@ -309,6 +324,7 @@ class AddContentToSchedule implements ShouldQueue {
 
       // Optionally, rethrow the exception or handle it as needed
       throw $e;
+    } catch (\Throwable $e) {
     }
   }
 

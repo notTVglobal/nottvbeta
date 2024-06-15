@@ -16,7 +16,7 @@
       {{ show.name }}
     </td>
 
-    <td class="px-6 py-4 text-sm w-full min-w-[16rem]">
+    <td class="px-6 py-4 text-sm w-full min-w-[16rem] max-w-32 break-words custom-word-wrap ">
       <button v-if="!show.notes" v-show="teamStore.noteEdit !== props.show.id" class="italic" @click="editNote">Click
         here to add/edit a note.
       </button>
@@ -70,10 +70,10 @@ let props = defineProps({
   show: Object,
   can: Object,
 })
-
-let form = useForm({
-  note: '',
-})
+//
+// let form = useForm({
+//   note: '',
+// })
 
 const componentKey = ref(0)
 teamStore.noteEdit = 0
@@ -88,3 +88,11 @@ function reloadNote() {
 }
 
 </script>
+<style scoped>
+.custom-word-wrap {
+  overflow-wrap: break-word;
+  word-wrap: break-word; /* For IE */
+  word-break: break-word;
+  hyphens: auto;
+}
+</style>

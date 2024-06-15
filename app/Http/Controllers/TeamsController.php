@@ -20,6 +20,7 @@ use App\Models\Image;
 use App\Models\Show;
 use App\Http\Resources\ImageResource;
 use App\Rules\ZoomUrl;
+use App\Services\BroadcastDetailsService;
 use App\Traits\GetTeamUserData;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,13 +35,16 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 use Mews\Purifier\Facades\Purifier;
+use function PHPUnit\Framework\isNull;
 
 
 class TeamsController extends Controller {
 
   use GetTeamUserData;
 
-  public function __construct() {
+  protected BroadcastDetailsService $broadcastDetailsService;
+
+  public function __construct(BroadcastDetailsService $broadcastDetailsService) {
     //tec21: this authorization works... but I'm having trouble
     // with the other ones below. So they are in web.php
 
@@ -54,6 +58,7 @@ class TeamsController extends Controller {
     $this->middleware('can:update,team')->only(['update']);
     $this->middleware('can:delete,team')->only(['destroy']);
 
+    $this->broadcastDetailsService = $broadcastDetailsService;
 
 // If you are having troubles with the policies saying
 // "Too few arguments..."
@@ -81,20 +86,6 @@ class TeamsController extends Controller {
     $user = Auth::user();
 
     $canViewCreator = optional($user)->can('viewCreator', User::class);
-
-//    function getLogo($team) {
-//      $getLogo = Image::query()
-//          ->where('team_id', $team->id)
-//          ->pluck('name')
-//          ->first();
-//      if (!empty($getLogo)) {
-//        $logo = $getLogo;
-//      } else {
-//        $logo = 'Ping.png';
-//      }
-//
-//      return $logo;
-//    }
 
     $component = $user ? 'Teams/Index' : 'LoggedOut/Teams/Index';
 
@@ -206,7 +197,7 @@ class TeamsController extends Controller {
 ////////////  SHOW
 //////////////////
 
-  public function show(Team $team) {
+  public function show(Team $team): \Inertia\Response {
     // Eagerly load the image with its appSetting relationship
     $team->load('image.appSetting', 'scheduleIndexes', 'members',);
 
@@ -360,15 +351,30 @@ class TeamsController extends Controller {
         'teamLeader',
         'managers',
         'members',
-        'image.appSetting'
+        'image.appSetting',
+        'scheduleIndexes'
     ]);
 
     // Retrieve shows
     $shows = $this->getShows($team->id);
 
-    // Prepare the response data using TeamDetailedResource
+    // Convert nextBroadcast to array for logging
+//    $nextBroadcastDetails = $team->nextBroadcast->toArray();
+//    Log::debug('Next Broadcast Details:', ['details' => $nextBroadcastDetails]);
+//
+
+    // Resolve the team data using TeamDetailedResource
+    $teamData = (new TeamDetailedResource($team))->resolve();
+
+    // Log the resolved team data
+//    Log::debug('Resolved Team Data:', $teamData);
+
+    // Log the team data right before returning the response
+//    Log::debug('Team Data to Inertia:', ['team' => $teamData]);
+
+    // Prepare the response data using Inertia
     return Inertia::render('Teams/{$id}/Manage', [
-        'team'    => (new TeamDetailedResource($team))->resolve(),
+        'team'    => $teamData,
         'shows'   => $shows,
         'filters' => Request::only(['team_id']),
         'can'     => $this->getUserPermissions($team),
@@ -884,93 +890,58 @@ class TeamsController extends Controller {
 
   }
 
+  /**
+   * @throws ValidationException
+   */
   public function savePublicMessage(HttpRequest $request, Team $team): \Illuminate\Http\JsonResponse {
-
     // Log the incoming request data
     Log::debug('Incoming request data', $request->all());
-
-    // Validate the input
     $validatedData = $request->validate([
-        'public_message'         => 'nullable|string|max:440',  // Validate against the requirements
-        'next_broadcast_details' => 'nullable|json',    // Validate that it is a valid JSON object
-        'schedule_index_id'      => 'required_with:next_broadcast_details|exists:schedules_indexes,id', // Validate that the schedule_index_id exists
+        'publicMessage'         => 'sometimes|string|max:440',
+        'nextBroadcastZoomLink' => 'sometimes|string',
+        'scheduleIndexId'       => 'required_with:next_broadcast_details|exists:schedules_indexes,id',
     ]);
 
-    if (isset($validatedData['schedule_index_id'])) {
-      Log::debug('get it.');
-      $scheduleIndex = SchedulesIndex::find($validatedData['schedule_index_id']);
+    if (isset($validatedData['scheduleIndexId'])) {
+      $scheduleIndex = SchedulesIndex::find($validatedData['scheduleIndexId']);
       if ($scheduleIndex) {
-        Log::debug('got it.');
-        // Decode the next_broadcast_details JSON string to an array
-        $nextBroadcastDetails = json_decode($validatedData['next_broadcast_details'], true);
 
-        // Ensure next_broadcast_details is decoded properly
-        if (json_last_error() !== JSON_ERROR_NONE) {
-          return response()->json(['errors' => ['next_broadcast_details' => 'Invalid JSON format']], 422);
+        // Initialize the JSON column if it's null
+        if (is_null($scheduleIndex->next_broadcast_details)) {
+          $scheduleIndex->next_broadcast_details = [];
         }
 
-        // Ensure next_broadcast_details is an array
-        if (!is_array($nextBroadcastDetails)) {
-          Log::debug('not an array.');
-          $nextBroadcastDetails = [];
+        $nextBroadcastDetails = $scheduleIndex->next_broadcast_details;
+
+        if (isset($validatedData['nextBroadcastZoomLink'])) {
+          // Get the current value
+          $nextBroadcastDetails['zoomLink'] = $validatedData['nextBroadcastZoomLink']; // Modify it
+          // Set the entire property
+        } else {
+          unset($nextBroadcastDetails['zoomLink']); // Unset the zoomLink if not provided
         }
+        $scheduleIndex->next_broadcast_details = $nextBroadcastDetails;
 
-        // Validate each detail in the next_broadcast_details
-        foreach ($nextBroadcastDetails as $detail) {
-          if (is_array($detail) && array_key_exists('zoomLink', $detail)) {
-            $validationResults = Validator::make($detail, [
-                'zoomLink' => ['nullable', 'url']  // Standard URL validation
-            ]);
+        $scheduleIndex->save(); // Save the model
 
-            // Check if the nested validation passes
-            if ($validationResults->fails()) {
-              return response()->json(['errors' => $validationResults->errors()], 422);
-            }
-          }
-          Log::debug('good.');
-        }
-
-        $currentDetails = $scheduleIndex->next_broadcast_details ? json_decode($scheduleIndex->next_broadcast_details, true) : [];
-
-        // Ensure currentDetails is an array
-        if (!is_array($currentDetails)) {
-          $currentDetails = [];
-        }
-
-        // Merge new details with current details
-        foreach ($nextBroadcastDetails as $detail) {
-          if (is_array($detail) && isset($detail['zoomLink'])) {
-            // Remove any existing zoomLink entry
-            $currentDetails = array_filter($currentDetails, fn($d) => !isset($d['zoomLink']));
-            // Add the new zoomLink entry
-            $currentDetails[] = $detail;
-          }
-        }
-
-        // Save the updated JSON details
-        $scheduleIndex->next_broadcast_details = json_encode($currentDetails);
-        $scheduleIndex->save();
-
-        // Log the saved state
-        Log::info('Saved next_broadcast_details', ['next_broadcast_details' => $scheduleIndex->next_broadcast_details]);
+//        Log::debug('Saved next_broadcast_details', ['next_broadcast_details' => $scheduleIndex->next_broadcast_details]);
       }
     }
 
-    // Save the public message
-    $sanitizedMessage = Purifier::clean($validatedData['public_message'], [
-        'HTML.Allowed'          => 'p,br,b,u,i,strong,em,sub,sup', // Allow subscript and superscript tags
-        'CSS.AllowedProperties' => [] // Specify allowed CSS properties, empty array means none allowed
-    ]);
+    // Optionally, save the public message if it is present
+    if (isset($validatedData['publicMessage'])) {
 
-    $team->public_message = $sanitizedMessage;
-    $team->save();
+      // Sanitize public message
+      $sanitizedPublicMessage = Purifier::clean($validatedData['publicMessage'], 'customNoCss');
 
-    // Return a successful response back to the client
-    return response()->json([
-        'message'        => 'Public message and broadcast details updated successfully.',
-        'public_message' => $validatedData['public_message']
-    ]);
+      Log::debug('Public message: ' . $sanitizedPublicMessage);
+      $team->public_message = $sanitizedPublicMessage;
+      $team->save();
+    }
+
+    return response()->json(['message' => 'Data saved successfully']);
   }
+
 
 
 

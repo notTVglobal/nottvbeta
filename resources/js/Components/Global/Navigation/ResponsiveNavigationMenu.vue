@@ -168,8 +168,8 @@
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              @click.prevent="router.visit('/teams')"
-              :active="route().current('teams.index')">
+              @click.prevent="router.visit('/browse')"
+              :active="route().current('browse.index')">
             <font-awesome-icon :icon="['fas', 'users']" class="mr-2" /> Browse
           </JetResponsiveNavLink>
 

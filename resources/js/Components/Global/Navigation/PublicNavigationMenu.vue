@@ -20,8 +20,8 @@
 
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
-                      :href="$route('teams.index')"
-                      :active="route().current('teams.index')">
+                      :href="$route('browse.index')"
+                      :active="route().current('browse.index')">
                     Browse</JetNavLink>
                 </h3>
 
