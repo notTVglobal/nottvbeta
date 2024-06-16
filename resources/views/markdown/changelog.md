@@ -3,6 +3,12 @@
 Last Update: June 15, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.25
+June 15, 2024
+
+* Fix Invite Team Member by Email Server Error.
+* Fix Add Show To Schedule duplicate entry (needs testing on production).
+
 ## v0.9.3.24
 June 15, 2024
 

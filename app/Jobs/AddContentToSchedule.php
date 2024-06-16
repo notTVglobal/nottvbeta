@@ -276,7 +276,7 @@ class AddContentToSchedule implements ShouldQueue {
 //          ->dispatch();
 
       $meta = [
-          'isSaving'           => false,
+          'isSaving'           => false,  
           'isUpdatingSchedule' => null,
           'isScheduled'        => true,
           'updatedBy'          => null,
