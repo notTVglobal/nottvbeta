@@ -51,7 +51,7 @@ class MovieUploadController extends BaseController
 // After we'll update the model with the uploaded video.
         // create image model
         // NEED TO PROTECT THESE
-        Movie::create([
+        $movie = Movie::create([
             'name' => $request->name,
             'description' => $request->description,
             'slug' => \Str::slug($request->name),
@@ -87,7 +87,7 @@ class MovieUploadController extends BaseController
         }
 
         // Return the user to the new movie page.
-        return redirect()->route('movies.show', [$slug])->with('success', 'Movie Added Successfully');
+        return redirect()->route('movie.show', [$movie->slug])->with('success', 'Movie Added Successfully');
     }
 
     /**

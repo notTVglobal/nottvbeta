@@ -13,6 +13,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Mail\TeamInviteMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -158,44 +159,57 @@ class TeamMembersController extends Controller {
     ]);
   }
 
-  public function inviteMember(Request $request, Team $team) {
+  public function inviteMember(Request $request, Team $team): \Illuminate\Http\JsonResponse {
     $request->validate([
         'email' => 'required|email',
     ]);
 
-    $email = $request->input('email');
-    // Generate a random invite code
-    $faker = Faker::create();
-    $randomWords = $faker->word() . $faker->word();
-    $randomDigits = mt_rand(100, 999);
-    $inviteCode = $randomWords . $randomDigits;
+    try {
+      $user = Auth::user();
+      $email = $request->input('email');
+      // Generate a random invite code
+      $faker = Faker::create();
+      $randomWords = $faker->word() . $faker->word();
+      $randomDigits = mt_rand(100, 999);
+      $inviteCode = $randomWords . $randomDigits;
 
-    // Set the expiry date to three months from now
-    $expiryDateUtc = Carbon::now()->addMonths(3)->toDateTimeString();
+      // Set the expiry date to three months from now
+      $expiryDateUtc = Carbon::now()->addMonths(3)->toDateTimeString();
 
-    // Save the invite code to the database with the team ID
-    $invite = InviteCode::create([
-        'code'         => $inviteCode,
-        'user_role_id' => 4,
-        'team_id'      => $team->id,
-        'volume'       => 1,
-        'used_count'   => 0, // Starts unused
-        'expiry_date'  => $expiryDateUtc,
-        'created_by'   => Auth::user()->id,
-    ]);
+      // Save the invite code to the database with the team ID
+      $invite = InviteCode::create([
+          'code'         => $inviteCode,
+          'user_role_id' => 4,
+          'team_id'      => $team->id,
+          'volume'       => 1,
+          'used_count'   => 0, // Starts unused
+          'expiry_date'  => $expiryDateUtc,
+          'created_by'   => $user->id,
+      ]);
 
-    // Generate the invite URL
-    $inviteUrl = config('app.url') . '/invite/' . $invite->ulid;
+      // Generate the invite URL
+      $inviteUrl = config('app.url') . '/invite/' . $invite->ulid;
 
-    // Send the invite email
-    Mail::to($request->input('email'))->send(new TeamInviteMail(
-        $request->input('email'),
-        Auth::user()->name,
-        $team->name,
-        $inviteUrl,
-        $inviteCode
-    ));
+      // Send the invite email
+      Mail::to($request->input('email'))->send(new TeamInviteMail(
+          $request->input('email'),
+          $user->name,
+          $team->name,
+          $inviteUrl,
+          $inviteCode
+      ));
 
-    return response()->json(['message' => 'Invitation sent successfully.']);
+      return response()->json(['message' => 'Invitation sent successfully.']);
+    } catch (\Exception $e) {
+      // Log the error
+      Log::error('Error inviting member: ' . $e->getMessage(), [
+          'team_id' => $team->id,
+          'user_id' => Auth::user()->id,
+      ]);
+
+      // Return a JSON response with an error message
+      return response()->json(['message' => 'Failed to send the invitation. Please try again later.'], 500);
+    }
   }
+
 }

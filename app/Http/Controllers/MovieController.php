@@ -282,7 +282,7 @@ class MovieController extends Controller {
     // $movie = Movie::query()->where('name', $request->name)->firstOrFail();
     // Use this route to return
     // the user to the new movie page.
-    return redirect()->route('movies.show', [$movie->slug])->with('success', 'Movie Added Successfully');
+    return redirect()->route('movie.show', [$movie->slug])->with('success', 'Movie Added Successfully');
   }
 
   /**
@@ -578,7 +578,7 @@ class MovieController extends Controller {
 
 //dd($movie->slug);
     // redirect
-    return redirect(route('movies.show', [$movie->slug]))->with('success', 'Movie Updated Successfully');
+    return redirect(route('movie.show', [$movie->slug]))->with('success', 'Movie Updated Successfully');
 
   }
 

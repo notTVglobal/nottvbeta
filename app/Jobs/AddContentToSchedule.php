@@ -9,6 +9,7 @@ use App\Models\ScheduleRecurrenceDetails;
 use App\Models\SchedulesIndex;
 use App\Models\Show;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Batch;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -63,7 +64,7 @@ class AddContentToSchedule implements ShouldQueue {
    * Execute the job.
    *
    * @return void
-   * @throws \Exception
+   * @throws Exception
    */
   public function handle(): void {
     $data = $this->data;
@@ -260,21 +261,22 @@ class AddContentToSchedule implements ShouldQueue {
       DB::commit();
 
       // Create the batch of UpdateBroadcastDates jobs
-      $jobs = [new UpdateBroadcastDates($schedule)];
+//      $jobs = [new UpdateBroadcastDates($schedule)];
 
       // Optionally, add more jobs to the batch if needed
       // $jobs[] = new AnotherJob($someParameter);
+      UpdateSingleScheduleAndIndex::dispatch($schedule->id);
 
-      Bus::batch($jobs)
-          ->then(function () use ($schedule) {
-            // Dispatch UpdateSingleScheduleAndIndex after UpdateBroadcastDates job completes
-            UpdateSingleScheduleAndIndex::dispatch($schedule);
-          })
-          ->name('Update Broadcast Dates and Single Schedule')
-          ->dispatch();
+//      Bus::batch($jobs)
+//          ->then(function () use ($schedule) {
+//            // Dispatch UpdateSingleScheduleAndIndex after UpdateBroadcastDates job completes
+//
+//          })
+//          ->name('Update Broadcast Dates and Single Schedule')
+//          ->dispatch();
 
       $meta = [
-          'isSaving'           => false,
+          'isSaving'           => false,  
           'isUpdatingSchedule' => null,
           'isScheduled'        => true,
           'updatedBy'          => null,
@@ -314,7 +316,7 @@ class AddContentToSchedule implements ShouldQueue {
 
 //      Log::debug('Broadcasted CreatorContentStatusUpdated event successfully');
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       // Rollback the transaction
       DB::rollback();
       Log::error('Failed to create schedule or index', [

@@ -364,7 +364,9 @@ const totalAvailableVIPInvites = computed(() => {
 })
 
 const totalAvailableCreatorInvites = computed(() => {
-  return props.inviteCodes.creatorInviteCodes.reduce((total, code) => total + (code.volume - code.used_count), 0)
+  return props.inviteCodes.creatorInviteCodes
+      .filter(code => code.team_id === null)
+      .reduce((total, code) => total + (code.volume - code.used_count), 0)
 })
 
 const totalAvailableAudiencePlusVipInvites = computed(() => {
