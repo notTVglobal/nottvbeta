@@ -118,10 +118,7 @@ onMounted(() => {
   setTimeout(() => {
     show.value = true;
   }, 200); // 200 milliseconds
-});
 
-
-onMounted(() => {
   teamStore.initializeShows({...props.shows})
   teamStore.initializeTeam({...props.team})
   teamStore.initializeContributors({...props.contributors})

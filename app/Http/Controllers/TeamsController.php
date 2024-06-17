@@ -199,7 +199,7 @@ class TeamsController extends Controller {
 
   public function show(Team $team): \Inertia\Response {
     // Eagerly load the image with its appSetting relationship
-    $team->load('image.appSetting', 'scheduleIndexes', 'members',);
+    $team->load('image.appSetting', 'scheduleIndexes', 'members');
 
     $user = Auth::user();
 

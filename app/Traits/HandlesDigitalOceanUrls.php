@@ -16,10 +16,15 @@ trait HandlesDigitalOceanUrls
   protected function getPreSignedUrl(Video $video): string {
     $digitalOceanService = app(DigitalOceanService::class);
 
-    return $digitalOceanService->getPreSignedUrl(
-        config('filesystems.disks.spaces.bucket'),
-//        $video->appSetting->cdn_endpoint,
-        $video->cloud_private_folder . $video->folder . '/' . $video->file_name
-    );
+    $downloadUrl = $video->appSetting->cdn_endpoint .
+        $video->cloud_private_folder . $video->folder . '/' . $video->file_name;
+
+    return $downloadUrl;
+
+//    return $digitalOceanService->getPreSignedUrl(
+////        config('filesystems.disks.spaces.bucket'),
+//        $video->appSetting->cdn_endpoint .
+//        $video->cloud_private_folder . $video->folder . '/' . $video->file_name
+//    );
   }
 }

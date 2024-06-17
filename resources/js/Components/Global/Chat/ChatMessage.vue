@@ -2,9 +2,9 @@
   <div v-if="message.is_visible || isMessageFromCurrentUser" class="flex flex-row space-x-2 mb-2 pr-5 w-full align-self-center">
     <div class="min-w-[2rem]">
       <img v-if="message.user_profile_photo_path"
-           :src="'/storage/' + message.user_profile_photo_path" class="rounded-full h-8 w-8 object-cover">
+           :src="'/storage/' + message.user_profile_photo_path" class="rounded-full h-8 w-8 object-cover" alt="">
       <img v-if="!message.user_profile_photo_path"
-           :src="message.user_profile_photo_url" class="rounded-full h-8 w-8 object-cover bg-gray-300">
+           :src="message.user_profile_photo_url" class="rounded-full h-8 w-8 object-cover bg-gray-300" alt="">
     </div>
     <div class="flex flex-col">
       <div :class="[pipMessageBgClass, messageBgClass]"

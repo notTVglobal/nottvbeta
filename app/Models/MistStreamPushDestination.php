@@ -12,6 +12,7 @@ class MistStreamPushDestination extends Model {
   protected $fillable = [
       'mist_stream_wildcard_id',
       'show_id',
+      'episode_id',
       'mist_push_id',
       'stream_name',
       'full_push_uri',
@@ -29,10 +30,14 @@ class MistStreamPushDestination extends Model {
   }
 
   public function show() {
-    return $this->belongsTo(Show::class, 'show_id', 'show_id');
+    return $this->belongsTo(Show::class, 'show_id', 'id');
+  }
+
+  public function episode() {
+    return $this->belongsTo(ShowEpisode::class, 'episode_id', 'id');
   }
 
   public function mistServerActivePush(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
-    return $this->belongsTo(MistServerActivePush::class, 'mist_push_id', 'push_id');
+    return $this->belongsTo(MistServerActivePush::class, 'mist_push_id', 'id');
   }
 }

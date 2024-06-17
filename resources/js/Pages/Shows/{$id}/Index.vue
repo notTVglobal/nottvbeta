@@ -33,6 +33,7 @@ import { computed, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useTeamStore } from '@/Stores/TeamStore'
 import Message from '@/Components/Global/Modals/Messages.vue'
 import ShowIdIndexHeader from '@/Components/Pages/Shows/Elements/ShowIdIndexHeader.vue'
 import ShowIdIndexMain from '@/Components/Pages/Shows/Elements/ShowIdIndexMain.vue'
@@ -40,6 +41,7 @@ import ShowIdIndexMain from '@/Components/Pages/Shows/Elements/ShowIdIndexMain.v
 usePageSetup('showsShow')
 
 const appSettingStore = useAppSettingStore()
+const teamStore = useTeamStore()
 const page  = usePage().props
 
 let props = defineProps({
@@ -53,6 +55,7 @@ let props = defineProps({
 onMounted(() => {
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
+  teamStore.initializeTeam({...props.team})
 })
 
 const pageTitle = computed(() => props.show.name);

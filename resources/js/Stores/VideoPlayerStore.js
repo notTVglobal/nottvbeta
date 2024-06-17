@@ -1033,9 +1033,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     this.controls = !this.controls
                 } else {
                     // videoPlayerStore.togglePlay()
-                    appSettingStore.toggleOsd()
                     if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5) {
                         appSettingStore.closeOtt()
+                    }
+                    if (appSettingStore.ott === 4) {
+                        this.controls = !this.controls
                     }
                 }
             } else if (!appSettingStore.pipChatMode) {

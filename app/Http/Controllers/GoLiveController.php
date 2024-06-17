@@ -212,7 +212,7 @@ class GoLiveController extends Controller {
       $isRecording = !is_null($allActivePushesCollection->first(function ($item) use ($autoRecordingsPath, $userRecordingsPath, $destination) {
         return $item['stream_name'] === $destination->stream_name &&
             str_contains($item['original_uri'], $userRecordingsPath) &&
-            !str_contains($item['original_uri'], $autoRecordingsPath.'$stream_$datetime.mkv');
+            !str_contains($item['original_uri'], $autoRecordingsPath . '$stream_$datetime.mkv');
       }));
 
       if ($isRecording) {
@@ -243,7 +243,126 @@ class GoLiveController extends Controller {
     ]);
   }
 
+  private function validateShowOrEpisodeId($showId, $episodeId): ?\Illuminate\Http\JsonResponse {
+    // Validate that at least one of showId or episodeId is provided
+    if (!$showId && !$episodeId) {
+      return response()->json([
+          'status'  => 'error',
+          'message' => 'Either showId or episodeId must be provided.',
+      ], 400);
+    }
 
+    // Check if the show or episode exists
+    if ($showId && !Show::where('id', $showId)->exists()) {
+      return response()->json([
+          'status'  => 'error',
+          'message' => 'The provided show ID does not exist.',
+      ], 404);
+    }
+
+    if ($episodeId && !ShowEpisode::where('id', $episodeId)->exists()) {
+      return response()->json([
+          'status'  => 'error',
+          'message' => 'The provided episode ID does not exist.',
+      ], 404);
+    }
+
+    return null; // Indicates no errors
+  }
+
+  public function getExistingDestinations(Request $request): \Illuminate\Http\JsonResponse {
+    $showId = $request->input('showId');
+    $episodeId = $request->input('episodeId');
+    $userId = $request->user()->id; // Assuming you have user authentication
+
+    $validationResponse = $this->validateShowOrEpisodeId($showId, $episodeId);
+    if ($validationResponse) {
+      return $validationResponse;
+    }
+
+    // Get the teams the user is a member of
+    $teamIds = TeamMember::where('user_id', $userId)->pluck('team_id');
+
+    // Fetch all shows belonging to these teams
+    $showIds = Show::whereIn('team_id', $teamIds)->pluck('id');
+
+    // Fetch destinations from these shows and eager load the show
+    $existingDestinations = MistStreamPushDestination::whereIn('show_id', $showIds)
+        ->with('show:id,name') // Eager load the show with only the id and name
+        ->get(['id', 'rtmp_url', 'rtmp_key', 'comment', 'show_id']); // Select necessary fields
+
+    // Remove duplicates based on rtmp_url and rtmp_key
+    $existingDestinations = $existingDestinations->unique(function ($item) {
+      return $item['rtmp_url'] . $item['rtmp_key'];
+    });
+
+    // Add the show name to each destination
+    $existingDestinations = $existingDestinations->map(function ($destination) {
+      $destination->show_name = $destination->show->name;
+      unset($destination->show); // Remove the show relationship to keep the response clean
+
+      return $destination;
+    });
+
+    return response()->json([
+        'status'       => 'success',
+        'message'      => 'Existing destinations fetched successfully.',
+        'destinations' => $existingDestinations,
+    ]);
+  }
+
+  public function copyDestinations(Request $request): \Illuminate\Http\JsonResponse {
+    // Log the request data
+    Log::info('Received copy destinations request', $request->all());
+
+    // Validate the request data
+    $validatedData = $request->validate([
+        'destinationIds'       => 'required|array',
+        'destinationIds.*'     => 'exists:mist_stream_push_destinations,id',
+        'showId'               => 'nullable|exists:shows,id',
+        'episodeId'            => 'nullable|exists:show_episodes,id',
+        'mistStreamWildcardId' => 'nullable|exists:mist_stream_wildcards,id'
+    ]);
+
+    $destinationIds = $validatedData['destinationIds'];
+    $showId = $validatedData['showId'] ?? null;
+    $episodeId = $validatedData['episodeId'] ?? null;
+
+    $validationResponse = $this->validateShowOrEpisodeId($showId, $episodeId);
+    if ($validationResponse) {
+      Log::error('Validation error', ['validationResponse' => $validationResponse]);
+
+      return $validationResponse;
+    }
+
+    // Fetch the destinations to be copied
+    $destinationsToCopy = MistStreamPushDestination::whereIn('id', $destinationIds)->get();
+
+    Log::info('Destinations to copy', ['destinationsToCopy' => $destinationsToCopy]);
+
+    $updatedDestinations = [];
+
+    foreach ($destinationsToCopy as $destination) {
+      $newDestination = $destination->replicate();
+      if ($showId) {
+        $newDestination->show_id = $showId;
+      }
+      if ($episodeId) {
+        $newDestination->episode_id = $episodeId;
+      }
+      $newDestination->mist_stream_wildcard_id = $validatedData['mistStreamWildcardId'];
+      $newDestination->save();
+      $updatedDestinations[] = $newDestination;
+    }
+
+    Log::info('Copied destinations', ['updatedDestinations' => $updatedDestinations]);
+
+    return response()->json([
+        'status'       => 'success',
+        'message'      => 'Push destinations copied successfully.',
+        'destinations' => $updatedDestinations,
+    ]);
+  }
 
 
 //    // Prepare the array of destinations to be returned

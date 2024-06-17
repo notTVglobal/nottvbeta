@@ -1,7 +1,18 @@
 # not.tv Changelog
 
-Last Update: June 15, 2024\
+Last Update: June 16, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.26
+June 16, 2024
+
+* Added scheduled command to remove video chunks that are 2 days old or older. This is to remove chunks from uploads that stopped before they were finished.
+* Fix the next broadcast Zoom link not showing up during the show.
+* Add Zoom Link banner to the Show page.
+* The Watch Live button on the show page now goes to the home page for logged out users.
+* Responsive Nav Menu slides in.
+* Added a copy push destinations feature to the Go Live page.
+* The Video on FullPage now shrinks to fit the chat on screen.
 
 ## v0.9.3.25
 June 15, 2024

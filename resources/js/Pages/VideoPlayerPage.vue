@@ -42,23 +42,20 @@
                         height="500"/>
       </div>
 
-      <div v-if="showSignup" class="signup-box-container flex items-center justify-center">
-        <div class="signup-box p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+      <div v-if="showSignup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+        <div class="signup-box p-4 bg-gray-800 text-white rounded-lg shadow-lg relative">
+          <button @click="dismissSignup" class="absolute top-2 right-2 text-white">&times;</button>
           <div class="flex w-full justify-center mb-2">
             <img :src="`/storage/images/Ping.png`" alt="notTV's Ping" class="w-10 h-10"/>
           </div>
           <h2 class="text-lg font-semibold">Sign Up for notTV</h2>
           <p class="mt-2">Join our community and stay updated with the latest content.</p>
           <form @submit.prevent="handleSignup" class="mt-4 flex flex-col">
-            <input type="email" v-model="email" placeholder="Enter your email"
-                   class="p-2 rounded bg-gray-900 text-white" required>
+            <input type="email" v-model="email" placeholder="Enter your email" class="p-2 rounded bg-gray-900 text-white" required>
             <input type="text" v-model="hpname" placeholder="HP Name" class="hidden" />
-            <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Sign Up
-            </button>
+            <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Sign Up</button>
           </form>
-          <button @click="dismissSignup" class="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded">No
-            Thanks
-          </button>
+          <button @click="dismissSignup" class="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded">No Thanks</button>
         </div>
       </div>
     </div>
@@ -67,7 +64,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import CopyClipboard from '@/Components/Global/Text/CopyClipboard.vue'
 import VideoJsShare from '@/Components/Global/VideoPlayer/VideoJs/VideoJsShare.vue'
@@ -92,9 +89,9 @@ const title = ref('Your Video Title')
 const shareUrl = `${page.appUrl}/video/${props.ulid}`
 const email = ref('')
 const hpname = ref('') // honeypot input to circumvent spam/robots
-const showSignup = ref(true) // control the visibility of the signup modal
 
-
+// Reactive variable to control the visibility of the signup modal
+const showSignup = ref(false);
 
 const handleSignup = async () => {
   try {
@@ -126,13 +123,22 @@ const handleSignup = async () => {
   }
 }
 
+// Function to handle ESC key press
+const handleKeyDown = (event) => {
+  if (event.key === 'Escape') {
+    showSignup.value = false;
+  }
+};
+
+// Function to dismiss the signup modal
 const dismissSignup = () => {
-  showSignup.value = false
-}
+  showSignup.value = false;
+};
+
 
 const beginDownload = async () => {
   const url = props.videoSource
-
+  console.log('Video source: ' + props.videoSource)
   try {
     // Fetch the file from the URL
     const response = await fetch(url)
@@ -161,10 +167,18 @@ const beginDownload = async () => {
 appSettingStore.pageReload = true
 
 onMounted(() => {
-  if(!page.auth.user) {
-    showSignup.value = true
+  // Set the initial value of showSignup based on the presence of page.props.auth.user
+  if (!page.auth.user) {
+    showSignup.value = true;
   }
-})
+  // Add event listener for ESC key
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  // Remove event listener for ESC key
+  window.removeEventListener('keydown', handleKeyDown);
+});
 
 </script>
 

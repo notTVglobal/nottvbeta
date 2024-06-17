@@ -36,7 +36,7 @@ const initialState = () => ({
         d: true, // On Screen Display D (Bottom Right)
     },
     pipChatMode: false, // Chat input focused uses pipChatMode when userStore.isMobile
-    pageBgColor: 'bg-gray-800', // Active background color
+    pageBgColor: 'bg-gray-900', // Active background color
     primaryBgColor: 'bg-gray-800', // Primary background color
     noLayoutBgColor: 'bg-gray-900', // Primary background color
     pipBgColor: 'bg-black', // Background color for pipChatMode
@@ -118,9 +118,10 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         toggleOsd() {
             const videoPlayerStore = useVideoPlayerStore()
             this.osd = !this.osd;
-            videoPlayerStore.controls = !videoPlayerStore.controls
+            // videoPlayerStore.controls = !videoPlayerStore.controls
             if (this.ott && !this.osd) {
                 this.showOttButtons = false
+                videoPlayerStore.controls = false
             } else if (this.ott && this.osd) {
                 this.showOttButtons = false
             } else if (!this.ott && !this.osd) {

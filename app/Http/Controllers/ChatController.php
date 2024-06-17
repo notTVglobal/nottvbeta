@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Channel;
 use App\Models\ChatMessage;
+use App\Traits\EmojiConversion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Carbon;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 
 
 class ChatController extends Controller {
+
+  use EmojiConversion;
 
   public function channels(HttpRequest $request): \Illuminate\Database\Eloquent\Collection {
     return Channel::all();
@@ -75,11 +78,15 @@ class ChatController extends Controller {
       }
     }
 
+    // Convert certain letter combinations into emojis
+    $formattedMessage = $this->convertToEmojis($validated['message']);
+
     // First, escape the message to prevent XSS attacks
-    $escapedMessage = e($validated['message']);
+    $escapedMessage = e($formattedMessage);
+//    $escapedMessage = e($validated['message']);
 
     // Use preg_replace_callback to format URLs in the escaped message
-    $formattedMessage = preg_replace_callback(
+    $escapedMessageWithUrls = preg_replace_callback(
         '#\b(?:https?://|http?://|www\.)[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))|\b[a-zA-Z0-9.-]+\.(?:com|tv|ca)\b#',
         function ($matches) {
           $url = $matches[0];
@@ -97,14 +104,10 @@ class ChatController extends Controller {
         $escapedMessage
     );
 
-    // Encrypt the message and username
-    $encryptedMessage = Crypt::encryptString($formattedMessage);
-    $encryptedUserName = Crypt::encryptString($validated['user_name']);
-
     $chatMessage = new ChatMessage([
         'user_id'                 => Auth::id(),
         'channel_id'              => $validated['channel_id'],
-        'message'                 => $formattedMessage,
+        'message'                 => $escapedMessageWithUrls,
         'user_name'               => $validated['user_name'],
         'user_profile_photo_path' => $validated['user_profile_photo_path'],
         'user_profile_photo_url'  => e($validated['user_profile_photo_url']),
@@ -115,7 +118,7 @@ class ChatController extends Controller {
     event(new NewChatMessage($chatMessage));
 
     // Encrypt the message and username before saving
-    $chatMessage->message = Crypt::encryptString($formattedMessage);
+    $chatMessage->message = Crypt::encryptString($escapedMessageWithUrls);
     $chatMessage->user_name = Crypt::encryptString($validated['user_name']);
 
     if ($chatMessage->save()) {

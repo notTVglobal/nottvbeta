@@ -726,7 +726,7 @@ function copyCommand(command) {
   command.copied = true;
   setTimeout(() => {
     command.copied = false;
-  }, 10000); // Hide the message after 10 second
+  }, 60000); // Hide the message after 60 seconds
 }
 
 let props = defineProps({
