@@ -240,7 +240,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             const currentSourceType = this.videoSourceType
 
             // Reset the player source to force reload
-            videoJs.reset(); // Ensure the player is fully reset before setting a new source
+            videoJs.reset() // Ensure the player is fully reset before setting a new source
 
             // Reset the player source to force reload
             videoJs.src({
@@ -609,6 +609,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             return {videoSrc, videoSourceType}
         },
         loadNewFirstPlayVideo(source) {
+            const nowPlayingStore = useNowPlayingStore()
             console.log('new first play video source: ', source)
             // check the source... is it properly coming in?
             nowPlayingStore.reset()
@@ -649,6 +650,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     if (!videoJs.paused()) {
                         videoJs.pause()
                     }
+
+                    videoJs.reset() // Ensure the player is fully reset before setting a new source
 
                     // Clear the current source
                     videoJs.src('')
@@ -839,78 +842,78 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         async loadMistStreamVideo(mistStream) {
             try {
-                const videoJs = videojs('main-player');
-                const audioStore = useAudioStore();
-                const userStore = useUserStore();
-                const notificationStore = useNotificationStore();
+                const videoJs = videojs('main-player')
+                const audioStore = useAudioStore()
+                const userStore = useUserStore()
+                const notificationStore = useNotificationStore()
 
                 // Ensure mistServerUri is set
                 if (!this.mistServerUri) {
-                    console.log('Mist Server URI not set, fetching...');
-                    await this.getMistServerUri();
+                    console.log('Mist Server URI not set, fetching...')
+                    await this.getMistServerUri()
                 }
 
                 if (this.mistServerUri) {
-                    console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
+                    console.log('Mist Server URI:', this.mistServerUri) // Log the URI to confirm it's fetched
 
                     // Construct the video source URL
-                    const basePath = this.mistServerUri;
-                    this.videoSource = `${basePath}hls/${mistStream}/index.m3u8`;
-                    console.log('Video Source Set To:', this.videoSource); // Log the final video source
+                    const basePath = this.mistServerUri
+                    this.videoSource = `${basePath}hls/${mistStream}/index.m3u8`
+                    console.log('Video Source Set To:', this.videoSource) // Log the final video source
 
-                    this.videoSourceType = 'application/vnd.apple.mpegURL';
+                    this.videoSourceType = 'application/vnd.apple.mpegURL'
 
                     // Pause the current video if it's playing
                     if (!videoJs.paused()) {
-                        videoJs.pause();
+                        videoJs.pause()
                     }
 
                     // Clear the current source
-                    videoJs.src('');
+                    videoJs.src('')
 
                     // Set the video source in video.js
-                    videoJs.src({src: this.videoSource, type: this.videoSourceType});
-                    this.unMute();
-                    this.paused = false;
+                    videoJs.src({src: this.videoSource, type: this.videoSourceType})
+                    this.unMute()
+                    this.paused = false
 
                     videoJs.ready(() => {
-                        console.log('Video.js is ready');
+                        console.log('Video.js is ready')
 
                         // Ensure the audio context and nodes are ready
-                        audioStore.deferAudioSetup = false;
+                        audioStore.deferAudioSetup = false
                         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
                             // Attempt to play the video after ensuring the AudioContext is ready
                             videoJs.play().catch(error => {
-                                notificationStore.setGeneralServiceNotification('Error', 'Code: 123B. Playback initiation error: ' + error);
-                                console.error('Code 123B. Playback initiation error: ', error);
+                                notificationStore.setGeneralServiceNotification('Error', 'Code: 123B. Playback initiation error: ' + error)
+                                console.error('Code 123B. Playback initiation error: ', error)
 
                                 // Ensure videoSettings is initialized
                                 if (!userStore.videoSettings) {
-                                    userStore.videoSettings = {};
+                                    userStore.videoSettings = {}
                                 }
 
                                 // If the user is not a subscriber or VIP, set firstPlay to true
                                 if (!userStore.isSubscriber || !userStore.isVip) {
-                                    userStore.videoSettings.firstPlay = true;
+                                    userStore.videoSettings.firstPlay = true
                                 }
-                            });
+                            })
 
                             // Consider toggling mute based on the user's preference or previous state
                             // videoJs.muted(false);
                             // this.muted = false;
                         }).catch(error => {
-                            notificationStore.setGeneralServiceNotification('Error', 'Code: 456B. Audio setup error: ' + error);
-                            console.error('Code 456B. Audio setup error: ', error);
-                        });
-                    });
+                            notificationStore.setGeneralServiceNotification('Error', 'Code: 456B. Audio setup error: ' + error)
+                            console.error('Code 456B. Audio setup error: ', error)
+                        })
+                    })
                 } else {
-                    console.error('Mist Server URI is still not set after fetching.');
+                    console.error('Mist Server URI is still not set after fetching.')
                 }
             } catch (error) {
                 // Log the error or perform any other error handling
-                const notificationStore = useNotificationStore();
-                notificationStore.setGeneralServiceNotification('Error', 'Code: 789B. Error loading new video: ' + error);
-                console.error('Code: 789B. Error loading new video: ', error);
+                const notificationStore = useNotificationStore()
+                notificationStore.setGeneralServiceNotification('Error', 'Code: 789B. Error loading new video: ' + error)
+                console.error('Code: 789B. Error loading new video: ', error)
             }
         },
 
@@ -1060,7 +1063,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     getters:
         {
             isLocalhost: (state) => {
-                return state.mistServerUri ? state.mistServerUri.includes('localhost') : false;
+                return state.mistServerUri ? state.mistServerUri.includes('localhost') : false
             },
         }
     ,

@@ -8,8 +8,13 @@ June 17, 2024
 
 * Fix Movie EditController.
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 * Add videoPlayer.reset before loading new source for First Play Video change.
+>>>>>>> development
+=======
+* Add new VideoPlayerStore function before loading new source for First Play Video change.
+* Add video player reset before load new source.
 >>>>>>> development
 
 ## v0.9.3.29
