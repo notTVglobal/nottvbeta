@@ -69,7 +69,10 @@ const loading = ref(false);
 
 const filteredDestinations = computed(() => {
   const currentDestinations = goLiveStore.destinations;
-  return otherShowDestinations.value.filter(destination =>
+  // Ensure otherShowDestinations.value is an array
+  const otherDestinations = Array.isArray(otherShowDestinations.value) ? otherShowDestinations.value : [];
+
+  return otherDestinations.filter(destination =>
       !currentDestinations.some(d => d.rtmp_url === destination.rtmp_url && d.rtmp_key === destination.rtmp_key)
   );
 });
@@ -90,7 +93,12 @@ const deselectAllDestinations = () => {
   selectedDestinations.value = [];
 };
 
+// Function to toggle selection of an id
 const toggleSelection = (id) => {
+  if (!Array.isArray(selectedDestinations.value)) {
+    selectedDestinations.value = [];
+  }
+
   if (selectedDestinations.value.includes(id)) {
     selectedDestinations.value = selectedDestinations.value.filter(destId => destId !== id);
   } else {
