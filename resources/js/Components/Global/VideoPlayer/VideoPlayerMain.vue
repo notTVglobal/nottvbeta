@@ -164,14 +164,14 @@ videoPlayerStore.ottPlaylist = false
 videoPlayerStore.ottFilters = false
 
 const showControls = () => {
-  if (!appSettingStore.fullPage) {
+  if (!appSettingStore.fullPage && !appSettingStore.isSmallScreen) {
     clearTimeout(hideControlsTimeout);
     videoPlayerStore.controls = true;
   }
 };
 
 const hideControls = () => {
-  if (!appSettingStore.fullPage) {
+  if (!appSettingStore.fullPage && !appSettingStore.isSmallScreen) {
     hideControlsTimeout = setTimeout(() => {
       videoPlayerStore.controls = false;
     }, 3000);
