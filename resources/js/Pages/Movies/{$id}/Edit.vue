@@ -626,7 +626,7 @@ let submit = () => {
   form.copyrightYear = selectedCopyrightYear;
   form.creative_commons_id = selectedCreativeCommons.value;
   form.release_year = selectedReleaseYear.value;
-  form.patch(route('movie.update', props.movie.slug));
+  form.put(route('movie.update', props.movie.slug));
 }
 
 let reloadImage = () => {

@@ -37,9 +37,9 @@ class MovieController extends Controller {
 
     $this->middleware('can:view,movie')->only(['show']);
     $this->middleware('can:create,' . \App\Models\Movie::class)->only(['create']);
-    $this->middleware('can:create,' . \App\Models\Movie::class)->only(['store']);
+    $this->middleware('can:store,' . \App\Models\Movie::class)->only(['store']);
     $this->middleware('can:edit,movie')->only(['edit']);
-    $this->middleware('can:edit,movie')->only(['update']);
+    $this->middleware('can:update,movie')->only(['update']);
     $this->middleware('can:destroy,movie')->only(['destroy']);
 
     $this->mistVideoUrlService = $mistVideoUrlService;
@@ -558,23 +558,10 @@ class MovieController extends Controller {
       $movie->video_id = null;
     }
 
-    // update the show
-    $movie->name = $request->name;
-    $movie->description = $request->description;
-    $movie->logline = $request->logline;
-    $movie->release_year = $request->release_year;
-    $movie->copyrightYear = $request->copyrightYear;
-    $movie->creative_commons_id = $request->creative_commons_id;
-    $movie->movie_category_id = $request->category;
-    $movie->movie_category_sub_id = $request->sub_category;
+    // Use fill method to update all fields
+    $movie->fill($validatedData);
     $movie->slug = \Str::slug($request->name);
-    $movie->www_url = $request->www_url;
-    $movie->instagram_name = $request->instagram_name;
-    $movie->telegram_url = $request->telegram_url;
-    $movie->twitter_handle = $request->twitter_handle;
-    $movie->status_id = $request->status; // Update the movie's status with the new status from the request
     $movie->save();
-    sleep(1);
 
 //dd($movie->slug);
     // redirect
