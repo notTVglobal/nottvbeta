@@ -13,7 +13,7 @@
         <div
             class="flex flex-col md:flex-row bg-gray-600 dark:bg-gray-700 border border-gray-900 w-full py-6 text-center align-middle rounded-lg shadow-lg">
           <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
-            <div v-if="teamStore.nextBroadcast && !teamStore.nextBroadcastIsOver" class="px-4">
+            <div v-if="shouldDisplayNextBroadcast" class="px-4">
               <p class="uppercase font-bold tracking-wider text-yellow-400 dark:text-gray-200">
                 Next Broadcast
               </p>
@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <ZoomLinkButton/>
+      <ZoomLinkButton />
 
       <TeamIdIndexUpcomingBroadcasts/>
       <!--  <div v-if="sortedBroadcasts.length" class="accordion bg-gray-800 text-gray-50 p-5 rounded-lg shadow">-->
@@ -129,6 +129,16 @@ const formattedTime = computed(() => {
   if (!teamStore.nextBroadcast) return null
   return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('h:mm a')
 })
+
+const shouldDisplayNextBroadcast = computed(() => {
+  const nextBroadcast = teamStore.nextBroadcast;
+  if (!nextBroadcast) return false;
+
+  const broadcastDate = dayjs(nextBroadcast.broadcastDate);
+  const now = dayjs().tz(userStore.timezone);
+
+  return broadcastDate.isAfter(now) && broadcastDate.diff(now, 'minute') > 30;
+});
 
 const goToBroadcast = (broadcast) => {
   if (!teamStore.nextBroadcast) return

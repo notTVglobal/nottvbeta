@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
 
-    <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
-      <div v-if="show?.nextBroadcast"
+    <div v-if="show?.nextBroadcast" class="flex flex-row flex-wrap gap-2 mt-2 items-center">
+      <div
            class="flex flex-col bg-gray-300 border border-gray-500 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
         <h2 class="text-2xl font-semibold mb-4 text-gray-800">Next Broadcast</h2>
         <p class="text-lg">
