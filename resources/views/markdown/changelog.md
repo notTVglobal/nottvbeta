@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: June 16, 2024\
+Last Update: June 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.27
+June 17, 2024
+
+* Video Upload page share button now opens the share page in a new tab instead of copying the page url to the clipboard.
+* Try fixing the video download button on the Video Upload page video table. Needs testing in production.
 
 ## v0.9.3.26
 June 16, 2024

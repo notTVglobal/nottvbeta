@@ -78,11 +78,13 @@
             <h3 v-if="$page.props.user.isCreator" class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/dashboard`">
+                <font-awesome-icon :icon="['fas', 'tachometer-alt']" class="mr-2" />
                 Dashboard</JetNavLink>
             </h3>
             <h3 class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/stream`">
+                <font-awesome-icon :icon="['fas', 'video']" class="mr-2" />
                 Back to Stream</JetNavLink>
             </h3>
 

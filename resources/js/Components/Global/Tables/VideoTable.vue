@@ -106,28 +106,32 @@
             <div>
               <button
                   @click.prevent="beginDownload(video)"
-                  class="px-3 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-              >Download
+                  class="px-2 py-1 text-white bg-orange-600 hover:bg-orange-500 rounded-lg flex items-center"
+              >
+                <font-awesome-icon icon="download" class="mr-2" />
+                Download
               </button>
             </div>
             <div>
-              <!-- Button Mode with Custom Text and Color -->
-              <CopyClipboard
-                  :text="videoShareUrl(video)"
-                  :id="video.id"
-                  mode="button"
-                  buttonText="Share"
-                  buttonClass="px-3 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-              />
+              <button
+                  @click.prevent="openShareUrl(video)"
+                  class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg flex items-center"
+              >
+                <font-awesome-icon icon="share-alt" class="mr-2" />
+                Share
+              </button>
             </div>
             <div>
               <button
                   @click.prevent="deleteVideo(video)"
-                  class="px-3 py-2 font-xs text-white bg-red-600 hover:bg-red-500 rounded-lg"
-              >Delete
+                  class="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-lg flex items-center"
+              >
+                <font-awesome-icon icon="trash-can" class="mr-2" />
+                Delete
               </button>
             </div>
           </div>
+
 
         </div>
       </div>
@@ -162,10 +166,14 @@ let props = defineProps({
 })
 
 const videoShareUrl = (video) => {
-  return page.appUrl + '/video/' + video.ulid
-  // return video.cdn_endpoint + video.cloud_private_folder + video.folder + video.file_name
-}
+  return `${page.appUrl}/video/${video.ulid}`;
+  // return video.cdn_endpoint + video.cloud_private_folder + video.folder + video.file_name;
+};
 
+const openShareUrl = (video) => {
+  const url = videoShareUrl(video);
+  window.open(url, '_blank');
+};
 
 const playVideo = (video) => {
   nowPlayingStore.reset()
@@ -217,27 +225,31 @@ const beginDownload = async (video) => {
   const url = video.download_filename;
 
   try {
+    // // Fetch the file from the URL
+    // const response = await fetch(url, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/octet-stream'
+    //   }
+    // });
+    //
+    // // Ensure the response is OK
+    // if (!response.ok) {
+    //   console.log('Network response was not ok');
+    //   return;
+    // }
+    //
+    // // Get the response as a Blob
+    // const blob = await response.blob();
+
     // Fetch the file from the URL
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/octet-stream'
-      }
-    });
-
-    // Ensure the response is OK
-    if (!response.ok) {
-      console.log('Network response was not ok');
-      return;
-    }
-
-    // Get the response as a Blob
-    const blob = await response.blob();
+    const response = await fetch(url)
+    const blob = await response.blob()
 
     // Create a link element
     const downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = video.download_filename || 'downloaded_video.mp4'; // Ensure the filename has an extension
+    downloadLink.download = video.download_filename || 'downloaded_video'; // Ensure the filename has an extension
 
     // Append the link to the document body
     document.body.appendChild(downloadLink);
