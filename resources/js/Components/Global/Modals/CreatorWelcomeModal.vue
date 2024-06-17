@@ -32,6 +32,7 @@
 import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+
 const videoPlayerStore = useVideoPlayerStore()
 
 import { router } from '@inertiajs/vue3'
@@ -53,9 +54,9 @@ const goToDashboard = () => {
 
 <style scoped>
 .bg-moving-gradient {
-  background: linear-gradient(270deg, #6a0dad, #ff6347, #1e90ff, #ff4500);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  background: linear-gradient(270deg, #6a0dad, #ff6347, #1e90ff, #ff4500, #6a0dad, #ff6347, #1e90ff, #ff4500, #6a0dad);
+  background-size: 900% 900%; /* Adjust size for smooth transition */
+  animation: gradientShift 30s linear infinite; /* Use linear timing for seamless loop */
 }
 
 @keyframes gradientShift {
@@ -83,7 +84,8 @@ button:hover {
   transition: opacity 1s ease;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
+{
   opacity: 0;
 }
 
