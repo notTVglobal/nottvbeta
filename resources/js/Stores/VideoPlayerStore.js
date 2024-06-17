@@ -153,7 +153,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.player.controls(false)
                 this.player.muted(this.muted)
 
-
                 // Await the player to be ready
                 await new Promise(resolve => this.player.ready(resolve))
 
@@ -609,8 +608,13 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             userStore.setFirstPlayFalse()
             return {videoSrc, videoSourceType}
         },
-
-
+        loadNewFirstPlayVideo(source) {
+            console.log('new first play video source: ', source)
+            // check the source... is it properly coming in?
+            nowPlayingStore.reset()
+            nowPlayingStore.activeMedia.details.primaryName = source.name
+            this.loadNewVideo(source)
+        },
         loadNewVideo(source) {
             try {
                 let videoJs = videojs('main-player')
