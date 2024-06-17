@@ -24,8 +24,9 @@ class Movie extends Model {
       'size',
       'file_path',
       'file_url',
-      'meta',
       'release_year',
+      'release_date',
+      'meta',
       'www_url',
       'instagram_name',
       'telegram_url',
@@ -37,7 +38,7 @@ class Movie extends Model {
       'logline',
       'duration',
       'video_id',
-      'movies_trailer_id',
+      'movies_trailers_id',
       'status_id',
       'copyrightYear',
       'releaseDateTime'
@@ -88,13 +89,11 @@ class Movie extends Model {
     return $this->belongsTo(MovieStatus::class, 'status_id');
   }
 
-  public function creativeCommons()
-  {
+  public function creativeCommons() {
     return $this->belongsTo(CreativeCommons::class, 'creative_commons_id');
   }
 
-  public function playlistItems()
-  {
+  public function playlistItems() {
     return $this->morphMany(ChannelPlaylistItem::class, 'content');
   }
 
@@ -108,16 +107,14 @@ class Movie extends Model {
 
 
   // Retrieves the cached category or loads it if not cached
-  public function getCachedCategory()
-  {
+  public function getCachedCategory() {
     return Cache::rememberForever('movie_category_' . $this->movie_category_id, function () {
       return $this->category;
     });
   }
 
   // Retrieves the cached subcategory or loads it if not cached
-  public function getCachedSubCategory()
-  {
+  public function getCachedSubCategory() {
     return Cache::rememberForever('movie_subcategory_' . $this->movie_category_sub_id, function () {
       return $this->subCategory;
     });

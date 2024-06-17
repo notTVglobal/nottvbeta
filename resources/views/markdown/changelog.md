@@ -3,6 +3,15 @@
 Last Update: June 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.30
+June 17, 2024
+
+* Fix Movie EditController.
+<<<<<<< HEAD
+=======
+* Add videoPlayer.reset before loading new source for First Play Video change.
+>>>>>>> development
+
 ## v0.9.3.29
 June 17, 2024
 

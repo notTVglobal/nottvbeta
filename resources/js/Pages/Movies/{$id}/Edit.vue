@@ -49,9 +49,9 @@
                                class="topBannerErrorMessage"></div>
                           <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
                                class="topBannerErrorMessage"></div>
-                          <div v-if="form.errors.category" v-text="form.errors.category"
+                          <div v-if="form.errors.movie_category_id" v-text="form.errors.movie_category_id"
                                class="topBannerErrorMessage"></div>
-                          <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
+                          <div v-if="form.errors.movie_category_sub_id" v-text="form.errors.movie_category_sub_id"
                                class="topBannerErrorMessage"></div>
                           <div v-if="form.errors.video_url" v-text="form.errors.video_url"
                                class="topBannerErrorMessage"></div>
@@ -65,7 +65,7 @@
                                class="topBannerErrorMessage"></div>
                           <div v-if="form.errors.notes" v-text="form.errors.notes"
                                class="topBannerErrorMessage"></div>
-                          <div v-if="form.errors.status" v-text="form.errors.status"
+                          <div v-if="form.errors.status_id" v-text="form.errors.status_id"
                                class="topBannerErrorMessage"></div>
                             <!--                            <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"-->
                             <!--                                 class="topBannerErrorMessage-->
@@ -187,14 +187,14 @@
                                         <div class="text-sm mb-2">Set the status to Active to make the movie accessible to the public. Set the status to Creators only to only make it available to creators. All other statuses will only be viewable by you.</div>
 
                                         <select required class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
-                                                v-model="form.status"
+                                                v-model="form.status_id"
                                         >
                                           <option v-for="status in statuses"
                                                   :key="status.id" :value="status.id">{{status.name}}</option>
 
 
                                         </select>
-                                        <div v-if="form.errors.status" v-text="form.errors.status"
+                                        <div v-if="form.errors.status_id" v-text="form.errors.status_id"
                                              class="errorClass"></div>
                                       </div>
 
@@ -603,7 +603,7 @@ const chooseSubCategory = () => {
 let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
-    status: props.movie.status_id,
+    status_id: props.movie.status_id,
     release_year: selectedReleaseYear,
     copyrightYear: selectedCopyrightYear,
     creative_commons_id: selectedCreativeCommons.value,
