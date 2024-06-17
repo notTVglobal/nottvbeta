@@ -1,5 +1,5 @@
 <template>
-  <div v-if="teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink && !teamStore.nextBroadcastIsOver"
+  <div v-if="shouldDisplayZoomLink"
        class="flex justify-center text-center text-black p-4 mx-5 bg-yellow-300 rounded-lg">
 
     <div class="space-x-4">
@@ -110,6 +110,10 @@ function shareZoomLink() {
   }
   socialShareStore.parseModel(payload)
 }
+
+const shouldDisplayZoomLink = computed(() => {
+  return teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink && isBroadcastOpen.value;
+});
 
 function joinZoom() {
   // console.log('zoomLink value:', zoomLink.value);  // Accessing the value of the computed property
