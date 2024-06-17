@@ -480,38 +480,35 @@ class MovieController extends Controller {
 
     // validate the request
     $validatedData = $request->validate([
+        'creative_commons_id'   => 'required|integer|exists:creative_commons,id',
         'name'                  => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
         'description'           => 'required',
-        'logline'               => 'required|string',
-        'release_date'          => 'date|after:tomorrow',
+        'video_url'             => 'nullable|url|ends_with:.mp4',
         'release_year'          => [
             'required_if:status,2',
             'nullable',
             'integer',
-            'min:1900',
-            'max:' . date('Y')
+            'min:1800',
         ],
-        'creative_commons_id'   => 'required|integer|exists:creative_commons,id',
-        'copyrightYear'         => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
-        'movie_category_id'     => 'required',
-        'movie_category_sub_id' => 'nullable',
-        'video_url'             => 'nullable|url|ends_with:.mp4',
+        'release_date'          => 'nullable|date',
         'www_url'               => 'nullable|active_url',
         'instagram_name'        => 'nullable|string|max:30',
         'telegram_url'          => 'nullable|active_url',
         'twitter_handle'        => 'nullable|string|min:4|max:15',
+        'movie_category_id'     => 'required',
+        'movie_category_sub_id' => 'nullable',
+        'logline'               => 'required|string',
         'notes'                 => 'nullable|string|max:1024',
-        'status'                => 'required|integer|exists:movie_statuses,id',
+        'status_id'             => 'required|integer|exists:movie_statuses,id',
+        'copyrightYear'         => ['nullable', 'integer', 'min:1900'],
     ], [
         'category.required'            => 'The category is required.',
         'creative_commons_id.required' => 'The creative commons selection is required.',
         'status.exists'                => 'The selected status is invalid.',
         'copyrightYear.integer'        => 'Please choose a copyright year',
-        'release_date.after'           => 'The release date must be at least 24 hours in the future.',
         'release_year.required_if'     => 'The release year is required when the status is active.',
         'release_year.integer'         => 'The release year must be an number.',
-        'release_year.min'             => 'The release year must be greater than 1900.',
-        'release_year.max'             => 'The release year cannot be beyond this year.',
+        'release_year.min'             => 'The release year must be greater than 1800.',
     ]);
 
     // Capture the original status before any changes
@@ -522,6 +519,11 @@ class MovieController extends Controller {
       // Set releaseDateTime to now
       $movie->releaseDateTime = now();
     }
+
+    // Use fill method to update all fields
+    $movie->fill($validatedData);
+    $movie->slug = \Str::slug($request->name);
+    $movie->save();
 
     // Check if the video_url is not empty and is different from the existing one.
     if (!empty($request->video_url)) {
@@ -554,9 +556,7 @@ class MovieController extends Controller {
       $movie->video_id = null;
     }
 
-    // Use fill method to update all fields
-    $movie->fill($validatedData);
-    $movie->slug = \Str::slug($request->name);
+    // Save the movie again to update the video_id
     $movie->save();
 
     // redirect

@@ -235,7 +235,7 @@
           <!-- Paginator -->
           <!--                            <Pagination :data="`#`" class=""/>-->
           <Link :href="`#`" class="text-blue-500 ml-2"> {{ movie.name }}
-            <span v-if="movie.copyrightYear"> © {{ movie.copyrightYear }}</span>
+            <span v-if="movie.release_year"> © {{ movie.release_year }}</span>
           </Link>
         </div>
       </footer>
