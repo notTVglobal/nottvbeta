@@ -20,10 +20,10 @@
           <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
             <div class="relative items-center">
               <div v-if="movie.status.id === 9" class="absolute flex justify-end w-full -mt-3 z-50">
-                <CreatorsOnlyBadge />
+                <CreatorsOnlyBadge/>
               </div>
               <div v-else-if="movie.isNew" class="absolute flex justify-end w-full -mt-3 z-50">
-                <NewContentBadge />
+                <NewContentBadge/>
               </div>
               <SingleImage :image="movie.image" :alt="'movie cover'"
                            :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>
@@ -31,7 +31,9 @@
             <div class="lg:ml-12 lg:mr-0">
               <h2 class="font-semibold text-4xl text-center lg:text-left tracking-wide">{{ movie.name }}</h2>
               <div class="text-gray-400 text-center lg:text-left mt-1">
-                <span class="text-yellow-700 tracking-wider uppercase">{{ movie.category?.name }}</span><span class="text-gray-400"> &middot; </span><span class="text-yellow-500 tracking-wide"> {{ movie.subCategory?.name }}</span>
+                <span class="text-yellow-700 tracking-wider uppercase">{{ movie.category?.name }}</span><span
+                  class="text-gray-400"> &middot; </span><span
+                  class="text-yellow-500 tracking-wide"> {{ movie.subCategory?.name }}</span>
                 <span v-if="movie.release_year"> &middot; {{ movie.release_year }}</span>
               </div>
 
@@ -68,7 +70,8 @@
                   </div>
                   <div v-if="props.movie.instagram_name"
                        class="instagram-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
-                    <a :href="'https://www.instagram.com/' + props.movie.instagram_name" class="hover:text-gray-400" target="_blank">
+                    <a :href="'https://www.instagram.com/' + props.movie.instagram_name" class="hover:text-gray-400"
+                       target="_blank">
                       <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                            viewBox="0 0 300 300">
                         <path d="M38.52,0.012h222.978C282.682,0.012,300,17.336,300,38.52v222.978c0,21.178-17.318,38.49-38.502,38.49
@@ -93,7 +96,8 @@
                   </div>
                   <div v-if="props.movie.twitter_handle"
                        class="twitter-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
-                    <a :href="'https://www.twitter.com/' + props.movie.twitter_handle" class="hover:text-gray-400" target="_blank">
+                    <a :href="'https://www.twitter.com/' + props.movie.twitter_handle" class="hover:text-gray-400"
+                       target="_blank">
                       <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                            viewBox="0 0 310 310">
                         <path id="XMLID_827_" d="M302.973,57.388c-4.87,2.16-9.877,3.983-14.993,5.463c6.057-6.85,10.675-14.91,13.494-23.73
@@ -122,45 +126,44 @@
 
                 <button v-if="movie?.video?.mediaType"
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        :disabled="isButtonDisabled"
                         @click.prevent="playMovie">
-                  <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                       viewBox="0 0 485 485">
+                  <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 485 485">
                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
-                                                s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
-                                                C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
-                                                S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+              s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+              C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+              S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                     <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                   </svg>
-                  <span
-                      v-if="nowPlayingStore?.activeMedia?.details?.primaryName === movie?.name"
-                      class="ml-2 text-sm md:text-md">Now Playing</span>
-                  <span v-else class="ml-2 text-sm md:text-md">Watch Now</span>
+                  <span v-if="nowPlayingStore?.activeMedia?.details?.primaryName === movie?.name"
+                        class="ml-2 text-sm md:text-md">
+                    Now Playing
+                  </span>
+                  <span v-else class="ml-2 text-sm md:text-md">{{ buttonLabel }}</span>
                 </button>
 
-                <button v-if="userStore.isVip || userStore.isAdmin"
-                        disabled
+                <button v-if="shouldDisplayTrailerButton"
                         class="h-fit flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click="playTrailer">
-                  <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                       viewBox="0 0 485 485">
+                  <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 485 485">
                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
-                                                s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
-                                                C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
-                                                S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+              s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+              C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+              S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                     <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                   </svg>
                   <span class="ml-2 text-sm md:text-md">Play Trailer</span>
                 </button>
 
-                <button v-if="userStore.isVip || userStore.isAdmin"
+                <button
                         disabled
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                   <span class="text-sm md:text-md"><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
                 </button>
 
-                <button v-if="userStore.isVip || userStore.isAdmin"
+                <button
                         disabled
-                        class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                        class="hidden bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                   <span class="text-sm md:text-md"><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
                 </button>
 
@@ -232,7 +235,7 @@
           <!-- Paginator -->
           <!--                            <Pagination :data="`#`" class=""/>-->
           <Link :href="`#`" class="text-blue-500 ml-2"> {{ movie.name }}
-            <span v-if="movie.release_year"> © {{ movie.release_year }}</span>
+            <span v-if="movie.copyrightYear"> © {{ movie.copyrightYear }}</span>
           </Link>
         </div>
       </footer>
@@ -244,7 +247,7 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -276,6 +279,18 @@ let props = defineProps({
   can: Object,
   // filters: Object,
 })
+
+const isButtonDisabled = computed(() => {
+  return !props.movie?.video?.video_url && !props.movie?.video?.file_name;
+});
+
+const buttonLabel = computed(() => {
+  return isButtonDisabled.value ? 'Unavailable' : 'Watch Now';
+});
+
+const shouldDisplayTrailerButton = computed(() => {
+  return props.movie?.trailer?.video_url || props.movie?.trailer?.file_name;
+});
 
 let thisYear = new Date().getFullYear()
 
@@ -327,91 +342,92 @@ let source = {
 // }
 
 let playMovie = () => {
+  if (!isButtonDisabled.value) {
+
+    // audioContext.resume().then(() => {
+    //   console.log('AudioContext resumed successfully');
+    //   videoPlayerStore.loadAndPlaySource(movie.video);
+    // }).catch(error => {
+    //   console.error('Error resuming AudioContext:', error);
+    // });
+
+    // Determine media type and specific details based on the video type
+    const movie = props.movie
+    const mediaType = movie.video ? movie.video.mediaType : null // Use the new 'mediaType' from the backend
+
+    const isInternalVideo = mediaType === 'movie'
+    const isExternalVideo = mediaType === 'externalVideo'
 
 
-  // audioContext.resume().then(() => {
-  //   console.log('AudioContext resumed successfully');
-  //   videoPlayerStore.loadAndPlaySource(movie.video);
-  // }).catch(error => {
-  //   console.error('Error resuming AudioContext:', error);
-  // });
-
-  // Determine media type and specific details based on the video type
-  const movie = props.movie;
-  const mediaType = movie.video ? movie.video.mediaType : null; // Use the new 'mediaType' from the backend
-
-  const isInternalVideo = mediaType  === 'movie';
-  const isExternalVideo = mediaType  === 'externalVideo';
-
-
-  // Load the video source in videoPlayerStore for playback
-  if (isInternalVideo) {
-    // For internal videos, load using the episode video directly
-    try {
-      videoPlayerStore.loadNewVideo(movie.video);
-      // Further actions that depend on the success of loadNewVideo
-    } catch (error) {
-      console.error("Failed to load new video:", error);
-      // Handle the failure, e.g., by showing an error message to the user
-      // Avoid performing further actions that depend on the successful execution of loadNewVideo
+    // Load the video source in videoPlayerStore for playback
+    if (isInternalVideo) {
+      // For internal videos, load using the episode video directly
+      try {
+        videoPlayerStore.loadNewVideo(movie.video)
+        // Further actions that depend on the success of loadNewVideo
+      } catch (error) {
+        console.error('Failed to load new video:', error)
+        // Handle the failure, e.g., by showing an error message to the user
+        // Avoid performing further actions that depend on the successful execution of loadNewVideo
+      }
+      // videoPlayerStore.loadNewSourceFromFile(movie.video);
+    } else if (isExternalVideo) {
+      // For external videos, focus on the video_url and type provided within the episode's video details
+      if (movie.video && movie.video.video_url) {
+        videoPlayerStore.loadNewSourceFromUrl({
+          video_url: movie.video.video_url,
+          type: movie.video.type, // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+        })
+      }
     }
-    // videoPlayerStore.loadNewSourceFromFile(movie.video);
-  } else if (isExternalVideo) {
-    // For external videos, focus on the video_url and type provided within the episode's video details
-    if (movie.video && movie.video.video_url) {
-      videoPlayerStore.loadNewSourceFromUrl({
-        video_url: movie.video.video_url,
-        type: movie.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
-      });
+    nowPlayingStore.reset()
+
+    const videoDetails = {
+      // Assuming video details are structured correctly in your episode data
+      video_url: movie.video ? movie.video.video_url : '',
+      type: movie.video ? movie.video.type : 'video/mp4', // MIME type for video.js
     }
+
+    // Common details for nowPlayingStore
+    const commonDetails = {
+      primaryName: movie.name, // Show or Movie name
+      secondaryName: '', // Episode name
+      primaryUrl: `movies/${movie.slug}`,
+      secondaryUrl: '',
+      channelName: '',
+      image: movie.image,
+      category: movie.category,
+      subCategory: movie.subCategory,
+      release_year: movie.release_year,
+      logline: movie.logline,
+      description: movie.description,
+      creative_commons: movie.creative_commons,
+      copyrightYear: movie.copyrightYear,
+    }
+
+    // Set the currently playing media in nowPlayingStore
+    nowPlayingStore.setActiveMedia(mediaType, {
+      ...commonDetails,
+      videoDetails, // Spread in the specific details for internal or external video
+    })
+    // videoPlayerStore.loadNewVideo(movie.video);
+    // Assuming `window.audioContext` is your global AudioContext
+    // if (window.audioContext.state === 'suspended') {
+    //     window.audioContext.resume().then(() => {
+    //         console.log('AudioContext resumed successfully');
+    //       videoPlayerStore.loadAndPlaySource(movie.video);
+    //     }).catch(error => {
+    //         console.error('Error resuming AudioContext:', error);
+    //     });
+    // } else {
+    //   videoPlayerStore.loadNewVideo(movie.video);
+    // }
+
+
+    appSettingStore.ott = 1
+    // router.visit('/stream');
   }
-  nowPlayingStore.reset();
-
-  const videoDetails = {
-    // Assuming video details are structured correctly in your episode data
-    video_url: movie.video ? movie.video.video_url : '',
-    type: movie.video ? movie.video.type : 'video/mp4', // MIME type for video.js
-  };
-
-  // Common details for nowPlayingStore
-  const commonDetails = {
-    primaryName: movie.name, // Show or Movie name
-    secondaryName: '', // Episode name
-    primaryUrl: `movies/${movie.slug}`,
-    secondaryUrl: '',
-    channelName: '',
-    image: movie.image,
-    category: movie.category,
-    subCategory: movie.subCategory,
-    release_year: movie.release_year,
-    logline: movie.logline,
-    description: movie.description,
-    creative_commons: movie.creative_commons,
-    copyrightYear: movie.copyrightYear,
-  }
-
-  // Set the currently playing media in nowPlayingStore
-  nowPlayingStore.setActiveMedia(mediaType, {
-    ...commonDetails,
-    videoDetails, // Spread in the specific details for internal or external video
-  });
-  // videoPlayerStore.loadNewVideo(movie.video);
-  // Assuming `window.audioContext` is your global AudioContext
-  // if (window.audioContext.state === 'suspended') {
-  //     window.audioContext.resume().then(() => {
-  //         console.log('AudioContext resumed successfully');
-  //       videoPlayerStore.loadAndPlaySource(movie.video);
-  //     }).catch(error => {
-  //         console.error('Error resuming AudioContext:', error);
-  //     });
-  // } else {
-  //   videoPlayerStore.loadNewVideo(movie.video);
-  // }
-
-
-  appSettingStore.ott = 1
-  // router.visit('/stream');
-};
+}
 
 
 // function checkForVideo() {

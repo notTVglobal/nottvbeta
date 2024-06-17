@@ -2,7 +2,7 @@
   <div>
     <dialog id="notifications" class="modal">
       <div class="modal-box bg-gray-900 border-2 border-accent">
-        <NotificationsContainer @closeModal="closeModalFunction" :key="userStore.notificationsKey"/>
+        <NotificationsContainer :key="userStore.notificationsKey"/>
 
       </div>
       <form ref="closeModal" method="dialog" class="modal-backdrop">
@@ -23,9 +23,9 @@ const notifications = ref([])
 const closeModal = ref(null)
 const notificationsDialog = ref(null)
 
-function closeModalFunction() {
-  closeModal.value.submit()
-}
+// function closeModalFunction() {
+//   closeModal.value.submit()
+// }
 
 
 </script>
