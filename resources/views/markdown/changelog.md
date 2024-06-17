@@ -3,6 +3,11 @@
 Last Update: June 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.28
+June 17, 2024
+
+* Added a Welcome Modal for Creators.
+
 ## v0.9.3.27
 June 17, 2024
 

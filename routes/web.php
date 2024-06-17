@@ -143,7 +143,7 @@ Route::get('/home', function () {
     }
 
     if ($user->isCreator()) {
-      return redirect()->route('dashboard');
+      return redirect()->route('creatorWelcome');
     }
 
     return redirect()->route('stream');
@@ -189,7 +189,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
   // Check if the currently authenticated user is a creator
   if (Auth::user()->creator) { // Assuming isCreator() is a method that determines if the user is a creator
-    return redirect('/dashboard');
+    return redirect('/creatorWelcome');
   }
 
   return redirect('/');
@@ -342,7 +342,7 @@ Route::post('/send-email-reminder', [EmailReminderController::class, 'sendEmailR
 /////////
 
 Route::get('/browse', [BrowseController::class, 'index'])
-  ->name('browse.index');
+    ->name('browse.index');
 Route::get('/browse/fetch-teams', [BrowseController::class, 'fetchTeams']);
 
 
@@ -427,6 +427,13 @@ Route::middleware([
 ///////////////////////////////
   Route::get('/onboarding/{step}', [CreatorsController::class, 'showOnboardingStep'])->name('onboarding.show');
 
+
+// Creator Welcome
+//////////////////
+
+  Route::get('/creator-welcome', [WelcomeController::class, 'creatorWelcome'])
+      ->can('viewDashboard', 'App\Models\Creator')
+      ->name('creatorWelcome');
 
 // Dashboard
 ///////////

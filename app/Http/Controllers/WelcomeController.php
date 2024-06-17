@@ -21,8 +21,9 @@ class WelcomeController extends Controller {
 
       // Redirect the user to the stream route
       if ($user->creator) {
-        return redirect()->route('dashboard');
+        return redirect()->route('creatorWelcome');
       }
+
       return redirect()->route('stream');
     }
 
@@ -71,6 +72,14 @@ class WelcomeController extends Controller {
     // if error return with('error', error);
     return redirect()->route('public.contact')->with('success', 'Contact Form Submitted Successfully');
 
+  }
+
+  public function creatorWelcome(): \Inertia\Response {
+    $user = Auth::user();
+
+    return Inertia::render('CreatorWelcome', [
+        'user_name' => $user->name
+    ]);
   }
 
   public function inviteFormSubmission(HttpRequest $request) {
