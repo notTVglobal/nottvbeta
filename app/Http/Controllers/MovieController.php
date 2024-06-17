@@ -72,8 +72,7 @@ class MovieController extends Controller {
     ]);
   }
 
-  public function showCategory(MovieCategory $movieCategory, HttpRequest $request): Response
-  {
+  public function showCategory(MovieCategory $movieCategory, HttpRequest $request): Response {
     $cacheKey = 'movie_category_subcategories_' . $movieCategory->id;
 
     $subCategories = Cache::rememberForever($cacheKey, function () use ($movieCategory) {
@@ -98,16 +97,16 @@ class MovieController extends Controller {
     $moviesResource = MovieResource::collection($movies);
 
     return Inertia::render('Movies/Category/{$id}/Index}', [
-        'category' => $movieCategory,
+        'category'      => $movieCategory,
         'subCategories' => $subCategories,
-        'movies' => $moviesResource,
-        'pagination' => [
-            'total' => $movies->total(),
-            'per_page' => $movies->perPage(),
+        'movies'        => $moviesResource,
+        'pagination'    => [
+            'total'        => $movies->total(),
+            'per_page'     => $movies->perPage(),
             'current_page' => $movies->currentPage(),
-            'last_page' => $movies->lastPage(),
-            'from' => $movies->firstItem(),
-            'to' => $movies->lastItem()
+            'last_page'    => $movies->lastPage(),
+            'from'         => $movies->firstItem(),
+            'to'           => $movies->lastItem()
         ]
     ]);
   }
@@ -197,18 +196,17 @@ class MovieController extends Controller {
   }
 
 
-
   private function applyStatusFilter() {
     return function ($query) {
       if (auth()->check()) {
         $user = auth()->user();
 
         if ($user->creator) {
-          // Creators can see movies with an active or creators only status
-          $query->whereIn('status_id', [2, 9]);
+          // Creators can see movies with a new, active or creators only status
+          $query->whereIn('status_id', [1, 2, 9]);
         } elseif ($user->subscription() || $user->isVip) {
-          // Subscribers and VIPs can see movies with an active status
-          $query->where('status_id', 2);
+          // Subscribers and VIPs can see movies with a new or active status
+          $query->where('status_id', [1, 2]);
         } else {
           // If neither, no movies should be visible
           $query->whereRaw('1 = 0'); // This will always evaluate to false
@@ -480,32 +478,30 @@ class MovieController extends Controller {
    */
   public function update(HttpRequest $request, Movie $movie) {
 
-//    dd($request);
-
     // validate the request
     $validatedData = $request->validate([
-        'name'                => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
-        'description'         => 'required',
-        'logline'             => 'required|string',
-        'release_date'        => 'date|after:tomorrow',
-        'release_year'        => [
+        'name'                  => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
+        'description'           => 'required',
+        'logline'               => 'required|string',
+        'release_date'          => 'date|after:tomorrow',
+        'release_year'          => [
             'required_if:status,2',
             'nullable',
             'integer',
             'min:1900',
             'max:' . date('Y')
         ],
-        'creative_commons_id' => 'required|integer|exists:creative_commons,id',
-        'copyrightYear'       => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
-        'category'            => 'required',
-        'sub_category'        => 'nullable',
-        'video_url'           => 'nullable|url|ends_with:.mp4',
-        'www_url'             => 'nullable|active_url',
-        'instagram_name'      => 'nullable|string|max:30',
-        'telegram_url'        => 'nullable|active_url',
-        'twitter_handle'      => 'nullable|string|min:4|max:15',
-        'notes'               => 'nullable|string|max:1024',
-        'status'              => 'required|integer|exists:movie_statuses,id',
+        'creative_commons_id'   => 'required|integer|exists:creative_commons,id',
+        'copyrightYear'         => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
+        'movie_category_id'     => 'required',
+        'movie_category_sub_id' => 'nullable',
+        'video_url'             => 'nullable|url|ends_with:.mp4',
+        'www_url'               => 'nullable|active_url',
+        'instagram_name'        => 'nullable|string|max:30',
+        'telegram_url'          => 'nullable|active_url',
+        'twitter_handle'        => 'nullable|string|min:4|max:15',
+        'notes'                 => 'nullable|string|max:1024',
+        'status'                => 'required|integer|exists:movie_statuses,id',
     ], [
         'category.required'            => 'The category is required.',
         'creative_commons_id.required' => 'The creative commons selection is required.',
@@ -563,7 +559,6 @@ class MovieController extends Controller {
     $movie->slug = \Str::slug($request->name);
     $movie->save();
 
-//dd($movie->slug);
     // redirect
     return redirect(route('movie.show', [$movie->slug]))->with('success', 'Movie Updated Successfully');
 

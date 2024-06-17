@@ -295,7 +295,7 @@
                                                         :key="category.id" :value="category.id">{{category.name}}</option>
                                             </select>
 
-                                          <div v-if="form.errors.category" v-text="form.errors.category"
+                                          <div v-if="form.errors.movie_category_id" v-text="form.errors.movie_category_id"
                                                class="errorClass"></div>
 
                                             <span class="">{{movieStore.category_description}}</span>
@@ -320,7 +320,7 @@
                                                 </option>
                                             </select>
                                             <span class="">{{movieStore.sub_category_description}}</span>
-                                            <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
+                                            <div v-if="form.errors.movie_category_sub_id" v-text="form.errors.movie_category_sub_id"
                                                  class="errorClass"></div>
                                         </div>
 
@@ -607,8 +607,8 @@ let form = useForm({
     release_year: selectedReleaseYear,
     copyrightYear: selectedCopyrightYear,
     creative_commons_id: selectedCreativeCommons.value,
-    category: movieStore.category_id,
-    sub_category: movieStore.sub_category_id,
+  movie_category_id: movieStore.category_id,
+  movie_category_sub_id: movieStore.sub_category_id,
     description: props.movie.description,
     logline: props.movie.logline,
     user_id: props.movie.user_id,
@@ -621,8 +621,8 @@ let form = useForm({
 })
 
 let submit = () => {
-  form.category = movieStore.category_id;
-  form.sub_category = movieStore.sub_category_id;
+  form.movie_category_id = movieStore.category_id;
+  form.movie_category_sub_id = movieStore.sub_category_id;
   form.copyrightYear = selectedCopyrightYear;
   form.creative_commons_id = selectedCreativeCommons.value;
   form.release_year = selectedReleaseYear.value;
