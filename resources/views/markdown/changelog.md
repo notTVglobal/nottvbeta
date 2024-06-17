@@ -7,6 +7,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 June 17, 2024
 
 * Fix Movie EditController.
+* Add videoPlayer.reset before loading new source for First Play Video change.
 
 ## v0.9.3.29
 June 17, 2024

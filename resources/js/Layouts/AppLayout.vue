@@ -149,7 +149,7 @@ firstPlayVideoEcho.subscribed(() => {
 
     videoPlayerStore.updateFirstPlay(source)
     // Load new video with the source data
-    videoPlayerStore.loadNewVideo(source)
+    videoPlayerStore.loadNewFirstPlayVideo(source)
   }
 })
 

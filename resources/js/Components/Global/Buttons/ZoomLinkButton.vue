@@ -59,25 +59,22 @@ const socialShareStore = useSocialShareStore()
 const team = computed(() => teamStore.team || {})
 
 const isBroadcastOpen = computed(() => {
-  const userCurrentTime = dayjs(userStore.userCurrentTime)
-  const broadcastDate = dayjs(teamStore.nextBroadcast.broadcastDate)
+  if (teamStore.nextBroadcast) {
+    const userCurrentTime = dayjs(userStore.userCurrentTime)
+    const broadcastDate = dayjs(teamStore.nextBroadcast.broadcastDate)
 
-  // console.log('User Current Time:', userCurrentTime.format())
-  // console.log('Broadcast Date:', broadcastDate.format())
+    // console.log('User Current Time:', userCurrentTime.format())
+    // console.log('Broadcast Date:', broadcastDate.format())
 
-  const startTime = broadcastDate.subtract(30, 'minute')
-  const endTime = broadcastDate.add(60, 'minute')
+    const startTime = broadcastDate.subtract(30, 'minute')
+    const endTime = broadcastDate.add(60, 'minute')
 
-  // console.log('Start Time:', startTime.format())
-  // console.log('End Time:', endTime.format())
+    // console.log('Start Time:', startTime.format())
+    // console.log('End Time:', endTime.format())
 
-  if (userCurrentTime.isBetween(startTime, endTime, null, '[]')) {
-    // console.log('Broadcast is open')
-    return true
-  } else {
-    // console.log('Broadcast is closed')
-    return false
+    return userCurrentTime.isBetween(startTime, endTime, null, '[]');
   }
+  return false
 })
 
 // Watch the current time to update isBroadcastOpen when time changes
