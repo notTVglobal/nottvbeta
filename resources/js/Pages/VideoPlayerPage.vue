@@ -23,7 +23,12 @@
       </div>
       <div class="absolute top-20 right-0 px-3 py-2 z-50">
         <div class="flex gap-2">
-          <button @click="beginDownload"
+          <button v-if="$page.props.user.isCreator" @click.prevent="appSettingStore.btnRedirect(`/videoupload`)"
+                  class="flex bg-green-500 text-white font-semibold px-4 py-2 hover:bg-green-400 rounded transition ease-in-out duration-150 items-center">
+            <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
+            My Uploads
+          </button>
+          <button @click.prevent="beginDownload"
                   class="flex bg-orange-500 text-white font-semibold px-4 py-2 hover:bg-orange-400 rounded transition ease-in-out duration-150 items-center">
             <font-awesome-icon icon="fa-download" class="mr-2"/>
             Download
@@ -138,7 +143,7 @@ const dismissSignup = () => {
 
 const beginDownload = async () => {
   const url = props.videoSource
-  console.log('Video source: ' + props.videoSource)
+  // console.log('Video source: ' + props.videoSource)
   try {
     // Fetch the file from the URL
     const response = await fetch(url)
