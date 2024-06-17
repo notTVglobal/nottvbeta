@@ -14,13 +14,13 @@
               @click="goToStream"
               class="px-12 py-8 text-4xl text-white bg-blue-500 hover:bg-blue-600 rounded-lg flex items-center justify-center"
           >
-            <span class="text-5xl">📺</span> <br><br>Watch Stream
+            <span class="text-5xl mr-2">📺</span> <br><br>Watch Stream
           </button>
           <button
               @click="goToDashboard"
               class="px-12 py-8 text-4xl text-white bg-green-500 hover:bg-green-600 rounded-lg flex items-center justify-center"
           >
-            <span class="text-5xl">🛠️</span> <br><br>Go To Your <br>Creator Dashboard
+            <span class="text-5xl mr-2">🛠️</span> <br><br>Go To Your <br>Creator Dashboard
           </button>
         </div>
       </div>

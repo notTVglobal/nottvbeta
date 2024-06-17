@@ -51,6 +51,7 @@ onBeforeMount(() => {
 
 // Call getUserTimezone early, possibly in onMounted
 onMounted(async () => {
+  appSettingStore.showOrangeFeedbackButton = true
   // getUserTimezone();
   // if (props.getUserData) {
   //   await updateUserStore();

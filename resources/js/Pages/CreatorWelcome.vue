@@ -31,6 +31,7 @@ videoPlayerStore.controls = false
 
 onMounted(() => {
   appSettingStore.showCreatorWelcomeModal = true
+  appSettingStore.showOrangeFeedbackButton = false
   userStore.user.name = props.user_name
 })
 

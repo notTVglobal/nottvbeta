@@ -1,7 +1,7 @@
 <template>
   <div class="h-1/2 scrollbar-hide w-full">
 
-    <div class="overflow-y-auto overflow-ellipsis"
+    <div class="overflow-y-auto overflow-ellipsis hide-scrollbar"
          :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
 
       <div class="oldMessage hyphens-auto" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()"

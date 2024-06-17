@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ottButtonsContainer button-custom-container" id="ottButtons">
+    <div class="ottButtonsContainer button-custom-container hide-scrollbar" id="ottButtons">
       <div class="flex flex-row flex-wrap-reverse space-x-2 justify-center">
         <button
             v-if="appSettingStore.prevUrl"

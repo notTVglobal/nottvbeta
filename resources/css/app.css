@@ -433,7 +433,7 @@ hr {
         left: 0;
         right: 0;
         gap: 0.5rem; /* You can adjust the gap size as needed */
-        @apply fixed flex flex-wrap justify-center mx-auto space-x-2 bottom-4 w-full hide-scrollbar
+        @apply fixed flex flex-wrap justify-center mx-auto space-x-2 bottom-4 w-full
     }
     /*.channelsFullPageContainer {*/
     /*    z-index: 200;*/
@@ -464,7 +464,7 @@ hr {
         height:calc(50vh + 1rem);
         /*top: 4rem;*/
         @apply fixed w-full bottom-0 right-0 left-0 px-1 pb-12 bg-opacity-80 bg-orange-600 text-sm text-white
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     .playlistCloseButton {
         @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
@@ -484,12 +484,6 @@ hr {
     /*}*/
 
     /* Mobile and Tablet */
-    /*.chatFullPageContainer {*/
-    /*    z-index: 900;*/
-    /*    min-height: calc(50vh - 7rem);*/
-    /*    justify-content: left;*/
-    /*    @apply bg-yellow-400 absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-scroll scroll-smooth  break-words hide-scrollbar*/
-    /*}*/
     .chatFullPageContainer {
         position: fixed;
         z-index: 90;
@@ -500,7 +494,7 @@ hr {
         bottom: 0;
         left: 0;
         right: 0;
-        @apply px-8 pb-24 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar
+        @apply px-8 pb-24 flex flex-col overflow-y-scroll overflow-x-hidden
     }
     .pipChatFullPageContainer {
         z-index: 90;
@@ -509,7 +503,6 @@ hr {
         bottom: 0;
         left: 0;
         right: 0;
-        /*@apply px-8 pb-24 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar*/
         @apply fixed w-full mt-7 px-8 pb-24 overflow-y-scroll z-50 border-t border-gray-900
     }
     .chatTopRightContainer {
@@ -522,9 +515,7 @@ hr {
         /*/*min-height: 75vh;*/
         /*display: flex;*/
         /*justify-content: left;*/
-        /*@apply w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages hide-scrollbar*/
-        /*@apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar*/
-        @apply bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden break-words hide-scrollbar
+        @apply bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden break-words
 
     }
     /* For Firefox - additional container */
@@ -579,7 +570,7 @@ hr {
         height:calc(50vh + 1rem);
         /*top: 4rem;*/
         @apply fixed w-full bottom-0 right-0 left-0 px-1 pb-12 bg-opacity-80 bg-yellow-600 text-sm text-white
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     .filtersCloseButton {
         @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
@@ -597,7 +588,7 @@ hr {
         height:calc(50vh - 7rem);
         /*top: 4rem;*/
         @apply fixed w-full bottom-0 pt-2 bg-opacity-80 text-gray-50
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
 }
 /* End Mobile and Tablet */
@@ -766,7 +757,7 @@ hr {
         /* Desktop and Standard ottButtonsContainer */
         z-index: 200;
         position: fixed;
-        @apply flex flex-row space-x-2 bottom-6 right-6 hide-scrollbar
+        @apply flex flex-row space-x-2 bottom-6 right-6
     }
     .channelsFullPageContainer {
         z-index: 200;
@@ -825,7 +816,7 @@ hr {
         max-height: calc(100% - 26rem);
         /*max-height: 70vh;*/
         /*max-width: 100%;*/
-        @apply w-[24rem] max-w-[24rem] bottom-24 pt-5 px-4 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar
+        @apply w-[24rem] max-w-[24rem] bottom-24 pt-5 px-4 flex flex-col overflow-y-scroll overflow-x-hidden
     }
     .chatFullPageMessages {
         @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip scrollbar-hide
@@ -864,7 +855,7 @@ hr {
         max-height: calc(100vh - 6rem);
         top: 4rem;
         @apply w-[24rem] bottom-0 pt-2 bg-opacity-80 text-gray-50
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     .upgradeCloseButton {
         @apply fixed bottom-5 mx-auto mb-3 opacity-100 w-fit h-12 p-4 rounded-full

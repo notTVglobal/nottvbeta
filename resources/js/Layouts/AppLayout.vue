@@ -46,7 +46,7 @@
         <GeneralServiceNotification v-if="user"/>
       </Teleport>
       <OrangeFeedbackBox
-          v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage"/>
+          v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage && appSettingStore.showOrangeFeedbackButton"/>
       <ToastNotification/>
       <SocialSharingModal v-if="socialShareStore.socialSharingModal" />
 

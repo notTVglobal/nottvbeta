@@ -51,6 +51,7 @@ const initialState = () => ({
         imageAlt: '',
     },
     showCookieBanner: false,
+    showOrangeFeedbackButton: true,
 })
 
 export const useAppSettingStore = defineStore('appSettingStore', {

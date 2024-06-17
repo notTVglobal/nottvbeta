@@ -152,7 +152,7 @@
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
 /******/ 		var inProgress = {};
-/******/ 		// data-webpack is not used as build has no uniqueName
+/******/ 		var dataWebpackPrefix = "nottvbeta:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
@@ -161,7 +161,7 @@
 /******/ 				var scripts = document.getElementsByTagName("script");
 /******/ 				for(var i = 0; i < scripts.length; i++) {
 /******/ 					var s = scripts[i];
-/******/ 					if(s.getAttribute("src") == url) { script = s; break; }
+/******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
 /******/ 				}
 /******/ 			}
 /******/ 			if(!script) {
@@ -173,7 +173,7 @@
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 		
+/******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
 /******/ 		
 /******/ 				script.src = url;
 /******/ 			}
@@ -309,7 +309,7 @@
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunknottvbeta"] = self["webpackChunknottvbeta"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
