@@ -300,8 +300,8 @@ export const useTeamStore = defineStore('teamStore', {
         nextBroadcastIsOver: (state) => {
             const userStore = useUserStore();
             const nowInUserTimezone = dayjs().utc().tz(userStore.timezone);
-            const broadcastEndTime = dayjs(state.nextBroadcastLoaded.broadcastDate)
-                .add(state.nextBroadcastLoaded.broadcastDetails.duration_minutes, 'minute')
+            const broadcastEndTime = dayjs(this.nextBroadcast.broadcastDate)
+                .add(this.nextBroadcast.broadcastDetails.duration_minutes, 'minute')
                 .utc()
                 .tz(userStore.timezone);
 
