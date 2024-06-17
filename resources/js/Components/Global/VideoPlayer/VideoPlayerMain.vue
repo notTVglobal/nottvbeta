@@ -6,7 +6,11 @@
     <!--        a vanilla javascript approach with an event listener instead. -->
     <!--        v-touch="() => {clickOnVideoAction()}"-->
     <!-- Video Player -->
-    <div :class="[videoPlayerStore.videoContainerClass, {'chatOpen': appSettingStore.ott === 4}]" v-touch="() => {videoPlayerStore.clickOnVideoAction()}" >
+    <div :class="[videoPlayerStore.videoContainerClass, {'chatOpen': appSettingStore.ott === 4}]"
+         v-touch="() => {videoPlayerStore.clickOnVideoAction()}"
+         @mouseenter="showControls"
+         @mouseleave="hideControls"
+    >
 
 
       <div :class="[videoPlayerStore.class, {'chatOpen': appSettingStore.ott === 4}]" >
@@ -33,10 +37,8 @@
       <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
 
-      <VideoControlsTopRight
-          v-if="!userStore.isMobile"
-          class=""
-      />
+      <VideoControlsTopRight />
+
 
       <!-- OTT Buttons and Displays -->
 
@@ -93,6 +95,7 @@ const osdStore = useOsdStore()
 let showLogin = ref(false)
 let screenWidth = ref(screen.width)
 let mouseActive = false
+let hideControlsTimeout = null;
 
 onMounted(() => {
 // onMounted lifecycle hook: Initializes video player settings and fetches user-specific playback settings.
@@ -160,7 +163,23 @@ videoPlayerStore.ottChat = false
 videoPlayerStore.ottPlaylist = false
 videoPlayerStore.ottFilters = false
 
+const showControls = () => {
+  if (!appSettingStore.fullPage) {
+    clearTimeout(hideControlsTimeout);
+    videoPlayerStore.controls = true;
+  }
+};
+
+const hideControls = () => {
+  if (!appSettingStore.fullPage) {
+    hideControlsTimeout = setTimeout(() => {
+      videoPlayerStore.controls = false;
+    }, 3000);
+  }
+};
+
 onUnmounted(() => {
+  clearTimeout(hideControlsTimeout);
 // tec21 (03/03/23): this doesn't seem to be working :-(
 // I think this watch is breaking the app on iPhone.
 // watch(orientation, (newOrientation) => {
@@ -180,6 +199,20 @@ onUnmounted(() => {
 
 
 </script>
+<style scoped>
+.btn-ghost:hover {
+  color: #1d4ed8; /* Tailwind blue-700 */
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+</style>
 
 <!-- A note about audio Tracks. -->
 <!-- https://github.com/videojs/http-streaming/blob/main/docs/multiple-alternative-audio-tracks.md -->

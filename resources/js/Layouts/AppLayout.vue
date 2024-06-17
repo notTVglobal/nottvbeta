@@ -37,6 +37,7 @@
           :showPopup="showHomescreenPopup"
           @close="closePopup"
       />
+      <CreatorWelcomeModal />
       <CookieBanner/>
       <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
@@ -89,6 +90,7 @@ import SocialSharingModal from '@/Components/Global/Modals/SocialSharingModal.vu
 import useEchoListeners from '@/Utilities/EchoListeners'
 import AddWebAppPopupNotification from '@/Components/Global/Popups/AddWebAppPopupNotification.vue'
 import { router, usePage } from '@inertiajs/vue3'
+import CreatorWelcomeModal from '@/Components/Global/Modals/CreatorWelcomeModal.vue'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()

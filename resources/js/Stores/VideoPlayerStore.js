@@ -1039,6 +1039,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     if (appSettingStore.ott === 4) {
                         this.controls = !this.controls
                     }
+                    if (appSettingStore.ott === 0) {
+                        appSettingStore.showOttButtons = !appSettingStore.showOttButtons
+                        this.controls = !this.controls
+                        appSettingStore.osd = !appSettingStore.osd
+                    }
                 }
             } else if (!appSettingStore.pipChatMode) {
                 router.visit('/stream')

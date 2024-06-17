@@ -21,7 +21,7 @@ class WelcomeController extends Controller {
 
       // Redirect the user to the stream route
       if ($user->creator) {
-        return redirect()->route('dashboard');
+        return redirect()->route('creatorWelcome');
       }
       return redirect()->route('stream');
     }
