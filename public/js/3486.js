@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunknottvbeta=self.webpackChunknottvbeta||[]).push([[3486],{53486:(t,e,n)=>{n.r(e),n.d(e,{useDashboardStore:()=>r});var i=n(38839),a=function(){return{currentNotificationType:"default"}},r=(0,i.nY)("dashboard",{state:a,actions:{reset:function(){Object.assign(this,{currentNotificationType:"default"})},setNotificationType:function(t){this.currentNotificationType=t}},getters:{isTeamTransferNotification:function(t){return"teamTransfer"===t.currentNotificationType}}})}}]);
+//# sourceMappingURL=3486.js.map
