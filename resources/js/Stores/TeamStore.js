@@ -69,7 +69,7 @@ export const useTeamStore = defineStore('teamStore', {
         //     this.$state = r.default;
         // },
         initializeTeam(team) {
-            console.log('incoming team: ', team)
+            // console.log('incoming team: ', team)
             const userStore = useUserStore()
 
             // Ensure nextBroadcast is an array and has at least one element

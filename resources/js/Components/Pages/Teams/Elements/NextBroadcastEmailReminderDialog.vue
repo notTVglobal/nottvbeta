@@ -12,14 +12,15 @@
           <input type="email" v-model="email"
                  class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                  required/>
-          <div class="mt-4 flex justify-end">
-            <button type="button" @click="closeDialog"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">Cancel
-            </button>
+          <div class="mt-4 flex justify-end gap-2">
             <button type="submit" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
               <div class="flex items-center gap-2"><img src="/storage/images/Ping.png" class="w-4 h-4"/> Send Reminder
               </div>
             </button>
+            <button type="button" @click="closeDialog"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">Cancel
+            </button>
+
           </div>
         </form>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink && !teamStore.nextBroadcastIsOver"
+  <div v-if="shouldDisplayZoomLink"
        class="flex justify-center text-center text-black p-4 mx-5 bg-yellow-300 rounded-lg">
 
     <div class="space-x-4">
@@ -62,20 +62,20 @@ const isBroadcastOpen = computed(() => {
   const userCurrentTime = dayjs(userStore.userCurrentTime)
   const broadcastDate = dayjs(teamStore.nextBroadcast.broadcastDate)
 
-  console.log('User Current Time:', userCurrentTime.format())
-  console.log('Broadcast Date:', broadcastDate.format())
+  // console.log('User Current Time:', userCurrentTime.format())
+  // console.log('Broadcast Date:', broadcastDate.format())
 
   const startTime = broadcastDate.subtract(30, 'minute')
   const endTime = broadcastDate.add(60, 'minute')
 
-  console.log('Start Time:', startTime.format())
-  console.log('End Time:', endTime.format())
+  // console.log('Start Time:', startTime.format())
+  // console.log('End Time:', endTime.format())
 
   if (userCurrentTime.isBetween(startTime, endTime, null, '[]')) {
-    console.log('Broadcast is open')
+    // console.log('Broadcast is open')
     return true
   } else {
-    console.log('Broadcast is closed')
+    // console.log('Broadcast is closed')
     return false
   }
 })
@@ -110,6 +110,10 @@ function shareZoomLink() {
   }
   socialShareStore.parseModel(payload)
 }
+
+const shouldDisplayZoomLink = computed(() => {
+  return teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink && isBroadcastOpen.value;
+});
 
 function joinZoom() {
   // console.log('zoomLink value:', zoomLink.value);  // Accessing the value of the computed property
