@@ -1,16 +1,23 @@
 <template>
   <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
-    <div v-if="show?.nextBroadcast"
-         class="flex flex-col bg-yellow-300 border border-yellow-500 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-800">Next Broadcast</h2>
-      <p class="text-lg">
-        <ConvertDateTimeToTimeAgo :dateTime="show?.nextBroadcast?.next_broadcast" :timezone="userStore.timezone"
-                                  :class="`text-yellow-700`"/>
-      </p>
-      <p class="text-lg text-gray-800">
-        {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show?.nextBroadcast?.next_broadcast) }}
-        {{ userStore.timezoneAbbreviation }}
-      </p>
+
+    <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
+      <div v-if="show?.nextBroadcast"
+           class="flex flex-col bg-gray-300 border border-gray-500 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Next Broadcast</h2>
+        <p class="text-lg">
+          <ConvertDateTimeToTimeAgo :dateTime="show?.nextBroadcast?.next_broadcast" :timezone="userStore.timezone"
+                                    :class="`text-yellow-700`"/>
+        </p>
+        <p class="text-lg text-gray-800">
+          {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show?.nextBroadcast?.next_broadcast) }}
+          {{ userStore.timezoneAbbreviation }}
+        </p>
+
+
+    </div>
+
+      <ZoomLinkButton/>
     </div>
 
     <div v-if="showStore?.isLive" class="flex flex-col justify-center ml-5">
@@ -37,14 +44,20 @@ import { useShowStore } from '@/Stores/ShowStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
+import { useTeamStore } from '@/Stores/TeamStore'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 import { computed, onMounted } from 'vue'
+import { router, usePage } from '@inertiajs/vue3'
+import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
 
 const userStore = useUserStore()
 const showStore = useShowStore()
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
 const scheduleStore = useScheduleStore()
+const teamStore = useTeamStore()
+
+const page = usePage()
 
 const props = defineProps({
   show: Object,
@@ -61,6 +74,10 @@ const isWatchingLive = computed(() => {
 })
 
 const watchNow = async () => {
+  if (!page.props.auth.user) {
+    router.visit('/')
+  }
+
   const mediaType = 'mistStream' // Use the new 'mediaType' from the backend
 
   const videoDetails = {

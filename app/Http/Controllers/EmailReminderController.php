@@ -14,8 +14,9 @@ class EmailReminderController extends Controller
     $eventDetails = $request->input('eventDetails');
     $recipientEmail = $request->input('email');
 
-//    $broadcastDate = Carbon::parse($eventDetails['broadcastDate'])->subMinutes(30)->setTimezone('UTC');
-    $broadcastDate = Carbon::now()->addMinutes(1)->setTimezone('UTC');
+    $broadcastDate = Carbon::parse($eventDetails['broadcastDate'])->subMinutes(30)->setTimezone('UTC');
+    //    For testing, sends an email in 1 minute from now:
+    //    $broadcastDate = Carbon::now()->addMinutes(1)->setTimezone('UTC');
 
 //    Log::debug('incoming date: ' . $eventDetails['broadcastDate']);
 //    Log::debug('converted date: ' . $broadcastDate);

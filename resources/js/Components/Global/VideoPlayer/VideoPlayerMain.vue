@@ -6,10 +6,10 @@
     <!--        a vanilla javascript approach with an event listener instead. -->
     <!--        v-touch="() => {clickOnVideoAction()}"-->
     <!-- Video Player -->
-    <div :class="videoPlayerStore.videoContainerClass" v-touch="() => {videoPlayerStore.clickOnVideoAction()}" >
+    <div :class="[videoPlayerStore.videoContainerClass, {'chatOpen': appSettingStore.ott === 4}]" v-touch="() => {videoPlayerStore.clickOnVideoAction()}" >
 
 
-      <div :class="videoPlayerStore.class" >
+      <div :class="[videoPlayerStore.class, {'chatOpen': appSettingStore.ott === 4}]" >
           <videoJs/>
 
 

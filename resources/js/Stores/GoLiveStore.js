@@ -8,6 +8,7 @@ const initialState = () => ({
     displayEpisodeGoLiveComponent: false,
     isEpisode: null,
     episode: null,
+    selectedEpisodeId: null,
     preSelectedShowId: null,
     selectedShowId: null,
     // selectedShow: null, this uses the getter... set it up in the component as a computed property
@@ -19,6 +20,8 @@ const initialState = () => ({
     streamInfo: null,
     rtmpUri: null,
     destinations: [], // New state for holding destinations
+    otherShowDestinations: [],
+    loadingOtherDestinations: false,
     isLoadingDestinations: false,
     loadingDestinationId: null,
     processingRecordingChange: false,
@@ -139,7 +142,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.processingRecordingChange = true
             try {
                 // console.log('2a post to /mist-stream/start-recording/')
-                const response = await axios.post('/mist-stream/start-recording/'+showSlug, {
+                const response = await axios.post('/mist-stream/start-recording/' + showSlug, {
                     stream_name: this.streamKey,
                 })
                 // console.log('5 and we\'re back in the GoLiveStore')
@@ -165,7 +168,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.processingRecordingChange = true
             // console.log(`Stopping recording for show ${showSlug}`)
             try {
-                const response = await axios.post('/mist-stream/stop-recording/'+showSlug, {
+                const response = await axios.post('/mist-stream/stop-recording/' + showSlug, {
                     stream_name: this.streamKey,
                 })
                 // console.log('Recording stopped successfully:', response.data)
@@ -262,7 +265,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.episode = episode
         },
         async fetchMistServerUri() {
-            const videoAuxPlayerStore = useVideoAuxPlayerStore();
+            const videoAuxPlayerStore = useVideoAuxPlayerStore()
             let uriResponse = await axios.get('/mist-server/uri')
             this.mistServerUri = uriResponse.data
             videoAuxPlayerStore.setMistServerUri(this.mistServerUri)
@@ -297,6 +300,50 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 this.playerIsReloading = false // Stop loading regardless of outcome
             }
 
+        },
+        async fetchOtherShowDestinations() {
+            this.loadingOtherDestinations = true
+            try {
+                const response = await axios.get('/go-live/existing-destinations', {
+                    params: {
+                        showId: this.selectedShowId,
+                        episodeId: this.selectedEpisodeId,
+                    },
+                })
+                this.otherShowDestinations = response.data.destinations
+                this.loadingOtherDestinations = false
+            } catch (error) {
+                notificationStore.setToastNotification('Failed to fetch destinations.', 'error')
+                console.error('Error fetching other show destinations', error)
+                this.loadingOtherDestinations = false
+            }
+        },
+        async copyDestinations(destinationIds) {
+            this.loadingOtherDestinations = true;
+            try {
+                const payload = {
+                    destinationIds,
+                    showId: this.selectedShowId,
+                    episodeId: this.selectedEpisodeId,
+                    mistStreamWildcardId: this.wildcardId
+                };
+                console.log('Sending copy destinations request', payload);
+
+                const response = await axios.post('/go-live/copy-destinations', payload);
+                console.log('Received response', response.data);
+
+                this.destinations = response.data.destinations || [];
+                const notificationStore = useNotificationStore();
+                notificationStore.setToastNotification(response.data.message, response.data.status);
+                this.loadingOtherDestinations = false;
+                return true; // Indicate success
+            } catch (error) {
+                console.error('Error copying destinations', error);
+                const notificationStore = useNotificationStore();
+                notificationStore.setToastNotification('Failed to copy destinations.', 'error');
+                this.loadingOtherDestinations = false;
+                return false; // Indicate failure
+            }
         },
         async fetchPushDestinations() {
             const notificationStore = useNotificationStore()
@@ -503,7 +550,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         streamOffline: (state) => {
             // Check if the 'error' key exists and if its value is 'Stream is offline'
             // If streamInfo is null or undefined, it defaults to an empty object {}
-            return (state.streamInfo?.error ?? '') === 'Stream is offline';
+            return (state.streamInfo?.error ?? '') === 'Stream is offline'
         },
     },
 

@@ -83,5 +83,9 @@ class MovieCategorySeeder extends Seeder
             'name' => 'Biopics',
             'description' => 'A movie genre that has been around since the birth of cinema, biopics are a category all their own. Biopics can technically run the gamut of movie genres (Sports movies, War, Westerns, etc.) but they often find their home in dramas. At their core, biopics dramatize real people and real events with varying degrees of verisimilitude.',
         ]);
+      MovieCategory::create([
+          'name' => 'Silent Films',
+          'description' => 'Silent films are films with no synchronized recorded sound, especially with no spoken dialogue.',
+      ]);
     }
 }

@@ -34,7 +34,7 @@ let props = defineProps({
   url: {
     type: String,
     required: false,
-    default: 'https://magicpillsmovie.com/'
+    default: 'https://traviscross.ca/'
   }
 });
 

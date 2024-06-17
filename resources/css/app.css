@@ -647,6 +647,10 @@ hr {
         align-content: flex-start;
         justify-content: center;
         background-color: black;
+        transition: width 0.3s ease;
+    }
+    .fullPageVideoContainer.chatOpen {
+        width:calc(100vw - 24rem);
     }
     .fullPageVideoClass {
         position:fixed;
@@ -661,6 +665,10 @@ hr {
         flex-wrap: wrap;
         align-content: flex-start;
         background-color: black;
+        transition: width 0.3s ease;
+    }
+    .fullPageVideoClass.chatOpen {
+        width:calc(100vw - 24rem);
     }
     .topRightVideoContainer {
         position: fixed;

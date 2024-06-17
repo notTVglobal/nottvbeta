@@ -29,13 +29,23 @@
           </button>
         </div>
         <div class="flex flex-col gap-2">
-          <button class="btn bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg"
-                  @click.prevent="addDestination">Add Push
-            Destinations
+          <button
+              class="btn bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
+              @click.prevent="copyDestinations">
+            <font-awesome-icon icon="copy" class="text-white"/>
+            Copy Destinations
+          </button>
+          <button
+              class="btn bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg flex items-center justify-center gap-2"
+              @click.prevent="addDestination">
+            <font-awesome-icon icon="plus" class="text-white"/>
+            Add Push Destinations
           </button>
           <div class="flex flex-row justify-end gap-2">
             <span v-if="goLiveStore.isProcessingDisableAllAutoPushes" class="loading loading-spinner text-info"></span>
-            <span v-show="!goLiveStore.isProcessingDisableAllAutoPushes" class="text-xs">Next refresh in... {{ countdown }}</span>
+            <span v-show="!goLiveStore.isProcessingDisableAllAutoPushes" class="text-xs">Next refresh in... {{
+                countdown
+              }}</span>
             <button
                 v-if="anyDestinationHasActiveAutoPush"
                 @click="goLiveStore.disableAllAutoPushes()"
@@ -65,7 +75,7 @@
         </div>
       </div>
       <div v-if="goLiveStore.destinations.length > 0">
-        <GoLiveDestinationList />
+        <GoLiveDestinationList/>
       </div>
     </div>
 
@@ -73,6 +83,7 @@
                                    :destinationDetails="goLiveStore.destinationDetails"
 
                                    :mode="goLiveStore.mistStreamPushDestinationFormModalMode"/>
+    <CopyDestinationsModal />
     <ToastNotification/>
   </div>
 </template>
@@ -85,6 +96,7 @@ import MistStreamPushDestinationForm from '@/Components/Global/MistStreams/MistS
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
 import GoLiveDestinationList from '@/Components/Pages/GoLive/GoLiveDestinationList.vue'
+import CopyDestinationsModal from '@/Components/Pages/GoLive/CopyDestinationsModal.vue'
 
 const appSettingStore = useAppSettingStore()
 const mistStore = useMistStore()
@@ -104,6 +116,10 @@ const addDestination = async () => {
   document.getElementById('mistStreamPushDestinationForm').showModal()
 }
 
+const copyDestinations = async () => {
+  await goLiveStore.fetchOtherShowDestinations()
+  document.getElementById('copyDestinationsModal').showModal()
+}
 
 const backgroundFetchPushDestinationsStatus = async () => {
   if (goLiveStore.wildcardId) {
@@ -131,15 +147,15 @@ const backgroundFetch = async () => {
     await Promise.all([
       fetchPushDestinationsStatus(),
       fetchStreamInfo(),
-    ]);
+    ])
 
     // Reset the countdown at the beginning of the fetch cycle
-    countdown.value = 15;
+    countdown.value = 15
 
     // Check if the stream just transitioned from offline to online
     if (goLiveStore.previousStreamStatus === true && !goLiveStore.streamOffline) {
       // console.log('Stream just transitioned from offline to online, reloading player');
-      await reloadPlayer();
+      await reloadPlayer()
     } else if (goLiveStore.streamOffline) {
       // console.log('Stream is offline, no action taken');
     } else {
@@ -147,12 +163,12 @@ const backgroundFetch = async () => {
     }
 
     // Update the previous stream status for the next check
-    goLiveStore.previousStreamStatus = goLiveStore.streamOffline;
+    goLiveStore.previousStreamStatus = goLiveStore.streamOffline
   } catch (error) {
-    console.error('Error during background fetch:', error);
+    console.error('Error during background fetch:', error)
     // Depending on your application's needs, handle the error appropriately
   }
-};
+}
 
 
 // Decrement the countdown every second

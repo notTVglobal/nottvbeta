@@ -846,9 +846,10 @@ class ShowsController extends Controller {
 
   private function transformTeamData($team) {
     return [
-        'name'   => $team->name,
-        'slug'   => $team->slug,
-        'poster' => $team->image ? $this->transformImage($team->image) : null,
+        'name'          => $team->name,
+        'slug'          => $team->slug,
+        'poster'        => $team->image ? $this->transformImage($team->image) : null,
+        'nextBroadcast' => $team->nextBroadcast ?? [],
       // Include additional team-related fields as needed
     ];
   }

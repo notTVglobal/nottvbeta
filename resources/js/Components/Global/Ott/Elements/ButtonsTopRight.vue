@@ -45,10 +45,10 @@ const userStore = useUserStore()
 // Access level requirements
 const accessLevels = {
   info: () => true, // All users
-  channels: () => userStore.isSubscriber || userStore.isAdmin,
-  playlist: () => userStore.isVip || userStore.isAdmin,
+  channels: () => userStore.isSubscriber || userStore.isVip || userStore.isAdmin,
+  playlist: () => userStore.isSubscriber || userStore.isVip || userStore.isAdmin,
   chat: () => true, // All users
-  filters: () => userStore.isVip || userStore.isAdmin,
+  filters: () => userStore.isSubscriber || userStore.isVip || userStore.isAdmin,
 };
 
 // Function to determine the CSS class based on the access level and OTT setting

@@ -1346,8 +1346,12 @@ Route::middleware([
   Route::post('/go-live/episodes/{showEpisode}/stream-key', [GoLiveController::class, 'getStreamKeyForEpisode'])->can('viewCreator', 'App\Models\User');
   // Get stream key for a show
   Route::post('/go-live/shows/{showId}/stream-key', [GoLiveController::class, 'getStreamKeyForShow'])->can('viewCreator', 'App\Models\User');
-// Prepare live stream for an episode
+  // Prepare live stream for an episode
   Route::post('/go-live/episodes/{episodeId}/prepare', [GoLiveController::class, 'prepareLiveStream'])->can('viewCreator', 'App\Models\User');
+  // Fetch destinations
+  Route::get('/go-live/existing-destinations', [GoLiveController::class, 'getExistingDestinations']);
+  // Copy destinations
+  Route::post('/go-live/copy-destinations', [GoLiveController::class, 'copyDestinations']);
 
 
 // MistAPI (the [original] first way we learned to connect to the Mist Server)

@@ -3,12 +3,12 @@
     <component :is="buttonComponent" />
   </div>
 
-  <NowPlayingInfo v-if="appSettingStore.ott === 1 && hasAccessTo('NowPlayingInfo')" :user="user"/>
-  <Playlist v-if="appSettingStore.ott === 3 && hasAccessTo('Playlist')" :user="user"/>
-  <Channels v-if="appSettingStore.ott === 2 && hasAccessTo('Channels')" :user="user"/>
-  <ChatContainer v-if="appSettingStore.ott === 4 && hasAccessTo('ChatContainer')" :user="user" />
-  <Filters v-if="appSettingStore.ott === 5 && hasAccessTo('Filters')" :user="user"/>
-  <Upgrade v-if="showUpgrade" :user="user"/>
+    <NowPlayingInfo v-if="appSettingStore.ott === 1 && hasAccessTo('NowPlayingInfo')" :user="user"/>
+    <Playlist v-if="appSettingStore.ott === 3 && hasAccessTo('Playlist')" :user="user"/>
+    <Channels v-if="appSettingStore.ott === 2 && hasAccessTo('Channels')" :user="user"/>
+    <ChatContainer v-if="appSettingStore.ott === 4 && hasAccessTo('ChatContainer')" :user="user" />
+    <Filters v-if="appSettingStore.ott === 5 && hasAccessTo('Filters')" :user="user"/>
+    <Upgrade v-if="showUpgrade" :user="user"/>
 
 </template>
 <script setup>
@@ -41,8 +41,8 @@ const buttonComponent = computed(() => {
 
 const accessLevels = {
   NowPlayingInfo: () => true,
-  Playlist: () => userStore.isSubscriber ||userStore.isVip || userStore.isAdmin,
-  Channels: () => userStore.isSubscriber || userStore.isVip || userStore.isAdmin,
+  Playlist: () => userStore.isSubscriber || userStore.isVip || userStore.isAdmin,
+  Channels: () => userStore.isSubscriber || userStore.isVip|| userStore.isAdmin,
   ChatContainer: () => true,
   Filters: () => userStore.isVip || userStore.isAdmin,
 }
