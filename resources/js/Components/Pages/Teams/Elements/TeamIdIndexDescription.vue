@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-80">
+  <div class="min-h-80 mb-4">
     <ExpandableDescription :description="team.description"/>
   </div>
 </template>
