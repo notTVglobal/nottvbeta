@@ -3,6 +3,12 @@
 Last Update: June 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.29
+June 17, 2024
+
+* Fix Movie playback button and Trailer buttons to be disabled when there is no video to play.
+* Cleaned up the close notifications method for the main notifications when deleting one or all.
+
 ## v0.9.3.28
 June 17, 2024
 

@@ -52,13 +52,13 @@ setTimeout(() => {
   isLoading.value = false;
 }, 2000); // Simulated 2-second delay
 
-function closeModalFunction() {
-  // Handle the custom event
-  emit('closeModal')
-  // closeModal.value.submit();
-  // notificationsDialog.value = document.getElementById('notifications');
-  // notificationsDialog.value.removeAttribute('open');
-}
+// function closeModalFunction() {
+//   // Handle the custom event
+//   emit('closeModal')
+//   // closeModal.value.submit();
+//   // notificationsDialog.value = document.getElementById('notifications');
+//   // notificationsDialog.value.removeAttribute('open');
+// }
 
 const deleteAllNotifications = async () => {
   try {
@@ -75,9 +75,10 @@ const deleteAllNotifications = async () => {
     }
 
     // close the modal
-    closeModalFunction()
-    notificationsDialog.value = document.getElementById('notifications');
-    notificationsDialog.value.removeAttribute('open');
+    document.getElementById('notifications').close()
+    // closeModalFunction()
+    // notificationsDialog.value = document.getElementById('notifications');
+    // notificationsDialog.value.removeAttribute('open');
 
   } catch (error) {
     // Handle any errors that occur during the deletion
