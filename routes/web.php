@@ -431,9 +431,8 @@ Route::middleware([
 // Creator Welcome
 //////////////////
 
-  Route::get('/creator-welcome', function () {
-    return Inertia::render('CreatorWelcome');
-  })->can('viewDashboard', 'App\Models\Creator')
+  Route::get('/creator-welcome', [WelcomeController::class, 'creatorWelcome'])
+      ->can('viewDashboard', 'App\Models\Creator')
       ->name('creatorWelcome');
 
 // Dashboard

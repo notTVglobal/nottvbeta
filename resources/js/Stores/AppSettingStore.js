@@ -18,6 +18,7 @@ const initialState = () => ({
     smallScreen: false, // Used to determine layout size width... min or max 1024
     verySmallScreen: false, // Used to determine layout size width... min or max 800
     pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true
+    showCreatorWelcomeModal: false,
     shouldScrollToTop: false,
     savedScrollPosition: null,
     ott: 0, // Number representing the Ott Panel currently open. 0 is closed.
@@ -309,5 +310,6 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         // this isn't being used anywhere right now..... 2024-04-27 tec21
         isSmallScreen: (state) => state.smallScreen,
         isVerySmallScreen: (state) => state.verySmallScreen,
+
     },
 });

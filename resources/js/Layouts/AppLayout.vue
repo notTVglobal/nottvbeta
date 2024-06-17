@@ -37,7 +37,7 @@
           :showPopup="showHomescreenPopup"
           @close="closePopup"
       />
-      <CreatorWelcomeModal />
+      <CreatorWelcomeModal/>
       <CookieBanner/>
       <ImageLightboxModal v-if="appSettingStore.showImageLightboxModal"/>
       <DialogNotification v-if="user"/>
@@ -68,9 +68,13 @@ import { useShopStore } from '@/Stores/ShopStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { useOttStore } from '@/Stores/OttStore'
 import { useSocialShareStore } from '@/Stores/SocialShareStore'
+// import { CreatorWelcomeModal } from '@/Components/Global/Modals/CreatorWelcomeModal.vue'
 
 import ResponsiveNavigationMenu from '@/Components/Global/Navigation/ResponsiveNavigationMenu'
 import NavigationMenu from '@/Components/Global/Navigation/NavigationMenu'
+//
+const CreatorWelcomeModal = defineAsyncComponent(() =>
+    import('@/Components/Global/Modals/CreatorWelcomeModal.vue'))
 
 const Login = defineAsyncComponent(() =>
     import('@/Components/Pages/Welcome/Login'))
@@ -90,7 +94,6 @@ import SocialSharingModal from '@/Components/Global/Modals/SocialSharingModal.vu
 import useEchoListeners from '@/Utilities/EchoListeners'
 import AddWebAppPopupNotification from '@/Components/Global/Popups/AddWebAppPopupNotification.vue'
 import { router, usePage } from '@inertiajs/vue3'
-import CreatorWelcomeModal from '@/Components/Global/Modals/CreatorWelcomeModal.vue'
 
 const appSettingStore = useAppSettingStore()
 const welcomeStore = useWelcomeStore()

@@ -1,6 +1,6 @@
 <template>
   <Transition name="fade">
-    <div v-if="appSettingStore.thisUrl === '/creator-welcome'"
+    <div v-if="appSettingStore.showCreatorWelcomeModal"
          class="fixed inset-0 flex items-center justify-center z-[999]">
       <!-- Background Gradient -->
       <div class="absolute inset-0 bg-moving-gradient opacity-80"></div>
@@ -31,6 +31,9 @@
 <script setup>
 import { useUserStore } from '@/Stores/UserStore'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+const videoPlayerStore = useVideoPlayerStore()
+
 import { router } from '@inertiajs/vue3'
 
 const userStore = useUserStore()
@@ -38,10 +41,13 @@ const appSettingStore = useAppSettingStore()
 
 const goToStream = () => {
   router.visit('/stream')
+  appSettingStore.showCreatorWelcomeModal = false
+  videoPlayerStore.unMute()
 }
 
 const goToDashboard = () => {
   router.visit('/dashboard')
+  appSettingStore.showCreatorWelcomeModal = false
 }
 </script>
 
