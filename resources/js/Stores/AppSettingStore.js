@@ -184,7 +184,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
                 // adjust as necessary based on additional context.
 
                 this.showOttButtons = true;
-                videoPlayerStore.controls = true;
+                // videoPlayerStore.controls = true;
                 if (userStore.isMobile || window.innerWidth < 1024) {
                     // this.osd = this.ott !== 0;
                 }

@@ -37,7 +37,8 @@
       <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
 
-      <VideoControlsTopRight />
+      <VideoControlsTopRight @mouseenter="showControls"
+                             @mouseleave="hideControls" />
 
 
       <!-- OTT Buttons and Displays -->
@@ -164,6 +165,7 @@ const isMobile = ref({
 
 const showControls = () => {
   if (!appSettingStore.fullPage && !appSettingStore.isSmallScreen) {
+    videoPlayerStore.controls = true;
     clearTimeout(hideControlsTimeout);
     videoPlayerStore.controls = true;
   }
@@ -173,7 +175,7 @@ const hideControls = () => {
   if (!appSettingStore.fullPage && !appSettingStore.isSmallScreen) {
     hideControlsTimeout = setTimeout(() => {
       videoPlayerStore.controls = false;
-    }, 3000);
+    }, 200);
   }
 };
 
