@@ -124,6 +124,11 @@ export const useChannelStore = defineStore('channelStore', {
                 const notificationStore = useNotificationStore();
                 // console.log('Changing channel with priority:', channel.playback_priority_type); // Log the attempted change
                 switch (channel.playback_priority_type) {
+                    // TODO: We need to fetch the next playlist_item...
+                    //  and we can keep fetching the next item as long
+                    //  as we are playing the playlist...
+                    //  and on end... we can check what the
+                    //  playlist repeat mode is set to.
                     case 'channelPlaylist':
                         if (channel.channel_playlist) {
                             this.channelPlaylist = channel.channel_playlist;
@@ -142,30 +147,52 @@ export const useChannelStore = defineStore('channelStore', {
                     case 'externalSource':
                         if (channel.channel_external_source) {
                             this.externalSource = channel.channel_external_source;
-                            await videoPlayerStore.loadExternalSourceVideo(channel.channel_external_source);
+
+                            // Construct the source object
+                            const source = {
+                                source: channel.channel_external_source.path,
+                                type: channel.channel_external_source.type,
+                                name: channel.channel_external_source.name,
+                                mediaType: 'externalVideo'
+                            };
+
+                            // Use videoPlayerStore.loadNewVideo(source) instead of loadExternalSourceVideo
+                            await videoPlayerStore.loadNewVideo(source);
+
                             this.loadChannelInfo(channel);
                         } else {
-                            let errorTitle = 'Unable to load channel: ' + channel.name
-                            let errorBody = 'No External Source.'
+                            let errorTitle = 'Unable to load channel: ' + channel.name;
+                            let errorBody = 'No External Source.';
                             console.warn(errorTitle);
                             console.warn(errorBody);
-                            notificationStore.setGeneralServiceNotification(errorTitle, errorBody)
+                            notificationStore.setGeneralServiceNotification(errorTitle, errorBody);
                             // Setup fallback options here.
                         }
                         break;
-
                     case 'mistStream':
                         // console.log('Attempting to load Mist Stream:', channel.mist_stream); // Log the Mist Stream attempt
                         if (channel.mist_stream) {
+                            console.log('channel store... load mistStream... : ', channel)
                             this.mistStream = channel.mist_stream;
-                            await videoPlayerStore.loadMistStreamVideo(channel.mist_stream.name);
+
+                            // Construct the source object
+                            const source = {
+                                source: channel.mist_stream.source,
+                                type: channel.mist_stream.mime_type,
+                                name: channel.mist_stream.name,
+                                mediaType: 'mistStream'
+                            };
+
+                            // Use videoPlayerStore.loadNewVideo(source) instead of loadMistStreamVideo
+                            await videoPlayerStore.loadNewVideo(source);
+
                             this.loadChannelInfo(channel);
                         } else {
-                            let errorTitle = 'Unable to load channel: ' + channel.name
-                            let errorBody = 'No Mist Stream.'
+                            let errorTitle = 'Unable to load channel: ' + channel.name;
+                            let errorBody = 'No Mist Stream.';
                             console.warn(errorTitle);
                             console.warn(errorBody);
-                            notificationStore.setGeneralServiceNotification(errorTitle, errorBody)
+                            notificationStore.setGeneralServiceNotification(errorTitle, errorBody);
                             // Setup fallback options here.
                         }
                         break;

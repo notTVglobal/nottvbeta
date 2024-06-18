@@ -119,12 +119,11 @@ onMounted(() => {
   const videoPlayer = videojs(videoElementId)
 
   // Additional logic to fetch and apply user settings will be added here following the above TODOs.
-  videoPlayerStore.videoSource = pageProps.firstPlay.first_play_video_source
-  videoPlayerStore.videoSourceType = pageProps.firstPlay.first_play_video_source_type
+  // videoPlayerStore.videoSource = pageProps.firstPlay.first_play_video_source
+  // videoPlayerStore.videoSourceType = pageProps.firstPlay.first_play_video_source_type
 
   videoPlayer.ready(() => {
-
-    videoPlayer.controls(false)
+    // videoPlayer.controls(false)
     console.log('videoPlayer ready')
     videoPlayerStore.videoPlayerLoaded = true
 
@@ -132,9 +131,9 @@ onMounted(() => {
     // videoPlayerStore.setupDynamicGainControl(videoPlayer);
 
   })
-  if (!appSettingStore.fullPage) {
-    videoPlayerStore.controls = false
-  }
+  // if (!appSettingStore.fullPage) {
+  //   // videoPlayerStore.controls = false
+  // }
 })
 
 let props = defineProps({
@@ -156,12 +155,12 @@ const isMobile = ref({
 //     unlockOrientation,
 // } = useScreenOrientation()
 
-videoPlayerStore.paused = false
-videoPlayerStore.osd = true
-videoPlayerStore.channels = false
-videoPlayerStore.ottChat = false
-videoPlayerStore.ottPlaylist = false
-videoPlayerStore.ottFilters = false
+// videoPlayerStore.paused = false
+// videoPlayerStore.osd = true
+// videoPlayerStore.channels = false
+// videoPlayerStore.ottChat = false
+// videoPlayerStore.ottPlaylist = false
+// videoPlayerStore.ottFilters = false
 
 const showControls = () => {
   if (!appSettingStore.fullPage && !appSettingStore.isSmallScreen) {
