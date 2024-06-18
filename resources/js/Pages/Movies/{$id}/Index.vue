@@ -392,7 +392,7 @@ let playMovie = () => {
     const commonDetails = {
       primaryName: movie.name, // Show or Movie name
       secondaryName: '', // Episode name
-      primaryUrl: `movies/${movie.slug}`,
+      primaryUrl: `movie/${movie.slug}`,
       secondaryUrl: '',
       channelName: '',
       image: movie.image,
