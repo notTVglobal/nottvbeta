@@ -527,11 +527,11 @@ class MovieController extends Controller {
 
     // Check if the video_url is not empty and is different from the existing one.
     if (!empty($request->video_url)) {
-      // Attempt to find an existing video with the same URL for any episode
+      // Attempt to find an existing video with the same URL for any movie
       $existingVideo = Video::where('video_url', $request->video_url)->first();
 
       if ($existingVideo) {
-        // If a video with the same URL already exists, associate its ID with the show episode
+        // If a video with the same URL already exists, associate its ID with the movie
         $movie->video_id = $existingVideo->id;
       } else {
         // No existing video with the same URL, proceed to create a new Video instance
@@ -542,18 +542,16 @@ class MovieController extends Controller {
             'type'             => 'video/mp4', // Assuming a default type for external videos
             'video_url'        => $request->video_url,
             'storage_location' => 'external',
-          // 'show_episodes_id' might not be needed if you're associating via $showEpisode->video_id below
-          // 'show_episodes_id' => $showEpisode->id,
         ]);
         $video->save();
 
-        // After saving the new video, set its ID as the video_id for the show episode
+        // After saving the new video, set its ID as the video_id for the movie
         $movie->video_id = $video->id;
 
       }
     } else { // else the video_url is empty, check if there was previously a video.
       // we need to either delete the video (soft delete) or... something...
-      $movie->video_id = null;
+      $movie->file_url = null;
     }
 
     // Save the movie again to update the video_id

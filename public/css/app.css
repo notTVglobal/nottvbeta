@@ -7772,6 +7772,11 @@ hr {
   margin-bottom: auto;
 }
 
+.mx-64 {
+  margin-left: 16rem;
+  margin-right: 16rem;
+}
+
 .-mb-8 {
   margin-bottom: -2rem;
 }
@@ -8408,6 +8413,10 @@ hr {
 
 .max-h-\[96rem\] {
   max-height: 96rem;
+}
+
+.max-h-full {
+  max-height: 100%;
 }
 
 .min-h-12 {
@@ -10554,6 +10563,14 @@ hr {
   padding: 2rem;
 }
 
+.p-24 {
+  padding: 6rem;
+}
+
+.p-64 {
+  padding: 16rem;
+}
+
 .px-0 {
   padding-left: 0px;
   padding-right: 0px;
@@ -10687,6 +10704,11 @@ hr {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+.px-64 {
+  padding-left: 16rem;
+  padding-right: 16rem;
 }
 
 .pb-0 {

@@ -10,6 +10,7 @@ use App\Models\MovieTrailer;
 use App\Models\Movie;
 use App\Models\VideoUploadJob;
 
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -68,8 +69,8 @@ class UploadVideoToSpacesJob implements ShouldQueue {
 
 //    if (str_contains($scanResult, 'FOUND')) {
 //      Log::warning("Virus detected in file: {$this->video->file_name}. File will be deleted.");
-      // Optionally, move the file to a quarantine directory instead of deleting it
-      // Storage::disk('local')->move($tempPath, storage_path('app/quarantine/') . $this->video->file_name);
+    // Optionally, move the file to a quarantine directory instead of deleting it
+    // Storage::disk('local')->move($tempPath, storage_path('app/quarantine/') . $this->video->file_name);
 //      unlink($tempPath);
 //      SendUserNotificationJob::dispatch($this->userId, 'Virus Detected', 'A virus was detected in your uploaded video and the file has been deleted.', url('/')); // Dispatch the new job
 
@@ -115,11 +116,19 @@ class UploadVideoToSpacesJob implements ShouldQueue {
     $this->video->storage_location = 'spaces';
     $this->video->save();
 
+    NotificationService::createAndDispatchNotification(
+        $this->userId,
+        null,
+        null,
+        null,
+        '<span class="text-yellow-500">Your video has been processed.</span>'
+    );
+
     // update the showEpisode if applicable
     // Check if the Video has a show_episodes_id
     if ($this->video->show_episodes_id) {
       // Update the ShowEpisode with the video_id
-      $showEpisode = ShowEpisode::find($this->video->show_episodes_id);
+      $showEpisode = ShowEpisode::with('show')->find($this->video->show_episodes_id);
       $this->userId = $showEpisode->user_id;
       if ($showEpisode) {
 //              Log::info('Before update: ' . json_encode($showEpisode->toArray()));
@@ -137,7 +146,7 @@ class UploadVideoToSpacesJob implements ShouldQueue {
           $ulid = $this->video->show_episodes_id;
         }
 //                Log::info('Successfully updated the Show Episode '. $ulid .' with the video ID '. $this->video->id);
-        event(new NewVideoUploaded($this->video, $this->video->user_id));
+//        event(new NewVideoUploaded($this->video, $this->video->user_id));
       } else {
         // Handle the case where ShowEpisode is not found
         // e.g., log an error or throw an exception
@@ -161,7 +170,8 @@ class UploadVideoToSpacesJob implements ShouldQueue {
           $ulid = $this->video->movie_trailers_id;
         }
         Log::info('Successfully updated the Movie Trailer ' . $ulid . ' with the video ID ' . $this->video->id);
-        event(new NewVideoUploaded($this->video, auth()->user()->id));
+//        event(new NewVideoUploaded($this->video, auth()->user()->id));
+//      );
       } else {
         // Handle the case where MovieTrailer is not found
         // e.g., log an error or throw an exception
@@ -185,14 +195,22 @@ class UploadVideoToSpacesJob implements ShouldQueue {
           $ulid = $this->video->movies_id;
         }
         Log::info('Successfully updated the Movie ' . $ulid . ' with the video ID ' . $this->video->id);
-        event(new NewVideoUploaded($this->video, $this->userId));
+//        event(new NewVideoUploaded($this->video, $this->userId));
+        NotificationService::createAndDispatchNotification(
+            $this->userId,
+            $movie->image_id,
+            '/movie/' . $movie->slug,
+            $movie->name,
+            '<span class="text-green-500">Your video is ready.</span>'
+        );
       } else {
         // Handle the case where Movie is not found
         // e.g., log an error or throw an exception
         Log::info('Problem updating the Movie with the video ID.');
       }
     }
-    event(new VideoProcessed($this->video->user_id));
+//    event(new VideoProcessed($this->video->user_id));
+
 //      event(new ProcessVideoInfoCompleted($this->videoId, $messageArray));
 //        error_log('Updated the Video model');
 

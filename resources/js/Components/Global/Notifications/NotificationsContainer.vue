@@ -16,7 +16,7 @@
     <div v-else>
       <div v-for="notification in filteredNotifications.slice().reverse()" :key="notification.id">
         <div v-if="notification"> <!-- Check if notification exists -->
-          <NotificationCard :notification="notification" @closeModal="closeModalFunction"/>
+          <NotificationCard :notification="notification"/>
           <!-- <button @click="markAsRead(notification.id)" v-if="!notification.read">Mark as Read</button> -->
         </div>
       </div>

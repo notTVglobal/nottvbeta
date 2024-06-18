@@ -502,6 +502,13 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.controls(false)
             this.videoCurrentTime = videoJs.currentTime
         },
+        fullPlayerReset() {
+            let videoJs = videojs('main-player')
+            if (videoJs) {
+                videoJs.dispose()
+                videoJs = videojs('main-player', this.playerOptions) // Ensure this.playerOptions is defined
+            }
+        },
 
 
         // This playNewVideo was created to access the audioContext
@@ -578,6 +585,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             } else if (source.mediaType === 'mistStream') {
                 videoSrc = source.source
                 videoSourceType = source.type
+            } else if (source.mediaType === 'movie') {
+                console.log('about to play movie, building source: ', source)
+                videoSrc = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/${source.file_name}`
+                console.log('Built source: ', videoSrc)
+                videoSourceType = source.type
             } else if (source.mediaType === 'vod') {
                 videoSrc = source.source
                 videoSourceType = source.type
@@ -606,7 +618,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
             // console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`)
             userStore.setFirstPlayFalse()
-            return {videoSrc, videoSourceType}
+            this.videoSource = videoSrc
+            this.videoSourceType = videoSourceType
+            return { videoSrc, videoSourceType }
         },
         loadNewFirstPlayVideo(source) {
             const nowPlayingStore = useNowPlayingStore()
@@ -617,8 +631,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.loadNewVideo(source)
         },
         loadNewVideo(source) {
+            console.log('playing new video source: ', source)
             try {
                 let videoJs = videojs('main-player')
+                videoJs.reset() // Ensure the player is fully reset before setting a new source
                 console.log('LOAD NEW VIDEO')
                 const audioStore = useAudioStore()
                 const userStore = useUserStore()
@@ -651,7 +667,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                         videoJs.pause()
                     }
 
-                    videoJs.reset() // Ensure the player is fully reset before setting a new source
 
                     // Clear the current source
                     videoJs.src('')
