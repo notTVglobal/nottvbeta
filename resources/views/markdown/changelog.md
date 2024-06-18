@@ -15,6 +15,12 @@ June 17, 2024
 =======
 * Add new VideoPlayerStore function before loading new source for First Play Video change.
 * Add video player reset before load new source.
+<<<<<<< HEAD
+>>>>>>> development
+=======
+* Temporary Fix for Video Player. The VideoPlayerStore needs to be refactored now that we have a pattern defined for media content.
+  * This needs to include the pattern for nowPlaying info, mediaTypes, and handling different media mime_types.
+  * This needs to be scalable to handle different attached objects, such as related content and Bonus Content. As well as OTT and OSD functionality with media metadata.
 >>>>>>> development
 
 ## v0.9.3.29

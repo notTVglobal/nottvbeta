@@ -6,21 +6,23 @@
       <div class="absolute inset-0 bg-moving-gradient opacity-80"></div>
 
       <!-- Modal Content -->
-      <div class="relative p-8 rounded-lg shadow-lg text-center bg-black bg-opacity-70 backdrop-blur-lg">
-        <h1 class="text-5xl font-bold text-white mb-8">Welcome, {{ userStore.user.name }}!</h1>
-        <p class="text-3xl text-white mb-12">What would you like to do?</p>
-        <div class="flex flex-wrap gap-8 justify-center">
+      <div class="relative p-8 rounded-lg shadow-lg text-center bg-black bg-opacity-70 backdrop-blur-lg" :class="modalClasses">
+        <h1 class="font-bold text-white mb-8" :class="titleClasses">Welcome, {{ userStore.user.name }}!</h1>
+        <p class="text-white mb-12" :class="subtitleClasses">What would you like to do?</p>
+        <div class="flex justify-center" :class="buttonContainerClasses">
           <button
               @click="goToStream"
-              class="px-12 py-8 text-4xl text-white bg-blue-500 hover:bg-blue-600 rounded-lg flex items-center justify-center"
+              class="text-white rounded-lg flex items-center justify-center transition transform duration-300 ease-in-out"
+              :class="watchStreamButtonClasses"
           >
-            <span class="text-5xl mr-2">📺</span> <br><br>Watch Stream
+            <span :class="iconClasses">📺</span> <br><br>Watch Stream
           </button>
           <button
               @click="goToDashboard"
-              class="px-12 py-8 text-4xl text-white bg-green-500 hover:bg-green-600 rounded-lg flex items-center justify-center"
+              class="text-white rounded-lg flex items-center justify-center transition transform duration-300 ease-in-out"
+              :class="dashboardButtonClasses"
           >
-            <span class="text-5xl mr-2">🛠️</span> <br><br>Go To Your <br>Creator Dashboard
+            <span :class="iconClasses">🛠️</span> <br><br>Go To Your <br>Creator Dashboard
           </button>
         </div>
       </div>
@@ -29,34 +31,77 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/Stores/UserStore'
-import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { computed } from 'vue';
+import { useUserStore } from '@/Stores/UserStore';
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore';
 
-const videoPlayerStore = useVideoPlayerStore()
+const videoPlayerStore = useVideoPlayerStore();
 
-import { router } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3';
 
-const userStore = useUserStore()
-const appSettingStore = useAppSettingStore()
+const userStore = useUserStore();
+const appSettingStore = useAppSettingStore();
 
 const goToStream = () => {
-  router.visit('/stream')
-  appSettingStore.showCreatorWelcomeModal = false
-  videoPlayerStore.unMute()
-}
+  router.visit('/stream');
+  appSettingStore.showCreatorWelcomeModal = false;
+  videoPlayerStore.unMute();
+};
 
 const goToDashboard = () => {
-  router.visit('/dashboard')
-  appSettingStore.showCreatorWelcomeModal = false
-}
+  router.visit('/dashboard');
+  appSettingStore.showCreatorWelcomeModal = false;
+};
+
+const modalClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'p-4 max-w-full max-h-full overflow-auto'
+      : 'p-8 max-w-4xl max-h-full';
+});
+
+const titleClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'text-3xl mb-4'
+      : 'text-5xl mb-8';
+});
+
+const subtitleClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'text-xl mb-6'
+      : 'text-3xl mb-12';
+});
+
+const buttonContainerClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'flex-col gap-4'
+      : 'flex-row gap-8';
+});
+
+const watchStreamButtonClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'px-6 py-4 text-2xl bg-blue-500 hover:bg-blue-600'
+      : 'px-12 py-8 text-4xl bg-blue-500 hover:bg-blue-600';
+});
+
+const dashboardButtonClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'px-6 py-4 text-2xl bg-green-500 hover:bg-green-600'
+      : 'px-12 py-8 text-4xl bg-green-500 hover:bg-green-600';
+});
+
+const iconClasses = computed(() => {
+  return appSettingStore.isSmallScreen
+      ? 'text-3xl mr-2'
+      : 'text-5xl mr-2';
+});
 </script>
 
 <style scoped>
 .bg-moving-gradient {
-  background: linear-gradient(270deg, #6a0dad, #ff6347, #1e90ff, #ff4500, #6a0dad, #ff6347, #1e90ff, #ff4500, #6a0dad);
-  background-size: 900% 900%; /* Adjust size for smooth transition */
-  animation: gradientShift 30s linear infinite; /* Use linear timing for seamless loop */
+  background: linear-gradient(270deg, #6a0dad, #ff6347, #1e90ff, #ff4500, #6a0dad);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
 }
 
 @keyframes gradientShift {
@@ -84,8 +129,7 @@ button:hover {
   transition: opacity 1s ease;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
-{
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
 

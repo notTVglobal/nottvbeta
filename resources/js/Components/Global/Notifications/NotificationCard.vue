@@ -6,7 +6,7 @@
       <font-awesome-icon icon="fa-trash-can"/>
 
     </button>
-    <div class="flex flex-row py-6 mb-3 border-b-2 border-accent border-opacity-25">
+    <div class="flex flex-row items-center py-6 mb-3 border-b-2 border-accent border-opacity-25">
 
       <div class="w-fit">
 
@@ -87,6 +87,7 @@ const truncatedMessage = computed(() => {
 // };
 
 const deleteNotification = async (notificationId) => {
+  console.log('deleting notification with ID: ' + notificationId)
   try {
     const response = await axios.delete(`/notifications/${notificationId}`, {method: 'DELETE'})
 
@@ -114,7 +115,7 @@ const deleteNotification = async (notificationId) => {
 }
 
 const visitUrl = (url) => {
-  emit('closeModal')
+  document.getElementById('notifications').close()
   router.visit(url)
 }
 
