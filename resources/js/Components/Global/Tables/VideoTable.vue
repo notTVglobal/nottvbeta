@@ -182,10 +182,10 @@ const playVideo = (video) => {
 
     // Check if showEpisode exists
     if (video.showEpisode?.show) {
-      nowPlayingStore.activeMedia.details.secondaryName = video.showEpisode.show.name
-      nowPlayingStore.activeMedia.details.secondaryUrl = 'shows/' + video.showEpisode.show.slug
-      nowPlayingStore.activeMedia.details.primaryName = video.showEpisode.data.name
-      nowPlayingStore.activeMedia.details.primaryUrl = 'shows/' + video.showEpisode.show.slug + '/episode/' + video.showEpisode.data.slug
+      nowPlayingStore.activeMedia.details.secondaryName = video.showEpisode?.show?.name
+      nowPlayingStore.activeMedia.details.secondaryUrl = 'shows/' + video.showEpisode?.show?.slug
+      nowPlayingStore.activeMedia.details.primaryName = video.showEpisode?.data?.name
+      nowPlayingStore.activeMedia.details.primaryUrl = 'shows/' + video.showEpisode.show.slug + '/episode/' + video.showEpisode?.data?.slug
     }
     // Check if movie exists
     if (video.movie) {

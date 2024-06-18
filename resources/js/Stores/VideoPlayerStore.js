@@ -74,10 +74,12 @@ const initialState = () => ({
     firstPlayVideoName: '',
     firstPlayVideoSource: '',
     firstPlayVideoSourceType: '',
+    firstPlayVideoSourceMediaType: '',
     key: '',
     videoName: '',
     videoSource: '',
     videoSourceType: '',
+    mediaType: '',
     videoPoster: '',
     nextSource: '',
     previousSource: '',
@@ -87,10 +89,11 @@ const initialState = () => ({
     currentShow: {},
     currentShowEpisode: {},
     currentVideo: {},
+    osd: true, // this has to be true or the osd does not display at all!
     hasVideo: false,
     controls: true,
     muted: true,
-    paused: true,
+    paused: false,
     // videoCurrentTime: '',
     currentTime: 0, // Current playback time in seconds
     duration: 0, // Total video duration in seconds
@@ -157,8 +160,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 await new Promise(resolve => this.player.ready(resolve))
 
                 // Attempt to start playback
-                await this.player.play()
-                console.log('Playback started successfully')
+                // await this.player.play()
+                // console.log('Playback started successfully')
 
             } catch (error) {
                 console.error('Error during player initialization or playback:', error)
@@ -200,6 +203,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.on('ended', () => {
                 const channelStore = useChannelStore()
                 const userStore = useUserStore()
+                // this.player.pause()
+                // this.player.reset()
                 console.log('Video has ended. Evaluating next steps based on the current channel...')
                 if (channelStore.currentChannel === 'firstPlay') {
                     console.log('Reloading firstPlay video...')
@@ -210,6 +215,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                         type: this.firstPlayVideoSourceType,
                         mediaType: 'firstPlay', // Hardcoded as this is specifically for firstPlay
                     }
+                    this.videoName = source.name
+                    this.videoSource = source.source
+                    this.videoSourceType = source.videoSource
                     nowPlayingStore.reset()
                     nowPlayingStore.activeMedia.details.primaryName = source.name
                     this.loadNewVideo(source)
@@ -220,11 +228,12 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     console.log('No specific channel or firstPlay detected, handling default scenario...')
                     // Optionally handle a default case
                     const defaultSource = {
-                        videoSrc: this.firstPlayVideoSource,
-                        videoType: this.firstPlayVideoSourceType,
+                        name: this.firstPlayVideoName,
+                        source: this.firstPlayVideoSource,
+                        type: this.firstPlayVideoSourceType,
                         mediaType: 'firstPlay',
                     }
-                    this.loadNewVideo(defaultSource)
+                    this.loadNewFirstPlayVideo(defaultSource)
                 }
                 // this.refreshVideoPlayer();
 
@@ -270,7 +279,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.player.off('pause', this.handlePause)
             // TODO: If you use the .on 'ended', remember
             //  to detach it here:
-            this.player.off('ended', this.handleEnd)
+            this.player.off('ended') // this will remove all event listeners for 'ended'
             this.player.off('error', this.handleError)
 
             this.eventListenersAttached = false
@@ -381,10 +390,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.paused = true
             })
         },
-        handleEnd() {
+        handleEnded() {
             this.player.on('ended', () => {
-                console.log('Video has ended. Refreshing the player...')
-                this.refreshVideoPlayer()
+                // console.log('Video has ended. Refreshing the player...')
+                // this.refreshVideoPlayer()
             })
         },
         handleError() {
@@ -394,8 +403,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 const error = this.player.error()
                 console.error('Video.js Error:', error.code, error.message)
                 if (error && error.code === 4) { // MEDIA_ERR_SRC_NOT_SUPPORTED
-                    console.log('Refreshing due to source error...')
-                    this.refreshVideoPlayer()
+                    // console.log('Refreshing due to source error...')
+                    // this.refreshVideoPlayer()
                 }
             })
         },
@@ -425,6 +434,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.firstPlayVideoName = newFirstPlay.name
             this.firstPlayVideoSource = newFirstPlay.source
             this.firstPlayVideoSourceType = newFirstPlay.type
+            this.firstPlayVideoSourceMediaType = newFirstPlay.mediaType
         },
         // Toggle mute state
         toggleMute() {
@@ -624,90 +634,111 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         loadNewFirstPlayVideo(source) {
             const nowPlayingStore = useNowPlayingStore()
-            console.log('new first play video source: ', source)
+            console.log('new first play video source... ', source)
             // check the source... is it properly coming in?
             nowPlayingStore.reset()
+            this.videoSource = source.source
+            this.videoSourceType = source.type
+            this.videoName = source.name
+            this.mediaType = source.mediaType
             nowPlayingStore.activeMedia.details.primaryName = source.name
             this.loadNewVideo(source)
         },
         loadNewVideo(source) {
-            console.log('playing new video source: ', source)
+            console.log('playing new video source: ', source);
             try {
-                let videoJs = videojs('main-player')
-                videoJs.reset() // Ensure the player is fully reset before setting a new source
-                console.log('LOAD NEW VIDEO')
-                const audioStore = useAudioStore()
-                const userStore = useUserStore()
+                // Get instances of necessary stores
+                const videoJs = videojs('main-player');
+                const audioStore = useAudioStore();
+                const userStore = useUserStore();
+                const notificationStore = useNotificationStore();
 
                 // Ensure videoSettings is initialized
                 if (!userStore.videoSettings) {
-                    userStore.videoSettings = {}
+                    console.log('Loading video settings...');
+                    userStore.videoSettings = {};
                 }
 
-                // First check if the source details are valid
-                const sourceDetails = this.getSourceDetails(source)
+                // First, check if the source details are valid
+                const sourceDetails = this.getSourceDetails(source);
                 if (!sourceDetails) {
-                    console.log('Exiting loadNewVideo due to getSourceDetails returning null.')
-                    return // Exit the function silently
+                    console.log('Exiting loadNewVideo due to getSourceDetails returning null.');
+                    return; // Exit the function silently
                 }
 
-                // Now that we know sourceDetails is not null, destructure it
-                const {videoSrc, videoSourceType} = sourceDetails
+                // Destructure sourceDetails
+                const { videoSrc, videoSourceType } = sourceDetails;
 
                 // Proceed only if videoSrc and videoSourceType are valid
                 if (!videoSrc || !videoSourceType) {
-                    // console.log('Exiting loadNewVideo due to no video source or type.');
-                    return // Exit the function silently
+                    console.log('Exiting loadNewVideo due to no video source or type.');
+                    return; // Exit the function silently
                 }
 
-                // Example: Stopping and cleaning up the current video and audio setup
-                if (videoJs) {
-                    // Pause the current video if it's playing
-                    if (!videoJs.paused()) {
-                        videoJs.pause()
-                    }
+                // Ensure the videoJs instance is available
+                if (!videoJs) {
+                    console.error('VideoJs instance not found.');
+                    notificationStore.setGeneralServiceNotification('Error', 'Code: 456B. VideoJs instance not found.');
+                    return;
+                }
 
+                // Pause the current video if it's playing
+                if (!videoJs.paused()) {
+                    videoJs.pause();
+                }
 
-                    // Clear the current source
-                    videoJs.src('')
+                // Reset the video player
+                console.log('Reset videoJs...');
+                videoJs.reset(); // Ensure the player is fully reset before setting a new source
+
+                // Clear the current source
+                console.log('Clear the video source...');
+                videoJs.src('');
+
+                // Ensure the player is ready before playing the new source
+                videoJs.ready(() => {
+                    console.log('VideoJs is ready...');
 
                     // Set up the new source
-                    videoJs.src({'src': videoSrc, 'type': videoSourceType})
+                    console.log('Set the new video source...');
+                    videoJs.src({ 'src': videoSrc, 'type': videoSourceType });
 
-                    videoJs.ready(() => {
-                        // ensureAudioContextAndNodesReady does the following:
-                        // 1. Resumes AudioContext if suspended.
-                        // 2. (Re)connects MediaElementSource from the video element to AudioContext.
-                        audioStore.deferAudioSetup = false
-                        audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
-                            // Only attempt to play the video after ensuring the AudioContext is ready
-                            videoJs.play().catch(error => {
-                                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 123A. Playback initiation error: ' + error)
-                                console.error('Code 123A. Playback initiation error: ', error)
+                    audioStore.deferAudioSetup = false;
+                    console.log('Ensure Audio Context and Nodes are Ready...');
+                    audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
+                        console.log('Audio Context and Nodes Ready!');
+                        // Only attempt to play the video after ensuring the AudioContext is ready
+                        console.log('Attempt to play the video...');
+                        videoJs.play().catch(error => {
+                            notificationStore.setGeneralServiceNotification('Error', 'Code: 123A. Playback initiation error: ' + error);
+                            console.error('Code 123A. Playback initiation error: ', error);
 
-                                // Ensure videoSettings is initialized
-                                if (!userStore.videoSettings) {
-                                    userStore.videoSettings = {}
-                                }
+                            // Ensure videoSettings is initialized
+                            if (!userStore.videoSettings) {
+                                userStore.videoSettings = {};
+                            }
 
-                                // if an
-                                if (!userStore.isSubscriber || !userStore.isVip) {
-                                    userStore.videoSettings.firstPlay = true
-                                }
-                            })
+                            // Set firstPlay flag based on user subscription status
+                            if (!userStore.isSubscriber || !userStore.isVip) {
+                                userStore.videoSettings.firstPlay = true;
+                            }
+                        });
 
-                            // Consider toggling mute based on the user's preference or previous state
-                            // videoJs.muted(false)
-                            // this.muted = false
-                        })
-                    })
-                }
+                        // Consider toggling mute based on the user's preference or previous state
+                        // videoJs.muted(false);
+                        // this.muted = false;
+                    }).catch(error => {
+                        notificationStore.setGeneralServiceNotification('Error', 'Code: 456C. Error ensuring audio context and nodes: ' + error);
+                        console.error('Code: 456C. Error ensuring audio context and nodes: ', error);
+                    });
+                });
             } catch (error) {
                 // Log the error or perform any other error handling
-                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 789A. Error loading new video: ' + error)
-                console.error('Code: 789A. Error loading new video: ', error)
+                useNotificationStore().setGeneralServiceNotification('Error', 'Code: 789A. Error loading new video: ' + error);
+                console.error('Code: 789A. Error loading new video: ', error);
             }
         },
+
 
 
         // loadNewVideo(source) {
