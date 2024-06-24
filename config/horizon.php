@@ -195,18 +195,31 @@ return [
         ],
         'supervisor-2' => [
             'connection' => 'redis',
-            'queue' => ['default', 'listener'],
+            'queue' => ['hourly'],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
+            'maxProcesses' => 3,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
-            'tries' => 1,
+            'tries' => 3,
             'timeout' => 60,
             'nice' => 0,
         ],
         'supervisor-3' => [
+            'connection' => 'redis',
+            'queue' => ['maintenance', 'daily'],
+            'balance' => 'auto',
+            'autoScalingStrategy' => 'time',
+            'maxProcesses' => 3,
+            'maxTime' => 0,
+            'maxJobs' => 0,
+            'memory' => 128,
+            'tries' => 3,
+            'timeout' => 60,
+            'nice' => 0,
+        ],
+        'supervisor-4' => [
             'connection' => 'redis',
             'queue' => ['video_processing'],
             'balance' => 'auto',
@@ -219,7 +232,7 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
-        'supervisor-4' => [
+        'supervisor-5' => [
             'connection' => 'redis',
             'queue' => ['tests'],
             'balance' => 'auto',
@@ -232,7 +245,7 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
-        'supervisor-5' => [
+        'supervisor-6' => [
             'connection' => 'redis',
             'queue' => ['long-running'],
             'balance' => 'auto',
@@ -245,7 +258,7 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
-        'supervisor-6' => [
+        'supervisor-7' => [
             'connection' => 'redis',
             'queue' => ['schedules'],
             'balance' => 'auto',
@@ -264,11 +277,6 @@ return [
 
     'environments' => [
         'production' => [
-//            'supervisor-1' => [
-//                'maxProcesses' => 10,
-//                'balanceMaxShift' => 1,
-//                'balanceCooldown' => 3,
-//            ],
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['high'],
@@ -286,10 +294,10 @@ return [
             ],
             'supervisor-2' => [
                 'connection' => 'redis',
-                'queue' => ['default', 'listener'],
+                'queue' => ['hourly'],
                 'balance' => 'auto',
                 'autoScalingStrategy' => 'time',
-                'maxProcesses' => 10,
+                'maxProcesses' => 3,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'maxTime' => 0,
@@ -301,7 +309,7 @@ return [
             ],
             'supervisor-3' => [
                 'connection' => 'redis',
-                'queue' => ['video_processing'],
+                'queue' => ['maintenance', 'daily'],
                 'balance' => 'auto',
                 'autoScalingStrategy' => 'time',
                 'maxProcesses' => 3,
@@ -316,6 +324,21 @@ return [
             ],
             'supervisor-4' => [
                 'connection' => 'redis',
+                'queue' => ['video_processing'],
+                'balance' => 'auto',
+                'autoScalingStrategy' => 'time',
+                'maxProcesses' => 3,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'maxTime' => 0,
+                'maxJobs' => 0,
+                'memory' => 128,
+                'tries' => 3,
+                'timeout' => 60,
+                'nice' => 0,
+            ],
+            'supervisor-5' => [
+                'connection' => 'redis',
                 'queue' => ['long-running'],
                 'balance' => 'auto',
                 'autoScalingStrategy' => 'time',
@@ -329,7 +352,7 @@ return [
                 'timeout' => 300,
                 'nice' => 0,
             ],
-            'supervisor-5' => [
+            'supervisor-6' => [
                 'connection' => 'redis',
                 'queue' => ['schedules'],
                 'balance' => 'auto',
@@ -348,7 +371,17 @@ return [
 
         'local' => [
             'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'simple',
+                'autoScalingStrategy' => 'time',
                 'maxProcesses' => 3,
+                'maxTime' => 0,
+                'maxJobs' => 0,
+                'memory' => 128,
+                'tries' => 3,
+                'timeout' => 60,
+                'nice' => 0,
             ],
         ],
     ],
