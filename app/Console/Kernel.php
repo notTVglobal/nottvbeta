@@ -21,28 +21,34 @@ class Kernel extends ConsoleKernel {
    */
   protected function schedule(Schedule $schedule): void {
 
-    $schedule->command('mistPush:updatePushData')->everyMinute();
-    $schedule->command('horizon:snapshot')->everyFiveMinutes();
+    // High-priority tasks
+    $schedule->command('mistPush:updatePushData')->everyMinute()->onQueue('high-priority');
+    $schedule->command('horizon:snapshot')->everyFiveMinutes()->onQueue('high-priority');
 
-    $schedule->command('images:delete-queued')->hourly();
-    $schedule->command('fetch:rss-feeds')->hourly();
-    $schedule->command('archive:rss-feeds')->hourly();
-//    $schedule->command('schedule:check-and-update-channels')->everyThirtyMinutes();
-    $schedule->command('update:schedule')->everyThirtyMinutes();
+    // Hourly tasks
+    $schedule->command('images:delete-queued')->hourly()->onQueue('hourly')->withoutOverlapping();
+    $schedule->command('fetch:rss-feeds')->hourly()->onQueue('hourly')->withoutOverlapping();
+    $schedule->command('archive:rss-feeds')->hourly()->onQueue('hourly')->withoutOverlapping();
 
-    // Purge cache files older than 1 hour every hour
+    // Every thirty minutes tasks
+    $schedule->command('update:schedule')->everyThirtyMinutes()->onQueue('hourly')->withoutOverlapping();
+
+    // Hourly maintenance task
     $schedule->call(function () {
       app(ScheduleService::class)->purgeOldCacheFiles(1);
-    })->hourly();
+    })->hourly()->onQueue('maintenance')->withoutOverlapping();
 
-    $schedule->command('purge:rss-feeds')->daily();
-    $schedule->command('expire:inviteCodes')->daily();
-    $schedule->command('video-chunks:remove-old')->daily();
-    $schedule->command('clamav:scan')->dailyAt('9:00'); // 9am UTC is 2am PDT or 3am PST
+    // Daily tasks
+    $schedule->command('purge:rss-feeds')->daily()->onQueue('daily')->withoutOverlapping();
+    $schedule->command('expire:inviteCodes')->daily()->onQueue('daily')->withoutOverlapping();
+    $schedule->command('video-chunks:remove-old')->daily()->onQueue('daily')->withoutOverlapping();
+    $schedule->command('clamav:scan')->dailyAt('9:00')->onQueue('daily')->withoutOverlapping(); // 9am UTC is 2am PDT or 3am PST
 
-    $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
-    $schedule->command('purge:schedule')->daily();
+    // Daily job
+    $schedule->job(new CheckSubscriptionStatuses, 'default')->daily()->onQueue('daily')->withoutOverlapping();
+    $schedule->command('purge:schedule')->daily()->onQueue('daily')->withoutOverlapping();
   }
+
 
   /**
    * Register the commands for the application.
