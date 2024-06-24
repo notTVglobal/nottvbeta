@@ -14,10 +14,10 @@ return new class extends Migration {
       $table->string('name')->after('user_id')->default('')->index();
       $table->string('slug')->after('name')->default('')->index();
       $table->foreignId('image_id')->after('slug')->nullable()->constrained('images')->nullOnDelete();
-      $table->text('biography')->after('image_id')->default('');
+      $table->text('biography')->nullable()->after('image_id');
       $table->string('contact_info')->after('biography')->nullable();
       $table->string('other_details')->after('contact_info')->nullable();
-      $table->json('social_media')->after('other_details')->default('{}');
+      $table->json('social_media')->nullable()->after('other_details');
     });
   }
 
