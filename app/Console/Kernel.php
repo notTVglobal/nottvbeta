@@ -21,78 +21,52 @@ class Kernel extends ConsoleKernel {
    */
   protected function schedule(Schedule $schedule): void
   {
-    // Hourly maintenance task: Purges old cache files older than 1 hour
-    $schedule->job(new \App\Jobs\PurgeOldCacheFilesJob(1))
-        ->hourly()
-        ->withoutOverlapping()
-        ->onQueue('maintenance');
 
-    // High-priority tasks
     // Runs every minute to update push data
-    $schedule->call(function() {
-      \Artisan::call('mistPush:updatePushData');
-    })->everyMinute()->withoutOverlapping()->onQueue('high-priority');
+    $schedule->command('mistPush:updatePushData')->everyMinute()->runInBackground();
 
     // Takes a snapshot of Horizon every five minutes
-    $schedule->call(function() {
-      \Artisan::call('horizon:snapshot');
-    })->everyFiveMinutes()->withoutOverlapping()->onQueue('high-priority');
-
-    // Hourly tasks
-    // Deletes queued images every hour
-    $schedule->call(function() {
-      \Artisan::call('images:delete-queued');
-    })->hourly()->withoutOverlapping()->onQueue('hourly');
-
-    // Fetches RSS feeds every hour
-    $schedule->call(function() {
-      \Artisan::call('fetch:rss-feeds');
-    })->hourly()->withoutOverlapping()->onQueue('hourly');
-
-    // Archives RSS feeds every hour
-    $schedule->call(function() {
-      \Artisan::call('archive:rss-feeds');
-    })->hourly()->withoutOverlapping()->onQueue('hourly');
+    $schedule->command('horizon:snapshot')->everyFiveMinutes()->runInBackground();
 
     // Every thirty minutes task
+
     // Updates the schedule every thirty minutes
-    $schedule->call(function() {
-      \Artisan::call('update:schedule');
-    })->everyThirtyMinutes()->withoutOverlapping()->onQueue('hourly');
+    $schedule->command('update:schedule')->everyThirtyMinutes()->withoutOverlapping();
+
+    // Hourly tasks
+
+    // Hourly maintenance task: Purges old cache files older than 1 hour
+    $schedule->job(new \App\Jobs\PurgeOldCacheFilesJob(1))->hourly()->withoutOverlapping();
+
+    // Deletes queued images every hour
+    $schedule->command('images:delete-queued')->hourly()->withoutOverlapping();
+
+    // Fetches RSS feeds every hour
+    $schedule->command('fetch:rss-feeds')->hourly()->withoutOverlapping();
+
+    // Archives RSS feeds every hour
+    $schedule->command('archive:rss-feeds')->hourly()->withoutOverlapping();
 
     // Daily tasks
+
     // Purges RSS feeds daily
-    $schedule->call(function() {
-      \Artisan::call('purge:rss-feeds');
-    })->daily()->withoutOverlapping()->onQueue('daily');
+    $schedule->command('purge:rss-feeds')->daily()->withoutOverlapping();
 
     // Expires invite codes daily
-    $schedule->call(function() {
-      \Artisan::call('expire:inviteCodes');
-    })->daily()->withoutOverlapping()->onQueue('daily');
+    $schedule->command('expire:inviteCodes')->daily()->withoutOverlapping();
 
     // Removes old video chunks daily
-    $schedule->call(function() {
-      \Artisan::call('video-chunks:remove-old');
-    })->daily()->withoutOverlapping()->onQueue('daily');
+    $schedule->command('video-chunks:remove-old')->daily()->withoutOverlapping();
 
     // Runs ClamAV scan daily at 9:00 UTC (2:00am PDT or 3:00am PST)
-    $schedule->call(function() {
-      \Artisan::call('clamav:scan');
-    })->dailyAt('9:00')->withoutOverlapping()->onQueue('daily');
+    $schedule->command('clamav:scan')->dailyAt('9:00')->withoutOverlapping();
 
     // Checks subscription statuses daily
-    $schedule->job(new \App\Jobs\CheckSubscriptionStatuses)
-        ->daily()
-        ->withoutOverlapping()
-        ->onQueue('daily');
+    $schedule->job(new \App\Jobs\CheckSubscriptionStatuses)->daily()->withoutOverlapping();
 
     // Purges the schedule daily
-    $schedule->call(function() {
-      \Artisan::call('purge:schedule');
-    })->daily()->withoutOverlapping()->onQueue('daily');
+    $schedule->command('purge:schedule')->daily()->withoutOverlapping();
   }
-
 
 
   /**
