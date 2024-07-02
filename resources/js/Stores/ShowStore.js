@@ -184,15 +184,15 @@ export const useShowStore = defineStore('showStore', {
             // console.log(form)
             if (form.scheduleType === 'one-time') {
                 // One-time scheduling logic
-                startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true)
-                form.startDate = startDate.format()
+                startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true).second(0)
+                form.startDate = startDate.format('YYYY-MM-DDTHH:mm:ssZ')
 
                 let durationHours = Number(form.durationHour)
                 let durationMinutes = Number(form.durationMinute)
                 form.duration = (durationHours * 60) + durationMinutes
 
-                endDate = startDate.add(durationHours, 'hour').add(durationMinutes, 'minute')
-                form.endDate = endDate.tz(userStore.canadianTimezone, true).format()
+                endDate = startDate.add(durationHours, 'hour').add(durationMinutes, 'minute').second(0)
+                form.endDate = endDate.tz(userStore.canadianTimezone, true).format('YYYY-MM-DDTHH:mm:ssZ')
 
                 form.startTime = null
                 form.daysOfWeek = null
@@ -200,15 +200,15 @@ export const useShowStore = defineStore('showStore', {
                 // Recurring scheduling logic
                 let hour = parseInt(form.startTime.hour) % 12
                 if (form.startTime.meridian === 'PM') hour += 12
-                startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute)
-                form.startDate = startDate.tz(userStore.canadianTimezone, true).format()
+                startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute).second(0)
+                form.startDate = startDate.tz(userStore.canadianTimezone, true).format('YYYY-MM-DDTHH:mm:ssZ')
 
-                let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes')
+                let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes').second(0)
                 form.endTime = newEndTime.format('HH:mm:ss')
 
                 let endDateOnly = dayjs(form.endDate).format('YYYY-MM-DD')
                 form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss')
-                form.endDate = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format()
+                form.endDate = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format('YYYY-MM-DDTHH:mm:ssZ')
 
                 // form.startTime = startDate.format('HH:mm:ss')
                 formattedDuration = (parseInt(form.durationHour) * 60) + parseInt(form.durationMinute)
