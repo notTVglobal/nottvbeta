@@ -109,29 +109,29 @@ class SchedulesController extends Controller {
 
     // tec21 2024-05-14: I'm commenting out the validation because
     // it kept returning errors saying the data was missing.
-    $data = $request->all();
+//    $data = $request->all();
 
-//    Log::info('addToSchedule request received', ['request' => $request->all()]);
     // Validate the request data
-//    $validatedData = $request->validate([
-//        'contentType'  => 'required|string',
-//        'contentId'    => ['required', new ValidContentId],  // Use custom validation rule
-//        'scheduleType' => 'required|string',
-//        'startTime'    => 'required|string', //
-//        'duration'     => 'required|integer',
-//        'startDate'    => 'required|date',
-//        'endDate'      => 'required|date',
-//        'daysOfWeek'   => 'sometimes|array',
-//        'timezone'     => 'required|string',
-//    ]);
+    $validatedData = $request->validate([
+        'contentType'   => 'required|string',
+        'contentId'     => ['required', new ValidContentId],  // Use custom validation rule
+        'scheduleType'  => 'required|string',
+        'duration'      => 'required|integer',
+        'startDateTime' => 'required|date',
+        'endDateTime'   => 'required|date',
+        'daysOfWeek'    => 'sometimes|array',
+        'timezone'      => 'required|string',
+    ]);
+
+    Log::info('addToSchedule request received', ['Validated request... ' => $validatedData]);
 
     // Determine the model class based on contentType
 //    $modelClass = $this->getModelClass($validatedData['contentType']);
-    $modelClass = getModelClass($data['contentType']);
+    $modelClass = getModelClass($validatedData['contentType']);
 
     // Load the content from the model and ID
 //    $content = $modelClass::findOrFail($validatedData['contentId']);  // Using primary key 'id'
-    $content = $modelClass::findOrFail($data['contentId']);  // Using primary key 'id'
+    $content = $modelClass::findOrFail($validatedData['contentId']);  // Using primary key 'id'
 
     // Update the meta column to include isSaving: true
     $meta = is_string($content->meta) ? json_decode($content->meta, true) : [];
@@ -145,10 +145,10 @@ class SchedulesController extends Controller {
     $content->meta = json_encode($meta);
     $content->save();
 
-    broadcast(new CreatorContentStatusUpdated($data['contentType'], $data['contentId'], $meta));
+    broadcast(new CreatorContentStatusUpdated($validatedData['contentType'], $validatedData['contentId'], $meta));
 
     // Dispatch the job with the data
-    AddContentToSchedule::dispatch($data);
+    AddContentToSchedule::dispatch($validatedData);
 
     // Return a response immediately, indicating that the process has started
     return response()->json(['message' => 'The schedule is being updated.']);
@@ -590,13 +590,14 @@ class SchedulesController extends Controller {
 // Logging the start and end times
       Log::debug('Parsed start and end times to UTC', [
           'startTimeUTC' => $startTimeUTC,
-          'endTimeUTC' => $endTimeUTC,
+          'endTimeUTC'   => $endTimeUTC,
       ]);
 
       $schedules = $this->scheduleService->fetchContentForRange($startTimeUTC, $endTimeUTC, false);
 
       if (isset($schedules['error'])) {
         Log::error('Error fetching schedules', ['error' => $schedules['error'], 'details' => $schedules['details']]);
+
         return response()->json($schedules, 400);
       }
 
@@ -605,6 +606,7 @@ class SchedulesController extends Controller {
       return response()->json(['items' => $schedules, 'message' => 'Schedules fetched successfully', 'status' => 'success']);
     } catch (\Exception $e) {
       Log::error('Exception in getSchedules', ['exception' => $e->getMessage()]);
+
       return response()->json(['message' => 'An unexpected error occurred', 'status' => 'error', 'details' => $e->getMessage()], 500);
     }
   }
@@ -737,27 +739,27 @@ class SchedulesController extends Controller {
           // Now, you can add both the datetime and the show details to $instances
           // Adjust according to how you need to structure $instances
           $instances[] = [
-              'id'              => $uniqueId, // Use the generated unique ID
-              'type'            => 'show',
-              'start_dateTime'      => $dateTimeUTC->toIso8601String(),
-              'start_dateTime_utc'      => $schedule->start_dateTime_utc->toIso8601String(),
-              'end_dateTime_utc'      => $schedule->end_dateTime_utc->toIso8601String(),
-              'content'         => [
+              'id'                 => $uniqueId, // Use the generated unique ID
+              'type'               => 'show',
+              'start_dateTime'     => $dateTimeUTC->toIso8601String(),
+              'start_dateTime_utc' => $schedule->start_dateTime_utc->toIso8601String(),
+              'end_dateTime_utc'   => $schedule->end_dateTime_utc->toIso8601String(),
+              'content'            => [
                   'show' => $showResource->resolve(), // Resolve to get an array
               ],
-              'durationMinutes' => $recurrenceDetails->duration_minutes,
-              'priority'        => $schedule->priority,
+              'durationMinutes'    => $recurrenceDetails->duration_minutes,
+              'priority'           => $schedule->priority,
           ];
         } else {
           // Handle other content types or absence of content
           $instances[] = [
-              'id'              => $uniqueId, // Use the generated unique ID
-              'start_dateTime'      => $dateTimeUTC->toIso8601String(),
-              'start_dateTime_utc'      => $schedule->start_dateTime_utc->toIso8601String(),
-              'end_dateTime_utc'      => $schedule->end_dateTime_utc->toIso8601String(),
-              'durationMinutes' => $recurrenceDetails->duration_minutes,
+              'id'                 => $uniqueId, // Use the generated unique ID
+              'start_dateTime'     => $dateTimeUTC->toIso8601String(),
+              'start_dateTime_utc' => $schedule->start_dateTime_utc->toIso8601String(),
+              'end_dateTime_utc'   => $schedule->end_dateTime_utc->toIso8601String(),
+              'durationMinutes'    => $recurrenceDetails->duration_minutes,
             // Include minimal details or indicate absence of detailed content
-              'content'         => [], // Placeholder for non-Show content
+              'content'            => [], // Placeholder for non-Show content
           ];
         }
       }
@@ -954,22 +956,22 @@ class SchedulesController extends Controller {
   }
 
   public function removeFromSchedule(Request $request): JsonResponse {
-    // Manually extract the data from the request body
-    $data = $request->json()->all();
 
     // Manually create a validator instance
-//    $validator = Validator::make($data, [
-//        'contentId'   => 'required|integer',
-//        'contentType' => 'required|string',
-//    ]);
+    $validatedData = $request->validate([
+        'contentId'   => 'required|integer',
+        'contentType' => 'required|string',
+    ]);
+
+    Log::info('removeFromSchedule request received', ['Validated request... ' => $validatedData]);
 
 //    if ($validator->fails()) {
 //      return response()->json(['errors' => $validator->errors()], 422);
 //    }
 
     // Correctly extract contentId and contentType using the case used in the validator
-    $contentId = $data['contentId'];
-    $contentType = $data['contentType'];
+    $contentId = $validatedData['contentId'];
+    $contentType = $validatedData['contentType'];
 
     // Convert contentType to the expected format for the polymorphic relation
     // Assuming your application uses specific namespacing for models
@@ -1019,10 +1021,10 @@ class SchedulesController extends Controller {
       $content->save();
 
       $shortContentType = strtolower(class_basename($contentType)); // converts to 'show'
-      broadcast(new CreatorContentStatusUpdated($shortContentType, $data['contentId'], $meta));
+      broadcast(new CreatorContentStatusUpdated($shortContentType, $validatedData['contentId'], $meta));
 
       $scheduleDetails = [];
-      broadcast(new ShowScheduleDetailsUpdated($shortContentType, $data['contentId'], $scheduleDetails));
+      broadcast(new ShowScheduleDetailsUpdated($shortContentType, $validatedData['contentId'], $scheduleDetails));
 
       Log::info("Content type {$shortContentType} with ID {$contentId} successfully removed from schedule.");
 
