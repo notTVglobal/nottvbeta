@@ -237,7 +237,7 @@
                            required
                            class="checkbox checkbox-info bg-white dark:bg-gray-800" />
                     <div class="ml-2">
-                      I agree to the <a :href="route('terms.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                      I agree to the <a :href="$route('terms.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
                     </div>
                   </div>
                 </JetLabel>

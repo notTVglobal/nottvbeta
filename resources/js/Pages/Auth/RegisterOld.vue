@@ -147,7 +147,7 @@ const submit = () => {
                     <div class="flex items-center">
                         <JetCheckbox id="terms" v-model="form.terms" name="terms" required />
                         <div class="ml-2">
-                            I agree to the <a :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                            I agree to the <a :href="$route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
                         </div>
                     </div>
                 </JetLabel>
@@ -157,7 +157,7 @@ const submit = () => {
 <!--            <div class="g-recaptcha mt-4" data-sitekey={config('services.recaptcha.key')}></div>-->
 
             <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                <Link :href="$route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
                     Already registered?
                 </Link>
 

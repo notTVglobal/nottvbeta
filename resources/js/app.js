@@ -4,7 +4,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/vue3'
 import AppLayout from './Layouts/AppLayout'
 import { createPinia } from 'pinia'
-import { ZiggyVue } from 'ziggy-js'
+import { route, ZiggyVue } from 'ziggy-js'
 import { Ziggy } from './ziggy.js'
 import Vue3TouchEvents from 'vue3-touch-events'
 // import helmet from "helmet";
@@ -211,6 +211,7 @@ createInertiaApp({
     setup({el, App, props, plugin}) {
         const VueApp = createApp({render: () => h(App, props)})
 
+        // Set the global property for route
         VueApp.config.globalProperties.$route = route
 
         VueApp.use(plugin)
