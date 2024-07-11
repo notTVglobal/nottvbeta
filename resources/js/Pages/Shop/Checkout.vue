@@ -16,7 +16,7 @@
       </header>
 
       <div>
-        <Link :href="route('products')">
+        <Link :href="$route('products')">
           <button
               class="bg-blue-600 hover:bg-blue-400 text-white px-2 py-1 rounded">
             See all products

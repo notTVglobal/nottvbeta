@@ -65,7 +65,7 @@
               </div>
 
               <div class="flex flex-wrap-reverse items-center justify-end mt-4">
-                <Link :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                <Link :href="$route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
                   Forgot your password?
                 </Link>
 

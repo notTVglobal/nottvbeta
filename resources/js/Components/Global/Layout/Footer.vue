@@ -12,7 +12,7 @@
     <nav>
       <header class="footer-title">Newsroom</header>
       <Link :href="`/news`" class="hover:text-blue-500">News Stories</Link>
-      <Link :href="route('news.reporters.index')" class="hover:text-blue-500">Reporters</Link>
+      <Link :href="$route('news.reporters.index')" class="hover:text-blue-500">Reporters</Link>
       <!--                        <a class="link link-hover">About us</a>-->
       <!--                        <a class="link link-hover">Contact</a>-->
       <!--                        <a class="link link-hover">Jobs</a>-->

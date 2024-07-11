@@ -65,7 +65,7 @@
         <!--          <JetResponsiveNavLink-->
         <!--              v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"-->
         <!--              @click="appSettingStore.closeNavDropdown()"-->
-        <!--              :href="route('upgrade')"-->
+        <!--              :href="$route('upgrade')"-->
         <!--              :active="appSettingStore.currentPage === 'upgrade'"-->
         <!--          >-->
         <!--            <div class="rounded-lg p-2 bg-gray-100 text-black hover:text-green-900">-->

@@ -157,7 +157,7 @@ const clearPhotoFileInput = () => {
                         Your email address is unverified.
 
                         <Link
-                            :href="route('verification.send')"
+                            :href="$route('verification.send')"
                             method="post"
                             as="button"
                             class="underline text-gray-600 hover:text-gray-900"
