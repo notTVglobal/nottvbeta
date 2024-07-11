@@ -48,7 +48,7 @@ export default {
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-center">
                 <Link
-                    :href="route('logout')"
+                    :href="$route('logout')"
                     method="post"
                     as="button"
                     class="underline text-sm text-gray-600 hover:text-gray-900 ml-2"

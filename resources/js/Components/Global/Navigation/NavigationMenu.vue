@@ -115,7 +115,7 @@
 <!--                />-->
 <!--                <JetNavLink v-touch="()=>(route('upgrade'))"-->
 <!--                            @click.prevent="videoPlayerStore.makeVideoTopRight()"-->
-<!--                            :href="route('upgrade')"-->
+<!--                            :href="$route('upgrade')"-->
 <!--                            :active="appSettingStore.currentPage === 'upgrade'"-->
 <!--                            class="active:border-none hover:border-none focus:border-none border-none">-->
 <!--                  <div class="w-full rounded-lg p-2 bg-gray-100 text-black hover:bg-fuchsia-400 hover:text-green-900">-->
