@@ -29,6 +29,7 @@ use DateTimeZone;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -1027,6 +1028,17 @@ class SchedulesController extends Controller {
       broadcast(new ShowScheduleDetailsUpdated($shortContentType, $validatedData['contentId'], $scheduleDetails));
 
       Log::info("Content type {$shortContentType} with ID {$contentId} successfully removed from schedule.");
+
+      // TODO: Running the scheduleService here could cause a conflict
+      //  if our cron is running the same thing... or if multiple people
+      //  are adding/removing schedules. We need to implement a flag in
+      //  the cache to determine if this actually needs to be run or not.
+
+      // Resolve ScheduleService using the service container
+      $scheduleService = App::make(ScheduleService::class);
+
+      // Fetch, transform, and cache the schedules
+      $scheduleService->fetchAndCacheSchedules();
 
       // Return a success response
       return response()->json(['message' => "{$shortContentType} removed from schedule"], 200);

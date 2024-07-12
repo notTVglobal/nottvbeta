@@ -116,7 +116,7 @@ watch(targetIsVisible, (isVisible) => {
 
 watch(search, throttle(function (value) {
   browseStore.filters.search = value
-  fetchTeams(1)
+  fetchTeams(teamStore.currentPage)
 }, 300))
 
 const filteredTeams = computed(() => {
@@ -125,7 +125,8 @@ const filteredTeams = computed(() => {
 })
 
 const loadMoreTeams = () => {
-  fetchTeams(currentPage + 1)
+  browseStore.currentPage ++
+  fetchTeams(browseStore.currentPage)
 }
 
 const navigateToTeam = (slug) => {

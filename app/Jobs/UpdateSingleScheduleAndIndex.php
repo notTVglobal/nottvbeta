@@ -4,11 +4,13 @@ namespace App\Jobs;
 
 use App\Models\Schedule;
 use App\Models\SchedulesIndex;
+use App\Services\ScheduleService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
@@ -51,6 +53,13 @@ class UpdateSingleScheduleAndIndex implements ShouldQueue {
 
       $this->updateScheduleAndIndex($schedule, $broadcastDatesData, $closestBroadcastDate);
       Redis::del($redisKey); // Clear the data from Redis after updating
+
+//      // Resolve ScheduleService using the service container
+//      $scheduleService = App::make(ScheduleService::class);
+//
+//      // Fetch, transform, and cache the schedules
+//      $scheduleService->fetchAndCacheSchedules();
+
     }
   }
 

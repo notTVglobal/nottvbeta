@@ -132,7 +132,8 @@ const savePublicMessage = () => {
     publicMessage: team.value.public_message,
   }
 
-  if (teamStore.nextBroadcastLoaded.scheduleIndexId) {
+  // Check if nextBroadcastLoaded is not null before accessing scheduleIndexId
+  if (teamStore.nextBroadcastLoaded && teamStore.nextBroadcastLoaded.scheduleIndexId) {
     payload.scheduleIndexId = teamStore.nextBroadcastLoaded.scheduleIndexId
   }
 

@@ -1,7 +1,18 @@
 # not.tv Changelog
 
-Last Update: June 17, 2024\
+Last Update: July 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.31
+July 11, 2024
+
+* Increase size of profile pictures upload from 1MB to 5MB.
+* Fixed saving the team public message when there is no upcoming broadcast
+* Fixed the browse teams loading duplicate teams on "Load ore Teams" on the Browse page.
+* Added icons to the Manage pages.
+* Removed some buttons from the Team, Show, Episode pages for Creators to make navigation simpler.
+* Fixed adding and removing shows to/from schedule now updates the schedule cache immediately.
+* Fixed wrong recurring dates getting added to the schedule.
 
 ## v0.9.3.30
 June 17, 2024

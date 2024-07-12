@@ -70,6 +70,8 @@ class ScheduleService {
    */
   public function fetchAndCacheSchedules(): Arrayable|JsonSerializable|array {
 
+    Log::info('Running fetchAndCacheSchedules()');
+
     // 1. Load the schedules
     $schedules = Schedule::with('content', 'scheduleRecurrenceDetails', 'scheduleIndexes')
         ->orderBy('start_dateTime_utc')

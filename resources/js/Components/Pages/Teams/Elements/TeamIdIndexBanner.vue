@@ -8,7 +8,7 @@
       leave-to-class="opacity-0 transform translate-x-full"
   >
     <div>
-      <div v-if="teamStore.nextBroadcast || team.public_message"
+      <div v-if="teamStore.nextBroadcast || teamStore.team.public_message"
            class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
         <div
             class="flex flex-col md:flex-row bg-gray-600 dark:bg-gray-700 border border-gray-900 w-full py-6 text-center align-middle rounded-lg shadow-lg">
@@ -34,13 +34,13 @@
               No broadcasts are currently scheduled.
             </div>
           </div>
-          <div v-if="teamStore.nextBroadcast"
+          <div
                class="flex flex-col md:w-2/3 justify-center items-center font-semibold px-4">
-            <div v-if="team.public_message"
-                 class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 mb-4 rounded">
-              <span v-html="team.public_message" class="public-message"/>
+            <div v-if="teamStore.team.public_message"
+                 class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 rounded">
+              <span v-html="teamStore.team.public_message" class="public-message"/>
             </div>
-            <div class="w-20 md:border-t border-gray-400 dark:border-gray-600">
+            <div v-if="teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink" class="w-20 mt-4 md:border-t border-gray-400 dark:border-gray-600">
             </div>
 
           </div>

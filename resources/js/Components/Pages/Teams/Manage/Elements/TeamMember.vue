@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr class="divide-y divide-gray-200">
     <td class="text-gray-500 px-6 py-4 min-w-[3rem] max-w-[3rem] text-sm">
       <img v-if="member.profile_photo_path"
            :src="`/storage/${member.profile_photo_path}`"

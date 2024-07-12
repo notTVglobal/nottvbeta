@@ -20,6 +20,7 @@
                     @click.prevent="router.visit('/stream')"
                     :href="`#`"
                     :active="appSettingStore.currentPage === 'stream'">
+                  <font-awesome-icon :icon="['fas', 'play']" class="mr-2" />
                   Stream
                 </JetNavLink>
               </h3>
@@ -29,6 +30,7 @@
                     @click.prevent="router.visit('/schedule')"
                     :href="`#`"
                     :active="appSettingStore.currentPage === 'schedule'">
+                  <font-awesome-icon :icon="['fas', 'calendar']" class="mr-2" />
                   Schedule
                 </JetNavLink>
               </h3>
@@ -38,6 +40,7 @@
                     @click.prevent="router.visit('/browse')"
                     :href="`#`"
                     :active="appSettingStore.currentPage === 'browse.index'">
+                  <font-awesome-icon :icon="['fas', 'search']" class="mr-2" />
                   Browse
                 </JetNavLink>
               </h3>
@@ -47,6 +50,7 @@
                     @click.prevent="router.visit('/news')"
                     :href="`#`"
                     :active="appSettingStore.currentPage.startsWith('news') && appSettingStore.currentPage !== 'newsroom' && !appSettingStore.currentPage.startsWith('newsRss') && !appSettingStore.currentPage.startsWith('news-')">
+                  <font-awesome-icon :icon="['fas', 'newspaper']" class="mr-2" />
                   News
                 </JetNavLink>
               </h3>
@@ -56,6 +60,7 @@
                     @click.prevent="router.visit('/shows')"
                     :href="`#`"
                     :active="appSettingStore.currentPage === 'shows'">
+                  <font-awesome-icon :icon="['fas', 'video']" class="mr-2" />
                   Shows
                 </JetNavLink>
               </h3>
@@ -66,6 +71,7 @@
                     @click.prevent="router.visit('/movies')"
                     :href="`#`"
                     :active="appSettingStore.currentPage === 'movies'">
+                  <font-awesome-icon :icon="['fas', 'film']" class="mr-2" />
                   Movies
                 </JetNavLink>
               </h3>
@@ -75,6 +81,7 @@
                     @click.prevent="router.visit('/shop')"
                     :href="`#`"
                     :active="appSettingStore.currentPage === 'shop'">
+                  <font-awesome-icon :icon="['fas', 'shopping-cart']" class="mr-2" />
                   Shop
                 </JetNavLink>
               </h3>

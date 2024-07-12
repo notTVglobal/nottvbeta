@@ -8,7 +8,7 @@
     </button>
   </div>
   <div class="overflow-x-auto">
-    <table class="table min-w-full divide-y divide-gray-200">
+    <table class="table min-w-full">
       <thead>
       <tr>
         <td class="px-6 min-w-[3rem] max-w-[3rem] whitespace-nowrap text-sm font-medium">
