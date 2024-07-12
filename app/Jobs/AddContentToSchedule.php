@@ -261,22 +261,22 @@ class AddContentToSchedule implements ShouldQueue {
       DB::commit();
 
       // Create the batch of UpdateBroadcastDates jobs
-//      $jobs = [new UpdateBroadcastDates($schedule)];
+      $jobs = [new UpdateBroadcastDates($schedule)];
 
       // Optionally, add more jobs to the batch if needed
       // $jobs[] = new AnotherJob($someParameter);
-      UpdateSingleScheduleAndIndex::dispatch($schedule->id);
 
-//      Bus::batch($jobs)
-//          ->then(function () use ($schedule) {
-//            // Dispatch UpdateSingleScheduleAndIndex after UpdateBroadcastDates job completes
-//
-//          })
-//          ->name('Update Broadcast Dates and Single Schedule')
-//          ->dispatch();
+
+      Bus::batch($jobs)
+          ->then(function () use ($schedule) {
+            // Dispatch UpdateSingleScheduleAndIndex after UpdateBroadcastDates job completes
+            UpdateSingleScheduleAndIndex::dispatch($schedule->id);
+          })
+          ->name('Update Broadcast Dates and Single Schedule')
+          ->dispatch();
 
       $meta = [
-          'isSaving'           => false,  
+          'isSaving'           => false,
           'isUpdatingSchedule' => null,
           'isScheduled'        => true,
           'updatedBy'          => null,

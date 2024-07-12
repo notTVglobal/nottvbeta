@@ -12,15 +12,15 @@
               <button
                   @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
                   class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-orange-500 hover:bg-orange-600 rounded-lg"
-              >Back to<br />
-                Team Page
+              >
+                <font-awesome-icon icon="fa-users-cog" class="hover:text-blue-800 mr-2"/> Manage Team
               </button>
               <button
                   :disabled="goLiveStore.displayEpisodeGoLiveComponent"
                   @click="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)"
-                  class="px-4 py-2 mb-2 text-white font-semibold bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
-              >Back to<br />
-                Manage Show
+                  class="px-4 py-2 mb-2 text-white font-semibold bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
+              >
+                <font-awesome-icon icon="fa-tv" class="hover:text-blue-800 mr-2"/> Manage Show
               </button>
             </div>
             <div class="flex flex-wrap-reverse justify-end gap-2">
@@ -30,13 +30,24 @@
                     @click="goLiveStore.toggleDisplayEpisodeGoLiveComponent(episode)"
                     :disabled="episode.show_episode_status_id > 6"
                     class="hidden px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
-                >Go Live
+                >
+                  <font-awesome-icon icon="fa-broadcast-tower" class="hover:text-blue-800 mr-1"/> Go Live
                 </button>
                 <button
                     v-if="goLiveStore.displayEpisodeGoLiveComponent"
                     @click="goLiveStore.toggleDisplayEpisodeGoLiveComponent()"
                     class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
-                >Cancel
+                >
+                  <font-awesome-icon icon="fa-times" class="hover:text-blue-800 mr-1"/> Cancel
+                </button>
+              </div>
+              <div>
+                <button
+                    @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}`)"
+                    :disabled="goLiveStore.displayEpisodeGoLiveComponent"
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
+                >
+                  <font-awesome-icon icon="fa-eye"  class="hover:text-blue-800 mr-1"/> View Episode
                 </button>
               </div>
               <div>
@@ -45,7 +56,8 @@
                     @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/edit`)"
                     :disabled="goLiveStore.displayEpisodeGoLiveComponent"
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
-                >Edit
+                >
+                  <font-awesome-icon icon="fa-pen" class="hover:text-blue-800 mr-1"/> Edit Episode
                 </button>
               </div>
               <div>
@@ -53,7 +65,8 @@
                     :disabled="goLiveStore.displayEpisodeGoLiveComponent"
                     @click="appSettingStore.btnRedirect('/dashboard')"
                     class="bg-black hover:bg-gray-800 text-white font-semibold px-4 py-2 rounded-lg disabled:bg-gray-400"
-                >Dashboard
+                >
+                  <font-awesome-icon :icon="['fas', 'tachometer-alt']" class="hover:text-blue-800 mr-1" /> Dashboard
                 </button>
 
               </div>

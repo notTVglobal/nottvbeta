@@ -14,12 +14,13 @@
 /storage/*.key
 /storage/app
 /storage/app/csv/invite_codes.csv
-/storage/logs/*
+/storage/logs
 !/storage/logs/.gitignore
 !/storage/framework/.gitignore
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
 /vendor
 .env
 .env.backup

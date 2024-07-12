@@ -53,14 +53,18 @@
                     :disabled="showStore.loadingUpdatingStatus || showStore.isUpdatingSchedule || showStore.isSaving"
                     class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white drop-shadow-lg py-2 flex flex-col disabled:text-white">
               <span v-if="showStore.loadingUpdatingStatus" class="loading loading-dots text-white"></span>
-              <span v-else-if="!showStore.isUpdatingSchedule && !showStore.isSaving" class="">Add Show To Schedule</span>
+              <span v-else-if="!showStore.isUpdatingSchedule && !showStore.isSaving" class="">
+                <font-awesome-icon :icon="['fas', 'calendar-plus']" class="hover:text-blue-800 mr-1" /> Add Show To Schedule
+              </span>
               <span v-else>The schedule is being updated...</span>
             </button>
             <button v-if="showStore.isScheduled" @click="openChangeScheduleModal"
                     :disabled="showStore.loadingUpdatingStatus || showStore.isUpdatingSchedule || showStore.isSaving"
                     class="btn btn-lg bg-indigo-500 hover:bg-indigo-700 border-indigo-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span v-if="showStore.loadingUpdatingStatus" class="loading loading-dots text-white"></span>
-              <span v-else-if="!showStore.isUpdatingSchedule && !showStore.isSaving">Change Schedule</span>
+              <span v-else-if="!showStore.isUpdatingSchedule && !showStore.isSaving">
+                <font-awesome-icon :icon="['fas', 'calendar-alt']" class="hover:text-blue-800 mr-1" /> Change Schedule
+              </span>
               <span v-else>The schedule is being updated...</span>
             </button>
               <div v-if="showStore.isUpdatingSchedule" class="mt-4 text-red-600">
