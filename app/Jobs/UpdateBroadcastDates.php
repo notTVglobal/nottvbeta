@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Schedule;
 use App\Models\SchedulesIndex;
+use App\Services\ScheduleService;
 use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
@@ -13,6 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
@@ -37,9 +39,12 @@ class UpdateBroadcastDates implements ShouldQueue {
 
   public function handle() {
 
+    Log::info('Update Broadcast Dates Job started');
+
     // Check if the job is part of a batch and if the batch has been cancelled
     if ($this->batch() && $this->batch()->cancelled()) {
       Log::info('Batch cancelled, job will not run', ['scheduleId' => $this->schedule->id]);
+
       return;
     }
 
@@ -64,6 +69,13 @@ class UpdateBroadcastDates implements ShouldQueue {
           'dates'                => $broadcastDates,
           'closestBroadcastDate' => $closestBroadcastDate
       ]));
+
+      // Resolve ScheduleService using the service container
+      $scheduleService = App::make(ScheduleService::class);
+
+      // Fetch, transform, and cache the schedules
+      $scheduleService->fetchAndCacheSchedules();
+
     } catch (Exception $e) {
       Log::error('Failed to update schedule broadcast dates', [
           'scheduleId' => $this->schedule->id,
@@ -223,49 +235,50 @@ class UpdateBroadcastDates implements ShouldQueue {
 
       // Use the start and end date times with the specified timezone
       $timezone = new DateTimeZone($details->timezone);
-//      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime, $timezone);
-//      $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime, $timezone);
-      $startDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime_utc);
-      $endDateTimeUTC = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime_utc);
+      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->start_dateTime, $timezone);
+      $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $details->end_dateTime, $timezone);
 
-//      Log::debug('DateTime Details', [
-//          'startDateTime' => $startDateTime,
-//          'endDateTime' => $endDateTime,
-//          'timezone' => $timezone
+//      Log::debug('Starting date range processing', [
+//          'startDateTime' => $startDateTime->toIso8601String(),
+//          'endDateTime' => $endDateTime->toIso8601String(),
+//          'daysOfWeek' => $daysOfWeek,
 //      ]);
 
-//      $currentDateTime = $startDateTime->copy();
-      $currentDateTime = $startDateTimeUTC->copy();
+      $currentDateTime = $startDateTime->copy();
+//      $currentDateTime = $startDateTimeUTC->copy();
 
       // Find the first valid day within the date range
-//      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTime)) {
-//        $currentDateTime->addDay();
-//      }
-      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTimeUTC)) {
+      while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTime)) {
         $currentDateTime->addDay();
       }
 
+//      Log::debug('First valid day found', [
+//          'firstValidDay' => $currentDateTime->toIso8601String(),
+//      ]);
 
       // Generate all occurrences of the specified days within the date range
-//      while ($currentDateTime->lte($endDateTime)) {
-//        if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
-//          // Convert the date to utc and add it to the array
-//          $recurrentDates[] = $currentDateTime->copy()->setTimezone('UTC')->toIso8601String();
-//        }
-        while ($currentDateTime->lte($endDateTimeUTC)) {
-          if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
-            // The date is UTC, add it to the array
-            $recurrentDates[] = $currentDateTime->copy()->toIso8601String();
-          }
+      while ($currentDateTime->lte($endDateTime)) {
+        if (in_array(strtolower($currentDateTime->format('l')), $daysOfWeek)) {
+          // Convert the date to utc and add it to the array
+          $recurrentDates[] = $currentDateTime->copy()->setTimezone('UTC')->toIso8601String();
 
+//          Log::debug('Added date', [
+//              'addedDate' => $currentDateTime->copy()->setTimezone('UTC')->toIso8601String(),
+//          ]);
+        }
 
-          // Find the next valid day
-        $currentDayIndex = array_search(strtolower($currentDateTime->format('l')), $daysOfWeek);
-        $nextDayIndex = ($currentDayIndex + 1) % count($daysOfWeek);
+        // Move to the next day
+        $currentDateTime->addDay();
 
-        // Calculate days to add to get to the next valid day
-        $daysToAdd = ($nextDayIndex > $currentDayIndex) ? $nextDayIndex - $currentDayIndex : (7 - $currentDayIndex) + $nextDayIndex;
-        $currentDateTime->addDays($daysToAdd);
+        // Find the next valid day
+        while (!in_array(strtolower($currentDateTime->format('l')), $daysOfWeek) && $currentDateTime->lte($endDateTime)) {
+          $currentDateTime->addDay();
+        }
+
+//        Log::debug('Next valid day found', [
+//            'nextValidDay' => $currentDateTime->toIso8601String(),
+//        ]);
+
       }
 
 //      Log::debug('Recurrent schedule dates', ['scheduleId' => $schedule->id, 'recurrentDates' => $recurrentDates]);

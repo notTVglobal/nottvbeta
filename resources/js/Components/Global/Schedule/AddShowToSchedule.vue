@@ -58,10 +58,12 @@
               <div class="flex justify-center space-x-4 mt-4">
                 <button @click.prevent="selectScheduleType('one-time')"
                         class="btn btn-primary h-40 w-60 bg-indigo-500 hover:bg-indigo-700 text-white rounded-lg flex flex-col p-4">
+                  <font-awesome-icon :icon="['fas', 'calendar-day']" class="hover:text-blue-800 mb-2 text-2xl" />
                   <span class="text-lg">One-time Event</span>
                 </button>
                 <button @click.prevent="selectScheduleType('recurring')"
                         class="btn btn-primary h-40 w-60 bg-indigo-500 hover:bg-indigo-700 text-white rounded-lg flex flex-col p-4">
+                  <font-awesome-icon :icon="['fas', 'sync-alt']" class="hover:text-blue-800 mb-2 text-2xl" />
                   <span class="text-lg">Recurring Show</span>
                 </button>
               </div>
@@ -160,7 +162,7 @@
             </ul>
 
 
-            <div class="mt-6 pt-6">
+            <div :class="{'mt-6 pt-6': currentStep !== 6}">
 
               <div v-if="currentStep === 1">
                 <!-- Step 1 content -->
@@ -929,6 +931,8 @@ function closeConfirmAddShowModal() {
 
 const closeModalAndReset = () => {
   currentStep.value = 0
+  resetForm()
+  clearErrors()
   closeModal()
   // router.visit(`/shows/${props.show.slug}/manage`)
 }
@@ -967,6 +971,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
+  scheduleStore.resetAll()
 })
 
 // onMounted(async () => {

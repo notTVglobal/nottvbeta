@@ -124,12 +124,12 @@ class TeamsController extends Controller {
 ////////////  CREATE AND STORE
 //////////////////////////////
 
-  public function create() {
+  public function create(): \Inertia\Response {
     return Inertia::render('Teams/Create');
   }
 
 
-  public function store(HttpRequest $request, Team $team) {
+  public function store(HttpRequest $request, Team $team): \Illuminate\Http\RedirectResponse {
 
     $validatedData = $request->validate([
         'name'           => 'unique:teams|required|max:255',
@@ -176,6 +176,7 @@ class TeamsController extends Controller {
         'name'                   => $processedName,
         'description'            => $sanitizedDescription,  // Use the sanitized description
         'user_id'                => $validatedData['user_id'],
+        'team_leader'            => $user->creator->id,
       //            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
         'totalSpots'             => $validatedData['totalSpots'],
         'slug'                   => \Str::slug($validatedData['name']),

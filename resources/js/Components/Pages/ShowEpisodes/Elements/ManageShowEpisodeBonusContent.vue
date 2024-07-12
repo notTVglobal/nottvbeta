@@ -13,7 +13,8 @@
       <button
           onclick="addBonusContentNotice.showModal()"
           class="bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-lg px-4 py-2"
-      >Add Bonus Content
+      >
+        <font-awesome-icon :icon="['fas', 'plus']" class="hover:text-blue-800 mr-1" /> Add Bonus Content
       </button>
     </div>
 

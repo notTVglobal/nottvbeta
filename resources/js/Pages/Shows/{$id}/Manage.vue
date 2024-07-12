@@ -27,25 +27,33 @@
               <button
                   @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
                   class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-orange-500 hover:bg-orange-600 rounded-lg"
-              >Back to<br/>
-                Manage Team
+              >
+                <font-awesome-icon :icon="['fas', 'users-cog']" class="hover:text-blue-800 mr-1" /> Manage Team
               </button>
             </div>
-            <div class="flex flex-wrap-reverse justify-end">
+            <div class="flex flex-wrap-reverse justify-end gap-2">
               <button
                   v-if="can.goLive"
                   @click="goLive"
-                  class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
-              >Go Live
+                  class="px-4 py-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
+              >
+                <font-awesome-icon :icon="['fas', 'broadcast-tower']" class="hover:text-blue-800 mr-1" /> Go Live
+              </button>
+              <button
+                  @click="appSettingStore.btnRedirect(`/shows/${show.slug}`)"
+                  class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+              >
+                <font-awesome-icon :icon="['fas', 'eye']" class="hover:text-blue-800 mr-1" /> View Show
               </button>
               <button
                   v-if="teamStore.can.editShow"
                   @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
-                  class="px-4 py-2 mb-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-              >Edit Show
+                  class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+              >
+                <font-awesome-icon :icon="['fas', 'pen']" class="hover:text-blue-800 mr-1" /> Edit Show
               </button>
 
-              <DashboardButton class="mb-2"/>
+              <DashboardButton class=""/>
 
             </div>
           </div>

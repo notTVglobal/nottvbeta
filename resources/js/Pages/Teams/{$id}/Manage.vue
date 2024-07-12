@@ -12,13 +12,21 @@
 
         <div class="flex justify-between mb-3 pt-6">
           <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE TEAM</div>
-          <div class="flex flex-wrap-reverse justify-end">
+          <div class="flex flex-wrap-reverse justify-end gap-2">
+
+            <button
+                @click="appSettingStore.btnRedirect(`/teams/${team.slug}`)"
+                class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+            >
+              <font-awesome-icon :icon="['fas', 'users']" class="hover:text-blue-800 mr-1" /> View Team
+            </button>
 
             <button
                 v-if="can.editTeam"
                 @click="appSettingStore.btnRedirect(`/teams/${team.slug}/edit`)"
                 class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-            >Edit Team
+            >
+              <font-awesome-icon :icon="['fas', 'pen']" class="hover:text-blue-800 mr-1" /> Edit Team
             </button>
 
             <DashboardButton/>
