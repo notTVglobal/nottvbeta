@@ -23,7 +23,7 @@
       </div>
       <div class="absolute top-20 right-0 px-3 py-2 z-50">
         <div class="flex gap-2">
-          <button v-if="$page.props.user.isCreator" @click.prevent="appSettingStore.btnRedirect(`/videoupload`)"
+          <button v-if="$page.props.user && $page.props.user.isCreator" @click.prevent="appSettingStore.btnRedirect(`/videoupload`)"
                   class="flex bg-green-500 text-white font-semibold px-4 py-2 hover:bg-green-400 rounded transition ease-in-out duration-150 items-center">
             <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
             My Uploads
@@ -172,8 +172,10 @@ const beginDownload = async () => {
 appSettingStore.pageReload = true
 
 onMounted(() => {
-  // Set the initial value of showSignup based on the presence of page.props.auth.user
-  if (!page.auth.user) {
+  // Set the initial value of showSignup based on the presence of page.props.auth and page.props.auth.user
+  if (page.auth && page.auth.user) {
+    showSignup.value = false;
+  } else {
     showSignup.value = true;
   }
   // Add event listener for ESC key
