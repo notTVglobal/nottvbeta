@@ -9,7 +9,8 @@
       <div class="absolute top-20 left-0 px-3 py-2 z-50">
         <div class="flex flex-col gap-2">
           <div>{{ video.filename }}</div>
-          <div @click.prevent="appSettingStore.btnRedirect(`/creator/${video.creator.slug}`)" class="flex gap-2 items-center hover:cursor-pointer">
+          <div @click.prevent="appSettingStore.btnRedirect(`/creator/${video.creator.slug}`)"
+               class="flex gap-2 items-center hover:cursor-pointer">
             <div class="min-w-[2rem]">
               <img v-if="video.user.profile_photo_path"
                    :src="'/storage/' + video.user.profile_photo_path" class="rounded-full h-8 w-8 object-cover">
@@ -23,15 +24,17 @@
       </div>
       <div class="absolute top-20 right-0 px-3 py-2 z-50">
         <div class="flex gap-2">
-          <button v-if="$page.props.user && $page.props.user.isCreator" @click.prevent="appSettingStore.btnRedirect(`/videoupload`)"
+          <button v-if="$page.props.user && $page.props.user.isCreator"
+                  @click.prevent="appSettingStore.btnRedirect(`/videoupload`)"
                   class="flex bg-green-500 text-white font-semibold px-4 py-2 hover:bg-green-400 rounded transition ease-in-out duration-150 items-center">
-            <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
+            <font-awesome-icon :icon="['fas', 'upload']" class="mr-2"/>
             My Uploads
           </button>
           <button @click.prevent="beginDownload"
-                  class="flex bg-orange-500 text-white font-semibold px-4 py-2 hover:bg-orange-400 rounded transition ease-in-out duration-150 items-center">
-            <font-awesome-icon icon="fa-download" class="mr-2"/>
-            Download
+                  :disabled="downloading"
+                  class="flex bg-orange-500 text-white disabled:bg-gray-700 font-semibold px-4 py-2 hover:bg-orange-400 rounded transition ease-in-out duration-150 items-center">
+            <span v-if="downloading"><span class="loading loading-spinner text-white text-xs"/> Downloading ...</span>
+            <span v-else><font-awesome-icon icon="fa-download" class="mr-2"/> Download</span>
           </button>
           <ShareButton :model="video"/>
         </div>
@@ -47,7 +50,8 @@
                         height="500"/>
       </div>
 
-      <div v-if="showSignup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+      <div v-if="showSignup"
+           class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
         <div class="signup-box p-4 bg-gray-800 text-white rounded-lg shadow-lg relative">
           <button @click="dismissSignup" class="absolute top-2 right-2 text-white">&times;</button>
           <div class="flex w-full justify-center mb-2">
@@ -56,11 +60,15 @@
           <h2 class="text-lg font-semibold">Sign Up for notTV</h2>
           <p class="mt-2">Join our community and stay updated with the latest content.</p>
           <form @submit.prevent="handleSignup" class="mt-4 flex flex-col">
-            <input type="email" v-model="email" placeholder="Enter your email" class="p-2 rounded bg-gray-900 text-white" required>
-            <input type="text" v-model="hpname" placeholder="HP Name" class="hidden" />
-            <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Sign Up</button>
+            <input type="email" v-model="email" placeholder="Enter your email"
+                   class="p-2 rounded bg-gray-900 text-white" required>
+            <input type="text" v-model="hpname" placeholder="HP Name" class="hidden"/>
+            <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded">Sign Up
+            </button>
           </form>
-          <button @click="dismissSignup" class="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded">No Thanks</button>
+          <button @click="dismissSignup" class="mt-2 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded">No
+            Thanks
+          </button>
         </div>
       </div>
     </div>
@@ -77,7 +85,7 @@ import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigatio
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import ShareButton from '@/Components/Global/UserActions/ShareButton.vue'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 
 const appSettingStore = useAppSettingStore()
 
@@ -94,9 +102,10 @@ const title = ref('Your Video Title')
 const shareUrl = `${page.appUrl}/video/${props.ulid}`
 const email = ref('')
 const hpname = ref('') // honeypot input to circumvent spam/robots
+const downloading = ref(false)
 
 // Reactive variable to control the visibility of the signup modal
-const showSignup = ref(false);
+const showSignup = ref(false)
 
 const handleSignup = async () => {
   try {
@@ -104,15 +113,15 @@ const handleSignup = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       },
-      body: JSON.stringify({ email: email.value })
+      body: JSON.stringify({email: email.value}),
     })
 
     // Check if honeypot field is filled
     if (hpname.value) {
       // console.warn('Honeypot field filled, likely a bot');
-      return;
+      return
     }
 
     const data = await response.json()
@@ -131,17 +140,18 @@ const handleSignup = async () => {
 // Function to handle ESC key press
 const handleKeyDown = (event) => {
   if (event.key === 'Escape') {
-    showSignup.value = false;
+    showSignup.value = false
   }
-};
+}
 
 // Function to dismiss the signup modal
 const dismissSignup = () => {
-  showSignup.value = false;
-};
+  showSignup.value = false
+}
 
 
 const beginDownload = async () => {
+  downloading.value = true
   const url = props.videoSource
   // console.log('Video source: ' + props.videoSource)
   try {
@@ -165,27 +175,30 @@ const beginDownload = async () => {
 
     // Revoke the object URL
     URL.revokeObjectURL(downloadLink.href)
+    downloading.value = false
   } catch (error) {
     console.error('Download failed', error)
+    downloading.value = false
   }
 }
+
 appSettingStore.pageReload = true
 
 onMounted(() => {
   // Set the initial value of showSignup based on the presence of page.props.auth and page.props.auth.user
   if (page.auth && page.auth.user) {
-    showSignup.value = false;
+    showSignup.value = false
   } else {
-    showSignup.value = true;
+    showSignup.value = true
   }
   // Add event listener for ESC key
-  window.addEventListener('keydown', handleKeyDown);
-});
+  window.addEventListener('keydown', handleKeyDown)
+})
 
 onUnmounted(() => {
   // Remove event listener for ESC key
-  window.removeEventListener('keydown', handleKeyDown);
-});
+  window.removeEventListener('keydown', handleKeyDown)
+})
 
 </script>
 
