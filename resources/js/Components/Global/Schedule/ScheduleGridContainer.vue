@@ -140,7 +140,7 @@
       <span class="loading loading-dots loading-lg text-info">
       </span>
       </div>
-      <div v-element-visibility="onElementVisibility"></div> <!-- This element triggers the visibility event -->
+      <div class="w-10 h-5 bg-green-500" v-element-visibility="onElementVisibility"></div> <!-- This element triggers the visibility event -->
     </div>
 
   </div>
@@ -183,22 +183,26 @@ const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFour
 const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
 
 const getPlayingTimeLabel = (start_dateTime) => {
-  const baseTime = dayjs(scheduleStore.baseTime).startOf('isoWeek');
+  const now = dayjs(scheduleStore.baseTime).tz(userStore.timezone);
   const start = dayjs(start_dateTime);
 
-  // console.log('baseTime:', baseTime.format('YYYY-MM-DD HH:mm:ss'));
+  const startOfToday = now.startOf('day');
+  const startOfTomorrow = startOfToday.add(1, 'day');
+  const startOfCurrentWeek = now.startOf('isoWeek');
+  const startOfNextWeek = startOfCurrentWeek.add(1, 'week');
+
+  // console.log('now:', now.format('YYYY-MM-DD HH:mm:ss'));
   // console.log('start_dateTime:', start.format('YYYY-MM-DD HH:mm:ss'));
 
-  const diffDays = start.diff(baseTime, 'day');
-  const diffWeeks = start.diff(baseTime, 'week');
-  const diffMonths = start.diff(baseTime.startOf('month'), 'month');
-  const diffYears = start.diff(baseTime, 'year');
+  const diffWeeks = start.diff(startOfCurrentWeek, 'week');
+  const diffMonths = start.diff(startOfCurrentWeek.startOf('month'), 'month');
+  const diffYears = start.diff(startOfCurrentWeek, 'year');
 
-  if (diffDays === 0) {
+  if (start.isSame(startOfToday, 'day')) {
     return 'Playing Today';
-  } else if (diffDays === 1) {
+  } else if (start.isSame(startOfTomorrow, 'day')) {
     return 'Playing Tomorrow';
-  } else if (diffDays > 1 && diffDays <= 7) {
+  } else if (start.isBefore(startOfNextWeek)) {
     return 'Later This Week';
   } else if (diffWeeks === 1) {
     return 'Next Week';
@@ -235,8 +239,7 @@ function onElementVisibility(state) {
 // Function to load more shows
 const loadMoreShows = async () => {
   if (isVisible.value && !scheduleStore.isLoading) {
-    scheduleStore.isLoading = true;
-    // console.log("Loading more shows");
+    console.log("Loading more shows");
 
     // Fetch more schedules
     await scheduleStore.fetchMoreSchedules();
@@ -250,11 +253,12 @@ const loadMoreShows = async () => {
 const throttledLoadMoreShows = throttle(loadMoreShows, 200);
 
 
-
-
-const allPlaceholders = computed(() => {
-  return scheduleStore.nextFourHoursOfContent.every(item => item.placeholder)
-})
+// Commented out because it's not being used...
+// Keeping it here for now in case we need to use it.
+//
+// const allPlaceholders = computed(() => {
+//   return scheduleStore.nextFourHoursOfContent.every(item => item.placeholder)
+// })
 
 const upcomingShows = computed(() => {
   const now = dayjs(scheduleStore.baseTime);
@@ -284,13 +288,15 @@ const upcomingShows = computed(() => {
 
 const displayedShows = computed(() => upcomingShows.value.slice(0, displayedShowsCount.value))
 
-function isNowPlaying(start_dateTime, duration) {
-  const now = dayjs()
-  const start = dayjs(start_dateTime)
-  const end = start.add(duration, 'minutes')
-  return now.isAfter(start) && now.isBefore(end)
-}
-
+// Commented out because it's not being used...
+// Keeping it here for now in case we need to use it.
+//
+// function isNowPlaying(start_dateTime, duration) {
+//   const now = dayjs()
+//   const start = dayjs(start_dateTime)
+//   const end = start.add(duration, 'minutes')
+//   return now.isAfter(start) && now.isBefore(end)
+// }
 
 const nowPlayingShow = computed(() => {
   return scheduleStore.nextFourHoursOfContent.find(show => show.nowPlaying)
@@ -323,9 +329,10 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   // scheduleStore.resetAll()
-  const now = dayjs();
-  const startDate = now.subtract(4, 'hour').toISOString();
-  const endDate = now.add(7, 'day').toISOString();
+  const now = dayjs().tz(userStore.timezone);
+  // console.log('now for fetchSchedules: ' + now.format())
+  const startDate = now.subtract(4, 'hour');
+  const endDate = now.add(7, 'day');
   await scheduleStore.fetchSchedules(startDate, endDate);
   initialFetchCompleted = true
 

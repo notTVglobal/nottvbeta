@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: July 11, 2024\
+Last Update: July 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.32
+July 27, 2024
+
+* Fixed the Schedule Show component
+  * Added International Timezones
+  * Refactored the components into one-time schedule and recurring schedule.
 
 ## v0.9.3.31
 July 11, 2024

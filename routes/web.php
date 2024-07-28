@@ -26,6 +26,7 @@ use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecordingController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SubscriptionPlanController;
+use App\Http\Controllers\SupportFileController;
 use App\Http\Controllers\TeamManagersController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
@@ -1505,6 +1506,8 @@ Route::post('/api/creators/register-check-email', [CreatorsController::class, 'r
 
 Route::get('/api/shows/{show}/check-live', [ShowsController::class, 'checkIsLive'])
     ->name('shows.checkLive');
+
+Route::get('/api/get-timezones', [SupportFileController::class, 'getTimezones']);
 
 
 //Route::any('/{any}', function() {

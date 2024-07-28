@@ -181,18 +181,22 @@ export const useShowStore = defineStore('showStore', {
         preparePayload(form) {
             const userStore = useUserStore()
             let startDate, endDate, formattedDuration
-            // console.log(form)
+
+            // Logging the initial form data
+            console.log('Initial Form Data:', form);
+
             if (form.scheduleType === 'one-time') {
                 // One-time scheduling logic
-                startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true).second(0)
-                form.startDate = startDate.format('YYYY-MM-DDTHH:mm:ssZ')
+                startDate = dayjs(form.startDate).format('YYYY-MM-DDTHH:mm:ssZ')
+                console.log('preparePayload set startDate: ' + startDate)
+                form.startDate = startDate
 
                 let durationHours = Number(form.durationHour)
                 let durationMinutes = Number(form.durationMinute)
                 form.duration = (durationHours * 60) + durationMinutes
 
-                endDate = startDate.add(durationHours, 'hour').add(durationMinutes, 'minute').second(0)
-                form.endDate = endDate.tz(userStore.canadianTimezone, true).format('YYYY-MM-DDTHH:mm:ssZ')
+                endDate = dayjs(startDate).add(durationHours, 'hour').add(durationMinutes, 'minute').second(0).format('YYYY-MM-DDTHH:mm:ssZ')
+                form.endDate = endDate
 
                 form.startTime = null
                 form.daysOfWeek = null
@@ -224,7 +228,7 @@ export const useShowStore = defineStore('showStore', {
                 startDateTime: form.startDate,
                 endDateTime: form.endDate,
                 daysOfWeek: form.scheduleType === 'recurring' ? form.daysOfWeek : [],
-                timezone: userStore.canadianTimezone,
+                timezone: form.timezone,
             }
         },
         async removeFromSchedule(contentType, contentId) {

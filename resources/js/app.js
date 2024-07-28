@@ -156,6 +156,7 @@ import {
 // import popper for pop-up tooltips
 import Popper from 'vue3-popper'
 import VueConfetti from 'vue-confetti'
+import vSelect from 'vue-select'
 
 // import confirm dialog
 // import ConfirmDialog from '@/Components/Global/Modals/ConfirmDialog';
@@ -235,6 +236,7 @@ createInertiaApp({
             .component('Head', Head)
             .component('font-awesome-icon', FontAwesomeIcon)
             .component('Popper', Popper)
+            .component('vSelect', vSelect)
             // .component("ConfirmDialog", ConfirmDialog)
             .mixin(formatDate())
             .mount(el)
