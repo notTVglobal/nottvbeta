@@ -3,6 +3,11 @@
 Last Update: July 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.9.3.33
+July 27, 2024
+
+* Fix Video Share page not working for logged out users.
+
 ## v0.9.3.32
 July 27, 2024
 

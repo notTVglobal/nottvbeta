@@ -243,7 +243,7 @@ class VideoController extends Controller {
 
     $videoSource = $this->getPreSignedUrl($video);
 
-    return inertia('VideoPlayerPage', [
+    return inertia('Video/Index', [
         'video'       => [
             'id'       => $video->id,
             'filename' => $video->filename,
