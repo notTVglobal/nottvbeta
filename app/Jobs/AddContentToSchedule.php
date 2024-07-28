@@ -139,10 +139,29 @@ class AddContentToSchedule implements ShouldQueue {
 //        'end_date'   => $formattedEndDate,
 //    ]);
 
+    Log::debug('Check incoming start dateTime', [
+        'start_date' => $start_DateTime,
+        'end_date'   => $end_DateTime,
+        'timezone'   => $timezone,
+    ]);
+
+    Log::debug('Check formatted start dateTime', [
+      'start_date' => $formattedStartDateTime,
+      'end_date'   => $formattedEndDateTime,
+      'timezone'   => $timezone,
+    ]);
+
+    Log::debug('Check UTC start dateTime', [
+        'start_date' => $startDateTimeUtc,
+        'end_date'   => $endDateTimeUtc,
+        'timezone'   => $timezone,
+    ]);
+
+
     // Query for overlapping schedules
-    $overlappingSchedules = Schedule::where(function ($query) use ($formattedStartDateTime, $formattedEndDateTime) {
-      $query->whereBetween('start_dateTime', [$formattedStartDateTime, $formattedEndDateTime])
-          ->orWhereBetween('end_dateTime', [$formattedStartDateTime, $formattedEndDateTime]);
+    $overlappingSchedules = Schedule::where(function ($query) use ($startDateTimeUtc, $endDateTimeUtc) {
+      $query->whereBetween('start_dateTime_utc', [$startDateTimeUtc, $endDateTimeUtc])
+          ->orWhereBetween('end_dateTime_utc', [$startDateTimeUtc, $endDateTimeUtc]);
     })->get();
 
     // Log the results of the overlap check
@@ -312,6 +331,7 @@ class AddContentToSchedule implements ShouldQueue {
           $scheduleDetails['contentId'],
           $scheduleDetails
       ));
+
 
 
 //      Log::debug('Broadcasted CreatorContentStatusUpdated event successfully');

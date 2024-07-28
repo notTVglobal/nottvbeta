@@ -302,7 +302,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         // this is our new fetch schedules method.
         async fetchSchedules(startDate, endDate) {
             this.isLoading = true
-            console.log(`Loading schedule between: ${startDate} and ${endDate}`) // Log the date being requested
+            // console.log(`Loading schedule between: ${dayjs(startDate).format()} and ${dayjs(endDate).format()}`) // Log the date being requested
             try {
                 const userStore = useUserStore()
                 const dayStartDate = dayjs(startDate)
@@ -311,11 +311,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 const fullISOEndDate = dayEndDate.toISOString()
 
                 const response = await axios.get(`/api/schedules/range?start=${fullISOStartDate}&end=${fullISOEndDate}`)
-
+                // console.log('fullISOStartDate: ' + fullISOStartDate)
+                // console.log('fullISOEndDate: ' + fullISOEndDate)
                 // const formattedStartDate = dayStartDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // const formattedEndDate = dayEndDate.format('YYYY-MM-DD') // For potential error messages and logging
                 // console.log(`Loading schedule between: ${formattedStartDate} and ${formattedEndDate}`) // Log the date being requested
-                console.log('Received response:', response.data) // Log the raw response data
+                // console.log('Received response:', response.data) // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone
@@ -346,11 +347,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
 
         async fetchMoreSchedules() {
+
             // Prevent fetching if already loading or if there are no more schedules to fetch
             if (this.isLoading || !this.hasMore) return;
 
             this.isLoading = true;
-            console.log('Fetching more schedules...');
+
             try {
                 const lastSchedule = this.schedules[this.schedules.length - 1];
                 const startDate = lastSchedule ? dayjs(lastSchedule.start_dateTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');

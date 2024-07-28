@@ -94,19 +94,24 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useNotificationStore } from "@/Stores/NotificationStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
-import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
+// import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
 import ChangeSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
+
+// Lazy load the AddShowToSchedule component
+const AddShowToSchedule = defineAsyncComponent(() =>
+    import('@/Components/Global/Schedule/AddShowToSchedule.vue')
+);
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
