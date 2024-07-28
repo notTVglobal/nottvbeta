@@ -29,8 +29,8 @@ const timezones = [
   { name: 'Central Time', offset: 'America/Chicago' },
   { name: 'Eastern Time', offset: 'America/New_York' },
   { name: 'London Time', offset: 'Europe/London' },
-  { name: 'Sydney Time', offset: 'Australia/Sydney' },
-  { name: 'Tokyo Time', offset: 'Asia/Tokyo' }
+  { name: 'Tokyo Time', offset: 'Asia/Tokyo' },
+  { name: 'Sydney Time', offset: 'Australia/Sydney' }
 ];
 
 const now = ref(dayjs());

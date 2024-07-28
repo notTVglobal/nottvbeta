@@ -1,24 +1,43 @@
 <template>
   <div>
-    <DatePicker v-model="date" mode="date" view="weekly" :disabled-dates="disabledDays" expanded/>
+    <DatePicker
+        v-model="date"
+        mode="date"
+        :timezone="effectiveTimezone"
+        view="weekly"
+        :disabled-dates="disabledDays"
+        expanded
+    />
 
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch, computed } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 import { DatePicker } from 'v-calendar'
 import 'v-calendar/style.css'
+import { useUserStore } from '@/Stores/UserStore'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
+const userStore = useUserStore()
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const props = defineProps({
   date: null,
+  timezone: String,
   disabledDays: {
     type: Array,
     default: () => [], // Default to an empty array if not provided
   },
 });
 
-const emits = defineEmits();
+const emits = defineEmits(['date-time-selected']);
+
+const effectiveTimezone = ref(props.timezone || userStore.timezone)
 
 let date = ref(props.date);
 const calendar = ref(null);
@@ -55,4 +74,15 @@ const calendar = ref(null);
 watch([date], ([newDate]) => {
   emits('date-time-selected', {date: newDate});
 });
+
+// Watch for changes in the timezone prop and update the effective timezone
+watch(
+    () => props.timezone,
+    (newTimezone) => {
+      console.log('Timezone prop changed:', newTimezone);
+      effectiveTimezone.value = newTimezone || userStore.timezone;
+      // Update selectedDate to reflect the new timezone
+      date.value = dayjs(date.value).tz(effectiveTimezone.value).startOf('minute').format('YYYY-MM-DDTHH:mm:ssZ');
+    }
+);
 </script>

@@ -76,7 +76,7 @@
                     </Link>
 
                     <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                      Log in ABC
+                      Log in
                     </JetButton>
                   </div>
                 </form>

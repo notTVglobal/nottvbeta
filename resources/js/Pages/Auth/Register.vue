@@ -116,7 +116,7 @@
                 <div class="mt-4 ml-4 border-t border-t-gray-200 text-center font-semibold">
                   <div @click.prevent="appSettingStore.btnRedirect(`subscribe`)"
                        class="text-blue-500 hover:text-blue-400 hover:cursor-pointer hover:scale-105 transition">
-                    Need an invite code?</div>
+                    👉 Need an invite code? <span class="underline">Click here</span></div>
                 </div>
               </div>
 

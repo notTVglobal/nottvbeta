@@ -1,6 +1,11 @@
 <template>
   <div>
-    <DatePicker v-model="date" mode="dateTime" :attributes='attrs' :rules="rules"/>
+    <DatePicker v-model="selectedDate"
+                mode="dateTime"
+                :timezone="effectiveTimezone"
+                :attributes='attrs'
+                :rules="rules"
+    />
 
   </div>
 </template>
@@ -21,27 +26,27 @@ dayjs.extend(timezone)
 
 const props = defineProps({
   date: null,
-});
+  timezone: String,
+})
 
-const emits = defineEmits(['date-time-selected']);
+const emits = defineEmits(['date-time-selected'])
 
-let date = ref(props.date ? props.date : dayjs().tz(userStore.timezone).format('YYYY-MM-DDTHH:mm:ssZ'));
+const effectiveTimezone = ref(props.timezone || userStore.timezone)
 
-const calendar = ref(null);
-
-// Customize time picker options to show only :00 and :30 minutes
-const timePickerOptions = {
-  step: 30, // Step in minutes, to show :00 and :30
-  round: 30, // Round to nearest step
-  start: '00:00', // Start time
-  end: '23:30', // End time
+const initializeDate = () => {
+  const roundedNow = dayjs().minute(Math.floor(dayjs().minute() / 30) * 30).second(0).format();
+  return props.date
+      ? dayjs(props.date).tz(effectiveTimezone.value).startOf('minute').format('YYYY-MM-DDTHH:mm:ssZ')
+      : dayjs(roundedNow).tz(effectiveTimezone.value).format('YYYY-MM-DDTHH:mm:ssZ');
 };
+
+const selectedDate = ref(initializeDate())
 
 const attrs = ref([
   {
     key: 'today',
-    highlight: true,
-    dates: new Date(),
+    dot: true,
+    dates: dayjs().tz(effectiveTimezone.value).format(),
   },
 ])
 
@@ -49,14 +54,29 @@ const rules = ref({
   minutes: {interval: 30},
 })
 
-// Watch for changes in selected dateTime emit it
-watch(date, (newDate) => {
-  emits('date-time-selected', {date: newDate});
-});
+// Watch for changes in selected dateTime and emit it
+watch(selectedDate, (newDate) => {
+  // Set the timezone without changing the time
+  let convertedNewDate = dayjs(newDate).tz(effectiveTimezone.value, true).format()
+
+  console.log('DateTimePicker watch Selected date: ' + convertedNewDate)
+  emits('date-time-selected', { date: convertedNewDate })
+})
+
+// Watch for changes in the timezone prop and update the effective timezone
+watch(
+    () => props.timezone,
+    (newTimezone) => {
+      console.log('Timezone prop changed:', newTimezone);
+      effectiveTimezone.value = newTimezone || userStore.timezone;
+      // Update selectedDate to reflect the new timezone
+      selectedDate.value = dayjs(selectedDate.value).tz(effectiveTimezone.value).startOf('minute').format('YYYY-MM-DDTHH:mm:ssZ');
+    }
+);
 
 onMounted(() => {
-  if (!props.date) {
-    date.value = dayjs().tz(userStore.timezone).format('YYYY-MM-DDTHH:mm:ssZ');
-  }
+  console.log('Effective Timezone on mount: ', effectiveTimezone.value);
+  console.log('onMounted Selected Date: ' + selectedDate.value)
 });
 </script>
+
