@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: July 27, 2024\
+Last Update: August 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.34
+August 8, 2024
+
+* Move the cron scheduler from the old Console.php to the new routes/console.php as per Laravel 11 standards. 
+* Added a notification / modal to the Welcome page: "To Join the Chat Log In"
 
 ## v0.9.3.33b
 July 27, 2024

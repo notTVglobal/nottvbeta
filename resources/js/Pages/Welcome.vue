@@ -25,13 +25,13 @@
         <div :class="containerClasses">
           <WelcomeBug/>
 
-            <div v-if="!hasScrolled && welcomeStore.showOverlay" class="pt-0">
-              <WelcomeNavButtons/>
-            </div>
+          <div v-if="!hasScrolled && welcomeStore.showOverlay" class="pt-0">
+            <WelcomeNavButtons/>
+          </div>
 
-            <div v-if="hasScrolled || !welcomeStore.showOverlay" class="pt-8 md:pt-0">
-              <WelcomeNavButtons/>
-            </div>
+          <div v-if="hasScrolled || !welcomeStore.showOverlay" class="pt-8 md:pt-0">
+            <WelcomeNavButtons/>
+          </div>
 
         </div>
       </header>
@@ -52,6 +52,22 @@
               <VideoControlsWelcome v-if="!welcomeStore.showOverlay" class="video-controls"
                                     :class="[{ 'hasScrolled': hasScrolled }, { hidden: !isVisibleVideoControls, visible: isVisibleVideoControls }]"/>
 
+              <div v-if="!welcomeStore.showOverlay && modal"
+                   class="fixed inset-0 flex items-center justify-center text-center bg-black bg-opacity-50 z-50"
+                   @click="closeModal">
+                <div class="bg-yellow-500 text-black rounded-lg p-6 w-full max-w-sm mx-auto shadow-lg relative"
+                     @click.stop>
+                  <h2 class="text-2xl font-bold mb-4">Join the Chat</h2>
+                  <p class="mb-6">Please log in to join the chat and connect with others.</p>
+                  <button @click="loginAndHideModal"
+                          class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                    Log In
+                  </button>
+                  <button @click="closeModal" class="absolute top-2 right-2 text-black hover:text-gray-600">
+                    &#10005; <!-- This is the 'X' symbol for closing -->
+                  </button>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -223,6 +239,7 @@ const targetForScroll = ref(null)
 const targetForVideoControls = ref(null)
 const isVisibleVideoControls = ref(true)
 const hasScrolled = ref(true)
+const modal = ref(true)
 
 // useIntersectionObserver(
 //     targetForVideoControls,
@@ -325,17 +342,26 @@ function watchNow() {
   videoPlayerStore.unMute()
 }
 
+const loginAndHideModal = () => {
+  welcomeStore.showLogin = true
+  modal.value = false
+}
+
+const closeModal = () => {
+  modal.value = false // Hides the modal
+}
+
 const isWelcomeBugVisible = computed(() => {
-  return welcomeStore.showOverlay === false || welcomeStore.hasScrolled;
-});
+  return welcomeStore.showOverlay === false || welcomeStore.hasScrolled
+})
 
 const containerClasses = computed(() => {
   return [
     'w-full flex flex-row md:px-6 py-4 md:py-4 welcomeOverlay',
-    { 'justify-between': isWelcomeBugVisible.value, 'justify-end': !isWelcomeBugVisible.value },
-    { 'bg-black py-2 md:py-4': hasScrolled.value }
-  ];
-});
+    {'justify-between': isWelcomeBugVisible.value, 'justify-end': !isWelcomeBugVisible.value},
+    {'bg-black py-2 md:py-4': hasScrolled.value},
+  ]
+})
 
 const pageTitle = ''
 const ogUrl = computed(() => `${page.appUrl}`)
@@ -377,6 +403,7 @@ const twitterImageAlt = computed(() => 'notTV Logo') // Alt text for the image
   transition: opacity 0.5s ease-in-out;
   padding: 1rem 0;
 }
+
 .video-controls.hasScrolled {
   background-color: rgba(0, 0, 0, 1);
 }

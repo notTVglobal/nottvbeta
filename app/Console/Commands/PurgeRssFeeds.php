@@ -12,11 +12,11 @@ use App\Services\ImageService;
 class PurgeRssFeeds extends Command
 {
     protected $signature = 'purge:rss-feeds';
-    protected $description = 'Purge RSS feed items from the temp table that are older than 30 days';
+    protected $description = 'Purge RSS feed items from the temp table that are older than 360 days';
 
     public function handle()
     {
-      // Set the threshold to 30 days before now
+      // Set the threshold to 360 days before now
       $threshold = Carbon::now()->subDays(360);
       NewsRssFeedItemTemp::where('created_at', '<', $threshold)->delete();
 
