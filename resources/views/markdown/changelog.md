@@ -3,12 +3,24 @@
 Last Update: August 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.9.3.34b
+## v0.9.3.34c
 August 8, 2024
 
 * Move the cron scheduler from the old Console.php to the new routes/console.php as per Laravel 11 standards. 
 * Added a notification / modal to the Welcome page: "To Join the Chat Log In".
 * Change formatting of Current Date on Schedule page.
+* Add query strings to GoLive page; you can bookmark and refresh the page.
+* Add debug statements to the getExistingDestinations function in the GoLiveController. 
+* Add a countdown timer to the GoLive page.
+* Create a BroadcastAutomationService.
+  * Needs testing.
+  * TODO: Create fallback methods for streams that aren't connected.
+    * Produce a Standby video/stream.
+    * Produce a Technical Difficulties video/stream.
+    * Add an email event to notify creators if they've missed their scheduled start time.
+  * Make this more efficient by running closer to the top of the hour and the half hour, 5 minutes before to check if the stream is connected and then caching a command to run at precise start time.
+  * During testing see how much of a delay there is in the switchover.
+  * Implement a new component to give viewers the choice to keep watching what they are watching or switch to the scheduled broadcast when there is overlap or a show runs long.
 
 ## v0.9.3.33b
 July 27, 2024

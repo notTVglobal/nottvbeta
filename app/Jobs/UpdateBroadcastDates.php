@@ -37,9 +37,9 @@ class UpdateBroadcastDates implements ShouldQueue {
    * @throws Exception
    */
 
-  public function handle() {
+  public function handle(): void {
 
-    Log::info('Update Broadcast Dates Job started');
+//    Log::debug('Update Broadcast Dates Job started ', ['scheduleId' => $this->schedule->id]);
 
     // Check if the job is part of a batch and if the batch has been cancelled
     if ($this->batch() && $this->batch()->cancelled()) {
@@ -65,16 +65,10 @@ class UpdateBroadcastDates implements ShouldQueue {
 
 //      Log::debug('Broadcast Dates: ', $broadcastDates);
 
-      Redis::set($redisKey, json_encode([
+      Redis::connection()->set($redisKey, json_encode([
           'dates'                => $broadcastDates,
           'closestBroadcastDate' => $closestBroadcastDate
       ]));
-
-      // Resolve ScheduleService using the service container
-      $scheduleService = App::make(ScheduleService::class);
-
-      // Fetch, transform, and cache the schedules
-      $scheduleService->fetchAndCacheSchedules();
 
     } catch (Exception $e) {
       Log::error('Failed to update schedule broadcast dates', [

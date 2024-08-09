@@ -81,15 +81,30 @@
         <button class="btn btn-secondary" @click="openStats">Live Analytics</button>
       </div>
 
-      <div>
-        <div>Live will begin in... &nbsp;</div>
-        <div class="countdown font-mono text-2xl">
-          <span :style="{ '--value': hours }">{{ hours.toString().padStart(2, '0') }}</span>h
-          <span :style="{ '--value': minutes }">{{ minutes.toString().padStart(2, '0') }}</span>m
-          <span :style="{ '--value': seconds }">{{ seconds.toString().padStart(2, '0') }}</span>s
-        </div>
-        <div class="text-xs">for demo purposes only</div>
-      </div>
+      <GoLiveCountdown />
+
+<!--      <div v-if="countdownMessage">-->
+<!--        <div>{{ countdownMessage }}</div>-->
+<!--      </div>-->
+<!--      <div v-else>-->
+<!--        <div>Live will begin in... &nbsp;</div>-->
+<!--        <div class="countdown font-mono text-2xl">-->
+<!--          <span v-if="days > 0" :style="{ '&#45;&#45;value': days }">{{ days.toString().padStart(2, '0') }}</span><span v-if="days > 0">d</span>-->
+<!--          <span :style="{ '&#45;&#45;value': hours }">{{ hours.toString().padStart(2, '0') }}</span>h-->
+<!--          <span :style="{ '&#45;&#45;value': minutes }">{{ minutes.toString().padStart(2, '0') }}</span>m-->
+<!--          <span :style="{ '&#45;&#45;value': seconds }">{{ seconds.toString().padStart(2, '0') }}</span>s-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div>Live will begin in... &nbsp;</div>-->
+<!--      <div class="countdown-container">-->
+<!--        <div class="countdown font-mono text-4xl">-->
+<!--          <span v-if="days > 0" class="countdown-unit">{{ days.toString().padStart(2, '0') }}</span><span v-if="days > 0">d</span>-->
+<!--          <span class="countdown-unit">{{ hours.toString().padStart(2, '0') }}</span>h-->
+<!--          <span class="countdown-unit">{{ minutes.toString().padStart(2, '0') }}</span>m-->
+<!--          <span class="countdown-unit">{{ seconds.toString().padStart(2, '0') }}</span>s-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -97,8 +112,13 @@
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import GoLiveCountdown from '@/Components/Pages/GoLive/GoLiveCountdown.vue'
+
+dayjs.extend(duration);
 
 const appSettingStore = useAppSettingStore()
 const goLiveStore = useGoLiveStore()
@@ -165,10 +185,41 @@ const countdownTime = 5 * 60
 // Reactive state for the countdown
 const countdown = ref(countdownTime)
 
+const nextBroadcast = computed(() => goLiveStore.selectedShow?.nextBroadcast);
+
+const days = ref(0);
+const hours = ref(0);
+const minutes = ref(0);
+const seconds = ref(0);
+const countdownMessage = ref('');
+
+const updateCountdown = () => {
+  if (!nextBroadcast.value) {
+    countdownMessage.value = "No broadcast is currently scheduled!";
+    return;
+  }
+
+  const now = dayjs();
+  const targetTime = dayjs.utc(nextBroadcast.value); // Convert the next broadcast time to a dayjs object in UTC
+  const difference = targetTime.diff(now);
+
+  if (difference <= 0) {
+    countdownMessage.value = "The broadcast is live now!";
+    return;
+  }
+
+  const duration = dayjs.duration(difference);
+
+  days.value = Math.floor(duration.asDays());
+  hours.value = duration.hours();
+  minutes.value = duration.minutes();
+  seconds.value = duration.seconds();
+};
+
 // Computed properties for hours, minutes, and seconds
-const hours = computed(() => Math.floor(countdown.value / 3600))
-const minutes = computed(() => Math.floor((countdown.value % 3600) / 60))
-const seconds = computed(() => countdown.value % 60)
+// const hours = computed(() => Math.floor(countdown.value / 3600))
+// const minutes = computed(() => Math.floor((countdown.value % 3600) / 60))
+// const seconds = computed(() => countdown.value % 60)
 
 const openStats = () => {
   window.open('/stats', '_blank')
@@ -176,38 +227,41 @@ const openStats = () => {
 
 
 // Function to start the countdown
-const startCountdown = () => {
-  // // Clear any existing interval to prevent multiple intervals
-  // if (intervalId !== null) {
-  //   clearInterval(intervalId)
-  // }
-  //
-  // // Reset countdown to initial value
-  // countdown.value = countdownTime
-  //
-  // // Start a new interval
-  // intervalId = setInterval(() => {
-  //   countdown.value--
-  //
-  //   if (countdown.value < 0) {
-  //     clearInterval(intervalId) // Stop the interval
-  //     intervalId = null // Reset the interval ID
-  //     // Optionally, you can reset countdown.value to countdownTime or another value here
-  //   }
-  // }, 1000)
-}
+// const startCountdown = () => {
+//   // // Clear any existing interval to prevent multiple intervals
+//   // if (intervalId !== null) {
+//   //   clearInterval(intervalId)
+//   // }
+//   //
+//   // // Reset countdown to initial value
+//   // countdown.value = countdownTime
+//   //
+//   // // Start a new interval
+//   // intervalId = setInterval(() => {
+//   //   countdown.value--
+//   //
+//   //   if (countdown.value < 0) {
+//   //     clearInterval(intervalId) // Stop the interval
+//   //     intervalId = null // Reset the interval ID
+//   //     // Optionally, you can reset countdown.value to countdownTime or another value here
+//   //   }
+//   // }, 1000)
+// }
 
 onMounted(async () => {
   // Automatically start the countdown or trigger based on an event
-  startCountdown()
+  // startCountdown()
+  updateCountdown();
+  intervalId = setInterval(updateCountdown, 1000); // Update every second
 })
 
 // Cleanup when the component unmounts
 onUnmounted(() => {
   // Cleanup interval on component unmount (countdown timer)
-  if (intervalId !== null) {
-    clearInterval(intervalId)
-  }
+  clearInterval(intervalId);
+  // if (intervalId !== null) {
+  //   clearInterval(intervalId)
+  // }
 })
 </script>
 <style scoped>
@@ -218,5 +272,29 @@ onUnmounted(() => {
   to {
     opacity: 0;
   }
+}
+
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.countdown {
+  display: flex;
+  gap: 10px;
+}
+
+.countdown-unit {
+  background-color: #1f2937;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
 }
 </style>

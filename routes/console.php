@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\Schedule;
 // Every minute tasks
 
 // Runs every minute to update push data
-Schedule::command('mistPush:updatePushData')->everyMinute()->runInBackground();
+Schedule::command('broadcast:check-and-broadcast')->everyMinute()->runInBackground();
+Schedule::command('mistPush:updatePushData')->everyMinute()->withoutOverlapping(1)->runInBackground();
 
 
 // Every five minutes tasks
@@ -32,8 +33,7 @@ Schedule::command('horizon:snapshot')->everyFiveMinutes()->runInBackground();
 
 // Every thirty minutes tasks
 
-// Updates the schedule every thirty minutes
-Schedule::command('update:schedule')->everyThirtyMinutes()->withoutOverlapping(20)->runInBackground();
+//
 
 
 // Hourly tasks
@@ -42,13 +42,19 @@ Schedule::command('update:schedule')->everyThirtyMinutes()->withoutOverlapping(2
 Schedule::command('images:delete-queued')->hourly()->runInBackground();
 
 // Fetches RSS feeds every hour
-Schedule::command('fetch:rss-feeds')->hourly();
+Schedule::command('fetch:rss-feeds')->hourly()->runInBackground();
 
 // Archives RSS feeds every hour
 Schedule::job(new ArchiveSavedRssFeedItemsJob)->hourly();
 
 // Hourly maintenance task: Purges old cache files older than 1 hour
 Schedule::job(new PurgeOldCacheFilesJob(1))->hourly();
+
+
+// Every six hours tasks
+
+// Updates the schedule every six hours
+Schedule::command('update:schedule')->everySixHours()->withoutOverlapping(240)->runInBackground();
 
 
 // Daily tasks
