@@ -308,13 +308,13 @@ class GoLiveController extends Controller {
     $existingDestinations = MistStreamPushDestination::whereIn('show_id', $showIds)
         ->with('show:id,name') // Eager load the show with only the id and name
         ->get(['id', 'rtmp_url', 'rtmp_key', 'comment', 'show_id']); // Select necessary fields
-    Log::debug('Existing destinations fetched', ['destinations' => $existingDestinations]);
+//    Log::debug('Existing destinations fetched', ['destinations' => $existingDestinations]);
 
     // Remove duplicates based on rtmp_url and rtmp_key
     $existingDestinations = $existingDestinations->unique(function ($item) {
       return $item['rtmp_url'] . $item['rtmp_key'];
     });
-    Log::debug('Duplicates removed from destinations', ['uniqueDestinations' => $existingDestinations]);
+//    Log::debug('Duplicates removed from destinations', ['uniqueDestinations' => $existingDestinations]);
 
     // Add the show name to each destination
     $existingDestinations = $existingDestinations->map(function ($destination) {
@@ -323,7 +323,7 @@ class GoLiveController extends Controller {
 
       return $destination;
     });
-    Log::debug('Show names added to destinations', ['finalDestinations' => $existingDestinations]);
+//    Log::debug('Show names added to destinations', ['finalDestinations' => $existingDestinations]);
 
     return response()->json([
         'status'       => 'success',
@@ -359,7 +359,7 @@ class GoLiveController extends Controller {
     // Fetch the destinations to be copied
     $destinationsToCopy = MistStreamPushDestination::whereIn('id', $destinationIds)->get();
 
-    Log::info('Destinations to copy', ['destinationsToCopy' => $destinationsToCopy]);
+//    Log::debug('Destinations to copy', ['destinationsToCopy' => $destinationsToCopy]);
 
     $updatedDestinations = [];
 
@@ -376,7 +376,7 @@ class GoLiveController extends Controller {
       $updatedDestinations[] = $newDestination;
     }
 
-    Log::info('Copied destinations', ['updatedDestinations' => $updatedDestinations]);
+//    Log::debug('Copied destinations', ['updatedDestinations' => $updatedDestinations]);
 
     return response()->json([
         'status'       => 'success',
