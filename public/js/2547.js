@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunknottvbeta=self.webpackChunknottvbeta||[]).push([[2547],{2547:(t,e,n)=>{n.r(e),n.d(e,{default:()=>r});const u={},r=(0,n(66262).A)(u,[["render",function(t,e){return null}]])}}]);
+//# sourceMappingURL=2547.js.map

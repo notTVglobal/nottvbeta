@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunknottvbeta=self.webpackChunknottvbeta||[]).push([[3189],{83189:(t,e,s)=>{s.r(e),s.d(e,{useUploadStore:()=>a});var u=s(38839),o=function(){return{videoId:null,uploadStatus:"idle"}},a=(0,u.nY)("uploadStore",{state:o,actions:{reset:function(){Object.assign(this,{videoId:null,uploadStatus:"idle"})},setVideoId:function(t){this.videoId=t},setUploadStatus:function(t){this.uploadStatus=t}}})}}]);
+//# sourceMappingURL=3189.js.map
