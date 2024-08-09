@@ -3,11 +3,12 @@
 Last Update: August 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.9.3.34
+## v0.9.3.34b
 August 8, 2024
 
 * Move the cron scheduler from the old Console.php to the new routes/console.php as per Laravel 11 standards. 
-* Added a notification / modal to the Welcome page: "To Join the Chat Log In"
+* Added a notification / modal to the Welcome page: "To Join the Chat Log In".
+* Change formatting of Current Date on Schedule page.
 
 ## v0.9.3.33b
 July 27, 2024
@@ -18,15 +19,15 @@ July 27, 2024
 ## v0.9.3.32
 July 27, 2024
 
-* Fixed the Schedule Show component
-  * Added International Timezones
+* Fixed the Schedule Show component.
+  * Added International Timezones.
   * Refactored the components into one-time schedule and recurring schedule.
 
 ## v0.9.3.31
 July 11, 2024
 
 * Increase size of profile pictures upload from 1MB to 5MB.
-* Fixed saving the team public message when there is no upcoming broadcast
+* Fixed saving the team public message when there is no upcoming broadcast.
 * Fixed the browse teams loading duplicate teams on "Load ore Teams" on the Browse page.
 * Added icons to the Manage pages.
 * Removed some buttons from the Team, Show, Episode pages for Creators to make navigation simpler.
