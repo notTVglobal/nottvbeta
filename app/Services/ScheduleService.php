@@ -70,7 +70,7 @@ class ScheduleService {
    */
   public function fetchAndCacheSchedules(): Arrayable|JsonSerializable|array {
 
-    Log::info('Running fetchAndCacheSchedules()');
+//    Log::debug('Running fetchAndCacheSchedules()');
 
     // 1. Load the schedules
     $schedules = Schedule::with('content', 'scheduleRecurrenceDetails', 'scheduleIndexes')
@@ -102,7 +102,7 @@ class ScheduleService {
     // 7. Cache the schedules
     $cacheKey = $this->getCacheKey('all_schedules');
     Cache::put($cacheKey, $resolvedSchedules, now()->addMinutes($this->cacheExpiryMinutes)); // Cache for 45 minutes
-    Log::info('Schedules cached successfully.');
+//    Log::debug('Schedules cached successfully.');
 
     // 8. Return the schedules if needed elsewhere in this service
     return $resolvedSchedules;
@@ -243,7 +243,7 @@ class ScheduleService {
       $keys = ['schedule_cache_scheduleToday', 'schedule_cache_scheduleWeek', 'schedule_cache_scheduleFiveDaySixHour', 'schedule_cache_all_schedules'];
 
       // Invalidate keys with patterns
-      $patternKeys = Redis::connection()->keys('schedule_cache_scheduleRange_*');
+      $patternKeys = Redis::connection()->command('keys', ['schedule_cache_scheduleRange_*']);
       $keys = array_merge($keys, $patternKeys);
 
       foreach ($keys as $key) {
@@ -291,7 +291,8 @@ class ScheduleService {
 
 
   public function purgeOldCacheFiles(int $hours = 1): void {
-    $patternKeys = Redis::connection()->keys('scheduleRange_*');
+    $patternKeys = Redis::connection()->command('keys', ['scheduleRange_*']);
+
     foreach ($patternKeys as $key) {
       $content = Cache::get($key);
       if ($content) {
