@@ -51,11 +51,19 @@ class GoLiveController extends Controller {
         ->where('active', true)
         ->pluck('team_id');
 
-    // Get shows that belong to those teams and have a status of 1, 2, or 9
+    // Get shows that belong to those teams and have a status of 1, 2, 8, or 9
     return Show::whereIn('team_id', $userActiveTeamIds)
         ->whereIn('show_status_id', [1, 2, 8, 9]) // 1 = new, 2 = active, 8 = hidden, 9 = creators only
         ->with('mistStreamWildcard')
-        ->get();
+        ->with(['scheduleIndexes' => function($query) {
+          $query->orderBy('created_at')->limit(1); // Limit to the first scheduleIndex
+        }])
+        ->get()
+        ->map(function ($show) {
+          $show->nextBroadcast = optional($show->scheduleIndexes->first())->next_broadcast;
+          unset($show->scheduleIndexes); // Remove the scheduleIndexes array
+          return $show;
+        });
   }
 
   /**
@@ -275,26 +283,38 @@ class GoLiveController extends Controller {
     $episodeId = $request->input('episodeId');
     $userId = $request->user()->id; // Assuming you have user authentication
 
+    // Log the incoming request data
+    Log::debug('getExistingDestinations called', [
+        'showId' => $showId,
+        'episodeId' => $episodeId,
+        'userId' => $userId,
+    ]);
+
     $validationResponse = $this->validateShowOrEpisodeId($showId, $episodeId);
     if ($validationResponse) {
+      Log::debug('Validation failed', ['response' => $validationResponse]);
       return $validationResponse;
     }
 
     // Get the teams the user is a member of
     $teamIds = TeamMember::where('user_id', $userId)->pluck('team_id');
+    Log::debug('Team IDs fetched', ['teamIds' => $teamIds]);
 
     // Fetch all shows belonging to these teams
     $showIds = Show::whereIn('team_id', $teamIds)->pluck('id');
+    Log::debug('Show IDs fetched', ['showIds' => $showIds]);
 
     // Fetch destinations from these shows and eager load the show
     $existingDestinations = MistStreamPushDestination::whereIn('show_id', $showIds)
         ->with('show:id,name') // Eager load the show with only the id and name
         ->get(['id', 'rtmp_url', 'rtmp_key', 'comment', 'show_id']); // Select necessary fields
+    Log::debug('Existing destinations fetched', ['destinations' => $existingDestinations]);
 
     // Remove duplicates based on rtmp_url and rtmp_key
     $existingDestinations = $existingDestinations->unique(function ($item) {
       return $item['rtmp_url'] . $item['rtmp_key'];
     });
+    Log::debug('Duplicates removed from destinations', ['uniqueDestinations' => $existingDestinations]);
 
     // Add the show name to each destination
     $existingDestinations = $existingDestinations->map(function ($destination) {
@@ -303,6 +323,7 @@ class GoLiveController extends Controller {
 
       return $destination;
     });
+    Log::debug('Show names added to destinations', ['finalDestinations' => $existingDestinations]);
 
     return response()->json([
         'status'       => 'success',

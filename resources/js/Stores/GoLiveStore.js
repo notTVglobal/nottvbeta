@@ -302,7 +302,12 @@ export const useGoLiveStore = defineStore('goLiveStore', {
 
         },
         async fetchOtherShowDestinations() {
+            console.log('Starting fetchOtherShowDestinations...'); // Log at the beginning of the method
+            console.log('Current selectedShowId:', this.selectedShowId); // Log the selected show ID
+            console.log('Current selectedEpisodeId:', this.selectedEpisodeId); // Log the selected episode ID
+
             this.loadingOtherDestinations = true
+
             try {
                 const response = await axios.get('/go-live/existing-destinations', {
                     params: {
@@ -310,8 +315,10 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                         episodeId: this.selectedEpisodeId,
                     },
                 })
+                console.log('Response from fetchOtherShowDestinations:', response.data); // Log the response data
                 this.otherShowDestinations = response.data.destinations
                 this.loadingOtherDestinations = false
+                console.log('Finished fetchOtherShowDestinations successfully.'); // Log when finished successfully
             } catch (error) {
                 notificationStore.setToastNotification('Failed to fetch destinations.', 'error')
                 console.error('Error fetching other show destinations', error)

@@ -500,9 +500,9 @@ class SchedulesController extends Controller {
   }
 
   public function adminUpdateSchedule(): JsonResponse {
-    Log::debug('Updating schedule...');
+//    Log::debug('Updating schedule...');
     $response = $this->scheduleService->updateSchedule();
-    Log::debug($response['message']);
+//    Log::debug($response['message']);
 
     return response()->json($response);
   }

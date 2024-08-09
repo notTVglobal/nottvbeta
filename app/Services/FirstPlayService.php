@@ -9,6 +9,10 @@ use App\Models\SchedulesIndex;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
+// TODO: This FirstPlayService is designed to work with the Admin Channel system.
+//  each channel will update the next video to play based on the channel's source.
+//  This is a work in progress. In the meantime, we are using the BroadcastAutomationService.
+
 class FirstPlayService
 {
   public function checkAndUpdateChannels(): void {

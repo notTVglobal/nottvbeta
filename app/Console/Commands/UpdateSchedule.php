@@ -33,9 +33,9 @@ class UpdateSchedule extends Command
    *
    * @return int
    */
-  public function handle()
-  {
+  public function handle(): int {
     $this->info('Dispatching the UpdateAllScheduleBroadcastDates job...');
+    Log::info('Run command: update:schedule');
 
     try {
       dispatch(new UpdateAllScheduleBroadcastDates());

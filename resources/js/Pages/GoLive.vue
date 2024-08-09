@@ -10,7 +10,7 @@
           <h1 :class="titleClass">Go Live</h1>
         </div>
         <div :class="buttonContainerClass">
-          <CancelButton />
+          <CancelButton/>
         </div>
       </div>
 
@@ -36,8 +36,9 @@
         <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{ goLiveStore.selectedShow.name }}</Link>
       </div>
 
-      <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />
-      <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id" class="flex flex-col justify-items-center text-center" :class="streamKeyClass">
+      <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id"/>
+      <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id"
+           class="flex flex-col justify-items-center text-center" :class="streamKeyClass">
         <div v-if="generateStreamKeyError" class="text-red-700">{{ generateStreamKeyError }}</div>
         <div v-if="generateStreamKeyProcessing && !generateStreamKeyError">
           <div>Stream key is being generated...</div>
@@ -45,15 +46,20 @@
         </div>
         <div v-if="!generateStreamKeyProcessing && !generateStreamKeyError">
           <div class="mb-3">Please generate a stream key:</div>
-          <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">Generate Key</button></div>
+          <div>
+            <button @click="handleGenerateStreamKey"
+                    class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">Generate Key
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <ManageShowEpisodeNoticeModals />
+  <ManageShowEpisodeNoticeModals/>
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
@@ -62,8 +68,6 @@ import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import Message from '@/Components/Global/Modals/Messages'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import GoLive from '@/Components/Global/GoLive/GoLive'
-import { computed, onMounted, ref } from 'vue'
-import videojs from 'video.js'
 import ManageShowEpisodeNoticeModals from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeNoticeModals.vue'
 import Button from '@/Jetstream/Button.vue'
 
@@ -75,7 +79,7 @@ const videoAuxPlayerStore = useVideoAuxPlayerStore()
 const goLiveStore = useGoLiveStore()
 
 const props = defineProps({
-  shows: Object
+  shows: Object,
 })
 
 const containerClass = computed(() => {
@@ -111,61 +115,90 @@ const streamKeyClass = computed(() => {
 })
 
 onMounted(async () => {
+
+  // Use the browser's window.location to get the full URL and extract the query parameter
+  const url = new URL(window.location.href);
+  const queryShowId = url.searchParams.get('show');
+
+  // Convert the query parameter to an integer
+  const selectedShowId = queryShowId ? parseInt(queryShowId, 10) : null;
+
+  console.log('Query Show ID:', queryShowId); // This should correctly log the query parameter
+
   goLiveStore.isEpisode = null
   goLiveStore.episode = null
-  goLiveStore.fetchShows().then(() => {
-    if (goLiveStore.preSelectedShowId) {
-      goLiveStore.selectedShowId = goLiveStore.preSelectedShowId;
-    }
-  });
-});
+
+  await goLiveStore.fetchShows()
+
+  if (selectedShowId ) {
+    goLiveStore.selectedShowId = selectedShowId ;
+  } else if (goLiveStore.preSelectedShowId) {
+    goLiveStore.selectedShowId = goLiveStore.preSelectedShowId;
+    console.log('Setting query parameter for preSelectedShowId:', goLiveStore.preSelectedShowId);
+
+    // Manually update the URL with the query string
+    const newUrl = `${window.location.pathname}?show=${goLiveStore.preSelectedShowId}`;
+    window.history.replaceState({}, '', newUrl);
+  } else {
+    goLiveStore.selectedShowId = null;
+  }
+
+  // goLiveStore.fetchShows().then(() => {
+  //   if (goLiveStore.preSelectedShowId) {
+  //     goLiveStore.selectedShowId = goLiveStore.preSelectedShowId
+  //   }
+  // })
+})
 
 const reloadPlayer = async () => {
   // Use a new Promise to wait for 1 second
-  await new Promise(resolve => setTimeout(resolve, 1000)); // 1000 milliseconds = 1 second
-  // After waiting, call the reloadPlayer method
-  await goLiveStore.reloadPlayer();
+  await new Promise(resolve => setTimeout(resolve, 1000)) // 1000 milliseconds = 1 second
 
-};
+  // Update the query string with the selected show ID
+  const newUrl = `${window.location.pathname}?show=${goLiveStore.selectedShowId}`;
+  window.history.replaceState({}, '', newUrl);
+
+  // After waiting, call the reloadPlayer method
+  await goLiveStore.reloadPlayer()
+}
 
 const generateStreamKeyProcessing = ref(false)
 const generateStreamKeyError = ref('')
 
-const onChangeShow = async (event) => {
-  goLiveStore.setSelectedShowId(event);
-  await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-  await goLiveStore.reloadPlayer();
-};
-
+// const onChangeShow = async (event) => {
+//   goLiveStore.setSelectedShowId(event);
+//   await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
+//   await goLiveStore.reloadPlayer();
+// };
 
 
 const handleGenerateStreamKey = async () => {
-  generateStreamKeyProcessing.value = true; // Start processing
+  generateStreamKeyProcessing.value = true // Start processing
 
   try {
     // Await the store's generateStreamKey method
-    await goLiveStore.generateStreamKey();
+    await goLiveStore.generateStreamKey()
     // Optional: Perform any additional actions after the key has been generated
-    await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-    await goLiveStore.reloadPlayer();
+    await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
+    await goLiveStore.reloadPlayer()
   } catch (error) {
     // Check if the error is from Axios and has a response object
-    let displayError = 'Failed to generate stream key: ';
+    let displayError = 'Failed to generate stream key: '
     if (error.response && error.response.data && error.response.data.error) {
       // If there's an error message in the response data, use it
-      displayError += error.response.data.error;
+      displayError += error.response.data.error
     } else if (error.message) {
       // Fallback to the error's message if no detailed response data is available
-      displayError += error.message;
+      displayError += error.message
     } else {
       // Generic error text if neither of the above is available
-      displayError += 'An unexpected error occurred.';
+      displayError += 'An unexpected error occurred.'
     }
-    console.log(displayError);
-    generateStreamKeyError.value = displayError; // Display the detailed error message on the page
+    console.log(displayError)
+    generateStreamKeyError.value = displayError // Display the detailed error message on the page
   } finally {
-    generateStreamKeyProcessing.value = false; // End processing
+    generateStreamKeyProcessing.value = false // End processing
   }
-};
+}
 </script>
 

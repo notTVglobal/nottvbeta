@@ -36,7 +36,8 @@ class UpdateSingleScheduleAndIndex implements ShouldQueue {
     }
 
     $redisKey = 'schedule_broadcast_dates_' . $schedule->id;
-    $cacheData = json_decode(Redis::get($redisKey), true);
+    $cacheData = json_decode(Redis::connection()->get($redisKey), true);
+
 
     if ($cacheData) {
       // Format for storage
@@ -52,7 +53,10 @@ class UpdateSingleScheduleAndIndex implements ShouldQueue {
       $closestBroadcastDate = $cacheData['closestBroadcastDate'];
 
       $this->updateScheduleAndIndex($schedule, $broadcastDatesData, $closestBroadcastDate);
-      Redis::del($redisKey); // Clear the data from Redis after updating
+//      Redis::del($redisKey);
+      Redis::connection()->command('del', [$redisKey]);  // Clear the data from Redis after updating
+
+
 
 //      // Resolve ScheduleService using the service container
 //      $scheduleService = App::make(ScheduleService::class);
