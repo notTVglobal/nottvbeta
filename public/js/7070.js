@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunknottvbeta=self.webpackChunknottvbeta||[]).push([[7070],{47070:(e,t,n)=>{n.r(t),n.d(t,{useWelcomeStore:()=>o});var s=n(38839),c=function(){return{}},o=(0,s.nY)("welcomeStore",{state:c,actions:{reset:function(){Object.assign(this,{})}}})}}]);
-//# sourceMappingURL=7070.js.map

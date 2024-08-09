@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunknottvbeta=self.webpackChunknottvbeta||[]).push([[4762],{74762:(e,t,n)=>{n.r(t),n.d(t,{default:()=>c});var l=n(29726),u={class:"w-full h-full"};const c={__name:"Billing",props:{},setup:function(e){return function(e,t){return(0,l.openBlock)(),(0,l.createElementBlock)("div",u)}}}}}]);
-//# sourceMappingURL=4762.js.map

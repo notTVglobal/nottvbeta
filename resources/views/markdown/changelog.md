@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: July 27, 2024\
+Last Update: August 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.34
+August 8, 2024
+
+* Move the cron scheduler from the old Console.php to the new routes/console.php as per Laravel 11 standards. 
+* Added a notification / modal to the Welcome page: "To Join the Chat Log In"
 
 ## v0.9.3.33b
 July 27, 2024
@@ -31,21 +37,11 @@ July 11, 2024
 June 17, 2024
 
 * Fix Movie EditController.
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-* Add videoPlayer.reset before loading new source for First Play Video change.
->>>>>>> development
-=======
 * Add new VideoPlayerStore function before loading new source for First Play Video change.
 * Add video player reset before load new source.
-<<<<<<< HEAD
->>>>>>> development
-=======
 * Temporary Fix for Video Player. The VideoPlayerStore needs to be refactored now that we have a pattern defined for media content.
   * This needs to include the pattern for nowPlaying info, mediaTypes, and handling different media mime_types.
   * This needs to be scalable to handle different attached objects, such as related content and Bonus Content. As well as OTT and OSD functionality with media metadata.
->>>>>>> development
 
 ## v0.9.3.29
 June 17, 2024

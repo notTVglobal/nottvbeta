@@ -6,6 +6,7 @@ use App\Jobs\DeleteImageJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImagesDeleteQueuedCommand extends Command
 {
@@ -45,6 +46,7 @@ class ImagesDeleteQueuedCommand extends Command
       Bus::batch($jobs)->dispatch();
 
       $this->info('Batch deletion of images dispatched.');
+      Log::info('Batch deletion of images dispatched.');
 
     }
 }
