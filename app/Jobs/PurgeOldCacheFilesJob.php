@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 class PurgeOldCacheFilesJob implements ShouldQueue {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-  protected $hours;
+  protected int $hours;
 
   /**
    * Create a new job instance.

@@ -165,6 +165,7 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3'
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
 import JetButton from '@/Jetstream/Button'
 import JetInput from '@/Jetstream/Input'
@@ -173,6 +174,7 @@ import JetLabel from '@/Jetstream/Label'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 
 const welcomeStore = useWelcomeStore()
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   status: String,

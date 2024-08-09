@@ -34,8 +34,7 @@ class CheckSubscriptionStatuses implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
-    {
+    public function handle(): void {
         // get subscriptions and update users.
         Log::info('Run Check Subscription Status Job -- note: this scheduled job needs to be edited to not make so many database writes.');
         foreach (Subscription::all() as $subscription) {
