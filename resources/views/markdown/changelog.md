@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: August 8, 2024\
+Last Update: August 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.35
+August 9, 2024
+
+* New Feature: Short Url's for Shows. On the Show Manage page Teams can now create a custom short url as needed for their promotional/marketing purposes.
+  * Added the ability to reset the clicks counter.
+  * Added the ability to disable/activate the url.
 
 ## v0.9.3.34c
 August 8, 2024
