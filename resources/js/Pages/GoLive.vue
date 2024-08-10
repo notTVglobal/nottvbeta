@@ -15,7 +15,7 @@
       </div>
 
       <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 w-full" :class="showSelectorClass">
-        <label class="block mb-2 uppercase font-bold text-xs text-light text-neutral dark:text-white" for="show">
+        <label class="block my-2 uppercase font-bold text-xs text-light text-neutral dark:text-white" for="show">
           Select Show To Go Live On
         </label>
         <select
@@ -28,9 +28,23 @@
         </select>
       </div>
 
-      <div v-else class="bg-black text-center py-6 text-white mx-auto border-red-700 border-2" :class="noShowsClass">
-        You don't have any shows to go live with... please check your show(s).
+      <div v-else>
+        <div v-if="showLoader" class="bg-black text-center py-6 text-white mx-auto border-red-700 border-2">
+          <span class="loading loading-ball mr-2"/> Please wait while we load your shows...
+        </div>
+        <div v-else class="bg-black text-center py-6 text-white mx-auto border-red-700 border-2" :class="noShowsClass">
+          ⚠️ You don't have any shows to go live with... please check your show(s) from your
+          <button
+              @click.prevent="router.visit('/dashboard')"
+              class="text-white bg-transparent border-none underline underline-offset-4 cursor-pointer hover:text-gray-300"
+          >dashboard
+          </button>.
+        </div>
       </div>
+
+<!--      <div v-else class="bg-black text-center py-6 text-white mx-auto border-red-700 border-2" :class="noShowsClass">-->
+<!--        You don't have any shows to go live with... please check your show(s).-->
+<!--      </div>-->
 
       <div v-if="goLiveStore.selectedShow" class="text-center w-full hover:text-blue-500" :class="selectedShowClass">
         <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{ goLiveStore.selectedShow.name }}</Link>
@@ -70,6 +84,7 @@ import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import GoLive from '@/Components/Global/GoLive/GoLive'
 import ManageShowEpisodeNoticeModals from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeNoticeModals.vue'
 import Button from '@/Jetstream/Button.vue'
+import { router } from '@inertiajs/vue3'
 
 usePageSetup('goLive')
 
@@ -81,6 +96,8 @@ const goLiveStore = useGoLiveStore()
 const props = defineProps({
   shows: Object,
 })
+
+const showLoader = ref(true)
 
 const containerClass = computed(() => {
   return 'place-self-center flex flex-col gap-y-3 min-h-screen bg-blue-900'
@@ -116,31 +133,35 @@ const streamKeyClass = computed(() => {
 
 onMounted(async () => {
 
+  setTimeout(() => {
+    showLoader.value = false
+  }, 10000)
+
   // Use the browser's window.location to get the full URL and extract the query parameter
-  const url = new URL(window.location.href);
-  const queryShowId = url.searchParams.get('show');
+  const url = new URL(window.location.href)
+  const queryShowId = url.searchParams.get('show')
 
   // Convert the query parameter to an integer
-  const selectedShowId = queryShowId ? parseInt(queryShowId, 10) : null;
+  const selectedShowId = queryShowId ? parseInt(queryShowId, 10) : null
 
-  console.log('Query Show ID:', queryShowId); // This should correctly log the query parameter
+  console.log('Query Show ID:', queryShowId) // This should correctly log the query parameter
 
   goLiveStore.isEpisode = null
   goLiveStore.episode = null
 
   await goLiveStore.fetchShows()
 
-  if (selectedShowId ) {
-    goLiveStore.selectedShowId = selectedShowId ;
+  if (selectedShowId) {
+    goLiveStore.selectedShowId = selectedShowId
   } else if (goLiveStore.preSelectedShowId) {
-    goLiveStore.selectedShowId = goLiveStore.preSelectedShowId;
-    console.log('Setting query parameter for preSelectedShowId:', goLiveStore.preSelectedShowId);
+    goLiveStore.selectedShowId = goLiveStore.preSelectedShowId
+    console.log('Setting query parameter for preSelectedShowId:', goLiveStore.preSelectedShowId)
 
     // Manually update the URL with the query string
-    const newUrl = `${window.location.pathname}?show=${goLiveStore.preSelectedShowId}`;
-    window.history.replaceState({}, '', newUrl);
+    const newUrl = `${window.location.pathname}?show=${goLiveStore.preSelectedShowId}`
+    window.history.replaceState({}, '', newUrl)
   } else {
-    goLiveStore.selectedShowId = null;
+    goLiveStore.selectedShowId = null
   }
 
   // goLiveStore.fetchShows().then(() => {
@@ -155,8 +176,8 @@ const reloadPlayer = async () => {
   await new Promise(resolve => setTimeout(resolve, 1000)) // 1000 milliseconds = 1 second
 
   // Update the query string with the selected show ID
-  const newUrl = `${window.location.pathname}?show=${goLiveStore.selectedShowId}`;
-  window.history.replaceState({}, '', newUrl);
+  const newUrl = `${window.location.pathname}?show=${goLiveStore.selectedShowId}`
+  window.history.replaceState({}, '', newUrl)
 
   // After waiting, call the reloadPlayer method
   await goLiveStore.reloadPlayer()

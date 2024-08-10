@@ -25,6 +25,7 @@ use App\Http\Controllers\NewsTipController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\RecordingController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ShortUrlController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\SupportFileController;
 use App\Http\Controllers\TeamManagersController;
@@ -1520,6 +1521,21 @@ Route::get('/api/get-timezones', [SupportFileController::class, 'getTimezones'])
 //Route::get('/subscribe', function () {
 //    return Inertia::location('https://99fd701b.sibforms.com/serve/MUIFAAAMUBfnlUf5rgaD2zSTE_76pHldyCCXhQvz-CBNZwd9lLYST4jcuwwsudQEHOkX1isAFHV6iXvtIepJSh5RkVrZY1wUQ5yaf1j6kWyzMJ75s2FZfHOZMdO7mkE-pDv96yW4bekMX67ZevIlWsjQvdDgEXUEKqfAvvQieIM3WxRCFru3o3y3Z9K2_6N17EaTq5eAHP04AIgp');
 //});
+
+// Route for creating a new short URL (outside the /r group)
+Route::post('/short-urls', [ShortUrlController::class, 'store'])->name('short-urls.store');
+
+// Route for fetching the short URL data for a specific show
+Route::get('/api/short-urls/{show}', [ShortUrlController::class, 'show'])->name('short-urls.show');
+
+Route::post('/short-urls/{show}/reset-clicks', [ShortUrlController::class, 'resetClicks'])->name('short-urls.reset-clicks');
+
+Route::post('/short-urls/{show}/toggle-active', [ShortUrlController::class, 'toggleActive'])->name('short-urls.toggle-active');
+
+// Group for redirecting the short URLs under /r
+Route::prefix('r')->group(function () {
+  Route::get('/{custom_name}', [ShortUrlController::class, 'redirect'])->name('short-urls.redirect');
+});
 
 Route::get('/shows/bc-rising-undrip', function () {
   return redirect('/shows/bc-rising');
