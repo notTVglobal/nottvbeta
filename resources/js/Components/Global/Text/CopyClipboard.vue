@@ -2,17 +2,18 @@
   <div class="relative">
     <template v-if="mode === 'icon'">
       <button class="" @click="copyToClipboard(text, id, 'text')">
-        <font-awesome-icon icon="fa-clipboard" class="ml-2 text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+        <font-awesome-icon icon="fa-clipboard" :class="buttonColor" class="ml-2 hover:cursor-pointer"/>
       </button>
     </template>
     <template v-else>
-      <button :class="buttonClass" @click="copyToClipboard(text, id, 'text')">
+      <button :class="[buttonColor, buttonClass]" @click="copyToClipboard(text, id, 'text')">
         {{ buttonText }}
       </button>
     </template>
     <transition name="fade-slide-up">
       <div v-if="lastCopied.id === id && lastCopied.type === 'text'"
-           class="copied-animation text-green-500 absolute">
+           class="copied-animation text-green-500 absolute"
+           :class="labelPosition">
         Copied to clipboard!
       </div>
     </transition>
@@ -21,14 +22,23 @@
 <script setup>
 import { useClipboard } from '@vueuse/core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   text: String,
-  id: Number,
+  id: {
+    type: Number,
+    default: 1
+  },
   mode: {
     type: String,
     default: 'icon'
+  },
+  labelPosition: {
+    // Top: Adjust this value to position it closer or further
+    // Left: Center horizontally relative to the button
+    type: String,
+    default: '-top-10 left-0'
   },
   buttonText: {
     type: String,
@@ -36,7 +46,11 @@ const props = defineProps({
   },
   buttonClass: {
     type: String,
-    default: 'px-3 py-2 mb-2 mr-4 text-xs text-white bg-blue-600 hover:bg-blue-500 rounded-lg'
+    default: 'px-3 py-2 mb-2 mr-4 text-xs rounded-lg'
+  },
+  buttonColor: {
+    type: String,
+    default: 'blue'
   }
 })
 
@@ -54,6 +68,13 @@ function copyToClipboard(text, id, type) {
     lastCopied.value = {id: null, type: null} // Reset after the animation
   }, 3000) // Ensure this matches your animation duration
 }
+
+// Computed property to generate the class names dynamically
+const buttonColor = computed(() => {
+  const baseClass = `text-${props.buttonColor}-500`;
+  const hoverClass = `hover:text-${props.buttonColor}-700`;
+  return `${baseClass} ${hoverClass}`;
+});
 
 </script>
 <style scoped>
@@ -85,8 +106,6 @@ function copyToClipboard(text, id, type) {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Optional: adds a slight shadow for depth */
   padding: 4px 8px;
   border-radius: 4px; /* Soften the edges */
-  top: -30px; /* Adjust this value to position it closer or further */
-  left: 0; /* Center horizontally relative to the button */
   transform: translateX(-50%); /* Center it */
   white-space: nowrap; /* Keep the message on one line */
 }

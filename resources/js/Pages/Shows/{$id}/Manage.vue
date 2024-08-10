@@ -28,7 +28,8 @@
                   @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
                   class="px-4 py-2 mr-2 mb-2 h-fit text-white font-semibold bg-orange-500 hover:bg-orange-600 rounded-lg"
               >
-                <font-awesome-icon :icon="['fas', 'users-cog']" class="hover:text-blue-800 mr-1" /> Manage Team
+                <font-awesome-icon :icon="['fas', 'users-cog']" class="hover:text-blue-800 mr-1"/>
+                Manage Team
               </button>
             </div>
             <div class="flex flex-wrap-reverse justify-end gap-2">
@@ -37,24 +38,30 @@
                   @click="goLive"
                   class="px-4 py-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
               >
-                <font-awesome-icon :icon="['fas', 'broadcast-tower']" class="hover:text-blue-800 mr-1" /> Go Live
+                <font-awesome-icon :icon="['fas', 'broadcast-tower']" class="hover:text-blue-800 mr-1"/>
+                Go Live
               </button>
               <button
                   @click="appSettingStore.btnRedirect(`/shows/${show.slug}`)"
                   class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
               >
-                <font-awesome-icon :icon="['fas', 'eye']" class="hover:text-blue-800 mr-1" /> View Show
+                <font-awesome-icon :icon="['fas', 'eye']" class="hover:text-blue-800 mr-1"/>
+                View Show
               </button>
               <button
                   v-if="teamStore.can.editShow"
                   @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
                   class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
               >
-                <font-awesome-icon :icon="['fas', 'pen']" class="hover:text-blue-800 mr-1" /> Edit Show
+                <font-awesome-icon :icon="['fas', 'pen']" class="hover:text-blue-800 mr-1"/>
+                Edit Show
               </button>
 
               <DashboardButton class=""/>
 
+            </div>
+            <div class="flex flex-wrap-reverse justify-end gap-2">
+              <ShortUrlManager />
             </div>
           </div>
 
@@ -90,7 +97,7 @@
             </div>
             <div v-if="showStore.openComponent === 'showEpisodes'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
-                <ManageShowEpisodesList />
+                <ManageShowEpisodesList/>
               </div>
             </div>
 
@@ -128,7 +135,7 @@
             <div v-if="showStore.openComponent === 'showRecordings'">
               <div class="mt-4 mb-12 pb-6 shadow overflow-auto border-b border-gray-200 sm:rounded-lg">
                 <ShowRecordingsList :showRecordings="show.recordings" :showName="show.name" :showSlug="show.slug"
-                                :showImage="show.image"/>
+                                    :showImage="show.image"/>
 
                 <!--            </div>-->
               </div>
@@ -158,6 +165,7 @@ import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 import ShowRecordingsList from '@/Components/Pages/ShowRecordings/ShowRecordingsList.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import ShortUrlManager from '@/Components/Global/Url/ShortUrlManager.vue'
 
 usePageSetup('shows/slug/manage')
 
@@ -185,7 +193,7 @@ teamStore.setActiveTeam(props.team)
 teamStore.setActiveShow(props.show)
 teamStore.can = props.can
 
-const currentUsers = ref([]);
+const currentUsers = ref([])
 
 const goLive = () => {
   goLiveStore.reset()
@@ -200,12 +208,12 @@ onMounted(() => {
   Echo.join(`creator.show.${props.show.id}`)
       .here(async (users) => {
         console.log('Users currently in the channel:', users)
-        currentUsers.value = users;
+        currentUsers.value = users
         // Elect the leader (first user in the list)
         if (users.length > 0) {
-          const leader = users[0];
-          showStore.setLeader(leader);
-          console.log(`Leader elected: ${leader.name}`);
+          const leader = users[0]
+          showStore.setLeader(leader)
+          console.log(`Leader elected: ${leader.name}`)
         }
 
         console.log(showStore.isUpdatingSchedule, showStore.updatedBy)
@@ -216,29 +224,29 @@ onMounted(() => {
             await axios.put(`/api/shows/${props.show.slug}/meta`, {
               isUpdatingSchedule: false,
               updatedBy: showStore.updatedBy,
-            });
-            console.log('isUpdatingSchedule and updatedBy fields reset');
+            })
+            console.log('isUpdatingSchedule and updatedBy fields reset')
 
           } catch (error) {
-            console.error('Error updating meta:', error);
+            console.error('Error updating meta:', error)
           }
         }
       })
       .joining((user) => {
         console.log('User joined the channel:', user)
-        currentUsers.value.push(user);
+        currentUsers.value.push(user)
       })
       .leaving((user) => {
         console.log('User left the channel:', user)
-        currentUsers.value = currentUsers.value.filter(u => u.id !== user.id);
+        currentUsers.value = currentUsers.value.filter(u => u.id !== user.id)
 
         if (user.id === showStore.leader.id) {
-          console.log('Leader left, electing new leader');
+          console.log('Leader left, electing new leader')
           // Elect a new leader if the current leader leaves
           if (currentUsers.value.length > 0) {
-            const newLeader = currentUsers.value[0];
-            showStore.setLeader(newLeader);
-            console.log(`New leader elected: ${newLeader.name}`);
+            const newLeader = currentUsers.value[0]
+            showStore.setLeader(newLeader)
+            console.log(`New leader elected: ${newLeader.name}`)
           }
         }
         // If current user is still the leader, run the command
@@ -248,10 +256,10 @@ onMounted(() => {
             channel: `creator.show.${props.show.id}`,
             showSlug: props.show.slug, // Pass the show slug
           }).then(response => {
-            console.log('Successfully posted to user-left-channel:', response.data);
+            console.log('Successfully posted to user-left-channel:', response.data)
           }).catch(error => {
-            console.error('Error posting to user-left-channel:', error);
-          });
+            console.error('Error posting to user-left-channel:', error)
+          })
         }
       })
       .listen('.CreatorContentStatusUpdated', (event) => {
@@ -263,18 +271,18 @@ onMounted(() => {
         })
       })
       .listen('.ShowScheduleDetailsUpdated', (event) => {
-        console.log('ShowScheduleDetailsUpdated event received:', event);
+        console.log('ShowScheduleDetailsUpdated event received:', event)
         // Assuming `start_DateTime` needs to be transformed into `startTime`
         const formattedStartTime = event.scheduleDetails.start_DateTime
         showStore.scheduleDetails = {
           ...event.scheduleDetails,
-          startTime: formattedStartTime
-        };
-        console.log('Updated scheduleDetails.startTime:', showStore.scheduleDetails.startTime);
+          startTime: formattedStartTime,
+        }
+        console.log('Updated scheduleDetails.startTime:', showStore.scheduleDetails.startTime)
       })
       .error((error) => {
-        console.error('Error subscribing to channel:', error);
-      });
+        console.error('Error subscribing to channel:', error)
+      })
 
 })
 
