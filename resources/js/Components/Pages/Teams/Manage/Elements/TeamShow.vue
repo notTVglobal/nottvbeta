@@ -5,7 +5,7 @@
 
       <div @click="router.visit(`/shows/${show.slug}/manage`)" class="h-20 w-20 min-w-[2.5rem] hover:cursor-pointer">
         <SingleImage :image="show.image" :alt="'show cover'"
-                     class="w-full h-full object-cover"/>
+                     class="w-full h-full max-h-20 object-cover"/>
       </div>
 
 

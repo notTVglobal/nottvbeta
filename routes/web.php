@@ -447,6 +447,8 @@ Route::middleware([
 //        ->middleware('can:viewDashboard,creator')
       ->name('dashboard');
 
+  Route::post('/dashboard/dismiss-changelog', [DashboardController::class, 'dismissChangelog'])->name('dashboard.dismissChangelog');
+
 
 // VIP
 ////////

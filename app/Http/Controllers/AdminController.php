@@ -523,48 +523,143 @@ class AdminController extends Controller {
 /////////////////////////
 
   public function moviesIndex() {
+    // Map frontend column names to database columns
+    $sortColumnMap = [
+        'name'   => 'movies.name',
+        'team'   => 'teams.name',
+        'status' => 'movie_statuses.name',
+    ];
+
+    $sortBy = Request::input('sort_by', 'name');
+    $sortDirection = Request::input('sort_direction', 'asc');
+
+    // Ensure the sort column exists in the map
+    $sortColumn = $sortColumnMap[$sortBy] ?? 'movies.name';
+
+    $moviesQuery = Movie::query()
+        ->select([
+            'movies.id',
+            'movies.name',
+            'movies.slug',
+            'movies.team_id',
+            'movies.status_id',
+            'movies.movie_category_id',
+            'movies.movie_category_sub_id',
+            'movies.image_id',
+            'movies.created_at',
+            'teams.name as team_name',
+            'teams.slug as team_slug',
+            'movie_statuses.id as status_id',
+            'movie_statuses.name as status_name',
+            'images.id as image_id',
+            'images.name as image_name',
+            'images.folder as image_folder',
+            'images.cloud_folder as image_cloud_folder',
+            'images.placeholder_url as image_placeholder_url',
+            'app_settings.cdn_endpoint as image_cdn_endpoint',
+            'movie_categories.name as category_name',
+            'movie_category_subs.name as sub_category_name',
+        ])
+        ->join('teams', 'movies.team_id', '=', 'teams.id')
+        ->leftJoin('movie_statuses', 'movies.status_id', '=', 'movie_statuses.id')
+        ->leftJoin('images', 'movies.image_id', '=', 'images.id')
+        ->leftJoin('app_settings', 'images.app_setting_id', '=', 'app_settings.id')
+        ->leftJoin('movie_categories', 'movies.movie_category_id', '=', 'movie_categories.id')
+        ->leftJoin('movie_category_subs', 'movies.movie_category_sub_id', '=', 'movie_category_subs.id')
+        ->when(Request::input('search'), function ($query, $search) {
+          $query->where(function ($query) use ($search) {
+            $query->where('movies.name', 'like', "%{$search}%")
+                ->orWhere('teams.name', 'like', "%{$search}%")
+                ->orWhere('movie_categories.name', 'like', "%{$search}%")
+                ->orWhere('movie_category_subs.name', 'like', "%{$search}%");
+          });
+        })
+        ->orderBy($sortColumn, $sortDirection)
+        ->paginate(10)
+        ->withQueryString();
 
     return Inertia::render('Admin/Movies', [
-        'movies'  => Movie::with('team.user', 'image.appSetting', 'status')
-            ->when(Request::input('search'), function ($query, $search) {
-              $query->where('name', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate(10, ['*'], 'movies')
-            ->withQueryString()
-            ->through(fn($movie) => [
-                'id'            => $movie->id,
-                'name'          => $movie->name,
-                'team_id'       => $movie->team_id,
-                'team'          => [
-                    'name' => $movie->team->name ?? null,
-                    'slug' => $movie->team->slug ?? null,
-                ],
-                'image'         => [
-                    'id'              => $movie->image->id,
-                    'name'            => $movie->image->name,
-                    'folder'          => $movie->image->folder,
-                    'cdn_endpoint'    => $movie->appSetting->cdn_endpoint,
-                    'cloud_folder'    => $movie->image->cloud_folder,
-                    'placeholder_url' => $movie->image->placeholder_url,
-                ],
-                'slug'          => $movie->slug,
-                'status'        => $movie->status,
-                'copyrightYear' => $movie->created_at->format('Y'),
-                'category'      => $movie->category ? $movie->category->toArray() : null,
-                'subCategory'   => $movie->subCategory ? $movie->subCategory->toArray() : null,
-                'can'           => [
-                    'editMovie' => Auth::user()->can('edit', $movie),
-                    'viewMovie' => Auth::user()->can('view', $movie)
-                ]
-            ]),
-        'filters' => Request::only(['search']),
+        'movies'  => $moviesQuery->through(fn($movie) => [
+            'id'            => $movie->id,
+            'name'          => $movie->name,
+            'team'          => [
+                'name' => $movie->team_name,
+                'slug' => $movie->team_slug,
+            ],
+            'image'         => [
+                'id'              => $movie->image_id,
+                'name'            => $movie->image_name,
+                'folder'          => $movie->image_folder,
+                'cloud_folder'    => $movie->image_cloud_folder,
+                'placeholder_url' => $movie->image_placeholder_url,
+                'cdn_endpoint'    => $movie->image_cdn_endpoint,
+            ],
+            'slug'          => $movie->slug,
+            'status'        => [
+                'id'   => $movie->status_id,
+                'name' => $movie->status_name,
+            ],
+            'copyrightYear' => $movie->created_at ? $movie->created_at->format('Y') : null,
+            'category'      => [
+                'name' => $movie->category_name,
+            ],
+            'subCategory'   => [
+                'name' => $movie->sub_category_name,
+            ],
+            'can'           => [
+                'editMovie' => Auth::user()->can('edit', $movie),
+                'viewMovie' => Auth::user()->can('view', $movie),
+            ]
+        ]),
+        'filters' => Request::only(['search', 'sort_by', 'sort_direction']),
         'can'     => [
             'viewMovies'   => Auth::user()->can('viewAny', Movie::class),
             'editMovies'   => Auth::user()->can('edit', Movie::class),
             'createMovies' => Auth::user()->can('create', Movie::class),
         ]
     ]);
+//
+//    return Inertia::render('Admin/Movies', [
+//        'movies'  => Movie::with('team.user', 'image.appSetting', 'status')
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $query->where('name', 'like', "%{$search}%");
+//            })
+//            ->latest()
+//            ->paginate(10, ['*'], 'movies')
+//            ->withQueryString()
+//            ->through(fn($movie) => [
+//                'id'            => $movie->id,
+//                'name'          => $movie->name,
+//                'team_id'       => $movie->team_id,
+//                'team'          => [
+//                    'name' => $movie->team->name ?? null,
+//                    'slug' => $movie->team->slug ?? null,
+//                ],
+//                'image'         => [
+//                    'id'              => $movie->image->id,
+//                    'name'            => $movie->image->name,
+//                    'folder'          => $movie->image->folder,
+//                    'cdn_endpoint'    => $movie->appSetting->cdn_endpoint,
+//                    'cloud_folder'    => $movie->image->cloud_folder,
+//                    'placeholder_url' => $movie->image->placeholder_url,
+//                ],
+//                'slug'          => $movie->slug,
+//                'status'        => $movie->status,
+//                'copyrightYear' => $movie->created_at->format('Y'),
+//                'category'      => $movie->category ? $movie->category->toArray() : null,
+//                'subCategory'   => $movie->subCategory ? $movie->subCategory->toArray() : null,
+//                'can'           => [
+//                    'editMovie' => Auth::user()->can('edit', $movie),
+//                    'viewMovie' => Auth::user()->can('view', $movie)
+//                ]
+//            ]),
+//        'filters' => Request::only(['search']),
+//        'can'     => [
+//            'viewMovies'   => Auth::user()->can('viewAny', Movie::class),
+//            'editMovies'   => Auth::user()->can('edit', Movie::class),
+//            'createMovies' => Auth::user()->can('create', Movie::class),
+//        ]
+//    ]);
   }
 
 
@@ -573,47 +668,147 @@ class AdminController extends Controller {
 
   public function showsIndex() {
 
+
+    // Map frontend column names to database columns
+    $sortColumnMap = [
+        'name'           => 'shows.name',
+        'showRunnerName' => 'users.name',
+        'teamName'       => 'teams.name',
+        'status'         => 'show_statuses.name',
+    ];
+
+    // Get sorting parameters from the request
+    $sortBy = Request::input('sort_by', 'name'); // Default to sorting by name
+    $sortDirection = Request::input('sort_direction', 'asc'); // Default to ascending order
+
+    // Add sorting for totalEpisodes by using a subquery
+    if ($sortBy === 'totalEpisodes') {
+      $showsQuery = Show::with([
+          'team:id,name,slug',
+          'user:id,name',
+          'image:id,name,folder,cloud_folder,placeholder_url',
+          'image.appSetting:id,cdn_endpoint',
+          'status:id,name'
+      ])
+          ->join('teams', 'shows.team_id', '=', 'teams.id') // Join the teams table
+          ->leftJoin('users', 'shows.user_id', '=', 'users.id') // Join the users table
+          ->leftJoin('show_statuses', 'shows.show_status_id', '=', 'show_statuses.id') // Join the statuses table
+          ->selectRaw('shows.*, (SELECT COUNT(*) FROM show_episodes WHERE show_episodes.show_id = shows.id) as totalEpisodes') // Subquery to count episodes
+          ->orderBy('totalEpisodes', $sortDirection); // Sort by total episodes
+    } else {
+      // Ensure the sort column exists in the map
+      $sortColumn = $sortColumnMap[$sortBy] ?? 'shows.name';
+
+      $showsQuery = Show::with([
+          'team:id,name,slug',
+          'user:id,name',
+          'image:id,name,folder,cloud_folder,placeholder_url',
+          'image.appSetting:id,cdn_endpoint',
+          'status:id,name'
+      ])
+          ->withCount('showEpisodes') // Add this to get the count of related shows
+          ->join('teams', 'shows.team_id', '=', 'teams.id') // Join the teams table
+          ->leftJoin('users', 'shows.user_id', '=', 'users.id') // Join the users table
+          ->leftJoin('show_statuses', 'shows.show_status_id', '=', 'show_statuses.id') // Join the statuses table
+          ->when(Request::input('search'), function ($query, $search) {
+            $query->where('shows.name', 'like', "%{$search}%")
+                ->orWhere('shows.ulid', 'like', "%{$search}%");
+          })
+          ->select([
+              'shows.id',
+              'shows.name',
+              'shows.slug',
+              'shows.team_id',
+              'shows.user_id',
+              'shows.image_id',
+              'shows.show_status_id',
+              'shows.created_at'
+          ]) // Select only necessary columns
+          ->orderBy($sortColumn, $sortDirection); // Order by the correct column
+    }
+
+    // Execute the query and paginate the results
+    $shows = $showsQuery->paginate(10)->withQueryString();
+
+    // Transform the data before returning it to Inertia
+    $shows->getCollection()->transform(function ($show) {
+      return [
+          'id'             => $show->id,
+          'name'           => $show->name,
+          'team_id'        => $show->team_id,
+          'teamName'       => $show->team->name,
+          'teamSlug'       => $show->team->slug,
+          'showRunnerId'   => $show->user_id,
+          'showRunnerName' => $show->user->name,
+          'image'          => [
+              'id'              => $show->image->id,
+              'name'            => $show->image->name,
+              'folder'          => $show->image->folder,
+              'cdn_endpoint'    => $show->image->appSetting->cdn_endpoint ?? null,
+              'cloud_folder'    => $show->image->cloud_folder,
+              'placeholder_url' => $show->image->placeholder_url,
+          ],
+          'slug'           => $show->slug,
+          'totalEpisodes'  => $show->showEpisodes->count(), // Count episodes directly here
+          'status'         => $show->status->name,
+          'statusId'       => $show->status->id,
+          'copyrightYear'  => $show->created_at->format('Y'),
+          'can'            => [
+              'editShow' => Auth::user()->can('edit', $show),
+              'viewShow' => Auth::user()->can('viewShowManagePage', $show)
+          ]
+      ];
+    });
+
     return Inertia::render('Admin/Shows', [
-        'shows'   => Show::with('team', 'user', 'image', 'showEpisodes', 'status')
-            ->when(Request::input('search'), function ($query, $search) {
-              $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('ulid', 'like', "%" . $search . "%");;
-            })
-            ->latest()
-            ->paginate(10, ['*'], 'shows')
-            ->withQueryString()
-            ->through(fn($show) => [
-                'id'             => $show->id,
-                'name'           => $show->name,
-                'team_id'        => $show->team_id,
-                'teamName'       => $show->team->name,
-                'teamSlug'       => $show->team->slug,
-                'showRunnerId'   => $show->user_id,
-                'showRunnerName' => $show->user->name,
-                'image'          => [
-                    'id'              => $show->image->id,
-                    'name'            => $show->image->name,
-                    'folder'          => $show->image->folder,
-                    'cdn_endpoint'    => $show->appSetting->cdn_endpoint,
-                    'cloud_folder'    => $show->image->cloud_folder,
-                    'placeholder_url' => $show->image->placeholder_url,
-                ],
-                'slug'           => $show->slug,
-                'totalEpisodes'  => $show->showEpisodes->count(),
-                'status'         => $show->status->name,
-                'statusId'       => $show->status->id,
-                'copyrightYear'  => $show->created_at->format('Y'),
-                'can'            => [
-                    'editShow' => Auth::user()->can('edit', $show),
-                    'viewShow' => Auth::user()->can('viewShowManagePage', $show)
-                ]
-            ]),
-        'filters' => Request::only(['search']),
+        'shows'   => $shows,
+        'filters' => Request::only(['search', 'sort_by', 'sort_direction']),
         'can'     => [
-//                'viewShows' => Auth::user()->can('view', Show::class),
             'viewCreator' => Auth::user()->can('viewCreator', User::class),
         ]
     ]);
+
+//    return Inertia::render('Admin/Shows', [
+//        'shows'   => Show::with('team', 'user', 'image', 'showEpisodes', 'status')
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $query->where('name', 'like', "%{$search}%")
+//                  ->orWhere('ulid', 'like', "%" . $search . "%");;
+//            })
+//            ->latest()
+//            ->paginate(10, ['*'], 'shows')
+//            ->withQueryString()
+//            ->through(fn($show) => [
+//                'id'             => $show->id,
+//                'name'           => $show->name,
+//                'team_id'        => $show->team_id,
+//                'teamName'       => $show->team->name,
+//                'teamSlug'       => $show->team->slug,
+//                'showRunnerId'   => $show->user_id,
+//                'showRunnerName' => $show->user->name,
+//                'image'          => [
+//                    'id'              => $show->image->id,
+//                    'name'            => $show->image->name,
+//                    'folder'          => $show->image->folder,
+//                    'cdn_endpoint'    => $show->appSetting->cdn_endpoint,
+//                    'cloud_folder'    => $show->image->cloud_folder,
+//                    'placeholder_url' => $show->image->placeholder_url,
+//                ],
+//                'slug'           => $show->slug,
+//                'totalEpisodes'  => $show->showEpisodes->count(),
+//                'status'         => $show->status->name,
+//                'statusId'       => $show->status->id,
+//                'copyrightYear'  => $show->created_at->format('Y'),
+//                'can'            => [
+//                    'editShow' => Auth::user()->can('edit', $show),
+//                    'viewShow' => Auth::user()->can('viewShowManagePage', $show)
+//                ]
+//            ]),
+//        'filters' => Request::only(['search']),
+//        'can'     => [
+////                'viewShows' => Auth::user()->can('view', Show::class),
+//            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+//        ]
+//    ]);
   }
 
 ////////////  EPISODES INDEX
@@ -621,39 +816,131 @@ class AdminController extends Controller {
 
   public function episodesIndex() {
 
+    // Map frontend column names to database columns
+    $sortColumnMap = [
+        'name'           => 'show_episodes.name',
+        'show'           => 'shows.name',
+        'teamName'       => 'teams.name',
+        'showRunnerName' => 'users.name',
+        'status'         => 'show_episode_statuses.name',
+        'created_at'     => 'show_episodes.created_at',
+    ];
+
+    // Get sorting parameters from the request
+    $sortBy = Request::input('sort_by', 'created_at'); // Default to sorting by created_at
+    $sortDirection = Request::input('sort_direction', 'desc'); // Default to descending order
+
+    // Ensure the sort column exists in the map
+    $sortColumn = $sortColumnMap[$sortBy] ?? 'show_episodes.created_at';
+
+    // Build the query with necessary columns, eager loading, and search functionality
+    $episodesQuery = ShowEpisode::with([
+        'image:id,name,folder,cloud_folder,placeholder_url,show_id',
+        'image.appSetting:id,cdn_endpoint',
+    ])
+        ->join('shows', 'show_episodes.show_id', '=', 'shows.id')
+        ->join('teams', 'shows.team_id', '=', 'teams.id')
+        ->leftJoin('users', 'shows.user_id', '=', 'users.id')
+        ->leftJoin('show_episode_statuses', 'show_episodes.show_episode_status_id', '=', 'show_episode_statuses.id')
+        ->when(Request::input('search'), function ($query, $search) {
+          $query->where(function ($query) use ($search) {
+            $query->where('show_episodes.name', 'like', "%{$search}%")
+                ->orWhere('show_episodes.ulid', 'like', "%{$search}%")
+                ->orWhereHas('show', function ($query) use ($search) {
+                  $query->where('shows.name', 'like', "%{$search}%")
+                      ->orWhereHas('team', function ($query) use ($search) {
+                        $query->where('teams.name', 'like', "%{$search}%");
+                      });
+                });
+          });
+        })
+        ->select([
+            'show_episodes.id',
+            'show_episodes.ulid',
+            'show_episodes.name',
+            'show_episodes.slug',
+            'shows.name as show_name',
+            'shows.slug as show_slug',
+            'teams.name as team_name',
+            'teams.slug as team_slug',
+            'users.id as show_runner_id',
+            'users.name as show_runner_name',
+            'show_episodes.created_at',
+            'show_episode_statuses.name as status_name',
+            'show_episode_statuses.id as status_id',
+            'show_episodes.image_id',
+        ]) // Select only necessary columns
+        ->orderBy($sortColumn, $sortDirection);
+
+    // Execute the query and paginate the results with specific columns
+    $episodes = $episodesQuery->paginate(10)->withQueryString();
+
+    // Transform the data before returning it to Inertia
+    $episodes->getCollection()->transform(function ($episode) {
+      return [
+          'id'             => $episode->id,
+          'ulid'           => $episode->ulid,
+          'name'           => $episode->name,
+          'slug'           => $episode->slug,
+          'show'           => $episode->show_name,
+          'showSlug'       => $episode->show_slug,
+          'teamName'       => $episode->team_name,
+          'teamSlug'       => $episode->team_slug,
+          'showRunnerId'   => $episode->show_runner_id,
+          'showRunnerName' => $episode->show_runner_name,
+          'image'          => [
+              'id'              => $episode->image->id ?? null,
+              'name'            => $episode->image->name ?? null,
+              'folder'          => $episode->image->folder ?? null,
+              'cdn_endpoint'    => $episode->image->appSetting->cdn_endpoint ?? null,
+              'cloud_folder'    => $episode->image->cloud_folder ?? null,
+              'placeholder_url' => $episode->image->placeholder_url ?? null,
+          ],
+          'status'         => $episode->status_name,
+          'statusId'       => $episode->status_id,
+          'created_at'     => $episode->created_at->format('M d, Y'),
+      ];
+    });
+
+    // Return the results to Inertia
     return Inertia::render('Admin/Episodes', [
-        'episodes' => ShowEpisode::with('show.team', 'show.image', 'show.user', 'show', 'showEpisodeStatus')
-            ->when(Request::input('search'), function ($query, $search) {
-              $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('ulid', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate(10, ['*'], 'episodes')
-            ->withQueryString()
-            ->through(fn($episode) => [
-                'ulid'           => $episode->ulid,
-                'name'           => $episode->name,
-                'slug'           => $episode->slug,
-                'show'           => $episode->show->name,
-                'showSlug'       => $episode->show->slug,
-                'teamName'       => $episode->show->team->name,
-                'teamSlug'       => $episode->show->team->slug,
-                'showRunnerId'   => $episode->show->user_id,
-                'showRunnerName' => $episode->show->user->name,
-                'image'          => [
-                    'id'              => $episode->show->image->id,
-                    'name'            => $episode->show->image->name,
-                    'folder'          => $episode->show->image->folder,
-                    'cdn_endpoint'    => $episode->show->appSetting->cdn_endpoint,
-                    'cloud_folder'    => $episode->show->image->cloud_folder,
-                    'placeholder_url' => $episode->image->placeholder_url,
-                ],
-                'status'         => $episode->showEpisodeStatus->name,
-                'statusId'       => $episode->showEpisodeStatus->id,
-                'created_at'     => $episode->created_at->format('M d, Y'),
-            ]),
-        'filters'  => Request::only(['search']),
+        'episodes' => $episodes,
+        'filters'  => Request::only(['search', 'sort_by', 'sort_direction']),
     ]);
+//
+//    return Inertia::render('Admin/Episodes', [
+//        'episodes' => ShowEpisode::with('show.team', 'show.image', 'show.user', 'show', 'showEpisodeStatus')
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $query->where('name', 'like', "%{$search}%")
+//                  ->orWhere('ulid', 'like', "%{$search}%");
+//            })
+//            ->latest()
+//            ->paginate(10, ['*'], 'episodes')
+//            ->withQueryString()
+//            ->through(fn($episode) => [
+//                'ulid'           => $episode->ulid,
+//                'name'           => $episode->name,
+//                'slug'           => $episode->slug,
+//                'show'           => $episode->show->name,
+//                'showSlug'       => $episode->show->slug,
+//                'teamName'       => $episode->show->team->name,
+//                'teamSlug'       => $episode->show->team->slug,
+//                'showRunnerId'   => $episode->show->user_id,
+//                'showRunnerName' => $episode->show->user->name,
+//                'image'          => [
+//                    'id'              => $episode->show->image->id,
+//                    'name'            => $episode->show->image->name,
+//                    'folder'          => $episode->show->image->folder,
+//                    'cdn_endpoint'    => $episode->show->appSetting->cdn_endpoint,
+//                    'cloud_folder'    => $episode->show->image->cloud_folder,
+//                    'placeholder_url' => $episode->image->placeholder_url,
+//                ],
+//                'status'         => $episode->showEpisodeStatus->name,
+//                'statusId'       => $episode->showEpisodeStatus->id,
+//                'created_at'     => $episode->created_at->format('M d, Y'),
+//            ]),
+//        'filters'  => Request::only(['search']),
+//    ]);
   }
 
 ////////////  TEAMS INDEX
@@ -675,43 +962,108 @@ class AdminController extends Controller {
       return $logo;
     }
 
+    // Define sortable columns
+    $sortableColumns = ['name', 'teamCreator', 'memberSpots', 'totalShows'];
+
+    // Get the sort_by and sort_direction from the request, with defaults
+    $sortBy = Request::input('sort_by', 'name'); // Default to 'name'
+    $sortDirection = Request::input('sort_direction', 'asc'); // Default to 'asc'
+
+    // Ensure that the sort_by column is valid
+    if (!in_array($sortBy, $sortableColumns)) {
+      $sortBy = 'name'; // Default fallback
+    }
+
+
+//    return Inertia::render('Admin/Teams', [
+//        'teams'   => Team::with('user', 'image', 'shows', 'teamStatus')
+//            ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
+//              $query->where('name', 'like', "%{$search}%");
+//            })
+//            ->latest()
+//            ->paginate(10, ['*'], 'teams')
+//            ->withQueryString()
+//            ->through(fn($team) => [
+//                'id'          => $team->id,
+//                'name'        => $team->name,
+//                'logo'        => getLogo($team),
+//                'image'       => [
+//                    'id'              => $team->image->id,
+//                    'name'            => $team->image->name,
+//                    'folder'          => $team->image->folder,
+//                    'cdn_endpoint'    => $team->appSetting->cdn_endpoint,
+//                    'cloud_folder'    => $team->image->cloud_folder,
+//                    'placeholder_url' => $team->image->placeholder_url,
+//                ],
+//                'teamCreator' => $team->user->name,
+//                'status'      => $team->teamStatus,
+//                'slug'        => $team->slug,
+//                'totalShows'  => $team->shows->count(),
+//                'memberSpots' => $team->members()->count(), // Calculate member spots dynamically
+//                'totalSpots'  => $team->totalSpots,
+//                'can'         => [
+//                    'editTeam' => Auth::user()->can('update', $team),
+//                    'viewTeam' => Auth::user()->can('viewTeamManagePage', $team)
+//                ]
+//            ]),
+//        'filters' => Request::only(['search']),
+//        'can'     => [
+//            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+//        ]
+//    ]);
+
+    $teams = Team::with('user', 'image', 'shows', 'teamStatus')
+        ->withCount('shows') // Add this to get the count of related shows
+        ->when(Request::input('search'), function ($query, $search) {
+          $query->where('name', 'like', "%{$search}%");
+        })
+        // Modify the query to order by the selected column and direction
+        ->when($sortBy === 'teamCreator', function ($query) use ($sortDirection) {
+          $query->join('users', 'teams.user_id', '=', 'users.id')
+              ->orderBy('users.name', $sortDirection);
+        }, function ($query) use ($sortBy, $sortDirection) {
+          if ($sortBy === 'totalShows') {
+            $query->orderBy('shows_count', $sortDirection); // Sort by the count of shows
+          } else if ($sortBy === 'memberSpots') {
+            $query->withCount('members')->orderBy('members_count', $sortDirection); // Sort by member spots
+          } else {
+            $query->orderBy($sortBy, $sortDirection);
+          }
+        })
+        ->paginate(10, ['teams.*']) // Select teams.* to avoid ambiguous columns
+        ->withQueryString()
+        ->through(fn($team) => [
+            'id'          => $team->id,
+            'name'        => $team->name,
+            'logo'        => getLogo($team),
+            'image'       => [
+                'id'              => $team->image->id,
+                'name'            => $team->image->name,
+                'folder'          => $team->image->folder,
+                'cdn_endpoint'    => $team->appSetting->cdn_endpoint,
+                'cloud_folder'    => $team->image->cloud_folder,
+                'placeholder_url' => $team->image->placeholder_url,
+            ],
+            'teamCreator' => $team->user->name,
+            'status'      => $team->teamStatus,
+            'slug'        => $team->slug,
+            'totalShows'  => $team->shows->count(),
+            'memberSpots' => $team->members()->count(),
+            'totalSpots'  => $team->totalSpots,
+            'can'         => [
+                'editTeam' => Auth::user()->can('update', $team),
+                'viewTeam' => Auth::user()->can('viewTeamManagePage', $team)
+            ]
+        ]);
 
     return Inertia::render('Admin/Teams', [
-        'teams'   => Team::with('user', 'image', 'shows', 'teamStatus')
-            ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
-              $query->where('name', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate(10, ['*'], 'teams')
-            ->withQueryString()
-            ->through(fn($team) => [
-                'id'          => $team->id,
-                'name'        => $team->name,
-                'logo'        => getLogo($team),
-                'image'       => [
-                    'id'              => $team->image->id,
-                    'name'            => $team->image->name,
-                    'folder'          => $team->image->folder,
-                    'cdn_endpoint'    => $team->appSetting->cdn_endpoint,
-                    'cloud_folder'    => $team->image->cloud_folder,
-                    'placeholder_url' => $team->image->placeholder_url,
-                ],
-                'teamCreator' => $team->user->name,
-                'status'      => $team->teamStatus,
-                'slug'        => $team->slug,
-                'totalShows'  => $team->shows->count(),
-                'memberSpots' => $team->members()->count(), // Calculate member spots dynamically
-                'totalSpots'  => $team->totalSpots,
-                'can'         => [
-                    'editTeam' => Auth::user()->can('update', $team),
-                    'viewTeam' => Auth::user()->can('viewTeamManagePage', $team)
-                ]
-            ]),
-        'filters' => Request::only(['search']),
+        'teams'   => $teams,
+        'filters' => Request::only(['search', 'sort_by', 'sort_direction']),
         'can'     => [
             'viewCreator' => Auth::user()->can('viewCreator', User::class),
         ]
     ]);
+
   }
 
   public function deleteUser(HttpRequest $request) {

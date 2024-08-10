@@ -23,12 +23,23 @@ class TeamDetailedResource extends JsonResource {
       return $this->image ? (new ImageResource($this->image))->resolve() : null;
     });
 
+    // Resolve the team members if they are paginated
+    $members = $this->additional['members'] ?? null;
+
+    if ($members) {
+      $members = $members->setCollection(
+          $members->getCollection()->map(function ($member) {
+            return (new TeamMemberResource($member))->resolve();
+          })
+      );
+    }
+
     // Resolve the team members if they are loaded
-    $members = $this->whenLoaded('members', function () {
-      return $this->members->map(function ($member) {
-        return (new TeamMemberResource($member))->resolve();
-      });
-    });
+//    $members = $this->whenLoaded('members', function () {
+//      return $this->members->map(function ($member) {
+//        return (new TeamMemberResource($member))->resolve();
+//      });
+//    });
 
     $managers = $this->whenLoaded('managers', function () {
       return $this->managers->map(function ($manager) {
@@ -56,7 +67,8 @@ class TeamDetailedResource extends JsonResource {
             'twitter_handle' => $this->twitter_handle ?? null,
         ],
         'totalSpots'       => $this->totalSpots,
-        'members'          => $members ?? null,
+//        'members'          => $members ?? null,
+        'members'          => $members ? $members->toArray() : null, // Pass the paginated members
         'teamOwner'        => $teamOwnerData,
         'teamLeader'       => $teamLeaderData,
         'managers'         => $managers,
