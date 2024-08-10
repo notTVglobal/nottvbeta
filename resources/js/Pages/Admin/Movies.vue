@@ -44,14 +44,14 @@
                         <th scope="col" class="min-w-[8rem] px-6 py-3">
                           Poster
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Movie Name
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('name')">
+                          Movie Name <span v-if="sortBy === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Team
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('team')">
+                          Team <span v-if="sortBy === 'team'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Status
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('status')">
+                          Status <span v-if="sortBy === 'status'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
                         <th scope="col" class="px-6 py-3">
                           <!--Manage/Edit-->
@@ -85,7 +85,7 @@
                             {{ movie.name }}
                           </Link>
                           <div class="text-sm text-gray-700 mt-1">
-                            {{movie.category?.name}} &middot; {{movie.subCategory?.name}}
+                            {{ movie.category?.name }} &middot; {{ movie.subCategory?.name }}
                           </div>
                         </th>
                         <th
@@ -97,36 +97,8 @@
                             {{ movie.team.name }}
                           </Link>
                         </th>
-                        <th
-                            scope="row"
-                            class="px-6 py-4 whitespace-nowrap"
-                        >
-                          <div v-if="movie.status.id===1" class="font-semibold text-pink-500">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===2" class="font-semibold text-green-600">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===3" class="font-medium text-orange-400">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===4" class="text-gray-500">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===5"
-                               class="font-semibold py-1 px-2 w-fit rounded-md bg-black text-gray-50">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===6" class="font-italic text-gray-500">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===7" class="font-medium font-italic text-red-600">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===8" class="font-semibold font-italic text-gray-500">
-                            {{ movie.status.name }}
-                          </div>
-                          <div v-if="movie.status.id===9" class="font-semibold text-green-600">
+                        <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                          <div :class="statusClasses(movie.status.id)">
                             {{ movie.status.name }}
                           </div>
                         </th>
@@ -168,14 +140,14 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
-import { ref, watch } from "vue"
-import throttle from "lodash/throttle"
+import { ref, watch } from 'vue'
+import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import AdminHeader from "@/Components/Pages/Admin/AdminHeader.vue"
-import Pagination from "@/Components/Global/Paginators/Pagination"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import AdminHeader from '@/Components/Pages/Admin/AdminHeader.vue'
+import Pagination from '@/Components/Global/Paginators/Pagination'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
 usePageSetup('adminMovies')
 
@@ -185,16 +157,64 @@ let props = defineProps({
   movies: Object,
   filters: Object,
   can: Object,
-});
+})
 
 let search = ref(props.filters.search)
+let sortBy = ref(props.filters.sort_by || 'name')
+let sortDirection = ref(props.filters.sort_direction || 'asc')
 
-watch(search, throttle(function (value) {
-  router.get('/admin/movies', {search: value}, {
+function toggleSort(column) {
+  if (sortBy.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortBy.value = column
+    sortDirection.value = 'asc'
+  }
+  router.get('/admin/movies', {
+    search: search.value,
+    sort_by: sortBy.value,
+    sort_direction: sortDirection.value,
+  }, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
+    replace: true,
+  })
+}
+
+watch([search, sortBy, sortDirection], throttle(function () {
+  router.get('/admin/movies', {
+    search: search.value,
+    sort_by: sortBy.value,
+    sort_direction: sortDirection.value,
+  }, {
+    preserveState: true,
+    replace: true,
+  })
+}, 300))
+
+const statusClasses = (statusId) => {
+  switch (statusId) {
+    case 1:
+      return 'font-semibold text-pink-500';
+    case 2:
+      return 'font-semibold text-green-600';
+    case 3:
+      return 'font-medium text-orange-400';
+    case 4:
+      return 'text-gray-500';
+    case 5:
+      return 'font-semibold py-1 px-2 w-fit rounded-md bg-black text-gray-50';
+    case 6:
+      return 'font-italic text-gray-500';
+    case 7:
+      return 'font-medium font-italic text-red-600';
+    case 8:
+      return 'font-semibold font-italic text-gray-500';
+    case 9:
+      return 'font-semibold text-green-600';
+    default:
+      return 'text-gray-500'; // Default styling if statusId doesn't match any case
+  }
+};
 
 </script>
 

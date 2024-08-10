@@ -245,6 +245,9 @@
 
 
     </div>
+
+    <ChangelogModal :showChangelog="Boolean(showChangelog)" :changelog="changelog" v-if="showChangelog && changelog"/>
+
   </div>
 
 </template>
@@ -261,6 +264,7 @@ import MyAssignments from '@/Components/Pages/Dashboard/Elements/MyAssignments/M
 import MyTeams from '@/Components/Pages/Dashboard/Elements/MyTeams/MyTeams'
 import MyShows from '@/Components/Pages/Dashboard/Elements/MyShows//MyShows'
 import NotificationPanel from '@/Components/Pages/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel'
+import ChangelogModal from '@/Components/Pages/Dashboard/Modals/ChangelogModal.vue'
 // import CreatorsShowCalendar from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendar.vue'
 
 usePageSetup('dashboard')
@@ -300,6 +304,19 @@ const userStore = useUserStore()
 // and save it in the UserStore.
 let props = defineProps({
   id: null,
+  changelog: {
+    type: Object,
+    required: true,
+    default: () => ({
+      version: '',
+      content: '',
+    }),
+  },
+  showChangelog: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   isAdmin: null,
   isCreator: null,
   isNewsPerson: null,

@@ -239,6 +239,10 @@ class User extends Authenticatable implements MustVerifyEmail {
 //        ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
   }
 
+  public function meta(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(UserMeta::class);
+  }
+
   public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Show::class);
   }

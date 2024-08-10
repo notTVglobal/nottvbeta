@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ImageResource;
+use App\Services\ChangelogService;
 use App\Models\AppSetting;
 use App\Models\Creator;
 use App\Models\NewsPerson;
@@ -13,16 +14,33 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Inertia\Response;
 
 class DashboardController extends Controller {
+
+  protected ChangelogService $changelogService;
+
+  public function __construct(ChangelogService $changelogService)
+  {
+    $this->changelogService = $changelogService;
+  }
+
   /**
    * Display a listing of the resource.
    *
    * @return Response
    */
-  public function index() {
+  public function index(): Response {
     $user = Auth::user();
+
+    $latestChangelog = $this->changelogService->getLatestChangelog();
+
+    $userMeta = \App\Models\UserMeta::firstOrCreate(['user_id' => $user->id]);
+    $changelogSeen = json_decode($userMeta->changelog_seen, true);
+
+    $showChangelog = !$changelogSeen || !in_array($latestChangelog['version'], $changelogSeen);
+
     $creator = Creator::where('user_id', $user->id)->first();
     $welcomeMessage = AppSetting::first()->welcome_message;
     $showCount = Show::count();
@@ -115,7 +133,9 @@ class DashboardController extends Controller {
       // the others will use Axios to get the data
       // and save it in the UserStore.
         'id'                    => auth()->user()->id,
-        'firstTimeCreator'      => $creator && (bool)$creator->first_time,
+        'showChangelog'         => (bool) $showChangelog,
+        'changelog'             => $showChangelog ? $latestChangelog : null,
+        'firstTimeCreator'      => $creator && (bool) $creator->first_time,
         'welcomeMessage'        => $welcomeMessage,
         'isAdmin'               => $isAdmin,
         'isCreator'             => $isCreator,
@@ -182,6 +202,22 @@ class DashboardController extends Controller {
             'viewNewsroom'  => Auth::user()->can('viewAny', NewsPerson::class)
         ],
         'canGoLive'             => $canGoLive,
+    ]);
+  }
+
+  public function dismissChangelog(Request $request): \Illuminate\Http\JsonResponse {
+    $user = Auth::user();
+    $latestChangelog = $request->input('version');
+
+    $userMeta = \App\Models\UserMeta::firstOrCreate(['user_id' => $user->id]);
+    $changelogSeen = json_decode($userMeta->changelog_seen, true) ?? [];
+    $changelogSeen[] = $latestChangelog;
+
+    $userMeta->update(['changelog_seen' => json_encode($changelogSeen)]);
+
+    // Return a JSON response with a success message
+    return response()->json([
+        'message' => 'Changelog dismissed successfully.'
     ]);
   }
 }

@@ -6,9 +6,20 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.9.3.35
 August 9, 2024
 
+* New Feature: Changelog Notification Modal.
+  * This will appear whenever there is a new version number.
 * New Feature: Short Url's for Shows. On the Show Manage page Teams can now create a custom short url as needed for their promotional/marketing purposes.
   * Added the ability to reset the clicks counter.
   * Added the ability to disable/activate the url.
+* Fixed the Paginator not showing with the list of Shows on the Team Manage page.
+* Added a Paginator to the Team Members list on the Team Manage page.
+* Added sortable columns to Admin Teams/Shows/Episodes/Movies pages.
+* Improved the search on the Admin/Episodes page to include show names and team names.
+* Improved database queries:
+  * Shows on the Team Manage page.
+  * Team Members on the Team Manage page.
+  * Admin/Shows and Admin/Episodes page.
+  * Admin/Movies page to team names, category names and sub category names.
 
 ## v0.9.3.34c
 August 8, 2024

@@ -347,14 +347,32 @@ class TeamsController extends Controller {
   public function manage(Team $team): \Inertia\Response {
 
     // Load necessary relationships
+//    $team->load([
+//        'user',
+//        'teamLeader',
+//        'managers',
+//        'members',
+//        'image.appSetting',
+//        'scheduleIndexes'
+//    ]);
+
+    // Load necessary relationships except for members, selecting only required columns
     $team->load([
-        'user',
-        'teamLeader',
-        'managers',
-        'members',
-        'image.appSetting',
-        'scheduleIndexes'
+        'user:id,name,email', // Select only required columns from user
+        'teamLeader:id,user_id', // Select only required columns from teamLeader
+        'teamLeader.user:id,name,email', // Select only required columns from user related to teamLeader
+        'managers:id,name,email', // Select only required columns from managers
+        'image:id,name,team_id,app_setting_id', // Select only required columns from image
+        'image.appSetting:id,cdn_endpoint', // Select only required columns from appSetting
+        'scheduleIndexes:id,team_id,content_type,content_id', // Select only required columns from scheduleIndexes
     ]);
+
+    // Paginate and eager load the team members with specific columns
+    $members = $team->members()
+        ->select(['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path']) // Select only the necessary columns
+        ->withPivot(['active', 'team_profile_is_public', 'created_at', 'updated_at']) // Include pivot data
+        ->paginate(5, ['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path'], 'members') // Select the necessary columns for pagination
+        ->withQueryString();
 
     // Retrieve shows
     $shows = $this->getShows($team->id);
@@ -365,7 +383,11 @@ class TeamsController extends Controller {
 //
 
     // Resolve the team data using TeamDetailedResource
-    $teamData = (new TeamDetailedResource($team))->resolve();
+//    $teamData = (new TeamDetailedResource($team))->resolve();
+
+    // Pass the paginated members to the resource
+    $teamData = (new TeamDetailedResource($team))->additional(['members' => $members])->resolve();
+
 
     // Log the resolved team data
 //    Log::debug('Resolved Team Data:', $teamData);
@@ -415,14 +437,53 @@ class TeamsController extends Controller {
   }
 
   protected function getShows($teamId) {
-    $shows = Show::with(['team', 'image.appSetting', 'category', 'subCategory', 'showRunner.user'])
+    $shows = Show::with([
+        'team:id,name', // Select only necessary columns from team
+        'image:id,name,team_id,app_setting_id', // Select necessary columns from image
+        'image.appSetting:id,cdn_endpoint', // Select necessary columns from related appSetting
+        'category:id,name,description', // Select necessary columns from category
+        'subCategory:id,name,description', // Select necessary columns from subCategory
+        'showRunner:id,user_id', // Select necessary columns from showRunner (assuming showRunner is another model)
+        'showRunner.user:id,name' // Select necessary columns from user related to showRunner
+    ])
         ->where('team_id', $teamId)
+        ->select([
+            'id',
+            'ulid',
+            'name',
+            'notes',
+            'slug',
+            'description',
+            'image_id',
+            'show_category_id', // Corrected from 'category_id'
+            'show_category_sub_id', // Corrected from 'category_id'
+            'show_runner', // ID for showRunner relationship
+        ]) // Select only necessary columns from shows
         ->latest()
-        ->paginate(5)
+        ->paginate(5, ['id', 'ulid', 'name', 'notes', 'slug', 'description', 'image_id', 'category_id', 'sub_category_id', 'show_runner_id'], 'shows')
         ->withQueryString();
 
     // Convert each show into a ShowResource, automatically handling the formatting
-    return ShowResource::collection($shows);
+//    return $shows;
+    // Convert each show into a ShowResource, automatically handling the formatting
+    $showResourceCollection = ShowResource::collection($shows);
+
+    // Add pagination information manually to match the original structure
+    return [
+        'data' => $showResourceCollection->collection->map->toArray(null), // Flatten the data
+        'current_page' => $shows->currentPage(),
+        'first_page_url' => $shows->url(1),
+        'from' => $shows->firstItem(),
+        'last_page' => $shows->lastPage(),
+        'last_page_url' => $shows->url($shows->lastPage()),
+        'links' => $shows->toArray()['links'], // Get the raw links array from the paginator
+        'next_page_url' => $shows->nextPageUrl(),
+        'path' => $shows->path(),
+        'per_page' => $shows->perPage(),
+        'prev_page_url' => $shows->previousPageUrl(),
+        'to' => $shows->lastItem(),
+        'total' => $shows->total(),
+    ];
   }
 //    public function manage(Team $team, Show $show)
 //    {
