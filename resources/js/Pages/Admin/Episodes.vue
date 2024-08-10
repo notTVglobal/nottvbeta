@@ -39,21 +39,22 @@
                         <th scope="col" class="min-w-[8rem] px-6 py-3">
 
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Episode Name
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('name')">
+                          Episode Name <span v-if="sortBy === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Show
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('show')">
+                          Show <span v-if="sortBy === 'show'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          ULID
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('ulid')">
+                          ULID <span v-if="sortBy === 'ulid'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Team
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('teamName')">
+                          Team <span v-if="sortBy === 'teamName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Status
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('status')">
+                          Status <span v-if="sortBy === 'status'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
+
                       </tr>
                       </thead>
                       <tbody>
@@ -132,13 +133,16 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3'
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import throttle from "lodash/throttle"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+
+usePageSetup('adminEpisodes')
 
 const appSettingStore = useAppSettingStore()
 
@@ -149,12 +153,35 @@ let props = defineProps({
 });
 
 let search = ref(props.filters.search)
+let sortBy = ref(props.filters.sort_by || 'name');
+let sortDirection = ref(props.filters.sort_direction || 'asc');
+
+function toggleSort(column) {
+  if (sortBy.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortBy.value = column;
+    sortDirection.value = 'asc';
+  }
+  router.get('/admin/episodes', {
+    search: search.value,
+    sort_by: sortBy.value,
+    sort_direction: sortDirection.value,
+  }, {
+    preserveState: true,
+    replace: true
+  });
+}
 
 appSettingStore.currentPage = 'adminEpisodes'
 appSettingStore.showFlashMessage = true;
 
-watch(search, throttle(function (value) {
-  router.get('/admin/episodes', {search: value}, {
+watch([search, sortBy, sortDirection], throttle(function () {
+  router.get('/admin/episodes', {
+    search: search.value,
+    sort_by: sortBy.value,
+    sort_direction: sortDirection.value,
+  }, {
     preserveState: true,
     replace: true
   });

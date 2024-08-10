@@ -40,24 +40,24 @@
                       <thead
                           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                       >
-                      <tr class="">
+                      <tr>
                         <th scope="col" class="min-w-[8rem] px-6 py-3">
                           Poster
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Show Name
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('name')">
+                          Show Name <span v-if="sortBy === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Show Runner
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('showRunnerName')">
+                          Show Runner <span v-if="sortBy === 'showRunnerName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Team
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('teamName')">
+                          Team <span v-if="sortBy === 'teamName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          # of Episodes
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('totalEpisodes')">
+                          # of Episodes <span v-if="sortBy === 'totalEpisodes'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Status
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('status')">
+                          Status <span v-if="sortBy === 'status'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
                         <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
                           <!--Manage/Edit-->
@@ -210,14 +210,29 @@ let props = defineProps({
   can: Object,
 });
 
-let search = ref(props.filters.search)
+let search = ref(props.filters.search);
+let sortBy = ref(props.filters.sort_by || 'name');
+let sortDirection = ref(props.filters.sort_direction || 'asc');
 
-watch(search, throttle(function (value) {
-  router.get('/admin/shows', {search: value}, {
+watch([search, sortBy, sortDirection], throttle(function () {
+  router.get('/admin/shows', {
+    search: search.value,
+    sort_by: sortBy.value,
+    sort_direction: sortDirection.value,
+  }, {
     preserveState: true,
     replace: true
   });
 }, 300));
+
+function toggleSort(column) {
+  if (sortBy.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortBy.value = column;
+    sortDirection.value = 'asc';
+  }
+}
 
 </script>
 

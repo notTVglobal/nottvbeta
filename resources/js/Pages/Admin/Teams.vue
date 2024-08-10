@@ -37,27 +37,23 @@
                     <table
                         class="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-x-auto"
                     >
-                      <thead
-                          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                      >
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>
-                        <th scope="col" class="min-w-[8rem] px-6 py-3">
-                          Logo
+                        <th scope="col" class="min-w-[8rem] px-6 py-3">Logo</th>
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('name')">
+                          Team Name <span v-if="sortBy === 'name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Team Name
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('teamCreator')">
+                          Team Creator <span v-if="sortBy === 'teamCreator'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          Team Creator
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('memberSpots')">
+                          # of Members <span v-if="sortBy === 'memberSpots'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                          # of Members
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          # of Shows
+                        <th scope="col" class="px-6 py-3 cursor-pointer" @click="toggleSort('totalShows')">
+                          # of Shows <span v-if="sortBy === 'totalShows'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                         </th>
                         <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
-                          <!--Manage/Edit-->
+                          <!-- Manage/Edit-->
                         </th>
                       </tr>
                       </thead>
@@ -162,14 +158,37 @@ let props = defineProps({
   can: Object,
 });
 
+const sortBy = ref('name'); // Default sort by 'name'
+const sortDirection = ref('asc'); // Default sort direction 'ascending'
+
 let search = ref(props.filters.search)
 
-watch(search, throttle(function (value) {
-  router.get('/admin/teams', {search: value}, {
+// watch(search, throttle(function (value) {
+//   router.get('/admin/teams', {search: value}, {
+//     preserveState: true,
+//     replace: true
+//   });
+// }, 300));
+
+watch([search, sortBy, sortDirection], throttle(function () {
+  router.get('/admin/teams', {
+    search: search.value,
+    sort_by: sortBy.value,
+    sort_direction: sortDirection.value,
+  }, {
     preserveState: true,
     replace: true
   });
 }, 300));
+
+function toggleSort(column) {
+  if (sortBy.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortBy.value = column;
+    sortDirection.value = 'asc';
+  }
+}
 
 function getBadgeColor(statusId) {
   switch (statusId) {

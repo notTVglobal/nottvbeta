@@ -46,10 +46,14 @@
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-      <TeamMember v-for="member in team.members" :member="member" :team="team" :key="member.id" :can="can"/>
+      <TeamMember v-for="member in team.members.data" :member="member" :team="team" :key="member.id" :can="can"/>
       </tbody>
     </table>
   </div>
+
+  <!-- Paginator -->
+  <Pagination :data="team.members" class="mt-6"/>
+
   <div class="text-right px-3 mt-2 text-gray-600 italic w-full"
        v-show="!teamStore.spotsRemaining">
     There are no remaining team spots. Edit the team to add more.
@@ -67,6 +71,7 @@ import { computed, onBeforeMount } from 'vue'
 import { useTeamStore } from "@/Stores/TeamStore"
 import TeamMember from "@/Components/Pages/Teams/Manage/Elements/TeamMember"
 import TeamAddMember from "@/Components/Pages/Teams/Manage/Elements/TeamAddMember"
+import Pagination from '@/Components/Global/Paginators/Pagination.vue'
 
 const teamStore = useTeamStore()
 
