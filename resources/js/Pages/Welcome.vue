@@ -55,18 +55,28 @@
               <div v-if="!welcomeStore.showOverlay && modal"
                    class="fixed inset-0 flex items-center justify-center text-center bg-black bg-opacity-50 z-50"
                    @click="closeModal">
-                <div class="bg-yellow-500 text-black rounded-lg p-6 w-full max-w-sm mx-auto shadow-lg relative"
-                     @click.stop>
-                  <h2 class="text-2xl font-bold mb-4">Join the Chat</h2>
-                  <p class="mb-6">Please log in to join the chat and connect with others.</p>
+                <div class="bg-yellow-500 text-black rounded-lg p-6 w-full max-w-sm mx-auto shadow-lg relative" @click.stop>
+                  <div class="mt-3 mb-6">
+                    <p class="text-lg font-semibold text-black mb-2">
+                      🚀 Please log in to join the chat and connect with others!
+                    </p>
+                    <p class="text-sm text-gray-800">
+                      🎥 If multiple shows are scheduled, pick your favorite from the schedule!
+                    </p>
+                  </div>
                   <button @click="loginAndHideModal"
-                          class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                          class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mr-2">
                     Log In
                   </button>
+                  <button @click="closeModal"
+                          class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700">
+                    Watch Now
+                  </button>
                   <button @click="closeModal" class="absolute top-2 right-2 text-black hover:text-gray-600">
-                    &#10005; <!-- This is the 'X' symbol for closing -->
+                    &#10005;
                   </button>
                 </div>
+
               </div>
 
             </div>

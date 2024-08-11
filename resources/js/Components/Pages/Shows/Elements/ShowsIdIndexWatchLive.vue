@@ -1,41 +1,53 @@
 <template>
   <div class="flex flex-row flex-wrap gap-2 mt-2 items-center">
 
-    <div v-if="show?.nextBroadcast" class="flex flex-row flex-wrap gap-2 mt-2 items-center">
-      <div
-           class="flex flex-col bg-gray-300 border border-gray-500 p-6 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start">
-        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Next Broadcast</h2>
+
+    <div v-if="show?.nextBroadcast" class="flex flex-row flex-wrap gap-4 mt-4 items-center">
+      <div v-if="!showStore?.isLive"
+          class="flex flex-col bg-gray-900 border border-yellow-500 p-8 rounded-lg shadow-lg justify-center items-center xl:justify-start xl:items-start transition-transform transform hover:scale-105">
+        <h2 class="text-3xl font-bold mb-4 text-yellow-400">Next Broadcast</h2>
         <p class="text-lg">
           <ConvertDateTimeToTimeAgo :dateTime="show?.nextBroadcast?.next_broadcast" :timezone="userStore.timezone"
-                                    :class="`text-yellow-700`"/>
+                                    :class="`text-yellow-500`"/>
         </p>
-        <p class="text-lg text-gray-800">
-          {{ userStore.formatLongDateTimeFromUtcToUserTimezone(show?.nextBroadcast?.next_broadcast) }}
+        <p class="text-xl text-yellow-300 mb-2">
+          {{ dayjs(show?.nextBroadcast?.next_broadcast).tz(userStore.timezone).format('MMMM D, YYYY h:mm A') }}
           {{ userStore.timezoneAbbreviation }}
         </p>
+        <p class="text-lg text-gray-400">
 
-
-    </div>
+        </p>
+      </div>
 
       <ZoomLinkButton/>
     </div>
 
-    <div v-if="showStore?.isLive" class="flex flex-col justify-center ml-5">
 
-      <div class="flex text-yellow-400">
-        Started&nbsp;
+    <div v-if="showStore?.isLive" class="flex flex-col justify-center ml-5 space-y-3">
+
+      <!-- Time Display -->
+      <div class="flex items-center text-yellow-400">
+        <span class="mr-1">Started</span>
         <ConvertDateTimeToTimeAgo
             :key="scheduleStore.baseTime"
             v-if="showStore?.liveScheduledStartTime"
             :dateTime="showStore?.liveScheduledStartTime"
-            :class="`text-yellow-400`"/>
+            class="text-yellow-400"
+        />
       </div>
 
-      <button @click="watchNow" class="btn bg-red-600 hover:bg-red-700 text-white">
+      <!-- Watch Button -->
+      <button
+          @click="watchNow"
+          :class="isWatchingLive ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'"
+          class="btn text-white px-6 py-2 rounded-md shadow-md transition duration-300 ease-in-out"
+      >
         <span v-if="isWatchingLive">Now Playing</span>
         <span v-else>Watch Live Now</span>
       </button>
+
     </div>
+
   </div>
 </template>
 <script setup>
@@ -49,6 +61,9 @@ import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTi
 import { computed, onMounted } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
 import ZoomLinkButton from '@/Components/Global/Buttons/ZoomLinkButton.vue'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
 
 const userStore = useUserStore()
 const showStore = useShowStore()
@@ -56,6 +71,9 @@ const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
 const scheduleStore = useScheduleStore()
 const teamStore = useTeamStore()
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const page = usePage()
 
@@ -86,24 +104,23 @@ const watchNow = async () => {
     type: 'application/x-mpegURL', // MIME type for video.js
   }
 
-  // Common details for nowPlayingStore
+// Common details for nowPlayingStore
   const commonDetails = {
-    primaryName: props.show.name, // Show or Movie name
-    // secondaryName: props.show.name, // Episode name
-    primaryUrl: `shows/${props.show.slug}`,
-    // secondaryUrl: `shows/${props.show.slug}`,
-    channelName: '',
-    image: props.show.image,
-    team: props.team,
-    creative_commons: props.show.firstPlayEpisode.creative_commons,
-    category: props.show?.category.name,
-    subCategory: props.show?.subCategory.name,
+    primaryName: props.show?.name ?? 'Unknown Name', // Fallback to 'Unknown Name' if null or undefined
+    primaryUrl: `shows/${props.show?.slug ?? 'unknown'}`, // Fallback to 'unknown' if slug is null or undefined
+    channelName: '', // Assuming this is intentionally left empty
+    image: props.show?.image ?? 'default-image.jpg', // Fallback to a default image if null or undefined
+    team: props.team ?? 'Unknown Team', // Fallback to 'Unknown Team' if null or undefined
+    creative_commons: props.show?.firstPlayEpisode?.creative_commons ?? 'Unknown License', // Fallback to 'Unknown License'
+    category: props.show?.category?.name ?? 'Uncategorized', // Fallback to 'Uncategorized'
+    subCategory: props.show?.subCategory?.name ?? 'No Subcategory', // Fallback to 'No Subcategory'
+    description: props.show?.description ?? 'No description available', // Fallback to 'No description available'
+    // Optional properties can also have fallbacks if needed
     // release_year: '',
-    // copyrightYear: props.show.firstPlayEpisode.copyrightYear,
-    description: props.show.description,
-    // releaseDateTime: props.show.firstPlayEpisode.release_dateTime,
-    // episodeNumber: props.show.firstPlayEpisode.episode_number,
-    // episodeId: props.show.firstPlayEpisode.ulid,
+    // copyrightYear: props.show?.firstPlayEpisode?.copyrightYear ?? 'Unknown Year',
+    // releaseDateTime: props.show?.firstPlayEpisode?.release_dateTime ?? 'Unknown Date',
+    // episodeNumber: props.show?.firstPlayEpisode?.episode_number ?? 'Unknown Episode',
+    // episodeId: props.show?.firstPlayEpisode?.ulid ?? 'Unknown ID',
   }
 
   // Set the currently playing media in nowPlayingStore

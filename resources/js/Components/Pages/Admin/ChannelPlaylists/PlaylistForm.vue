@@ -1,20 +1,20 @@
 <template>
-  <div>
+  <div class="bg-white text-black">
     <div>
       <label for="name" class="block font-medium text-gray-700">Name:</label>
-      <input type="text" v-model="store.name" id="name" class="input input-bordered w-full mt-1" required>
+      <input type="text" v-model="store.name" id="name" class="input input-bordered input-info bg-white text-black w-full mt-1" required>
     </div>
     <div>
       <label for="description" class="block font-medium text-gray-700">Description:</label>
-      <textarea v-model="store.description" id="description" class="input input-bordered w-full mt-1"></textarea>
+      <textarea v-model="store.description" id="description" class="input input-bordered input-info bg-white text-black w-full mt-1"></textarea>
     </div>
     <div>
       <label for="url" class="block font-medium text-gray-700">URL:</label>
-      <input type="text" v-model="store.url" id="url" class="input input-bordered w-full mt-1">
+      <input type="text" v-model="store.url" id="url" class="input input-bordered input-info bg-white text-black w-full mt-1">
     </div>
     <div>
       <label for="type" class="block font-medium text-gray-700">Type:</label>
-      <select v-model="store.type" id="type" class="input input-bordered w-full mt-1">
+      <select v-model="store.type" id="type" class="input input-bordered input-info bg-white text-black w-full mt-1">
         <option value="regular">Regular</option>
         <option value="event">Event</option>
         <option value="special">Special</option>
@@ -26,7 +26,7 @@
       </label>
       <div class="flex">
         <input type="datetime-local" v-model="store.startTime" id="start_dateTime"
-               class="input input-bordered w-full mt-1">
+               class="input input-bordered input-info bg-white text-black w-full mt-1">
         <button type="button" @click.prevent="clearStartDateTime"
                 class="btn bg-gray-300 hover:bg-gray-400 text-black ml-2 mt-1">Clear
         </button>
@@ -41,7 +41,7 @@
       </label>
       <div class="flex">
         <input type="datetime-local" v-model="store.endTime" id="end_dateTime"
-               class="input input-bordered w-full mt-1">
+               class="input input-bordered input-info bg-white text-black w-full mt-1">
         <button type="button" @click.prevent="clearEndDateTime"
                 class="btn bg-gray-300 hover:bg-gray-400 text-black ml-2 mt-1">Clear
         </button>
@@ -52,12 +52,12 @@
     </div>
     <div>
       <label for="priority" class="block font-medium text-gray-700">Priority:</label>
-      <input type="number" v-model="store.priority" id="priority" class="input input-bordered w-full mt-1">
+      <input type="number" v-model="store.priority" id="priority" class="input input-bordered input-info bg-white text-black w-full mt-1">
     </div>
     <div>
       <label for="repeat_mode" class="block font-medium text-gray-700">Repeat Mode: <span
           class="text-sm text-gray-500">(What happens when the playlist reaches the end?)</span></label>
-      <select v-model="store.repeat_mode" id="repeat_mode" class="input input-bordered w-full mt-1">
+      <select v-model="store.repeat_mode" id="repeat_mode" class="input input-bordered input-info bg-white text-black w-full mt-1">
         <option value="repeat_all">Repeat All</option>
         <option value="repeat_last">Repeat Last One Only</option>
         <option value="shuffle">Shuffle</option>
@@ -67,7 +67,7 @@
     </div>
     <div v-if="store.repeat_mode === 'next_playlist'">
       <label for="next_playlist" class="block font-medium text-gray-700">Select Playlist:</label>
-      <select v-model="store.next_playlist_id" id="next_playlist" class="input input-bordered w-full mt-1">
+      <select v-model="store.next_playlist_id" id="next_playlist" class="input input-bordered input-info bg-white text-black w-full mt-1">
         <option v-for="playlist in store.playlists" :key="playlist.id" :value="playlist.id">
           {{ playlist.name }}
         </option>

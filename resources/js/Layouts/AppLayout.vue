@@ -46,17 +46,18 @@
         <GeneralServiceNotification v-if="user"/>
       </Teleport>
       <OrangeFeedbackBox
-          v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage && appSettingStore.showOrangeFeedbackButton"/>
+          v-if="user && !appSettingStore.showNavDropdown && !ottStore.showOttContent && appSettingStore.fullPage && appSettingStore.showOrangeFeedbackButton && appSettingStore.osd"/>
       <ToastNotification/>
-      <SocialSharingModal v-if="socialShareStore.socialSharingModal" />
+      <SocialSharingModal v-if="socialShareStore.socialSharingModal"/>
 
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from 'vue'
+import { ref, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 
+import { eventBus } from '@/Utilities/EventBus'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useWelcomeStore } from '@/Stores/WelcomeStore'
@@ -111,7 +112,7 @@ let isStreamPage = ref()
 let showLogin = ref(false)
 let reloadVideoMainPlayer = 0
 
-const page = usePage().props;
+const page = usePage().props
 
 let props = defineProps({
   user: Object,
@@ -123,13 +124,13 @@ let props = defineProps({
 // schedule updates.
 
 
-const showHomescreenPopup = ref(page.showHomescreenPopup);
+const showHomescreenPopup = ref(page.showHomescreenPopup)
 
 const closePopup = () => {
-  showHomescreenPopup.value = false;
+  showHomescreenPopup.value = false
   // Clear the session variable after showing the popup
-  router.post('/clear-popup-session');
-};
+  router.post('/clear-popup-session')
+}
 
 const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
 
@@ -189,6 +190,7 @@ onMounted(async () => {
     // console.log('get user data on AppLayout')
     // Call any other user-specific initialization functions here
   }
+  eventBus.start(); // Start the global timer when the app mounts
 })
 
 onBeforeUnmount(() => {
@@ -198,10 +200,13 @@ onBeforeUnmount(() => {
   appSettingStore.removeResizeListener()
 })
 
+onUnmounted(() => {
+  eventBus.stop(); // Stop the global timer when the app unmounts, if needed
+})
+
 function setPage() {
   isStreamPage = appSettingStore.currentPage === 'stream'
 }
-
 
 
 function disconnect() {

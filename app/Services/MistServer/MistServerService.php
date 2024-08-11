@@ -333,6 +333,7 @@ class MistServerService {
         ]
     ];
 
+//    Log::debug('MistStream add or update stream', ['data' => $data]);
 
     $response = $this->send($data);
 

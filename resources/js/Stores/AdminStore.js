@@ -212,10 +212,32 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         removeItem(item) {
-            // Correctly mutate the state using 'this.items'
-            this.items = this.items.filter(i => i.id !== item.id);
-            console.log('Item removed:', item);
-            console.log('Updated items:', this.items);
+            // Extract the raw value or the properties you need for debugging
+            const rawItem = item._rawValue || item._value || item;
+
+            console.log('Attempting to remove item:', {
+                id: rawItem.id,
+                name: rawItem.name,
+                type: rawItem.type,
+            }); // Log the specific properties of the item
+
+            const index = this.items.findIndex(i => i.id === rawItem.id);
+            if (index !== -1) {
+                this.items.splice(index, 1); // Mutate the array to ensure reactivity
+                console.log('Item removed:', {
+                    id: rawItem.id,
+                    name: rawItem.name,
+                    type: rawItem.type,
+                });
+                console.log('Updated items array:', this.items);
+            } else {
+                console.warn('Item not found in items array:', {
+                    id: rawItem.id,
+                    name: rawItem.name,
+                    type: rawItem.type,
+                });
+            }
+
         },
         // Add more actions as needed
         // this next one should probably go in AdminChannelStore

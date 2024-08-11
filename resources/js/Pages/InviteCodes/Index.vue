@@ -50,6 +50,7 @@
                 <button
                     @click.prevent="exportCodes"
                     class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white"
+                    disabled
                 >
                   Export Codes
                 </button>
