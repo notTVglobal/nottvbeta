@@ -139,23 +139,23 @@ class AddContentToSchedule implements ShouldQueue {
 //        'end_date'   => $formattedEndDate,
 //    ]);
 
-    Log::debug('Check incoming start dateTime', [
-        'start_date' => $start_DateTime,
-        'end_date'   => $end_DateTime,
-        'timezone'   => $timezone,
-    ]);
+//    Log::debug('Check incoming start dateTime', [
+//        'start_date' => $start_DateTime,
+//        'end_date'   => $end_DateTime,
+//        'timezone'   => $timezone,
+//    ]);
 
-    Log::debug('Check formatted start dateTime', [
-      'start_date' => $formattedStartDateTime,
-      'end_date'   => $formattedEndDateTime,
-      'timezone'   => $timezone,
-    ]);
+//    Log::debug('Check formatted start dateTime', [
+//      'start_date' => $formattedStartDateTime,
+//      'end_date'   => $formattedEndDateTime,
+//      'timezone'   => $timezone,
+//    ]);
 
-    Log::debug('Check UTC start dateTime', [
-        'start_date' => $startDateTimeUtc,
-        'end_date'   => $endDateTimeUtc,
-        'timezone'   => $timezone,
-    ]);
+//    Log::debug('Check UTC start dateTime', [
+//        'start_date' => $startDateTimeUtc,
+//        'end_date'   => $endDateTimeUtc,
+//        'timezone'   => $timezone,
+//    ]);
 
 
     // Query for overlapping schedules
@@ -270,7 +270,7 @@ class AddContentToSchedule implements ShouldQueue {
           'next_broadcast' => $schedule->start_dateTime_utc,  // Assuming start_dateTime is the next broadcast
       ];
 
-      Log::debug('Next Broadcast: ', $schedulesIndexData);
+//      Log::debug('Next Broadcast: ', $schedulesIndexData);
 
       // Create the SchedulesIndex entry
       SchedulesIndex::create($schedulesIndexData);
