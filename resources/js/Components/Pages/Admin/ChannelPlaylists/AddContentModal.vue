@@ -1,13 +1,13 @@
 <template>
   <div class="modal" :class="{ 'modal-open': showModal }">
-    <div class="modal-box">
+    <div class="modal-box bg-white text-black">
       <form @submit.prevent="handleFetchContent" v-if="!contentFetched">
         <h3 class="font-bold text-lg mb-2">Add Content to Fill Gap</h3>
         <div class="form-control mb-2">
           <label class="label">
             <span class="label-text">Select Content Type</span>
           </label>
-          <select v-model="contentType" class="select select-bordered">
+          <select v-model="contentType" class="select select-bordered bg-white text-black">
             <option value="ShowEpisode">Show Episode</option>
             <option value="Movie">Movie</option>
             <option value="NewsStory">News Story</option>
@@ -30,7 +30,7 @@
 
       <div v-else class="mt-6">
         <div class="flex justify-between items-center mb-4">
-          <input v-model="searchQuery" @input="handleSearch" type="text" class="input input-bordered w-3/4" placeholder="Search content...">
+          <input v-model="searchQuery" @input="handleSearch" type="text" class="input input-bordered input-info bg-white text-black w-3/4" placeholder="Search content...">
           <button @click.prevent="resetContent" class="btn btn-secondary">Back</button>
         </div>
         <h4 class="font-semibold text-lg mb-4 text-gray-800">Available {{ availableContentType }}</h4>

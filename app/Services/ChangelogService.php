@@ -99,6 +99,12 @@ class ChangelogService {
       } elseif (stripos($line, 'Fixed') !== false) {
         $emoji = '🐛';
         $formattedLine = preg_replace('/^Fixed/i', '<strong>Fixed</strong>', $line);
+      }  elseif (stripos($line, 'Updated') !== false) {
+        $emoji = '🔄';
+        $formattedLine = preg_replace('/^Updated/i', '<strong>Updated</strong>', $line);
+      } elseif (stripos($line, 'Changed') !== false) {  // Added condition for "Changed"
+        $emoji = '⚙️';
+        $formattedLine = preg_replace('/^Changed/i', '<strong>Changed</strong>', $line);
       } else {
         $formattedLine = "<strong>{$line}</strong>";
       }

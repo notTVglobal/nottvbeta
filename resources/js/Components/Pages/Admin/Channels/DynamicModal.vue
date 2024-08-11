@@ -1,6 +1,6 @@
 <template>
   <dialog id="dynamicModal" class="modal">
-    <div class="modal-box w-11/12 max-w-5xl">
+    <div class="modal-box w-11/12 max-w-5xl bg-white text-black">
 
       <div class="flex flex-row justify-between align-bottom">
         <div class="flex gap-2">
@@ -137,7 +137,7 @@
                 </button>
                 <button
                     v-if="adminStore.currentType === 'channelPlaylist' && item.status === 'Inactive'"
-                    @click="removeChannelPlaylist(item)"
+                    @click="openConfirmRemoveChannelPlaylistModal(item)"
                     class="ml-1 px-2 py-1 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
                 >
                   <font-awesome-icon icon="fa-trash-can" class="text-xs"/>
@@ -174,7 +174,7 @@
         </template>
         <template #form-description>
           Note: You cannot edit the stream name (right now), it will only create a new stream. This is a bug that needs
-          to be fixed in the AddOrUpdateMistStreamJob
+          to be fixed in the AddOrUpdateMistStreamJob. To fix this we need to get the list of streams... look for this particular stream and then prepare the streamDetails with the optional parameters that are shown in the stream call. I think that's why it's not updating... because the update may not have all the parameters.
         </template>
         <template #button-label>
           Update
@@ -182,7 +182,7 @@
       </AddOrUpdateMistStreamModal>
 
       <dialog id="confirmSelectionModal" class="modal">
-        <div class="modal-box">
+        <div class="modal-box bg-white text-black">
           <h3 class="font-bold text-lg">Confirm Selection</h3>
           <p class="py-4">
             Are you sure you want to select <span id="selectedItemName"></span>?
@@ -195,7 +195,7 @@
       </dialog>
 
       <dialog id="confirmRemoveModal" class="modal">
-        <div class="modal-box">
+        <div class="modal-box bg-white text-black">
           <h3 class="font-bold text-lg">Confirm Remove</h3>
           <p class="py-4">
             Are you sure you want to remove <span id="selectedForRemovalItemName"></span>?
@@ -203,6 +203,19 @@
           <div class="modal-action">
             <button class="btn" @click="confirmRemove" :disabled="adminStore.loading">Confirm</button>
             <button class="btn" @click="closeConfirmRemoveModal" :disabled="adminStore.loading">Cancel</button>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="confirmRemoveChannelPlaylistModal" class="modal">
+        <div class="modal-box bg-white text-black">
+          <h3 class="font-bold text-lg">Confirm Remove</h3>
+          <p class="py-4">
+            Are you sure you want to remove <span id="selectedForRemovalItemName"></span>?
+          </p>
+          <div class="modal-action">
+            <button class="btn" @click="removeChannelPlaylist" :disabled="adminStore.loading">Confirm</button>
+            <button class="btn" @click="closeConfirmChannelPlaylistRemoveModal" :disabled="adminStore.loading">Cancel</button>
           </div>
         </div>
       </dialog>
@@ -272,6 +285,9 @@ const items = computed(() => adminStore.filteredItems)
 const currentItemId = computed(() => adminStore.activeItem)
 const selectedPlaylist = ref(null) // Reactive property for the selected playlist
 
+// Create a reactive reference to force updates
+const forceUpdate = ref(0);
+
 // const searchItems = () => {
 //   adminStore.searchItems(adminStore.type, searchTerm.value);
 // };
@@ -313,6 +329,7 @@ const confirmSelection = async () => {
 const confirmRemove = async () => {
   if (selectedItem.value) {
     removeMistStream(selectedItem.value.name)
+    adminStore.removeItem(selectedItem.value)
     document.getElementById('confirmRemoveModal').close() // Close the modal
     // Handle additional logic for item selection if necessary
   }
@@ -329,7 +346,7 @@ const openEditModal = (item) => {
 
 const removeMistStream = (name) => {
   router.post(route('mistStream.remove'), {'name': name})
-  document.getElementById('dynamicModal').close()
+  // document.getElementById('dynamicModal').close()
 }
 
 const openEditPlaylistModal = (item) => {
@@ -344,13 +361,33 @@ const closeEditPlaylistModal = () => {
   document.getElementById('updateChannelPlaylistModal').close()
 }
 
-const removeChannelPlaylist = (item) => {
-  channelPlaylistStore.removePlaylist(item.id)
-  adminStore.removeItem(item)
+const channelPlaylistRemoveItemHolder = ref()
+
+const openConfirmRemoveChannelPlaylistModal = (item) => {
+  channelPlaylistRemoveItemHolder.value = item
+  document.getElementById('confirmRemoveChannelPlaylistModal').showModal()
+}
+
+const removeChannelPlaylist = () => {
+  channelPlaylistStore.removePlaylist(channelPlaylistRemoveItemHolder.value.id)
+  adminStore.removeItem(channelPlaylistRemoveItemHolder)
+  document.getElementById('confirmRemoveChannelPlaylistModal').close()
+}
+
+const closeConfirmChannelPlaylistRemoveModal = () => {
+  document.getElementById('confirmRemoveChannelPlaylistModal').close()
 }
 
 const refreshList = () => {
   adminStore.fetchItems(props.type)
+}
+
+const closeConfirmRemoveModal = () => {
+  document.getElementById('confirmRemoveModal').close()
+}
+
+const closeConfirmSelectionModal = () => {
+  document.getElementById('confirmSelectionModal').close()
 }
 
 // onMounted(() => {
@@ -360,6 +397,11 @@ const refreshList = () => {
 //     console.error('Error fetching items:', error);
 //   });
 // });
+
+// Watch the items array in the store
+watch(() => adminStore.items, () => {
+  forceUpdate.value++; // Increment to force a re-render
+});
 
 const getStatusClass = (status) => {
   switch (status) {

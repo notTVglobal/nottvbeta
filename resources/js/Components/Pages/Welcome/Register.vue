@@ -150,11 +150,6 @@
               >Cancel
               </button>
             </div>
-            <div class="flex flex-wrap justify-end mt-2 ml-4 font-semibold">
-              <div>For a chance to get an invite code&nbsp;</div><div><a
-                href="https://not.tv/subscribe" target="_blank" class="font-bold text-blue-600 hover:text-blue-400 hover:cursor-pointer">subscribe
-              to our newsletter</a></div>
-            </div>
           </div>
         </footer>
       </div>

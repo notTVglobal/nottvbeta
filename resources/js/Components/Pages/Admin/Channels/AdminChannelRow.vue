@@ -44,18 +44,18 @@
           <input v-model="channel.active"
                  type="checkbox"
                  @click.prevent="toggleChannelActiveStatus"
-                 class="toggle toggle-success"/>
+                 class="toggle toggle-success hover:text-blue-300 active:text-gray-500 active:bg-gray-50"/>
         </label>
       </div>
     </div>
 
     <dialog :id="'adminEditChannel_'+channel.id" class="modal">
-      <div class="modal-box">
+      <div class="modal-box bg-white text-black">
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <h3 class="font-bold text-lg mb-2">Edit Channel Name</h3>
-        <input v-model="channelName" type="text" class="input input-bordered w-full max-w-xs" />
+        <input v-model="channelName" type="text" class="input input-bordered input-info bg-white text-black w-full max-w-xs" />
         <button @click.prevent="submit" class="btn btn-primary ml-2">Submit</button>
       </div>
     </dialog>
