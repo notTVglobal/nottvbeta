@@ -11,7 +11,7 @@
       TV &#169; 2009-{{ new Date().getFullYear() }}
     </div>
     <div class="flex justify-center">
-      Beta Preview v0.9.3.35
+      Beta Preview v0.9.3.36
     </div>
     <div class="flex justify-center text-blue-600 hover:text-blue-400 underline">
       <Link @click="appSettingStore.closeNavDropdown()" :href="`/changelog`">changelog</Link>

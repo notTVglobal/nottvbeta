@@ -687,10 +687,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     videoJs.pause();
                 }
 
-                // Reset the video player
-                console.log('Reset videoJs...');
-                videoJs.reset(); // Ensure the player is fully reset before setting a new source
-
                 // Clear the current source
                 console.log('Clear the video source...');
                 videoJs.src('');

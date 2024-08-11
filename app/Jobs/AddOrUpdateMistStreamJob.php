@@ -45,17 +45,26 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
    * @return void
    */
   public function handle(MistServerService $mistServerService) {
+
+//    Log::debug('Starting AddOrUpdateMistStreamJob', [
+//        'mistStreamData' => $this->mistStreamData,
+//        'originalName' => $this->originalName,
+//    ]);
+
     // Initialize or ensure $this->mistStreamData is an array to prevent potential null access issues
     $this->mistStreamData = $this->mistStreamData ?? [];
 
     // Safely determine the correct name to use, avoiding null access
     $streamNameForService = $this->originalName ?? $this->mistStreamData['name'] ?? '';
+//    Log::debug('Determined stream name for service', ['streamNameForService' => $streamNameForService]);
 
     // Use where() to get a query builder instance, then use firstOrNew to find or create the model
     $stream = MistStream::where('name', $streamNameForService)->firstOrNew();
+//    Log::debug('MistStream retrieved or created', ['stream' => $stream->toArray()]);
 
     // Update or set attributes directly, safely excluding 'metadata' from null access
     $stream->fill(Arr::except($this->mistStreamData, ['metadata']));
+//    Log::debug('MistStream after fill', ['stream' => $stream->toArray()]);
 
 //    Log::debug('MistStreamData before accessing', ['mistStreamData' => $this->mistStreamData]);
 
@@ -71,11 +80,14 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
       }
     })->toArray();
 
+//    Log::debug('Processed metadata', ['metadata' => $metadata]);
+
     // Assign processed metadata to the stream object
     $stream->metadata = $metadata;
 
     // Save changes to the database
     $stream->save();
+//    Log::debug('MistStream saved to database', ['stream' => $stream->toArray()]);
 
     // Prepare the stream details for the MistServer API call,
     // ensuring metadata is correctly included even if it was initially null or not an array
@@ -84,6 +96,8 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
             'source' => $stream->source,
           // Potentially other attributes here...
         ] + $metadata; // Ensure metadata updates are included
+
+//    Log::debug('Prepared stream details for MistServer API', ['streamDetails' => $streamDetails]);
 
     // Call the service to add or update the stream on the MistServer with the prepared details
     $response = $mistServerService->addOrUpdateStream($streamNameForService, $streamDetails);

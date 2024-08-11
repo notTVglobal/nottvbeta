@@ -4,7 +4,7 @@
       :class="['source-selector', {'is-priority': source?.playback_priority_type, 'is-playing': source?.isPlaying, 'is-fallback': source?.isFallback, 'has-error': source?.hasError}]">
     <div>
       <!-- Display the source status here (playing, fallback, error) -->
-      <div v-if="source?.playback_priority_type === sourceType" class="btn btn-xs mt-1 text-white bg-green-500 hover:bg-green-500">Priority</div>
+      <div v-if="source?.playback_priority_type === sourceType" class="btn btn-xs mt-1 text-white bg-green-500 hover:bg-green-500 border-none">Priority</div>
       <span>
 
       </span>
@@ -17,20 +17,20 @@
   <!--    <button class="btn btn-xs hover:bg-green-500 bg-green-500">Priority</button>-->
   <!--  </div>-->
 
-  <button v-if="source?.playback_priority_type !== sourceType" class="btn btn-xs mt-1"
+  <button v-if="source?.playback_priority_type !== sourceType" class="btn btn-xs mt-1 bg-gray-100 text-gray-800 hover:bg-gray-200 border-none"
           @click="setPriority">Set as Priority
   </button>
 
 
   <dialog :id="`confirmPriorityChangeModal`" class="modal">
-    <div class="modal-box">
+    <div class="modal-box bg-white text-black">
       <h3 class="font-bold text-lg">Confirm Selection for {{ adminStore.sourceSelector?.source?.name }}</h3>
       <p class="py-4">
         Are you sure you want to change priority to <span class="font-bold">{{ adminStore.sourceSelector?.sourceType }}</span>?
       </p>
       <div class="modal-action">
-        <button class="btn" @click="confirmPriorityChange">Confirm</button>
-        <button class="btn" onclick="document.getElementById('confirmPriorityChangeModal').close()">Cancel</button>
+        <button class="btn" @click.prevent="confirmPriorityChange">Confirm</button>
+        <button class="btn" @click.prevent="closeModal">Cancel</button>
       </div>
     </div>
   </dialog>
@@ -64,7 +64,10 @@ adminStore.sourceSelector.sourceType = props.sourceType
 const confirmPriorityChange = async () => {
   await adminStore.setPlaybackPriorityType(adminStore.sourceSelector.source, adminStore.sourceSelector.sourceType)
   document.getElementById('confirmPriorityChangeModal').close() // Close the modal
+}
 
+const closeModal = () => {
+  document.getElementById('confirmPriorityChangeModal').close()
 }
 
 // const setPriority = async () => {
@@ -78,7 +81,7 @@ const confirmPriorityChange = async () => {
 <style scoped>
 .source-selector {
   /* Base styles */
-  //margin-top: 0.5rem;
+  /*margin-top: 0.5rem;*/
 }
 
 .is-playing {

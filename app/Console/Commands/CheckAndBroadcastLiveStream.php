@@ -31,9 +31,9 @@ class CheckAndBroadcastLiveStream extends Command {
       $now = Carbon::now()->utc()->startOfMinute();
       $nextMinute = $now->copy()->addMinute();
 
-      Log::debug('CheckAndBroadcastLiveStream: Checking for scheduled broadcasts', [
-          'current_time' => $now->toDateTimeString(),
-      ]);
+//      Log::debug('CheckAndBroadcastLiveStream: Checking for scheduled broadcasts', [
+//          'current_time' => $now->toDateTimeString(),
+//      ]);
 
       // Get schedules that are supposed to start within the next minute
       $schedules = SchedulesIndex::whereBetween('next_broadcast', [$now, $nextMinute])
@@ -41,7 +41,7 @@ class CheckAndBroadcastLiveStream extends Command {
           ->get();
 
       if ($schedules->isEmpty()) {
-        Log::debug('CheckAndBroadcastLiveStream: No scheduled broadcasts found for the next minute');
+//        Log::debug('CheckAndBroadcastLiveStream: No scheduled broadcasts found for the next minute');
 
         return;
       }
@@ -49,9 +49,9 @@ class CheckAndBroadcastLiveStream extends Command {
       // If there are multiple schedules, sort by priority from the schedules table
       $schedules = $schedules->sortBy('priority');
 
-      Log::debug('CheckAndBroadcastLiveStream: Found scheduled broadcasts', [
-          'schedule_count' => $schedules->count(),
-      ]);
+//      Log::debug('CheckAndBroadcastLiveStream: Found scheduled broadcasts', [
+//          'schedule_count' => $schedules->count(),
+//      ]);
 
       // Process the schedule with the highest priority (lowest number)
       $this->processSchedule($schedules->first());
@@ -70,25 +70,25 @@ class CheckAndBroadcastLiveStream extends Command {
 
       $mistStreamName = $scheduleIndex->content->mistStreamWildcard->name;
 
-      Log::debug('CheckAndBroadcastLiveStream: Processing schedule', [
-          'schedule_id'      => $scheduleIndex->id,
-          'mist_stream_name' => $mistStreamName,
-      ]);
+//      Log::debug('CheckAndBroadcastLiveStream: Processing schedule', [
+//          'schedule_id'      => $scheduleIndex->id,
+//          'mist_stream_name' => $mistStreamName,
+//      ]);
 
       $activeStreams = $this->playbackService->activeStreams()['active_streams'] ?? [];
 
       if (in_array($mistStreamName, $activeStreams)) {
-        Log::debug('CheckAndBroadcastLiveStream: Stream is active, proceeding with broadcast', [
-            'mist_stream_name' => $mistStreamName,
-        ]);
+//        Log::debug('CheckAndBroadcastLiveStream: Stream is active, proceeding with broadcast', [
+//            'mist_stream_name' => $mistStreamName,
+//        ]);
 
         // Live stream is connected, broadcast the event
         $this->broadcastLiveStream($scheduleIndex);
 
       } else {
-        Log::debug('CheckAndBroadcastLiveStream: Stream is not active, initiating fallback mechanism', [
-            'mist_stream_name' => $mistStreamName,
-        ]);
+//        Log::debug('CheckAndBroadcastLiveStream: Stream is not active, initiating fallback mechanism', [
+//            'mist_stream_name' => $mistStreamName,
+//        ]);
 
         // Live stream not connected, start fallback mechanism
         $this->startFallback($scheduleIndex);
@@ -105,9 +105,9 @@ class CheckAndBroadcastLiveStream extends Command {
   protected function broadcastLiveStream($scheduleIndex): void {
     $this->broadcastService->updateAndBroadcast($scheduleIndex);
 
-    Log::debug('CheckAndBroadcastLiveStream: Stream broadcasted', [
-        'schedule_id' => $scheduleIndex->id,
-    ]);
+//    Log::debug('CheckAndBroadcastLiveStream: Stream broadcasted', [
+//        'schedule_id' => $scheduleIndex->id,
+//    ]);
   }
 
 
@@ -117,11 +117,11 @@ class CheckAndBroadcastLiveStream extends Command {
 
     try {
 
-      Log::debug('CheckAndBroadcastLiveStream: Starting fallback mechanism', [
-          'schedule_id'    => $scheduleIndex->id,
-          'retry_interval' => $retryInterval,
-          'max_retries'    => $maxRetries,
-      ]);
+//      Log::debug('CheckAndBroadcastLiveStream: Starting fallback mechanism', [
+//          'schedule_id'    => $scheduleIndex->id,
+//          'retry_interval' => $retryInterval,
+//          'max_retries'    => $maxRetries,
+//      ]);
 
       // TODO: Set the firstPlay stream to 'standby'. Use the scheduled show name as firstPlayVideoName/customVideoName.
       //   Create the standby stream and implement it here.
@@ -133,15 +133,15 @@ class CheckAndBroadcastLiveStream extends Command {
         $activeStreams = $this->playbackService->activeStreams()['active_streams'] ?? [];
         $mistStreamName = $scheduleIndex->content->mistStreamWildcard->name;
 
-        Log::debug('CheckAndBroadcastLiveStream: Fallback retry', [
-            'retry_number'     => $retry + 1,
-            'mist_stream_name' => $mistStreamName,
-        ]);
+//        Log::debug('CheckAndBroadcastLiveStream: Fallback retry', [
+//            'retry_number'     => $retry + 1,
+//            'mist_stream_name' => $mistStreamName,
+//        ]);
 
         if (in_array($mistStreamName, $activeStreams)) {
-          Log::debug('CheckAndBroadcastLiveStream: Stream became active during fallback, broadcasting', [
-              'mist_stream_name' => $mistStreamName,
-          ]);
+//          Log::debug('CheckAndBroadcastLiveStream: Stream became active during fallback, broadcasting', [
+//              'mist_stream_name' => $mistStreamName,
+//          ]);
 
           $this->broadcastLiveStream($scheduleIndex);
 
@@ -150,9 +150,9 @@ class CheckAndBroadcastLiveStream extends Command {
       }
 
       // After 5 minutes, if the stream is still not connected
-      Log::debug('CheckAndBroadcastLiveStream: Stream did not become active after retries, setting to test', [
-          'schedule_id' => $scheduleIndex->id,
-      ]);
+//      Log::debug('CheckAndBroadcastLiveStream: Stream did not become active after retries, setting to test', [
+//          'schedule_id' => $scheduleIndex->id,
+//      ]);
 
       $this->setStreamToTest($scheduleIndex);
 
@@ -171,10 +171,10 @@ class CheckAndBroadcastLiveStream extends Command {
 
     try {
       // Log that the stream was set to test
-      Log::debug('CheckAndBroadcastLiveStream: Stream set to test', [
-          'schedule_id'     => $scheduleIndex->id,
-          'new_stream_name' => 'test',
-      ]);
+//      Log::debug('CheckAndBroadcastLiveStream: Stream set to test', [
+//          'schedule_id'     => $scheduleIndex->id,
+//          'new_stream_name' => 'test',
+//      ]);
     } catch (Exception $e) {
       Log::error('CheckAndBroadcastLiveStream: Error while setting stream to Test', [
           'error'       => $e->getMessage(),

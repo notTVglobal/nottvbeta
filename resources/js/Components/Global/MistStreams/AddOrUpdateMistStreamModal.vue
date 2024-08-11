@@ -1,7 +1,7 @@
 <template>
 
   <dialog :id="id" class="modal">
-    <div class="modal-box w-11/12 max-w-5xl">
+    <div class="modal-box w-11/12 max-w-5xl bg-white text-black">
       <h3 class="font-bold text-lg">
         <slot name="form-title">Default Form Title</slot>
       </h3>
@@ -44,10 +44,10 @@
             <label class="block mt-4 mb-2 uppercase font-bold text-xs dark:text-gray-200"
                    for="comment">Comment</label>
             <input v-model="form.comment"
-                      class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
-                      type="text"
-                      name="comment"
-                      id="comment" placeholder="Comment..."></input>
+                   class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
+                   type="text"
+                   name="comment"
+                   id="comment" placeholder="Comment..."></input>
             <div v-if="form.errors.comment" v-text="form.errors.comment" class="text-xs text-red-600 mt-1"></div>
 
             <label class="block mt-4 mb-2 uppercase font-bold text-xs dark:text-gray-200"
@@ -91,13 +91,15 @@
 
 </template>
 <script setup>
-import { reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { useChannelStore } from '@/Stores/ChannelStore'
 import { useAdminStore } from '@/Stores/AdminStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const channelStore = useChannelStore()
 const adminStore = useAdminStore()
+const notificationStore = useNotificationStore()
 
 import Label from '@/Jetstream/Label.vue'
 import Button from '@/Jetstream/Button.vue'
@@ -112,7 +114,7 @@ let props = defineProps({
 const modalVisible = ref(false)
 
 const metadata = ref([{key: '', value: ''}])
-let originalName = ref(''); // used for stream name changes
+let originalName = ref('') // used for stream name changes
 
 const addMetadataField = () => {
   form.metadata.push({key: '', value: ''})
@@ -131,15 +133,14 @@ let form = reactive(useForm({
   metadata: [], // Initialize with one empty metadata entry
 }))
 
-form.reset() // on modal load, reset form.
-
 // Watch for changes in the mistStream object in your Pinia store
+// This only applies if updating the mistStream
 watch(() => channelStore.mistStream, (newVal) => {
   if (newVal) {
     // Populate the form with mistStream data
     form.id = newVal.id || ''
     form.name = newVal.name || ''
-    originalName.value = newVal.name || ''; // Capture the original name
+    originalName.value = newVal.name || '' // Capture the original name
     form.source = newVal.source || 'push://'
     form.mime_type = newVal.mime_type || 'application/vnd.apple.mpegurl'
     form.comment = newVal.comment || ''
@@ -167,34 +168,110 @@ watch(() => channelStore.mistStream, (newVal) => {
 //   }
 // }
 
-let submit = async () => {
-  await form.post(route('mistStream.addOrUpdate', { originalName: originalName.value })), {
-    onSuccess: () => {
-      postSubmissionActions(); // Call the async function
-    },
-    onError: () => {
-      // Handle errors if needed, e.g., log to console or show a message
-      // Errors are automatically attached to the form object
-    },
+const validateStreamName = (name) => {
 
+  // Check if the name is empty
+  if (!name.trim()) {
+    console.warn('Validation Failed: Stream name is empty.');
+    notificationStore.setGeneralServiceNotification('Invalid Stream Name', 'The stream name cannot be empty.');
+    return { valid: false, reformattedName: null };
   }
-  closeModal()
-}
 
-const postSubmissionActions = async () => {
-  await adminStore.fetchItems('mistStream'); // Await the fetching of items
-  channelStore.clearMistStream(); // Clear selected mistStream
-  form.reset(); // Reset form fields
-  closeModal(); // Close modal
+  // Check if the original name exceeds 100 characters
+  if (name.length > 100) {
+    console.warn('Validation Failed: Original stream name exceeds 100 characters.');
+    notificationStore.setGeneralServiceNotification('Invalid Stream Name', 'The stream name cannot exceed 100 characters.');
+    return { valid: false, reformattedName: null };
+  }
+
+  let reformattedName = name.toLowerCase().replace(/[^a-z0-9._-]/g, '');
+  console.log('Reformatted Stream Name:', reformattedName);
+
+  // Check if the name starts with a number
+  if (/^\d/.test(reformattedName)) {
+    console.warn('Validation Failed: Stream name starts with a number.');
+    notificationStore.setGeneralServiceNotification('Invalid Stream Name', 'The stream name cannot start with a number.');
+    return { valid: false, reformattedName: null };
+  }
+
+  // Check if the reformatted name exceeds 100 characters
+  if (reformattedName.length > 100) {
+    console.warn('Validation Failed: Reformatted stream name exceeds 100 characters.');
+    notificationStore.setGeneralServiceNotification('Invalid Stream Name', 'The stream name cannot exceed 100 characters.');
+    return { valid: false, reformattedName: null };
+  }
+
+
+  // Check if the name was reformatted
+  if (reformattedName !== name) {
+    console.warn('Validation Warning: Stream name was reformatted.');
+    form.name = reformattedName
+    return { valid: false, reformattedName };
+  }
+
+  console.log('Validation Passed: Stream name is valid.');
+  return { valid: true, reformattedName };
 };
 
+
+let submit = () => {
+  console.log('Starting Stream Name Validation...');
+  const { valid, reformattedName } = validateStreamName(form.name);
+
+  if (!valid) {
+    console.log('Stream Name Validation Failed.');
+    if (reformattedName) {
+      console.log('Showing notification for reformatted stream name.');
+      notificationStore.setGeneralServiceNotification(
+          'Stream Name Reformatted',
+          `The stream name has been reformatted to "${reformattedName}". Please confirm before proceeding.`
+      );
+      // Optionally set the originalName to the reformatted one, but do not submit yet
+      // originalName.value = reformattedName;
+    }
+    // Do not close the modal or submit
+    console.log('Form submission aborted due to validation failure.');
+    return;
+  }
+
+  console.log('Stream Name Validation Passed. Proceeding with submission.');
+
+  if (originalName.value === '') {
+    originalName.value = form.name
+  }
+
+  form.post(route('mistStream.addOrUpdate', { originalName: originalName.value }), {
+    onSuccess: () => {
+      console.log('Form submission successful.');
+      postSubmissionActions(); // Call the async function
+      closeModal(); // Close the modal only if the submission is successful
+    },
+    onError: (error) => {
+      console.error('Error during submission:', error);
+
+      // Display the error notification
+      notificationStore.setToastNotification('An error occurred during submission. Please try again.', 'error');
+      // Do not close the modal on error
+      console.log('Form submission failed. Modal remains open.');
+    },
+  });
+};
+
+const postSubmissionActions = async () => {
+  await adminStore.fetchItems('mistStream') // Await the fetching of items
+  channelStore.clearMistStream() // Clear selected mistStream
+  form.reset() // Reset form fields
+  originalName.value = ''
+  closeModal() // Close modal
+}
+
 function closeModal() {
-  document.getElementById(props.id).close()
   channelStore.clearMistStream()
   // Reset the form fields to their initial values
   form.reset()
   // Clear all validation errors
   form.clearErrors()
+  document.getElementById(props.id).close()
 }
 
 // function toggleModal() {

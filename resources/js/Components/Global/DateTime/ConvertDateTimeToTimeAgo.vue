@@ -1,21 +1,22 @@
 <template>
-    <div class="capitalize" :class="props.class">{{ timeAgo }}</div>
+  <div class="capitalize" :class="props.class">{{ timeAgo }}</div>
 </template>
 <script setup>
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc'; // Required for timezone support
-import { useUserStore } from "@/Stores/UserStore"
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc' // Required for timezone support
+import { useUserStore } from '@/Stores/UserStore'
+import { eventBus } from '@/Utilities/EventBus'
 
 const userStore = useUserStore()
 
 // Extend Day.js with the plugins
-dayjs.extend(relativeTime);
-dayjs.extend(timezone);
-dayjs.extend(utc);
+dayjs.extend(relativeTime)
+dayjs.extend(timezone)
+dayjs.extend(utc)
 
 let props = defineProps({
   dateTime: String,
@@ -27,22 +28,25 @@ let props = defineProps({
 const dateInUserTimezone = computed(() => {
   if (userStore.timezone) {
     if (userStore.timezone === props.timezone) {
-      return dayjs(props.dateTime).format();
+      return dayjs(props.dateTime).format()
     } else {
-      return dayjs.utc(props.dateTime).tz(userStore.timezone).format();
+      return dayjs.utc(props.dateTime).tz(userStore.timezone).format()
     }
 
   }
-  return '';
-});
+  return ''
+})
 
 // Computed property to generate "time ago" string based on the converted date
 const timeAgo = computed(() => {
   if (dateInUserTimezone.value) {
-    return dayjs(dateInUserTimezone.value).fromNow();
+    // Accessing eventBus.tick to establish a reactive dependency
+    const tick = eventBus.tick;
+    // Recalculate the "time ago" string whenever tick changes
+    return dayjs(dateInUserTimezone.value).fromNow()
   }
-  return 'Loading...'; // Or any placeholder text until the timezone is loaded
-});
+  return 'Loading...' // Or any placeholder text until the timezone is loaded
+})
 
 //
 // const userTimezone = userStore.timezone; // Adjust according to your state management

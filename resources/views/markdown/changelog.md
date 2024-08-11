@@ -1,7 +1,30 @@
 # not.tv Changelog
 
-Last Update: August 9, 2024\
+Last Update: August 10, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.36
+August 10, 2024
+
+* Changed the message on the notification to logged out users who click "Watch".
+  * "If multiple shows are scheduled, pick your favorite from the schedule!".
+* Fixed changelog modal now scrolls to the top on small screens when loaded.
+* Fixed Add Show To Schedule showing date is in the past when it's not.
+* Fixed StartTime missing from the Add Show To Schedule form update method.
+* Updated the TimeAgo times to dynamically update without reloading the page.
+  * Created a new EventBus.js utility to handle this.
+* Added a Tooltip to the "Save For Later" button that appears on a Show's Index page.
+* Improved the styling of the Next Broadcast banner on a Show's Index page.
+* Fixed the audio playback problem with VOD videos.
+  * Removed the video player reset from the videoPlayerStore when a new video is loaded.
+* Added a Click Me visual animation to draw attention to the Need Help button that appears on the Stream Page.
+* Changed the Feedback button label to "Need Help?".
+* Fixed the CRON Scheduler. It stopped running August 8, 2024 when we switched from PHP 8.1 to PHP 8.2. 
+* Updated the Admin Storage Calculations page.
+* Created a new placeholder for "My Library".
+* Fixed RSS Feeds not updating, needed to add the Batchable Trait into the Job.
+* Fixed the DynamicModal on the Admin/Channels page, the modal cancel buttons work now.
+
 
 ## v0.9.3.35
 August 9, 2024

@@ -224,16 +224,30 @@ function goToStep(step) {
   emits('go-to-step', step);
 }
 
-
 function handleStartDateSelected(date) {
-  // startDate.value = date.date; // Update the startDate ref
-  // const updatedForm = { ...props.form, startDate: date.date };
-  // emits('update-form', updatedForm);
-  // updateEndDate(date);
+  // Parse the selected date
+  let selectedDate = dayjs(date.date);
 
-  startDate.value = dayjs(date.date).format();
+  // Adjust the time based on startTime
+  let hour = parseInt(startTime.value.hour, 10);
+  const minute = parseInt(startTime.value.minute, 10);
+
+  // Convert to 24-hour format if necessary
+  if (startTime.value.meridian === 'PM' && hour < 12) {
+    hour += 12;
+  } else if (startTime.value.meridian === 'AM' && hour === 12) {
+    hour = 0; // Midnight case
+  }
+
+  // Set the hour and minute
+  selectedDate = selectedDate.hour(hour).minute(minute).second(0);
+
+  // Format the selected date with the correct time
+  startDate.value = selectedDate.format();
+
   console.log('Selected date:', startDate.value);
   console.log('Timezone:', props.timezone);
+
   emitUpdatedForm();
   updateEndDate(startDate.value);
 }
@@ -377,6 +391,7 @@ function emitUpdatedForm() {
   emits('update-form', {
     ...props.form,
     startDate: startDate.value,
+    startTime: startTime.value,
     endDate: endDate.value,
     daysOfWeek: daysOfWeek.value,
     durationHour: durationHour.value,

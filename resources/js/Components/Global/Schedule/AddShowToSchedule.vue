@@ -230,7 +230,7 @@ const clearErrors = () => {
 
 function updateForm(newForm) {
   Object.assign(form, newForm)
-  console.log('Updated form: ', newForm)
+  // console.log('Updated form: ', newForm)
   form.durationDisplay = `${form.durationHour} hours ${form.durationMinute} minutes`
 }
 
@@ -264,35 +264,37 @@ function selectScheduleType(type) {
 }
 
 function goToNextStep() {
-  console.log('goToNextStep step number: ' + currentStep.value)
-  console.log('goToNextStep form startDate: ' + form.startDate)
   // Clear any existing error message
   stepError.value = ''
 
+  // Combine startDate and startTime into a single dayjs object
+  let startHour = parseInt(form.startTime.hour)
+  const startMinute = parseInt(form.startTime.minute)
+
+  // Convert to 24-hour format if necessary
+  if (form.startTime.meridian === 'PM' && startHour !== 12) {
+    startHour += 12
+  } else if (form.startTime.meridian === 'AM' && startHour === 12) {
+    startHour = 0 // Midnight case
+  }
+
+  // Combine form.startDate and form.startTime
+  const startDateTime = dayjs(form.startDate)
+      .hour(startHour)
+      .minute(startMinute)
+      .second(0)
+      .millisecond(0)
+
+  const now = dayjs().tz(userStore.timezone)
+  console.log('Now (current time in user timezone): ' + now.format())
+
+  const startDateTimeWithTimezone = dayjs(startDateTime).tz(userStore.timezone)
+  console.log('Start Date Time (with timezone applied): ' + startDateTimeWithTimezone.format())
+
+  // Compare the start time with the current time in the user's timezone
+  const isInThePast = startDateTimeWithTimezone.isBefore(now)
+
   if (form.scheduleType === 'recurring') {
-
-    // Combine startDate and startTime into a single dayjs object
-    let startHour = parseInt(form.startTime.hour)
-    const startMinute = parseInt(form.startTime.minute)
-
-    if (form.startTime.meridian === 'PM' && startHour !== 12) {
-      startHour += 12
-    } else if (form.startTime.meridian === 'AM' && startHour === 12) {
-      startHour = 0
-    }
-
-    // Combine form.startDate and form.startTime
-    const startDateTime = dayjs(form.startDate)
-        .hour(startHour)
-        .minute(startMinute)
-        .second(0)
-        .millisecond(0)
-
-    const now = dayjs().tz(userStore.timezone)
-    // const sixHoursFromNow = now.add(6, 'hour')
-
-    const isInThePast = dayjs(startDateTime).tz(userStore.timezone).isBefore(now)
-
     if (currentStep.value === 1 && form.daysOfWeek.length === 0) {
       // If no days are selected and the current step is 1, set an error message
       stepError.value = 'Please select at least one day of the week.'
@@ -300,8 +302,9 @@ function goToNextStep() {
       // If no start date is selected and the current step is 4, set an error message
       stepError.value = 'Please select a start date.'
     } else if (currentStep.value === 4 && isInThePast) {
-      // If the start date is within the next 6 hours when the current step is 4, set an error message
+      // If the start date is in the past when the current step is 4, set an error message
       stepError.value = 'Start date must be in the future.'
+      console.log('Error:', stepError.value, 'Start Date Time:', startDateTimeWithTimezone.format(), 'Now:', now.format())
     } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
       // Allow the end date to be up to one week beyond exactly three months from the start date
       // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
@@ -315,9 +318,7 @@ function goToNextStep() {
   } else if (form.scheduleType === 'one-time') {
 
     const now = dayjs().tz(userStore.timezone)
-    // const sixHoursFromNow = now.add(6, 'hour')
-
-    // const isBeforeSixHours = dayjs(form.startDate).isBefore(sixHoursFromNow)
+    const startDateTimeWithTimezone = dayjs(startDateTime).tz(userStore.timezone)
     const isInThePast = dayjs(form.startDate).tz(userStore.timezone).isBefore(now)
 
     if (currentStep.value === 1 && (!form.startDate || form.startDate === 'Invalid Date')) {
@@ -326,6 +327,7 @@ function goToNextStep() {
     } else if (currentStep.value === 1 && isInThePast) {
       // If the start date is today or earlier when the current step is 1, set an error message
       stepError.value = 'Start date must be in the future.'
+      console.log('Error:', stepError.value, 'Start Date Time:', startDateTimeWithTimezone.format(), 'Now:', now.format())
     } else if (currentStep.value === 2) {
       document.getElementById('confirmAddShowModal').showModal()
     } else if (currentStep.value < totalSteps.value) {
