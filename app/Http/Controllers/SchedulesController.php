@@ -124,7 +124,7 @@ class SchedulesController extends Controller {
         'timezone'      => 'required|string',
     ]);
 
-    Log::info('addToSchedule request received', ['Validated request... ' => $validatedData]);
+//    Log::debug('addToSchedule request received', ['Validated request... ' => $validatedData]);
 
     // Determine the model class based on contentType
 //    $modelClass = $this->getModelClass($validatedData['contentType']);
@@ -964,7 +964,7 @@ class SchedulesController extends Controller {
         'contentType' => 'required|string',
     ]);
 
-    Log::info('removeFromSchedule request received', ['Validated request... ' => $validatedData]);
+//    Log::debug('removeFromSchedule request received', ['Validated request... ' => $validatedData]);
 
 //    if ($validator->fails()) {
 //      return response()->json(['errors' => $validator->errors()], 422);
@@ -1027,7 +1027,7 @@ class SchedulesController extends Controller {
       $scheduleDetails = [];
       broadcast(new ShowScheduleDetailsUpdated($shortContentType, $validatedData['contentId'], $scheduleDetails));
 
-      Log::info("Content type {$shortContentType} with ID {$contentId} successfully removed from schedule.");
+//      Log::debug("Content type {$shortContentType} with ID {$contentId} successfully removed from schedule.");
 
       // TODO: Running the scheduleService here could cause a conflict
       //  if our cron is running the same thing... or if multiple people
