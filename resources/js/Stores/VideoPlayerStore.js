@@ -566,7 +566,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         getSourceDetails(source) {
             const userStore = useUserStore() // Make sure you import useUserStore at the top
-            console.log(source)
+            console.log('Get source details: ' + JSON.stringify(source, null, 2))
             let videoSrc, videoSourceType
 
             // Default to 'video/mp4' if type is not specified or is empty
@@ -687,47 +687,65 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                     videoJs.pause();
                 }
 
-                // Clear the current source
-                console.log('Clear the video source...');
-                videoJs.src('');
+                // Set up the new source
+                console.log('Set the new video source...');
+                videoJs.src({ 'src': videoSrc, 'type': videoSourceType });
 
-                // Ensure the player is ready before playing the new source
-                videoJs.ready(() => {
-                    console.log('VideoJs is ready...');
+                audioStore.deferAudioSetup = false;
+                console.log('Ensure Audio Context and Nodes are Ready...');
+                audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
+                    console.log('Audio Context and Nodes Ready!');
+                    // Only attempt to play the video after ensuring the AudioContext is ready
+                    console.log('Attempt to play the video...');
+                    videoJs.play().catch(error => {
+                        notificationStore.setToastNotification('Code 123A. Playback initiation error', 'error');
+                        console.error('Code 123A. Playback initiation error: ', error);
 
-                    // Set up the new source
-                    console.log('Set the new video source...');
-                    videoJs.src({ 'src': videoSrc, 'type': videoSourceType });
+                        // Ensure videoSettings is initialized
+                        if (!userStore.videoSettings) {
+                            userStore.videoSettings = {};
+                        }
 
-                    audioStore.deferAudioSetup = false;
-                    console.log('Ensure Audio Context and Nodes are Ready...');
-                    audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
-                        console.log('Audio Context and Nodes Ready!');
-                        // Only attempt to play the video after ensuring the AudioContext is ready
-                        console.log('Attempt to play the video...');
-                        videoJs.play().catch(error => {
-                            notificationStore.setGeneralServiceNotification('Error', 'Code: 123A. Playback initiation error: ' + error);
-                            console.error('Code 123A. Playback initiation error: ', error);
-
-                            // Ensure videoSettings is initialized
-                            if (!userStore.videoSettings) {
-                                userStore.videoSettings = {};
-                            }
-
-                            // Set firstPlay flag based on user subscription status
-                            if (!userStore.isSubscriber || !userStore.isVip) {
-                                userStore.videoSettings.firstPlay = true;
-                            }
-                        });
-
-                        // Consider toggling mute based on the user's preference or previous state
-                        // videoJs.muted(false);
-                        // this.muted = false;
-                    }).catch(error => {
-                        notificationStore.setGeneralServiceNotification('Error', 'Code: 456C. Error ensuring audio context and nodes: ' + error);
-                        console.error('Code: 456C. Error ensuring audio context and nodes: ', error);
+                        // Set firstPlay flag based on user subscription status
+                        if (!userStore.isSubscriber || !userStore.isVip) {
+                            userStore.videoSettings.firstPlay = true;
+                        }
                     });
-                });
+                })
+                console.log('Video now playing.');
+                // Ensure the player is ready before playing the new source
+            //     videoJs.ready(() => {
+            //         console.log('VideoJs is ready...');
+            //
+            //         audioStore.deferAudioSetup = false;
+            //         console.log('Ensure Audio Context and Nodes are Ready...');
+            //         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
+            //             console.log('Audio Context and Nodes Ready!');
+            //             // Only attempt to play the video after ensuring the AudioContext is ready
+            //             console.log('Attempt to play the video...');
+            //             videoJs.play().catch(error => {
+            //                 notificationStore.setToastNotification('Code 123A. Playback initiation error', 'error');
+            //                 console.error('Code 123A. Playback initiation error: ', error);
+            //
+            //                 // Ensure videoSettings is initialized
+            //                 if (!userStore.videoSettings) {
+            //                     userStore.videoSettings = {};
+            //                 }
+            //
+            //                 // Set firstPlay flag based on user subscription status
+            //                 if (!userStore.isSubscriber || !userStore.isVip) {
+            //                     userStore.videoSettings.firstPlay = true;
+            //                 }
+            //             });
+            //
+            //             // Consider toggling mute based on the user's preference or previous state
+            //             // videoJs.muted(false);
+            //             // this.muted = false;
+            //         }).catch(error => {
+            //             notificationStore.setGeneralServiceNotification('Error', 'Code: 456C. Error ensuring audio context and nodes: ' + error);
+            //             console.error('Code: 456C. Error ensuring audio context and nodes: ', error);
+            //         });
+            //     });
             } catch (error) {
                 // Log the error or perform any other error handling
                 useNotificationStore().setGeneralServiceNotification('Error', 'Code: 789A. Error loading new video: ' + error);
