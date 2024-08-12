@@ -1305,6 +1305,9 @@ Route::middleware([
       ->middleware('throttle:10,1') // Allows 10 requests per minute
       ->name('chatMessage');
 
+  Route::post('/chat/toggle-reaction', [ChatController::class, 'toggleReaction']);
+
+
 //    Route::get('/chatTest', function () {
 //        return Inertia::render('ChatTest');
 //    })->can('viewVip', 'App\Models\User')

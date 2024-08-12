@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <button @click.stop="showBannedUsers" class="manage-banned-users-button text-3xl" tabindex="0">🕵️‍♂️</button>
-    <AdminModal :title="`Banned Users`" :isVisible="showModal" @close="showModal = false">
+    <AdminModal :title="`Banned Users`" :isVisible="showModal" @close="closeModal">
       <ul>
         <li v-for="user in bannedUsers" :key="user.id" class="mb-2 flex justify-between items-center">
           <div>
@@ -15,17 +15,19 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue'
 import { useAdminStore } from '@/Stores/AdminStore';
 import AdminModal from '@/Components/Global/Modals/AdminModal.vue'
 
 const adminStore = useAdminStore();
 const showModal = ref(false);
-const bannedUsers = ref([]);
+
+// Use computed property to bind bannedUsers directly from the store
+const bannedUsers = computed(() => adminStore.bannedUsers);
 
 const showBannedUsers = async () => {
+  adminStore.showShadowBanButton()
   await adminStore.fetchBannedUsers();
-  bannedUsers.value = adminStore.bannedUsers;
   showModal.value = true;
 };
 
@@ -34,8 +36,14 @@ const unbanUser = async (userId) => {
   await adminStore.showBannedUsers(); // Refresh the list
   if (adminStore.bannedUsers <= 0) {
     showModal.value = false;
+    adminStore.hideShadowBanButton()
   }
 };
+
+const closeModal = () => {
+  showModal.value = false
+  adminStore.hideShadowBanButton()
+}
 
 </script>
 <style scoped>

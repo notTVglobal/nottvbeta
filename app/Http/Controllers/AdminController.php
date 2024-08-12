@@ -46,6 +46,7 @@ class AdminController extends Controller {
   protected MistServerService $playbackService;
 
   public function __construct() {
+    $this->middleware('admin'); // Apply the admin middleware
     $this->playbackService = MistServerServiceFactory::make('playback');
 //    $this->middleware('can:view,show')->only(['show']);
 
