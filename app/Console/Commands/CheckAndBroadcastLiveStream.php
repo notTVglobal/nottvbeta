@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use App\Models\SchedulesIndex;
 use App\Services\MistServer\MistServerService;
@@ -75,7 +76,7 @@ class CheckAndBroadcastLiveStream extends Command {
 //          'mist_stream_name' => $mistStreamName,
 //      ]);
 
-      $activeStreams = $this->playbackService->activeStreams()['active_streams'] ?? [];
+      $activeStreams = $this->playbackService->activeStreams();
 
       if (in_array($mistStreamName, $activeStreams)) {
 //        Log::debug('CheckAndBroadcastLiveStream: Stream is active, proceeding with broadcast', [

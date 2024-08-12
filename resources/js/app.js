@@ -1,5 +1,6 @@
 import './bootstrap'
 
+import axios from 'axios'
 import { createApp, h } from 'vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/vue3'
 import AppLayout from './Layouts/AppLayout'
@@ -174,6 +175,15 @@ import vSelect from 'vue-select'
 //     components,
 //     directives
 // })
+
+// Ensure axios sends cookies with requests
+axios.defaults.withCredentials = true
+
+// Call this to set up the CSRF cookie before making any authenticated requests
+axios.get('/sanctum/csrf-cookie').then(() => {
+    // Now you can make authenticated requests
+    // For example, you can now call your `toggleReaction` function or initialize your app
+})
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV'
 const AudioContext = window.AudioContext || window.webkitAudioContext

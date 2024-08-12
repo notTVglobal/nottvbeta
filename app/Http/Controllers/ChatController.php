@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ReactionUpdated;
 use App\Models\Channel;
 use App\Models\ChatMessage;
+use App\Models\ChatMessageReaction;
 use App\Traits\EmojiConversion;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 
 class ChatController extends Controller {
@@ -30,15 +36,25 @@ class ChatController extends Controller {
     return ChatMessage::query()
         ->where('channel_id', $channelId)
         ->where('created_at', '>=', Carbon::now()->subDay())
-        ->with(['user' => function ($query) {
-          $query->select('id', 'name', 'profile_photo_path', 'is_banned', 'ban_expires_at');
-        }])
+        ->with([
+            'user'      => function ($query) {
+              $query->select('id', 'name', 'profile_photo_path', 'is_banned', 'ban_expires_at');
+            },
+            'reactions' => function ($query) {
+              $query->select('chat_message_id', 'user_id', 'reaction_type');
+            }
+        ])
         ->latest()
         ->limit(20)
         ->get()
         ->each(function ($message) {
           $message->message = Crypt::decryptString($message->message);
           $message->user_name = Crypt::decryptString($message->user_name);
+
+          // Handle null reactions
+          if (is_null($message->reactions)) {
+            $message->reactions = [];
+          }
         });
   }
 
@@ -127,5 +143,63 @@ class ChatController extends Controller {
     }
 
     return response()->json(['message' => 'Failed to send message'], 500);
+  }
+
+  public function toggleReaction(HttpRequest $request): \Illuminate\Http\JsonResponse {
+    try {
+      // Validate the incoming request
+      $validated = $request->validate([
+          'message_id'    => 'required|exists:chat_messages,id',
+          'reaction_type' => 'required|in:heart,thumbs_up',
+      ]);
+
+      // Attempt to find the chat message
+      $chatMessage = ChatMessage::findOrFail($validated['message_id']);
+      $userId = auth()->id();
+
+      if (!$userId) {
+        // Handle the case where the user is not authenticated
+        return response()->json(['error' => 'User not authenticated'], 401);
+      }
+
+      // Check if the user has already reacted
+      $existingReaction = ChatMessageReaction::where('chat_message_id', $validated['message_id'])
+          ->where('user_id', $userId)
+          ->first();
+
+      if ($existingReaction) {
+        // If the same reaction type, remove it
+        if ($existingReaction->reaction_type === $validated['reaction_type']) {
+          $existingReaction->delete();
+        } else {
+          // Otherwise, change the reaction type
+          $existingReaction->update(['reaction_type' => $validated['reaction_type']]);
+        }
+      } else {
+        // Create a new reaction
+        ChatMessageReaction::create([
+            'chat_message_id' => $validated['message_id'],
+            'user_id'         => $userId,
+            'reaction_type'   => $validated['reaction_type'],
+        ]);
+      }
+
+      // Broadcast the update
+      broadcast(new ReactionUpdated($chatMessage->id, $chatMessage->channel_id, $validated['reaction_type'], $userId))->toOthers();
+
+      return response()->json(['message' => 'Reaction updated successfully']);
+
+    } catch (ValidationException $e) {
+      // Handle validation exceptions
+      return response()->json(['error' => 'Validation failed', 'details' => $e->errors()], 422);
+    } catch (ModelNotFoundException $e) {
+      // Handle cases where the chat message is not found
+      return response()->json(['error' => 'Chat message not found'], 404);
+    } catch (Exception $e) {
+      // Log any other exceptions
+      Log::error('Error toggling reaction: ' . $e->getMessage(), ['exception' => $e]);
+
+      return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+    }
   }
 }

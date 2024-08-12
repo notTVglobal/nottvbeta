@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: August 10, 2024\
+Last Update: August 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.37
+August 11, 2024
+
+* New Feature: Reaction emojis to chat messages.
+* Fixed the chat shadow ban not properly displayed for the admin.
+* Fixed a bug when loading active streams to automatically start a scheduled broadcast.
 
 ## v0.9.3.36
 August 10, 2024
