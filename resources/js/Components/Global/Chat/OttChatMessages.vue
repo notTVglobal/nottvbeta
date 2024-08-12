@@ -44,20 +44,23 @@ channel
       console.error('Subscription error:', error)
     })
     .listen('.chat', (event) => {
-      console.log('Event received:', event)
+      // console.log('Event received:', event)
       const tempId = Date.now()
       const newMessage = {...event.message, id: tempId}
       chatStore.newMessages.push(newMessage)
-      0
     })
-
-// onBeforeMount(async () => {
-//
-// });
+    .listen('.ReactionUpdated', (event) => {
+      // console.log('Reaction event received:', event)
+      chatStore.updateReactions(event.message_id, event.channel_id, event.reaction_type, event.user_id)
+    })
 
 onMounted(() => {
   connect()
 })
+
+// onBeforeMount(async () => {
+//
+// });
 
 //
 // onUpdated(() => {

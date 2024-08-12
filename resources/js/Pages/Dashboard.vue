@@ -305,7 +305,7 @@ const userStore = useUserStore()
 let props = defineProps({
   id: null,
   changelog: {
-    type: Object,
+    type: [Object, null], // Allow both Object and null as valid types
     required: true,
     default: () => ({
       version: '',

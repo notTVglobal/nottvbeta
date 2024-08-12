@@ -27,8 +27,8 @@
           </p>
           <ul class="list-disc list-inside text-gray-700">
             <li><strong>Bitrate:</strong> 4.5 Mbps</li>
-            <li><strong>Storage per hour:</strong> 2.44 GB</li>
-            <li><strong>Total storage (72 hours):</strong> 2.44 TB</li>
+            <li><strong>Storage per hour:</strong> 2.025 GB</li>
+            <li><strong>Total storage (72 hours):</strong> 145.8 GB</li>
           </ul>
           <div class="mt-4">
             <a href="https://www.digitalrebellion.com/webapps/videocalc" target="_blank">
@@ -51,8 +51,7 @@
               <ul class="pl-5 mt-2">
                 <li><strong>Cost for 250 GiB:</strong> Included</li>
                 <li><strong>Additional Storage Cost:</strong> $0.02/GiB</li>
-                <li><strong>Cost for 1 TB (additional 750 GiB):</strong> $15.00/mo</li>
-                <li><strong>Cost for 72 hours (2.44 TB):</strong> $36.80/mo</li>
+                <li><strong>Cost for 72 hours (145.8 GB):</strong> $5.00/mo (within 250 GiB)</li>
               </ul>
             </li>
             <li class="mt-4">
@@ -61,12 +60,11 @@
               </a>:
               <ul class="pl-5 mt-2">
                 <li><strong>Cost per TB:</strong> $6.99/mo</li>
-                <li><strong>Cost for 72 hours (2.44 TB):</strong> $17.05/mo</li>
+                <li><strong>Cost for 72 hours (145.8 GB):</strong> $6.99/mo</li>
               </ul>
             </li>
           </ul>
         </div>
-
       </div>
 
       <div class="p-6">
@@ -208,89 +206,89 @@ const appSettingStore = useAppSettingStore()
 let props = defineProps({
   can: Object,
 })
-
 const liveStreamBufferMilestones = [
   {
     milestone: 'Initial',
     streamCount: '1 Stream',
-    totalStorage: '2.44 TB',
-    digitalOceanCost: '$36.80',
-    wasabiCost: '$17.05',
+    totalStorage: '145.8 GB',
+    digitalOceanCost: '$5.00',
+    wasabiCost: '$6.99',
   },
   {
     milestone: '10 Streams',
     streamCount: '10 Streams',
-    totalStorage: '24.4 TB',
-    digitalOceanCost: '$368.00',
-    wasabiCost: '$170.50',
+    totalStorage: '1.458 TB',
+    digitalOceanCost: '$24.16',
+    wasabiCost: '$10.19',
   },
   {
     milestone: '50 Streams',
     streamCount: '50 Streams',
-    totalStorage: '122 TB',
-    digitalOceanCost: '$1,840.00',
-    wasabiCost: '$852.50',
+    totalStorage: '7.29 TB',
+    digitalOceanCost: '$140.80',
+    wasabiCost: '$50.97',
   },
   {
     milestone: '100 Streams',
     streamCount: '100 Streams',
-    totalStorage: '244 TB',
-    digitalOceanCost: '$3,680.00',
-    wasabiCost: '$1,705.00',
+    totalStorage: '14.58 TB',
+    digitalOceanCost: '$286.60',
+    wasabiCost: '$101.94',
   },
   {
     milestone: '500 Streams',
     streamCount: '500 Streams',
-    totalStorage: '1,220 TB',
-    digitalOceanCost: '$18,400.00',
-    wasabiCost: '$8,525.00',
+    totalStorage: '72.9 TB',
+    digitalOceanCost: '$1,453.00',
+    wasabiCost: '$509.70',
   },
   {
     milestone: '1,000 Streams',
     streamCount: '1,000 Streams',
-    totalStorage: '2,440 TB',
-    digitalOceanCost: '$36,800.00',
-    wasabiCost: '$17,050.00',
+    totalStorage: '145.8 TB',
+    digitalOceanCost: '$2,911.00',
+    wasabiCost: '$1,019.40',
   },
-]
+];
 
 const vodStorageMilestones = [
   {
     timePeriod: '1st Month',
     vodContentAdded: '10 TB',
     totalStorage: '10 TB',
-    digitalOceanCost: '$150.00',
+    digitalOceanCost: '$199.79',
     wasabiCost: '$69.90',
   },
   {
     timePeriod: '6th Month',
     vodContentAdded: '60 TB',
     totalStorage: '70 TB',
-    digitalOceanCost: '$1,350.00',
+    digitalOceanCost: '$1,428.94',
     wasabiCost: '$489.30',
   },
   {
     timePeriod: '12th Month',
     vodContentAdded: '120 TB',
     totalStorage: '190 TB',
-    digitalOceanCost: '$3,300.00',
+    digitalOceanCost: '$3,885.33',
     wasabiCost: '$1,328.10',
   },
   {
     timePeriod: '18th Month',
     vodContentAdded: '180 TB',
     totalStorage: '370 TB',
-    digitalOceanCost: '$6,600.00',
-    wasabiCost: '$2,587.50',
+    digitalOceanCost: '$7,571.98',
+    wasabiCost: '$2,586.30',
   },
   {
     timePeriod: '24th Month',
     vodContentAdded: '240 TB',
     totalStorage: '610 TB',
-    digitalOceanCost: '$10,800.00',
-    wasabiCost: '$4,266.90',
+    digitalOceanCost: '$12,487.81',
+    wasabiCost: '$4,264.90',
   },
-]
+];
+
 
 const contentEquivalents = [
   { timePeriod: '1st Month', totalStorage: '10 TB', hoursOfContent: '2,500 hours', equivalentTo: '30,000 music videos or 1,250 movies', thirtyMinEpisodes: '5,000' },
@@ -299,6 +297,7 @@ const contentEquivalents = [
   { timePeriod: '18th Month', totalStorage: '370 TB', hoursOfContent: '92,500 hours', equivalentTo: '1,110,000 music videos or 46,250 movies', thirtyMinEpisodes: '185,000' },
   { timePeriod: '24th Month', totalStorage: '610 TB', hoursOfContent: '152,500 hours', equivalentTo: '1,830,000 music videos or 76,250 movies', thirtyMinEpisodes: '305,000' },
 ];
+
 
 </script>
 

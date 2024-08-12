@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useUserStore } from '@/Stores/UserStore'
 
 const initialState = () => ({
     channels: [], // For Admin Channels page
@@ -44,7 +45,8 @@ const initialState = () => ({
         },
     },
     bannedUsers: [],
-    loading: false
+    loading: false,
+    shadowBanButton: false // show or hide Shadow Ban Button
 })
 
 export const useAdminStore = defineStore('adminStore', {
@@ -74,6 +76,10 @@ export const useAdminStore = defineStore('adminStore', {
                 })
         },
         async toggleChannelActiveStatus(channelId) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const notificationStore = useNotificationStore();
             try {
                 const response = await axios.post('/admin/channels/' + channelId + '/toggleChannelActive');
@@ -87,6 +93,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async addChannel(name) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const notificationStore = useNotificationStore();
             try {
                 const response = await axios.post('/admin/channels/add', {'name': name});
@@ -118,6 +128,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async updateChannel(channelId, newName) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const notificationStore = useNotificationStore();
             try {
                 const response = await axios.post(`/admin/channels/${channelId}`, {'name': newName});
@@ -175,6 +189,10 @@ export const useAdminStore = defineStore('adminStore', {
         //     this.items = data.items;
         // },
         async fetchItems(type) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             console.log('fetch items: ' + type);
             this.currentType = type
             this.loading = true
@@ -242,6 +260,10 @@ export const useAdminStore = defineStore('adminStore', {
         // Add more actions as needed
         // this next one should probably go in AdminChannelStore
         async setPlaybackPriorityType(channel, priorityType) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const dataToSend = {setPriorityType: priorityType}
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setPlaybackPriorityType`, dataToSend)
@@ -260,6 +282,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async setMistStream(channel, mistStreamId) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const dataToSend = {mistStreamId: mistStreamId}
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setMistStream`, dataToSend)
@@ -277,6 +303,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async setChannelPlaylist(channel, channelPlaylistId) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const dataToSend = {channelPlaylistId: channelPlaylistId}
             this.loading = true
             try {
@@ -297,6 +327,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async setExternalSource(channel, externalSourceId) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const dataToSend = {mistStreamId: externalSourceId}
             try {
                 const response = await axios.post(`/admin/channels/${channel.id}/setExternalSource`, dataToSend)
@@ -346,6 +380,10 @@ export const useAdminStore = defineStore('adminStore', {
         ////// FIRST PLAY SETTINGS
         /////////////////////////// admin/update-first-play-settings
         async fetchFirstPlaySettings() {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const notificationStore = useNotificationStore();
             try {
                 const response = await axios.post(`/admin/fetch-first-play-settings`);
@@ -377,6 +415,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async updateFirstPlaySettings() {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const notificationStore = useNotificationStore();
 
             try {
@@ -425,6 +467,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async fetchActiveStreams() {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const notificationStore = useNotificationStore();
             this.fetchingActiveStreams = true
             try {
@@ -459,6 +505,10 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         async setActiveStreamAsFirstPlay(activeStream) {
+            const userStore = useUserStore
+            if (!userStore.isAdmin) {
+                return
+            }
             const videoPlayerStore = useVideoPlayerStore();
             if (activeStream === 'test') {
                 this.firstPlaySettings.customVideoSource = videoPlayerStore.mistServerUri + 'hls/test/index.m3u8'
@@ -482,11 +532,20 @@ export const useAdminStore = defineStore('adminStore', {
             // name
 
         },
+        showShadowBanButton() {
+          this.shadowBanButton = true
+        },
+        hideShadowBanButton() {
+            this.shadowBanButton = false
+        },
         async banUser(userId, duration) {
             const notificationStore = useNotificationStore();
             try {
                 const response = await axios.post(`/admin/ban-user/${userId}`, {duration});
-                notificationStore.setGeneralServiceNotification('Success', 'User banned successfully.');
+
+                // Update bannedUsers list
+                this.bannedUsers.push(response.data);
+
                 return response.data;
             } catch (error) {
                 notificationStore.setGeneralServiceNotification('Error', 'Failed to ban user. ' + error);
@@ -498,7 +557,10 @@ export const useAdminStore = defineStore('adminStore', {
             const notificationStore = useNotificationStore()
             try {
                 const response = await axios.post(`/admin/unban-user/${userId}`);
-                notificationStore.setGeneralServiceNotification('Success', 'User unbanned successfully.');
+
+                // Update bannedUsers list by removing the unbanned user
+                this.bannedUsers = this.bannedUsers.filter(user => user.id !== userId);
+
                 return response.data;
             } catch (error) {
                 notificationStore.setGeneralServiceNotification('Error', 'Failed to unban user. ' + error);

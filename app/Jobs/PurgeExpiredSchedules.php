@@ -59,13 +59,28 @@ class PurgeExpiredSchedules implements ShouldQueue
 
                     // Check if the show has any remaining schedules
                     if ($show->schedules()->count() === 0) {
-                      // Update the show meta to set isScheduled to false
-                      $meta = json_decode($show->meta, true);
-                      if (!is_array($meta)) {
-                        $meta = [];
+
+                      // Retrieve the meta data
+                      $meta = $show->meta;
+
+                      // If $meta is already an array, use it directly
+                      if (is_array($meta)) {
+                        $metaData = $meta;
+                      } else {
+                        // If $meta is not an array, decode it or initialize an empty array if null or empty
+                        $metaData = $meta ? json_decode($meta, true) : [];
+
+                        // Check if decoding was successful
+                        if (!is_array($metaData)) {
+                          $metaData = [];
+                        }
                       }
-                      $meta['isScheduled'] = false;
-                      $show->meta = json_encode($meta);
+
+                      // Update the meta data
+                      $metaData['isScheduled'] = false;
+
+                      // Re-encode the meta data to JSON and save it
+                      $show->meta = json_encode($metaData);
                       $show->save();
 
 //                      Log::debug('Updated show meta isScheduled to false', ['show_id' => $show->id]);

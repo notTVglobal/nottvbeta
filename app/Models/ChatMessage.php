@@ -23,12 +23,15 @@ class ChatMessage extends Model
       'is_visible' => 'boolean',
   ];
 
-    public function channel() {
+    public function channel(): \Illuminate\Database\Eloquent\Relations\HasOne {
         return $this->hasOne('App\Models\Channel', 'id', 'channel_id');
     }
 
-    public function user()
-    {
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo(User::class);
     }
+
+  public function reactions(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(ChatMessageReaction::class);
+  }
 }
