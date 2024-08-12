@@ -36,7 +36,8 @@
             </span>
             <span
                 v-if="heartCount > 0"
-                class="absolute -top-2 -right-0 text-[0.5rem] text-white bg-red-500 rounded-full px-1"
+                class="absolute text-[0.5rem] font-semibold border border-black text-white bg-red-500 rounded-full w-[0.9rem] h-[0.9rem] flex items-center justify-center"
+                :style="{ top: '-0.7rem', right: '0rem' }"
             >
               {{ heartCount }}
             </span>
@@ -57,7 +58,8 @@
             </span>
             <span
                 v-if="thumbsUpCount > 0"
-                class="absolute -top-2 -right-0 text-[0.5rem] text-white bg-blue-500 rounded-full px-1"
+                class="absolute text-[0.5rem] font-semibold border border-black text-white bg-blue-500 rounded-full w-[0.9rem] h-[0.9rem] flex items-center justify-center"
+                :style="{ top: '-0.7rem', right: '0rem' }"
             >
               {{ thumbsUpCount }}
             </span>
