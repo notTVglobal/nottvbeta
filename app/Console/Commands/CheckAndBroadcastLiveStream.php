@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use App\Models\SchedulesIndex;
-use App\Services\MistServer\MistServerService;
+use App\Services\MistServer\PlaybackService;
 use App\Services\BroadcastAutomationService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -15,12 +15,12 @@ class CheckAndBroadcastLiveStream extends Command {
   protected $signature = 'broadcast:check-and-broadcast';
   protected $description = 'Check scheduled shows and broadcast if the live stream is connected';
 
-  protected MistServerService $playbackService;
+  protected PlaybackService $playbackService;
   protected BroadcastAutomationService $broadcastService;
 
   public function __construct() {
     parent::__construct();
-    $this->playbackService = app(MistServerService::class);
+    $this->playbackService = app(PlaybackService::class);
     $this->broadcastService = app(BroadcastAutomationService::class);
   }
 
