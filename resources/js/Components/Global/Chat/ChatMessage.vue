@@ -1,6 +1,6 @@
 <template>
   <div v-if="message.is_visible || isMessageFromCurrentUser"
-       class="flex flex-row space-x-1 pb-3 pr-5 w-full align-self-center">
+       class="flex flex-row space-x-1 pb-3 pr-2 w-full align-self-center">
     <div class="min-w-[2rem]">
       <img v-if="message.user_profile_photo_path"
            :src="'/storage/' + message.user_profile_photo_path" class="rounded-full h-8 w-8 object-cover" alt="">
@@ -15,7 +15,7 @@
            class="flex flex-col rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50"
 >
         <div class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</div>
-        <div class="text-white" v-html="message.message"
+        <div class="text-white text-sm" v-html="message.message"
              style="overflow-wrap: break-word; word-break: break-word;"></div>
       </div>
       <div class="flex justify-between items-center">
