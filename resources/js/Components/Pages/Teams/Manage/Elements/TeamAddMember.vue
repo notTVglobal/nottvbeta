@@ -103,8 +103,8 @@ const fetchCreators = async () => {
     const response = await axios.get('/api/all-creators') // New endpoint to fetch all creators
     teamStore.setCreators(response.data.data)
     // Debugging: Log the creators data to ensure it's populated correctly
-    console.log('Creators fetched:', response.data.data)
-    console.log('Team Id: ', teamStore.id)
+    // console.log('Creators fetched:', response.data.data)
+    // console.log('Team Id: ', teamStore.id)
   } catch (error) {
     console.error(error)
   }
