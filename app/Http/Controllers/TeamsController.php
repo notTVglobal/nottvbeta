@@ -362,9 +362,9 @@ class TeamsController extends Controller {
         'teamLeader:id,user_id', // Select only required columns from teamLeader
         'teamLeader.user:id,name,email', // Select only required columns from user related to teamLeader
         'managers:id,name,email', // Select only required columns from managers
-        'image:id,name,team_id,app_setting_id', // Select only required columns from image
+        'image:id,name,team_id,app_setting_id,cloud_folder,folder,placeholder_url', // Select only required columns from image
         'image.appSetting:id,cdn_endpoint', // Select only required columns from appSetting
-        'scheduleIndexes:id,team_id,content_type,content_id', // Select only required columns from scheduleIndexes
+        'scheduleIndexes', // Select all columns from scheduleIndexes
     ]);
 
     // Paginate and eager load the team members with specific columns
@@ -439,7 +439,7 @@ class TeamsController extends Controller {
   protected function getShows($teamId) {
     $shows = Show::with([
         'team:id,name', // Select only necessary columns from team
-        'image:id,name,team_id,app_setting_id', // Select necessary columns from image
+        'image:id,name,team_id,app_setting_id,cloud_folder,folder,placeholder_url', // Select necessary columns from image
         'image.appSetting:id,cdn_endpoint', // Select necessary columns from related appSetting
         'category:id,name,description', // Select necessary columns from category
         'subCategory:id,name,description', // Select necessary columns from subCategory
@@ -953,42 +953,12 @@ class TeamsController extends Controller {
   }
 
   /**
-   * @throws ValidationException
    */
   public function savePublicMessage(HttpRequest $request, Team $team): \Illuminate\Http\JsonResponse {
-    // Log the incoming request data
-//    Log::debug('Incoming request data', $request->all());
+    // Validate the incoming request data
     $validatedData = $request->validate([
-        'publicMessage'         => 'sometimes|string|max:440',
-        'nextBroadcastZoomLink' => 'sometimes|string',
-        'scheduleIndexId'       => 'required_with:next_broadcast_details|exists:schedules_indexes,id',
+        'publicMessage' => 'sometimes|string|max:440',
     ]);
-
-    if (isset($validatedData['scheduleIndexId'])) {
-      $scheduleIndex = SchedulesIndex::find($validatedData['scheduleIndexId']);
-      if ($scheduleIndex) {
-
-        // Initialize the JSON column if it's null
-        if (is_null($scheduleIndex->next_broadcast_details)) {
-          $scheduleIndex->next_broadcast_details = [];
-        }
-
-        $nextBroadcastDetails = $scheduleIndex->next_broadcast_details;
-
-        if (isset($validatedData['nextBroadcastZoomLink'])) {
-          // Get the current value
-          $nextBroadcastDetails['zoomLink'] = $validatedData['nextBroadcastZoomLink']; // Modify it
-          // Set the entire property
-        } else {
-          unset($nextBroadcastDetails['zoomLink']); // Unset the zoomLink if not provided
-        }
-        $scheduleIndex->next_broadcast_details = $nextBroadcastDetails;
-
-        $scheduleIndex->save(); // Save the model
-
-//        Log::debug('Saved next_broadcast_details', ['next_broadcast_details' => $scheduleIndex->next_broadcast_details]);
-      }
-    }
 
     // Optionally, save the public message if it is present
     if (isset($validatedData['publicMessage'])) {
@@ -996,13 +966,49 @@ class TeamsController extends Controller {
       // Sanitize public message
       $sanitizedPublicMessage = Purifier::clean($validatedData['publicMessage'], 'customNoCss');
 
-//      Log::debug('Public message: ' . $sanitizedPublicMessage);
+      // Save the sanitized public message to the team
       $team->public_message = $sanitizedPublicMessage;
       $team->save();
     }
 
-    return response()->json(['message' => 'Data saved successfully']);
+    return response()->json(['message' => 'Public message saved successfully']);
   }
+
+
+  public function saveBroadcastDetails(HttpRequest $request, Team $team): \Illuminate\Http\JsonResponse {
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'scheduleIndexId'       => 'required|exists:schedules_indexes,id',
+        'nextBroadcastZoomLink' => 'sometimes|nullable|string',
+    ]);
+
+    // Find the corresponding schedule index using the validated scheduleIndexId
+    $scheduleIndex = SchedulesIndex::find($validatedData['scheduleIndexId']);
+    if ($scheduleIndex) {
+
+      // Initialize the JSON column if it's null
+      if (is_null($scheduleIndex->next_broadcast_details)) {
+        $scheduleIndex->next_broadcast_details = [];
+      }
+
+      $nextBroadcastDetails = $scheduleIndex->next_broadcast_details;
+
+      // Update the zoom link if provided in the request
+      if (isset($validatedData['nextBroadcastZoomLink'])) {
+        $nextBroadcastDetails['zoomLink'] = $validatedData['nextBroadcastZoomLink'];
+      } else {
+        // Optionally remove the zoom link if it's not provided
+        unset($nextBroadcastDetails['zoomLink']);
+      }
+
+      // Save the updated broadcast details back to the schedule index
+      $scheduleIndex->next_broadcast_details = $nextBroadcastDetails;
+      $scheduleIndex->save();
+    }
+
+    return response()->json(['message' => 'Broadcast details saved successfully']);
+  }
+
 
 
 

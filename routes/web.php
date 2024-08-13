@@ -1022,6 +1022,9 @@ Route::middleware([
     Route::post('/teams/{team}/save-public-message', [TeamsController::class, 'savePublicMessage'])
         ->middleware('can:manage,team');
 
+    Route::post('/teams/{team}/save-broadcast-details', [TeamsController::class, 'saveBroadcastDetails'])
+        ->middleware('can:manage,team');
+
     // Edit team
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
         ->name('teams.edit');

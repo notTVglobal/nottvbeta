@@ -5,7 +5,7 @@
     <div class="space-x-4">
       <p class="text-lg md:text-xl leading-relaxed font-medium text-gray-900 dark:text-gray-200 p-3 rounded">
         <span v-if="!isBroadcastOpen">Join the next broadcast!</span>
-        <span v-else>Join the meeting!</span>
+        <span v-else>Join the show!</span>
       </p>
       <p v-if="!isBroadcastOpen" class="text-sm text-black">The link will appear 30 minutes before we go live.</p>
       <div class="flex justify-center">
@@ -67,7 +67,7 @@ const isBroadcastOpen = computed(() => {
     // console.log('Broadcast Date:', broadcastDate.format())
 
     const startTime = broadcastDate.subtract(30, 'minute')
-    const endTime = broadcastDate.add(60, 'minute')
+    const endTime = broadcastDate.add(teamStore.nextBroadcast.broadcastDetails.duration_minutes, 'minute');
 
     // console.log('Start Time:', startTime.format())
     // console.log('End Time:', endTime.format())
@@ -109,7 +109,7 @@ function shareZoomLink() {
 }
 
 const shouldDisplayZoomLink = computed(() => {
-  return teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink && isBroadcastOpen.value;
+  return teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink;
 });
 
 function joinZoom() {

@@ -42,5 +42,4 @@ const teamStore = useTeamStore()
 
 const shows = computed(() => teamStore.shows || {});
 
-
 </script>

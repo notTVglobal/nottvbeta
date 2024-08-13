@@ -31,18 +31,23 @@ class ChangeFirstPlayVideo implements ShouldBroadcastNow {
   /**
    * Get the channels the event should broadcast on.
    *
-   * @return \Illuminate\Broadcasting\Channel|array
+   * @return Channel
    */
-  public function broadcastOn() {
+  public function broadcastOn(): Channel {
     return new Channel('firstPlayVideo');
   }
 
   public function broadcastAs(): string {
-//            return 'chat.'. $this->chatMessage->channel_id;
     return 'changeFirstPlayVideo';
   }
 
-  public function broadcastWith() {
+  public function broadcastWith(): array {
+
+    // Log the event details before broadcasting
+    Log::info('Broadcasting changeFirstPlayVideo event', [
+        'event' => $this,
+    ]);
+
     $broadcastData = [
         'firstPlayVideo' => [
             'source' => $this->videoData->source ?? null,
@@ -51,7 +56,12 @@ class ChangeFirstPlayVideo implements ShouldBroadcastNow {
             'name' => $this->videoData->name ?? null,
         ]
     ];
-//    Log::debug('Broadcasting video data', $broadcastData);
+
+    // Detailed debug log, consider using this in non-production environments
+    if (config('app.env') !== 'production') {
+      Log::debug('Broadcasting video data', $broadcastData);
+    }
+
     return $broadcastData;
   }
 }

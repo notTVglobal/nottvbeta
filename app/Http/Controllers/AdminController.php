@@ -342,7 +342,7 @@ class AdminController extends Controller {
 //    Log::debug('Video data before dispatch', ['videoData' => $videoDetails]);
 
 // Broadcast the updated firstPlay
-    event(new ChangeFirstPlayVideo($videoDetails));
+    broadcast(new ChangeFirstPlayVideo($videoDetails));
 
     // Return a success response
     return response()->json([

@@ -135,25 +135,36 @@ const closePopup = () => {
 const firstPlayVideoEcho = Echo.channel('firstPlayVideo')
 
 firstPlayVideoEcho.subscribed(() => {
-  console.log('Subscribed to firstPlayVideo channel')
+  console.log('Successfully subscribed to firstPlayVideo channel')
 }).listen('.changeFirstPlayVideo', (e) => {
-  console.log('Broadcast notification, first play video changed:', e)
+  try {
+    console.log('Received changeFirstPlayVideo event:', e)
 
-  // Check if 'skip_first_playback_video' is not enabled
-  if (userStore.videoSettings.skip_first_playback_video !== 1) {
-    const source = {
-      source: e.firstPlayVideo.source,
-      mediaType: e.firstPlayVideo.mediaType || 'mistStream', // Default to 'mistStream' if not specified
-      type: e.firstPlayVideo.type,
-      name: e.firstPlayVideo.name,
+    // Check if 'skip_first_playback_video' is not enabled
+    if (userStore.videoSettings.skip_first_playback_video !== 1) {
+      console.log('skip_first_playback_video is not enabled, proceeding with video update');
+
+      const source = {
+        source: e.firstPlayVideo.source,
+        mediaType: e.firstPlayVideo.mediaType || 'mistStream', // Default to 'mistStream' if not specified
+        type: e.firstPlayVideo.type,
+        name: e.firstPlayVideo.name,
+      }
+
+      console.log('Source for new video:', source);
+
+      videoPlayerStore.updateFirstPlay(source)
+      // Load new video with the source data
+      videoPlayerStore.loadNewFirstPlayVideo(source)
+    } else {
+      console.log('skip_first_playback_video is enabled, skipping video update');
     }
-
-    videoPlayerStore.updateFirstPlay(source)
-    // Load new video with the source data
-    videoPlayerStore.loadNewFirstPlayVideo(source)
-  }
+  } catch (error) {
+      console.error('Error processing changeFirstPlayVideo event:', error);
+    }
+  }).error((error) => {
+    console.error('Error with Echo channel:', error);
 })
-
 
 // const userTimezone = ref('');
 

@@ -128,7 +128,7 @@ import Pagination from '@/Components/Global/Paginators/Pagination'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import ShowNoteEdit from '@/Components/Pages/Teams/Manage/Elements/ShowNoteEdit.vue'
 import { useForm } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()

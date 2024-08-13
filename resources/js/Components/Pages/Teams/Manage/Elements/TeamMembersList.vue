@@ -46,7 +46,7 @@
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-      <TeamMember v-for="member in team.members.data" :member="member" :team="team" :key="member.id" :can="can"/>
+      <TeamMember v-for="member in teamStore.members" :member="member" :team="team" :key="member.id" :can="can"/>
       </tbody>
     </table>
   </div>
