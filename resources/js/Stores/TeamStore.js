@@ -120,8 +120,6 @@ export const useTeamStore = defineStore('teamStore', {
             this.team.name = team.name
             this.team.description = team.description
             this.team.slug = team.slug
-            this.team.members = team.members
-            this.team.managers = team.managers
             this.team.totalSpots = team.totalSpots
         },
         setActiveShow(show) {
@@ -131,7 +129,7 @@ export const useTeamStore = defineStore('teamStore', {
             this.activeShow = episode
         },
         addMember(member) {
-            this.members.push(member)
+            this.team.members.data.push(member)
             this.team.memberCount++
         },
         removeMember(memberId) {

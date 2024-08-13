@@ -20,7 +20,7 @@
     <td class="light:text-gray-600 px-6 py-4 text-sm">
       <span v-if="member.id === teamStore.team?.teamLeader?.id" class="text-indigo-700">Team Leader</span>
       <span v-else-if="member.id === teamStore.team?.teamCreator?.id" class="text-indigo-700">Team Creator</span>
-      <span v-else-if="teamStore.team.managers.some(manager => manager.id === member.id)" class="text-orange-700">Team Manager</span>
+      <span v-else-if="teamStore.managers.some(manager => manager.id === member.id)" class="text-orange-700">Team Manager</span>
       <span v-else>Team Member</span>
     </td>
 
@@ -75,9 +75,6 @@ import ConfirmRemoveTeamMemberDialog from '@/Components/Global/Modals/ConfirmRem
 import ConfirmTeamManagerDialog from '@/Components/Global/Modals/ConfirmTeamManagerDialog'
 
 const teamStore = useTeamStore()
-
-let removeManager = ref(false)
-let addManager = ref(false)
 
 let props = defineProps({
   team: Object,
