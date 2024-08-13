@@ -1,7 +1,18 @@
 # not.tv Changelog
 
-Last Update: August 11, 2024\
+Last Update: August 12, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.38
+August 12, 2024
+
+* Fixed Team Logo not showing on Team Manage page.
+* Fixed Show Posters not showing on Team Manage page.
+* Fixed Team Member count not properly displaying.
+* Fixed Team Members add/remove not working correctly.
+* Fixed Team page not showing correct Next Broadcast
+* Added a Change Broadcast Details button to the Team Manage page.
+  * Teams can now set a Zoom link for viewers to call in. The link will appear 30 minutes before the show starts and remain visible to the end of the show.
 
 ## v0.9.3.37
 August 11, 2024

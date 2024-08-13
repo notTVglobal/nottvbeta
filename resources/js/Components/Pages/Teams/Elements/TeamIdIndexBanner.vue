@@ -12,22 +12,27 @@
            class="flex flex-col md:flex-row justify-center w-full py-2 px-5">
         <div
             class="flex flex-col md:flex-row bg-gray-600 dark:bg-gray-700 border border-gray-900 w-full py-6 text-center align-middle rounded-lg shadow-lg">
-          <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-center">
-            <div v-if="shouldDisplayNextBroadcast" class="px-4">
-              <p class="uppercase font-bold tracking-wider text-yellow-400 dark:text-gray-200">
+          <div class="flex flex-col md:w-1/3 md:border-r border-gray-400 dark:border-gray-600 justify-start">
+            <div
+                v-if="shouldDisplayNextBroadcast"
+                @click="goToBroadcast(teamStore.nextBroadcast)"
+                class="py-10 hover:bg-gray-800 dark:hover:bg-gray-800 text-white dark:text-gray-200 rounded-lg cursor-pointer transition-all duration-200 ease-in-out hover:shadow-xl"
+            >
+              <p class="uppercase font-bold tracking-wider text-yellow-300 dark:text-yellow-300 mb-1">
                 Next Broadcast
               </p>
-              <p class="text-lg text-gray-200 dark:text-gray-200">
+              <p class="text-lg font-medium mb-1">
+                {{ teamStore.nextBroadcast.name }}
+              </p>
+              <p class="text-lg">
                 {{ formattedDate }}
               </p>
-              <p class="text-lg text-gray-200 dark:text-gray-200">
+              <p class="text-lg mb-3">
                 {{ formattedTime }} {{ userStore.timezoneAbbreviation }}
               </p>
-              <!-- Enhanced broadcast name display -->
-              <div @click="goToBroadcast(teamStore.nextBroadcast)"
-                   class="broadcast-hover flex items-center justify-center mx-auto mt-2 text-xl md:text-2xl font-semibold text-blue-500 dark:text-blue-300 hover:underline cursor-pointer">
+              <div class="flex items-center justify-center mx-auto mt-2">
                 <SingleImage :image="teamStore.nextBroadcast.image" :alt="`Image`"
-                             :class="`max-w-32 max-h-24 object-cover rounded-lg`"/>
+                             :class="`max-w-32 max-h-24 object-cover rounded-lg shadow-lg`"/>
               </div>
             </div>
             <div v-else class="px-4 text-gray-400 dark:text-gray-200">
@@ -36,18 +41,22 @@
           </div>
           <div
                class="flex flex-col md:w-2/3 justify-center items-center font-semibold px-4">
-            <div v-if="teamStore.team.public_message"
-                 class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 rounded">
+
+            <div v-if="teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink" class="w-full mt-4 ">
+              <ZoomLinkButton />
+            </div>
+            <div :class="{'pt-4': teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink}"
+                 class="text-lg md:text-xl leading-relaxed font-medium text-gray-200 dark:text-gray-200 p-3 rounded w-full">
               <span v-html="teamStore.team.public_message" class="public-message"/>
             </div>
-            <div v-if="teamStore.nextBroadcast && teamStore.nextBroadcastZoomLink" class="w-20 mt-4 md:border-t border-gray-400 dark:border-gray-600">
-            </div>
+
+
 
           </div>
         </div>
       </div>
 
-      <ZoomLinkButton />
+
 
       <TeamIdIndexUpcomingBroadcasts/>
       <!--  <div v-if="sortedBroadcasts.length" class="accordion bg-gray-800 text-gray-50 p-5 rounded-lg shadow">-->
@@ -108,48 +117,85 @@ const teamStore = useTeamStore()
 const userStore = useUserStore()
 
 // Map store state to local computed properties
-const team = computed(() => teamStore.team || {})
+// const team = computed(() => teamStore.team || {})
 
 const activeIndex = ref(null)
 
-const toggle = (index) => {
-  if (activeIndex.value === index) {
-    activeIndex.value = null
-  } else {
-    activeIndex.value = index
-  }
-}
+// const toggle = (index) => {
+//   if (activeIndex.value === index) {
+//     activeIndex.value = null
+//   } else {
+//     activeIndex.value = index
+//   }
+// }
+
+// Use the first item in sortedBroadcasts
+const firstBroadcast = computed(() => {
+  return teamStore.sortedBroadcasts[0] || null;
+});
+
+// const formattedDate = computed(() => {
+//   if (!teamStore.nextBroadcast) return null
+//   return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('dddd MMMM D, YYYY')
+// })
+//
+// const formattedTime = computed(() => {
+//   if (!teamStore.nextBroadcast) return null
+//   return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('h:mm a')
+// })
 
 const formattedDate = computed(() => {
-  if (!teamStore.nextBroadcast) return null
-  return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('dddd MMMM D, YYYY')
-})
+  if (!firstBroadcast.value) return null;
+  return dayjs(firstBroadcast.value.broadcastDate).tz(userStore.timezone).format('dddd MMMM D, YYYY');
+});
 
 const formattedTime = computed(() => {
-  if (!teamStore.nextBroadcast) return null
-  return dayjs(teamStore.nextBroadcast.broadcastDate).tz(userStore.timezone).format('h:mm a')
-})
+  if (!firstBroadcast.value) return null;
+  return dayjs(firstBroadcast.value.broadcastDate).tz(userStore.timezone).format('h:mm a');
+});
 
 const shouldDisplayNextBroadcast = computed(() => {
-  const nextBroadcast = teamStore.nextBroadcast;
-  if (!nextBroadcast) return false;
+  if (!firstBroadcast.value) return false;
 
-  const broadcastDate = dayjs(nextBroadcast.broadcastDate);
+  const broadcastDate = dayjs(firstBroadcast.value.broadcastDate);
   const now = dayjs().tz(userStore.timezone);
 
   return broadcastDate.isAfter(now) && broadcastDate.diff(now, 'minute') > 30;
 });
 
-const goToBroadcast = (broadcast) => {
-  if (!teamStore.nextBroadcast) return
+// const shouldDisplayNextBroadcast = computed(() => {
+//   const nextBroadcast = teamStore.nextBroadcast;
+//   if (!nextBroadcast) return false;
+//
+//   const broadcastDate = dayjs(nextBroadcast.broadcastDate);
+//   const now = dayjs().tz(userStore.timezone);
+//
+//   return broadcastDate.isAfter(now) && broadcastDate.diff(now, 'minute') > 30;
+// });
+
+const goToBroadcast = nextBroadcast => {
+  if (!firstBroadcast.value) return;
+
   const baseLink = {
-    'show': `/shows/${broadcast.slug}/`,
-    'movie': `/movie/${broadcast.slug}/`,
-    'showEpisode': `/shows/${broadcast?.show?.slug}/episode/${broadcast.slug}/`,
-  }
-  const url = baseLink[broadcast.type] || '/'
-  router.visit(url)
-}
+    'show': `/shows/${firstBroadcast.value.slug}/`,
+    'movie': `/movie/${firstBroadcast.value.slug}/`,
+    'showEpisode': `/shows/${firstBroadcast.value?.show?.slug}/episode/${firstBroadcast.value.slug}/`,
+  };
+
+  const url = baseLink[firstBroadcast.value.type] || '/';
+  router.visit(url);
+};
+
+// const goToBroadcast = (broadcast) => {
+//   if (!teamStore.nextBroadcast) return
+//   const baseLink = {
+//     'show': `/shows/${broadcast.slug}/`,
+//     'movie': `/movie/${broadcast.slug}/`,
+//     'showEpisode': `/shows/${broadcast?.show?.slug}/episode/${broadcast.slug}/`,
+//   }
+//   const url = baseLink[broadcast.type] || '/'
+//   router.visit(url)
+// }
 </script>
 <style>
 .broadcast-carousel {

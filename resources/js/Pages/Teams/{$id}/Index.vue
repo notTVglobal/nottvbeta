@@ -7,7 +7,7 @@
     <meta property="og:image" :content="ogImage" />
   </Head>
 
-  <div id="topDiv" class="place-self-center h-screen flex flex-col">
+  <div id="topDiv" class="place-self-center min-h-screen flex flex-col">
     <div
         class="min-h-screen w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 rounded sm:rounded-lg shadow">
 

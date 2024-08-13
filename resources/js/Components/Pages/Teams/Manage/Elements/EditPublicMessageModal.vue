@@ -25,18 +25,6 @@
             {{ team?.public_message?.length }}/440 max characters
           </div>
 
-
-          <!-- Set Zoom Link for the next broadcast. -->
-          <div v-if="teamStore?.nextBroadcastLoaded && teamStore?.nextBroadcastLoaded?.broadcastDate">
-            <p class="italic">insert zoom link</p>
-            <input v-model="teamStore.nextBroadcastZoomLink" type="text" placeholder="Type here"
-                   class="input input-bordered w-full max-w-xs bg-white dark:bg-gray-800 dark:text-white border-black focus:border-black"/>
-            <p class="mt-2 text-sm uppercase font-semibold">
-              for the next broadcast:</p>
-            <p class="">{{ formatedBroadcastDate }}</p>
-            <p class="font-semibold uppercase">{{ teamStore?.nextBroadcast?.name }}</p>
-          </div>
-
         </div>
 
 
@@ -58,7 +46,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import dayjs from 'dayjs'
@@ -78,11 +66,13 @@ const errorMessage = ref('')
 const hasError = ref(false) // New state variable to track if there was an error
 
 // Define the computed property for formatting broadcast date
-const formatedBroadcastDate = computed(() => {
-  return teamStore.nextBroadcast?.broadcastDate
-      ? dayjs(teamStore.nextBroadcast?.broadcastDate).format('dddd MMMM DD [at] HH:mm a')
-      : ''
-})
+// const formatedBroadcastDate = computed(() => {
+//   return teamStore.nextBroadcast?.broadcastDate
+//       ? dayjs(teamStore.nextBroadcast?.broadcastDate).format('dddd MMMM DD [at] HH:mm a')
+//       : ''
+// })
+
+
 
 const hasNextBroadcastDate = computed(() => !!teamStore.nextBroadcast.broadcastDate)
 
@@ -132,14 +122,6 @@ const savePublicMessage = () => {
     publicMessage: team.value.public_message,
   }
 
-  // Check if nextBroadcastLoaded is not null before accessing scheduleIndexId
-  if (teamStore.nextBroadcastLoaded && teamStore.nextBroadcastLoaded.scheduleIndexId) {
-    payload.scheduleIndexId = teamStore.nextBroadcastLoaded.scheduleIndexId
-  }
-
-  if (teamStore.nextBroadcastZoomLink) {
-    payload.nextBroadcastZoomLink = teamStore.nextBroadcastZoomLink
-  }
 
   console.log('payload: ', payload)
 

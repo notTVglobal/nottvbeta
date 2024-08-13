@@ -15,6 +15,7 @@
       <div v-if="can.hasSpecialPermission">
 
         <EditPublicMessageModal />
+        <ChangeNextBroadcastDetails />
 
       </div>
 
@@ -37,21 +38,16 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import EditPublicMessageModal from '@/Components/Pages/Teams/Manage/Elements/EditPublicMessageModal.vue'
+import ChangeNextBroadcastDetails from '@/Components/Pages/Teams/Manage/Elements/ChangeNextBroadcastDetails.vue'
 
 const teamStore = useTeamStore()
 
 // Map store state to local computed properties
 const team = computed(() => teamStore.team || {});
 const can = computed(() => teamStore.can);
-
-
-
-
-
-
 
 </script>

@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useTeamStore } from '@/Stores/TeamStore'
@@ -86,6 +86,15 @@ function reloadNote() {
   props.show.notes = teamStore.note
   componentKey.value += 1
 }
+
+// Watch for changes in the team object and log the image when it becomes available
+watchEffect(() => {
+  if (props.show.image) {
+    console.log('Show image object:', props.show.image);
+  } else {
+    console.log('Show image is not available yet.');
+  }
+});
 
 </script>
 <style scoped>

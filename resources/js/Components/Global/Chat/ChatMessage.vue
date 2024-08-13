@@ -65,6 +65,7 @@
             </span>
           </button>
         </div>
+        <ShadowBanButton v-if="$page.props.auth.user.isAdmin && adminStore.shadowBanButton" :message="message"/>
       </div>
     </div>
   </div>
