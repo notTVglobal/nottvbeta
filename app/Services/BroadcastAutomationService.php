@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Events\ChangeFirstPlayVideo;
 use App\Models\AppSetting;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -85,7 +87,7 @@ class BroadcastAutomationService {
       ]);
 
       // Trigger the event
-      event(new ChangeFirstPlayVideo((object) [
+      broadcast(new ChangeFirstPlayVideo((object) [
           'source'    => $updateData['first_play_video_source'],
           'mediaType' => $updateData['first_play_media_type'],
           'name'      => $updateData['first_play_video_name'],

@@ -31,7 +31,11 @@ class FetchRssFeeds extends Command {
           Log::info('All RSS feed fetch jobs completed successfully.');
         })
         ->catch(function (Batch $batch, Throwable $e) {
-          Log::error('One or more RSS feed fetch jobs failed.', ['exception' => $e]);
+          Log::error('One or more RSS feed fetch jobs failed.', [
+              'batch_id' => $batch->id,
+              'failed_jobs_count' => $batch->failedJobs,
+              'exception' => $e->getMessage(),
+          ]);
         })
         ->finally(function (Batch $batch) {
           Log::info('RSS feed fetch job batch finished.');

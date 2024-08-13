@@ -41,6 +41,9 @@ class TeamDetailedResource extends JsonResource {
 //      });
 //    });
 
+    // Count the members associated with the team
+    $memberCount = $this->members()->count();
+
     $managers = $this->whenLoaded('managers', function () {
       return $this->managers->map(function ($manager) {
         return (new TeamManagerResource($manager))->resolve();
@@ -58,7 +61,8 @@ class TeamDetailedResource extends JsonResource {
         'slug'             => $this->slug,
         'image'            => $resolvedImage,
         'team_status_id'   => $this->team_status_id,
-        'nextBroadcast'    => $this->nextBroadcast ? $this->nextBroadcast->toArray() : [],
+//        'nextBroadcast'    => $this->nextBroadcast ? $this->nextBroadcast->toArray() : [],
+        'nextBroadcast'    => $this->nextBroadcast ?? [],
         'public_message'   => $this->public_message ?? '',
         'socialMediaLinks' => [
             'www_url'        => $this->www_url ?? null,
@@ -69,6 +73,7 @@ class TeamDetailedResource extends JsonResource {
         'totalSpots'       => $this->totalSpots,
 //        'members'          => $members ?? null,
         'members'          => $members ? $members->toArray() : null, // Pass the paginated members
+        'memberCount'      => $memberCount,
         'teamOwner'        => $teamOwnerData,
         'teamLeader'       => $teamLeaderData,
         'managers'         => $managers,
