@@ -33,7 +33,8 @@ Schedule::command('horizon:snapshot')->everyFiveMinutes()->runInBackground();
 
 // Every thirty minutes tasks
 
-//
+// Updates the schedule every thirty minutes
+Schedule::command('update:schedule')->everyThirtyMinutes()->withoutOverlapping(30)->runInBackground();
 
 
 // Hourly tasks
@@ -49,12 +50,6 @@ Schedule::job(new ArchiveSavedRssFeedItemsJob)->hourly();
 
 // Hourly maintenance task: Purges old cache files older than 1 hour
 Schedule::job(new PurgeOldCacheFilesJob(1))->hourly();
-
-
-// Every six hours tasks
-
-// Updates the schedule every six hours
-Schedule::command('update:schedule')->everySixHours()->withoutOverlapping(240)->runInBackground();
 
 
 // Daily tasks

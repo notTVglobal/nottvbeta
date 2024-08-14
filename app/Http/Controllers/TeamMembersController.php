@@ -109,8 +109,6 @@ class TeamMembersController extends Controller {
     // Get the requested members page
     $page = $request->query('members', 1); // Default to page 1 if not provided
 
-    Log::info("Fetching team members for team: {$team->slug}, page: {$page}");
-
     // Fetch paginated members with the necessary columns and pivot data
     $members = $team->members()
         ->select(['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path']) // Select only the necessary columns

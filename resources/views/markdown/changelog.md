@@ -7,6 +7,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 August 13, 2024
 
 * Team member's email and phone numbers are no longer visible by default.
+* Changed schedule to update every 30 minutes instead of every 6 hours.
 
 ## v0.9.3.38c
 August 12, 2024
