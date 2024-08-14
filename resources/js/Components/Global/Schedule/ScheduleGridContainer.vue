@@ -7,7 +7,7 @@
     <span class="text-sm uppercase text-purple-500">All times are listed in your timezone.</span>
   </div>
   <div class="mb-2 tracking-wide">
-    <span class="text-sm uppercase text-yellow-500">The schedule is updated every six hours.</span>
+    <span class="text-sm uppercase text-yellow-500">The schedule is updated every 30 minutes.</span>
   </div>
 
   <div class="w-full">

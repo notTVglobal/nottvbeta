@@ -22,8 +22,12 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
    */
   public function handle(): void {
 
+    // Define the cutoff time
+    $cutoffTime = now()->subMinutes(30);
+
     // Retrieve all broadcast dates from Redis and update the database
     $schedules = Schedule::with('content', 'scheduleRecurrenceDetails', 'scheduleIndexes')
+        ->where('end_dateTime_utc', '>', $cutoffTime)
         ->orderBy('start_dateTime_utc')
         ->get();
 
@@ -31,18 +35,34 @@ class UpdateSchedulesAndIndexes implements ShouldQueue {
     $schedules->chunk(100)->each(function ($chunk) {
       $jobs = [];
 
+
       foreach ($chunk as $schedule) {
-        $jobs[] = new ProcessSingleScheduleAndIndex($schedule);
+        // Check if the schedule should be deleted
+        if ($schedule->end_dateTime_utc->lt(now()->subMinutes(30))) {
+          // Delete associated schedules_index and schedule_recurrence_details records
+          $schedule->scheduleIndexes()->delete();
+          $schedule->scheduleRecurrenceDetails()->delete();
+
+          // Delete the schedule itself
+          $schedule->delete();
+
+          Log::info("Schedule ID {$schedule->id} and its associated records were deleted.");
+        } else {
+          $jobs[] = new ProcessSingleScheduleAndIndex($schedule);
+        }
       }
 
-      Bus::batch($jobs)
-          ->then(function (Batch $batch) {
-            Log::info('Batch to cache schedules processed successfully. Batch ID: ' . $batch->id);
-          })
-          ->catch(function (Batch $batch, Throwable $e) {
-            Log::error('Batch job failure detected: ' . $e->getMessage());
-          })
-          ->dispatch();
+      // Dispatch the batch job
+      if (!empty($jobs)) {
+        Bus::batch($jobs)
+            ->then(function (Batch $batch) {
+              Log::info('Batch to cache schedules processed successfully. Batch ID: ' . $batch->id);
+            })
+            ->catch(function (Batch $batch, Throwable $e) {
+              Log::error('Batch job failure detected: ' . $e->getMessage());
+            })
+            ->dispatch();
+      }
     });
   }
 }
