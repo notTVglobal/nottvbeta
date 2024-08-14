@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
+use App\Http\Resources\TeamDetailedResource;
+use App\Http\Resources\TeamMemberResource;
 use App\Models\InviteCode;
 use App\Models\Notification;
 use App\Services\NotificationService;
@@ -101,6 +103,26 @@ class TeamMembersController extends Controller {
         'message' => $user->name . ' has been successfully added to the team.'
     ]);
 
+  }
+
+  public function fetchPaginatedTeamMembers(Team $team, Request $request): \Illuminate\Http\JsonResponse {
+    // Get the requested members page
+    $page = $request->query('members', 1); // Default to page 1 if not provided
+
+    Log::info("Fetching team members for team: {$team->slug}, page: {$page}");
+
+    // Fetch paginated members with the necessary columns and pivot data
+    $members = $team->members()
+        ->select(['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path']) // Select only the necessary columns
+        ->withPivot(['active', 'team_profile_is_public', 'created_at', 'updated_at']) // Include pivot data
+        ->paginate(5, ['*'], 'members', $page) // Use 'members' as the page name
+        ->withQueryString();
+
+    // Set the base path for pagination URLs to match the request route
+    $members->setPath(url("/teams/{$team->slug}/fetch-paginated-team-members"));
+
+    // Return the paginated resource collection as a JsonResponse
+    return TeamMemberResource::collection($members)->response();
   }
 
 //    public function detach(Request $request)

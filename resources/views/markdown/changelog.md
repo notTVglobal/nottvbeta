@@ -3,7 +3,7 @@
 Last Update: August 12, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.9.3.38b
+## v0.9.3.38c
 August 12, 2024
 
 * Fixed Team Logo not showing on Team Manage page.
