@@ -11,13 +11,13 @@ class NotificationService
 {
   public static function createAndDispatchNotification($userId, $imageId, $url, $title, $message): void {
     // Log all the parameters
-    Log::debug('Creating notification with data: ', [
-        'user_id' => $userId,
-        'image_id' => $imageId,
-        'url' => $url,
-        'title' => $title,
-        'message' => $message
-    ]);
+//    Log::debug('Creating notification with data: ', [
+//        'user_id' => $userId,
+//        'image_id' => $imageId,
+//        'url' => $url,
+//        'title' => $title,
+//        'message' => $message
+//    ]);
 
     try {
     $notification = new Notification;
