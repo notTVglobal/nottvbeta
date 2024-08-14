@@ -20,7 +20,7 @@
     <td class="light:text-gray-600 px-6 py-4 text-sm">
       <span v-if="member.id === teamStore.team?.teamLeader?.id" class="text-indigo-700">Team Leader</span>
       <span v-else-if="member.id === teamStore.team?.teamCreator?.id" class="text-indigo-700">Team Creator</span>
-      <span v-else-if="teamStore.managers.some(manager => manager.id === member.id)" class="text-orange-700">Team Manager</span>
+      <span v-else-if="teamStore.team.managers.some(manager => manager.id === member.id)" class="text-orange-700">Team Manager</span>
       <span v-else>Team Member</span>
     </td>
 
@@ -47,7 +47,7 @@
         <span>{{ managerButtonText }}</span>
       </button>
 
-      <div v-if="$page.props.auth.user.id !== member.id || team.teamOwner.id !== member.id">
+      <div v-if="$page.props.auth.user.id !== member.id || teamStore.team.teamOwner.id !== member.id">
         <button v-if="can.isTeamOwner || can.isTeamLeader"
                 class="bg-red-600 text-white hover:bg-red-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                 @click.prevent="deleteTeamMember(member)"
@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import ConfirmRemoveTeamMemberDialog from '@/Components/Global/Modals/ConfirmRemoveTeamMemberDialog'
 import ConfirmTeamManagerDialog from '@/Components/Global/Modals/ConfirmTeamManagerDialog'
@@ -77,7 +77,6 @@ import ConfirmTeamManagerDialog from '@/Components/Global/Modals/ConfirmTeamMana
 const teamStore = useTeamStore()
 
 let props = defineProps({
-  team: Object,
   member: Object,
   can: Object,
 })
@@ -96,8 +95,6 @@ function confirmTeamManager(member) {
   teamStore.confirmManagerDialog = true
 
   teamStore.addManager = !teamStore.team.managers.some(manager => manager.id === member.id)
-
-
 }
 
 // Computed property to check if the member is a manager
@@ -113,18 +110,6 @@ const managerButtonText = computed(() => {
 // Computed property for button class
 const managerButtonClass = computed(() => {
   return isManager.value ? 'bg-orange-600 hover:bg-orange-500' : 'bg-blue-600 hover:bg-blue-500'
-})
-//
-// if (isManager) {
-//   removeManager = true
-//   addManager = false
-// } else if (!isManager) {
-//   addManager = true
-//   removeManager = false
-// }
-
-onBeforeMount(() => {
-
 })
 
 defineEmits([

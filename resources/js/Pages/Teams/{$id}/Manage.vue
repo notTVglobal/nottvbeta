@@ -142,14 +142,15 @@ let props = defineProps({
   can: Object,
 })
 
-console.log('Props received:', props)
+// console.log('Props received:', props)
 // teamStore.setActiveTeam(props.team)
 
-onMounted(() => {
+onMounted(async() => {
   teamStore.initializeTeam({...props.team})
   teamStore.initializeShows({...props.shows})
   teamStore.initializeContributors({...props.contributors})
   teamStore.setCan({...props.can})
+  await teamStore.fetchPaginatedTeamMembers()
 })
 
 onBeforeUnmount(() => {

@@ -1040,6 +1040,10 @@ Route::middleware([
     Route::post('/api/fetch-team-members', [TeamMembersController::class, 'fetchTeamMembers'])
         ->name('teams.fetchTeamMembers');
 
+    // Fetch paginated team members
+    Route::get('/teams/{team}/fetch-paginated-team-members', [TeamMembersController::class, 'fetchPaginatedTeamMembers'])
+        ->name('teams.fetchPaginatedTeamMembers');
+
     // Add team member
     Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
         ->name('teams.addTeamMember');
