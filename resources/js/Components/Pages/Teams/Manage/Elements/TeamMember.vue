@@ -24,12 +24,29 @@
       <span v-else>Team Member</span>
     </td>
 
-    <td class="light:text-gray-600 px-6 py-4 text-sm">
-      {{ member.phone }}
+<!--    <td class="light:text-gray-600 px-6 py-4 text-sm">-->
+<!--      {{ member.phone }}-->
+<!--    </td>-->
+
+<!--    <td class="light:text-gray-600 px-6 py-4 text-sm">-->
+<!--      {{ member.email }}-->
+<!--    </td>-->
+
+
+    <!-- Blurred Phone Placeholder -->
+    <td class="light:text-gray-600 px-6 py-4 text-sm hover:cursor-pointer">
+      <span v-if="blurredPhone" @click="toggleBlur('phone')">{{ phonePlaceholder }}</span>
+      <span v-else @click="toggleBlur('phone')" @mouseenter="resetBlurTimeout('phone')" @mouseleave="startBlurTimeout('phone')">
+        {{ member.phone }}
+      </span>
     </td>
 
-    <td class="light:text-gray-600 px-6 py-4 text-sm">
-      {{ member.email }}
+    <!-- Blurred Email Placeholder -->
+    <td class="light:text-gray-600 px-6 py-4 text-sm hover:cursor-pointer">
+      <span v-if="blurredEmail" @click="toggleBlur('email')">{{ emailPlaceholder }}</span>
+      <span v-else @click="toggleBlur('email')" @mouseenter="resetBlurTimeout('email')" @mouseleave="startBlurTimeout('email')">
+        {{ member.email }}
+      </span>
     </td>
 
     <td class="px-6 py-4">
@@ -69,7 +86,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import ConfirmRemoveTeamMemberDialog from '@/Components/Global/Modals/ConfirmRemoveTeamMemberDialog'
 import ConfirmTeamManagerDialog from '@/Components/Global/Modals/ConfirmTeamManagerDialog'
@@ -81,7 +98,43 @@ let props = defineProps({
   can: Object,
 })
 
+const blurredPhone = ref(true)
+const blurredEmail = ref(true)
+const phonePlaceholder = '•••••••••'
+const emailPlaceholder = '•••••••••'
+let blurTimeout = null
+
 teamStore.confirmDialog = false
+
+// Toggle blur state
+function toggleBlur(field) {
+  if (field === 'phone') {
+    blurredPhone.value = !blurredPhone.value
+    if (!blurredPhone.value) {
+      blurredEmail.value = true // Blur email when phone is visible
+    }
+  } else if (field === 'email') {
+    blurredEmail.value = !blurredEmail.value
+    if (!blurredEmail.value) {
+      blurredPhone.value = true // Blur phone when email is visible
+    }
+  }
+}
+
+// Start a timeout to blur the field
+function startBlurTimeout(field) {
+  if (blurTimeout) clearTimeout(blurTimeout)
+  blurTimeout = setTimeout(() => {
+    if (field === 'phone') blurredPhone.value = true
+    if (field === 'email') blurredEmail.value = true
+  }, 5000)
+}
+
+// Reset the blur timeout on hover
+function resetBlurTimeout(field) {
+  if (blurTimeout) clearTimeout(blurTimeout)
+}
+
 
 function deleteTeamMember(member) {
   teamStore.deleteMemberName = member.name

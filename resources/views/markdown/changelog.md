@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: August 12, 2024\
+Last Update: August 13, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.9.3.39
+August 13, 2024
+
+* Team member's email and phone numbers are no longer visible by default.
 
 ## v0.9.3.38c
 August 12, 2024

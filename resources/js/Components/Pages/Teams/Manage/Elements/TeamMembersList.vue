@@ -49,35 +49,12 @@
       <TeamMember v-for="member in members" :member="member" :can="can"/>
       </tbody>
     </table>
-    <!-- Paginator -->
-<!--    <Pagination v-if="teamStore.team.members?.links" :data="paginatedData" @page-change="handlePageChange" class="mt-6"/>-->
     <!-- Custom Paginator -->
     <CustomPagination v-if="paginatedData.links"
                       :links="paginatedData.links"
                       :current_page="paginatedData.current_page"
                       :last_page="paginatedData.last_page"
                       @page-change="handlePageChange" />
-
-    <!-- Temporary Paginator -->
-    <div class="flex justify-between items-center mt-6">
-<!--      <button-->
-<!--          :disabled="currentPage === 1"-->
-<!--          @click="handlePageChange(currentPage - 1)"-->
-<!--          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"-->
-<!--      >-->
-<!--        Previous-->
-<!--      </button>-->
-<!--      <span>Page {{ currentPage }} of {{ paginatedData.value.last_page }}</span>-->
-<!--      <button-->
-<!--          :disabled="currentPage === paginatedData.value.last_page"-->
-<!--          @click="handlePageChange(currentPage + 1)"-->
-<!--          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"-->
-<!--      >-->
-<!--        Next-->
-<!--      </button>-->
-    </div>
-
-
 
   </div>
 
@@ -103,15 +80,11 @@ import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useTeamStore } from '@/Stores/TeamStore'
 import TeamMember from '@/Components/Pages/Teams/Manage/Elements/TeamMember'
 import TeamAddMember from '@/Components/Pages/Teams/Manage/Elements/TeamAddMember'
-import Pagination from '@/Components/Global/Paginators/Pagination.vue'
 import CustomPagination from '@/Components/Global/Paginators/CustomPagination.vue'
 
 const teamStore = useTeamStore()
 
-// Local state for pagination
-// const currentPage = ref(1)
 const isLoading = ref(false)
-
 
 // Map store state to local computed properties
 const members = computed(() => teamStore.team.members.data)
@@ -140,7 +113,6 @@ async function fetchMembers(page = 1) {
       await fetchMembers(lastPage);  // Fetch the last valid page
     }
 
-    console.log('Fetched members for page:', page);
   } catch (error) {
     console.error('Error fetching members:', error);
   } finally {

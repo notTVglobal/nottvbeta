@@ -147,7 +147,6 @@ export const useTeamStore = defineStore('teamStore', {
                     data: [],
                     links: {},
                 };
-                console.log('Initialized team.members:', this.team.members);
             }
 
             try {
@@ -161,7 +160,6 @@ export const useTeamStore = defineStore('teamStore', {
 
                 // If the requested page exceeds the total pages, adjust to the last valid page
                 if (page > meta.last_page) {
-                    console.log(`Page ${page} exceeds total pages. Adjusting to page ${meta.last_page}.`);
                     // Fetch the last valid page
                     return await this.fetchPaginatedTeamMembers(meta.last_page);
                 }
