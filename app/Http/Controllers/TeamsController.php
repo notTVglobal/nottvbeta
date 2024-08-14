@@ -368,11 +368,11 @@ class TeamsController extends Controller {
     ]);
 
     // Paginate and eager load the team members with specific columns
-    $members = $team->members()
-        ->select(['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path']) // Select only the necessary columns
-        ->withPivot(['active', 'team_profile_is_public', 'created_at', 'updated_at']) // Include pivot data
-        ->paginate(5, ['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path'], 'members') // Select the necessary columns for pagination
-        ->withQueryString();
+//    $members = $team->members()
+//        ->select(['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path']) // Select only the necessary columns
+//        ->withPivot(['active', 'team_profile_is_public', 'created_at', 'updated_at']) // Include pivot data
+//        ->paginate(5, ['users.id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path'], 'members') // Select the necessary columns for pagination
+//        ->withQueryString();
 
     // Retrieve shows
     $shows = $this->getShows($team->id);
@@ -386,7 +386,7 @@ class TeamsController extends Controller {
 //    $teamData = (new TeamDetailedResource($team))->resolve();
 
     // Pass the paginated members to the resource
-    $teamData = (new TeamDetailedResource($team))->additional(['members' => $members])->resolve();
+    $teamData = (new TeamDetailedResource($team))->resolve();
 
 
     // Log the resolved team data

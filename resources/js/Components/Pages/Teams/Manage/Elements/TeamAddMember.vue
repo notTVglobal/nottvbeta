@@ -102,6 +102,7 @@ const fetchCreators = async () => {
   try {
     const response = await axios.get('/api/all-creators') // New endpoint to fetch all creators
     teamStore.setCreators(response.data.data)
+    console.log('Creators:', teamStore.creators) // Check if creators are being set
     // Debugging: Log the creators data to ensure it's populated correctly
     // console.log('Creators fetched:', response.data.data)
     // console.log('Team Id: ', teamStore.id)
@@ -111,9 +112,10 @@ const fetchCreators = async () => {
 }
 
 const filteredCreators = computed(() => {
+  if (!teamStore.creators) return [] // Fallback to an empty array if undefined
   if (!search.value) return teamStore.creators
   return teamStore.creators.filter(creator =>
-      creator.name.toLowerCase().includes(search.value.toLowerCase()),
+      creator.name.toLowerCase().includes(search.value.toLowerCase())
   )
 })
 

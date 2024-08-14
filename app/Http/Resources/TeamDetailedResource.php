@@ -23,16 +23,17 @@ class TeamDetailedResource extends JsonResource {
       return $this->image ? (new ImageResource($this->image))->resolve() : null;
     });
 
-    // Resolve the team members if they are paginated
-    $members = $this->additional['members'] ?? null;
+    // Resolve the team members if they are included in the additional data
+    $members = $this->when(isset($this->additional['members']), function () {
+      $members = $this->additional['members'];
 
-    if ($members) {
-      $members = $members->setCollection(
+      // Transform the members using TeamMemberResource
+      return $members->setCollection(
           $members->getCollection()->map(function ($member) {
             return (new TeamMemberResource($member))->resolve();
           })
       );
-    }
+    });
 
     // Resolve the team members if they are loaded
 //    $members = $this->whenLoaded('members', function () {
@@ -54,7 +55,8 @@ class TeamDetailedResource extends JsonResource {
     $teamOwnerData = $this->user ? $this->getTeamUserData($this->user) : $this->getEmptyTeamUserData();
     $teamLeaderData = $this->teamLeader ? $this->getTeamUserData($this->teamLeader->user) : $this->getEmptyTeamUserData();
 
-    return [
+    // Build the response array
+    $response = [
         'id'               => $this->id,
         'name'             => $this->name,
         'description'      => $this->description,
@@ -71,12 +73,19 @@ class TeamDetailedResource extends JsonResource {
             'twitter_handle' => $this->twitter_handle ?? null,
         ],
         'totalSpots'       => $this->totalSpots,
-//        'members'          => $members ?? null,
-        'members'          => $members ? $members->toArray() : null, // Pass the paginated members
         'memberCount'      => $memberCount,
         'teamOwner'        => $teamOwnerData,
         'teamLeader'       => $teamLeaderData,
         'managers'         => $managers,
     ];
+
+    // Conditionally add members to the response
+    if ($members && !$members instanceof \Illuminate\Http\Resources\MissingValue) {
+      $response['members'] = $members->toArray();
+    }
+
+    return $response;
   }
+
+
 }

@@ -13,8 +13,16 @@ const initialState = () => ({
     team: {},
     shows: {},
     contributors: {},
-    members: {},
+    members: {
+        pages: {}, // Cache for member pages
+        current_page: 1,
+        last_page: 1,
+        per_page: 5,
+        total: 0,
+        data: [], // Current page data
+    },
     managers: [],
+    creators: [],
     teamOwner: [],
     teamLeader: [],
     can: {},
@@ -70,7 +78,6 @@ export const useTeamStore = defineStore('teamStore', {
         //     this.$state = r.default;
         // },
         initializeTeam(team) {
-            console.log('incoming team: ', team)
             // const userStore = useUserStore()
 
             // // Ensure nextBroadcast is an array and has at least one element
@@ -102,7 +109,8 @@ export const useTeamStore = defineStore('teamStore', {
             //     this.nextBroadcastLoaded = null
             //     this.nextBroadcastZoomLink = null
             // }
-
+            this.members = team.members ? team.members.data : [] // Directly set members
+            this.managers = team.managers || []
             this.team = team || {}
             // this.setActiveTeam(team)
         },
@@ -128,15 +136,68 @@ export const useTeamStore = defineStore('teamStore', {
         setActiveEpisode(episode) {
             this.activeShow = episode
         },
-        addMember(member) {
-            this.team.members.data.push(member)
-            this.team.memberCount++
+        async fetchPaginatedTeamMembers(page = 1) {
+            // Ensure team.members is defined
+            if (!this.team.members) {
+                this.team.members = {
+                    current_page: 1,
+                    last_page: 1,
+                    per_page: 5,
+                    total: 0,
+                    data: [],
+                    links: {},
+                };
+                console.log('Initialized team.members:', this.team.members);
+            }
+
+            try {
+                // Fetch the paginated members data
+                const response = await axios.get(`/teams/${this.team.slug}/fetch-paginated-team-members?members=${page}`);
+
+                // Extract meta data and the list of members
+                const meta = response.data.meta;
+                const data = response.data.data;
+                const links = response.data.links;
+
+                // If the requested page exceeds the total pages, adjust to the last valid page
+                if (page > meta.last_page) {
+                    console.log(`Page ${page} exceeds total pages. Adjusting to page ${meta.last_page}.`);
+                    // Fetch the last valid page
+                    return await this.fetchPaginatedTeamMembers(meta.last_page);
+                }
+
+                // Update the team.members state with the paginated response
+                this.team.members.current_page = meta.current_page;
+                this.team.members.last_page = meta.last_page;
+                this.team.members.per_page = meta.per_page;
+                this.team.members.total = meta.total;
+                this.team.members.data = data; // Store the current page's data
+                this.team.members.links = links; // Store the pagination links
+
+            } catch (error) {
+                console.error('Failed to fetch team members:', error);
+            }
         },
-        removeMember(memberId) {
+        async addMember(member) {
+            // this.team.members.data.push(member)
+            this.team.memberCount++
+            // Refresh the current page of members
+            await this.fetchPaginatedTeamMembers(this.team.members.current_page) // Use the current page from the prop
+
+        },
+        async removeMember(memberId) {
             // this.members = this.members.filter(member => member.id !== memberId)
-            this.team.members.data = this.team.members.data.filter(member => member.id !== memberId)
+            // this.team.members.data = this.team.members.data.filter(member => member.id !== memberId)
             // this.team.members.data = this.members
             this.team.memberCount--
+            // Refresh the current page of members
+            await this.fetchPaginatedTeamMembers(this.team.members.current_page) // Use the current page from the prop
+            // Ensure the members array is updated by reassigning it
+            this.team.members = {
+                ...this.team.members,
+                data: [...this.team.members.data] // Force Vue to recognize the change
+            };
+
         },
         updateCreatorTeams(creatorId, teamId, remove = false) {
             const creator = this.creators.find(c => c.id === creatorId)
@@ -246,9 +307,6 @@ export const useTeamStore = defineStore('teamStore', {
         toggleGoLiveDisplay() {
             this.goLiveDisplay = !this.goLiveDisplay
         },
-        async fetchTeamMembers() {
-            await axios.get('/team/team-members').then().error()
-        },
         setCreators(creators) {
             this.creators = creators
         },
@@ -278,14 +336,6 @@ export const useTeamStore = defineStore('teamStore', {
             if (state.team.memberCount) {
                 return state.team.memberCount > 99 ? '99+' : state.team.memberCount
             }
-        },
-        setManagers(state) {
-            state.managers = state.team.managers
-            return state.managers
-        },
-        setMembers(state) {
-            state.members = state.team.members.data
-            return state.members
         },
         // nextBroadcast(state) {
         //     const {team} = state
